@@ -1,8 +1,8 @@
 version: 1.0.0
 files:
-  - url: BTS-Office-Setup-1.0.0.exe
-    sha512: zXj87TpUWFlqVKmZn6msjvEqYszPlyo20+FNzpOmLEWQiLkJHHFYzVppKm0kqYKon8mxqtNY1UOnUW2vrhfomw==
-    size: 130048400
-path: BTS-Office-Setup-1.0.0.exe
-sha512: zXj87TpUWFlqVKmZn6msjvEqYszPlyo20+FNzpOmLEWQiLkJHHFYzVppKm0kqYKon8mxqtNY1UOnUW2vrhfomw==
-releaseDate: '2026-10-15T05:53:37.387Z'
+  - url: BTS-Creative-Setup-1.0.0.exe
+    sha512: VN4hi14c550Ka5hcIfpepSlfLfJhzVleKeVUovnIQZ3fMCeAq0bzhOFWDfohX3KiuLsmRUpAWxSdHCFG8ZdjjA==
+    size: 130050855
+path: BTS-Creative-Setup-1.0.0.exe
+sha512: VN4hi14c550Ka5hcIfpepSlfLfJhzVleKeVUovnIQZ3fMCeAq0bzhOFWDfohX3KiuLsmRUpAWxSdHCFG8ZdjjA==
+releaseDate: '2026-10-15T06:08:02.060Z'

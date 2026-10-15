@@ -21,12 +21,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 ---------------------------------------------------------------------------
-Third-party components bundled with BTS Office:
+Third-party components bundled with BTS Creative:
 - Electron (MIT), pdf.js (Apache-2.0), pdf-lib (MIT), paper.js (MIT),
   jsPDF (MIT), svg2pdf.js (MIT), ag-psd (MIT), electron-updater (MIT)
 - FFmpeg (GPL v3) is shipped as a separate executable in resources/ffmpeg.
   Its license is included as resources/ffmpeg/LICENSE.txt. Source code:
   https://github.com/BtbN/FFmpeg-Builds and https://ffmpeg.org
 
-BTS Office is an independent project and is not affiliated with, endorsed by,
+BTS Creative is an independent project and is not affiliated with, endorsed by,
 or sponsored by Adobe Inc. All trademarks belong to their respective owners.

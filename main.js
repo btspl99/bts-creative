@@ -1,5 +1,5 @@
-// BTS Office — main process
-// Free & open-source creative suite for students. https://office.btspl.tech
+// BTS Creative — main process
+// Free & open-source creative suite for students. https://creative.btspl.tech
 const { app, BrowserWindow, ipcMain, dialog, shell, Menu, nativeTheme } = require('electron');
 const path = require('path');
 const fs = require('fs');
@@ -10,7 +10,7 @@ let autoUpdater = null;
 try { autoUpdater = require('electron-updater').autoUpdater; } catch (e) { /* dev without updater */ }
 
 const APPS = {
-  home:   { file: 'src/home/index.html',   title: 'BTS Office',     w: 1180, h: 760 },
+  home:   { file: 'src/home/index.html',   title: 'BTS Creative',     w: 1180, h: 760 },
   pdf:    { file: 'src/pdf/index.html',    title: 'BTS PDF Pro',    w: 1400, h: 900 },
   photo:  { file: 'src/photo/index.html',  title: 'BTS Photo',      w: 1440, h: 920 },
   vector: { file: 'src/vector/index.html', title: 'BTS Vector',     w: 1440, h: 920 },
@@ -200,7 +200,7 @@ ipcMain.handle('tmp:write', (_e, { name, data }) => {
   const p = path.join(dir, name); fs.writeFileSync(p, Buffer.from(data)); return p;
 });
 
-// ---------- Auto update (from office.btspl.tech) ----------
+// ---------- Auto update (from creative.btspl.tech) ----------
 function broadcast(ch, payload) { for (const w of windows) if (!w.isDestroyed()) w.webContents.send(ch, payload); }
 function setupUpdater() {
   if (!autoUpdater || !app.isPackaged) return;

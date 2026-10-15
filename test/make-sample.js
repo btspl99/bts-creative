@@ -5,7 +5,7 @@ const fs = require('fs');
   const form = d.getForm();
   for (let i = 1; i <= 3; i++) {
     const p = d.addPage([595, 842]);
-    p.drawText(`BTS Office Test Document — Page ${i}`, { x: 60, y: 770, size: 22, font: fb, color: rgb(0.1, 0.1, 0.3) });
+    p.drawText(`BTS Creative Test Document — Page ${i}`, { x: 60, y: 770, size: 22, font: fb, color: rgb(0.1, 0.1, 0.3) });
     const para = 'The quick brown fox jumps over the lazy dog. Students can annotate, sign, and organize PDF pages for free.';
     for (let l = 0; l < 12; l++) p.drawText(para.slice(0, 80), { x: 60, y: 720 - l * 22, size: 12, font: f });
     p.drawRectangle({ x: 60, y: 300, width: 470, height: 100, color: rgb(0.9, 0.95, 1) });

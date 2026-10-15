@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' data: blob:; img-src 'self' data: blob:">
-<title>BTS Office</title>
+<title>BTS Creative</title>
 <link rel="stylesheet" href="../shared/theme.css">
 <style>
   .home { position: absolute; top: var(--titlebar); left: 0; right: 0; bottom: 0; display: grid; grid-template-columns: 230px 1fr; }
@@ -43,7 +43,7 @@
     <div class="nav active" data-view="home"><svg viewBox="0 0 24 24"><path d="M3 10l9-7 9 7v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Home</div>
     <div class="nav" data-view="recent"><svg viewBox="0 0 24 24"><path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM12 6v6l4 2"/></svg>Recent files</div>
     <div class="nav" data-view="about"><svg viewBox="0 0 24 24"><path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM12 16v-4M12 8h.01"/></svg>About &amp; updates</div>
-    <div class="foot">BTS Office <span id="ver"></span><br>Free &amp; open source for students<br>© Bhoomiputra Tech Solutions</div>
+    <div class="foot">BTS Creative <span id="ver"></span><br>Free &amp; open source for students<br>© Bhoomiputra Tech Solutions</div>
   </div>
   <div class="main" id="main"></div>
 </div>
@@ -61,8 +61,8 @@ titlebar({ logo: 'BTS', menus: [
     '-', { label: 'Exit', action: () => bts.win.close() } ] },
   { label: 'Help', items: [
     { label: 'Check for updates', action: checkUpdates },
-    { label: 'Website', action: () => bts.external('https://office.btspl.tech') },
-    { label: 'About BTS Office', action: () => show('about') } ] },
+    { label: 'Website', action: () => bts.external('https://creative.btspl.tech') },
+    { label: 'About BTS Creative', action: () => show('about') } ] },
 ]});
 window.addEventListener('bts:close', () => bts.win.close());
 UI.shortcut('ctrl+o', () => bts.openFileAuto());
@@ -101,11 +101,11 @@ async function show(view) {
     main.append(h('div', { class: 'hero' }, h('div', {}, h('h1', {}, 'Recent files'))), await recentList(20));
   } else {
     const v = await bts.version();
-    main.append(h('div', { class: 'hero' }, h('div', {}, h('h1', {}, 'About BTS Office'), h('p', {}, 'Version ' + v))));
+    main.append(h('div', { class: 'hero' }, h('div', {}, h('h1', {}, 'About BTS Creative'), h('p', {}, 'Version ' + v))));
     const st = h('span', { class: 'muted', id: 'updState' }, '');
-    main.append(h('div', { class: 'about-box', html: `<b>BTS Office</b> is a free, open-source creative suite built for students by Bhoomiputra Tech Solutions Pvt Ltd.<br><br>
-      Includes <b>PDF Pro</b>, <b>Photo</b>, <b>Vector</b> and <b>Video</b>. Updates are delivered automatically from <b>office.btspl.tech</b>.<br><br>
-      Licensed under the MIT License. BTS Office is an independent project and is not affiliated with or endorsed by Adobe Inc.<br><br>` },
+    main.append(h('div', { class: 'about-box', html: `<b>BTS Creative</b> is a free, open-source creative suite built for students by Bhoomiputra Tech Solutions Pvt Ltd.<br><br>
+      Includes <b>PDF Pro</b>, <b>Photo</b>, <b>Vector</b> and <b>Video</b>. Updates are delivered automatically from <b>creative.btspl.tech</b>.<br><br>
+      Licensed under the MIT License. BTS Creative is an independent project and is not affiliated with or endorsed by Adobe Inc.<br><br>` },
       h('div', { class: 'row' }, h('button', { class: 'btn primary', onclick: checkUpdates, html: icon('update') + 'Check for updates' }), st)));
   }
 }
@@ -124,7 +124,7 @@ document.querySelectorAll('.nav').forEach(n => n.onclick = () => show(n.dataset.
 bts.version().then(v => document.getElementById('ver').textContent = 'v' + v);
 UI.fileDrop(files => files.forEach(f => { const p = bts.fs.pathOf(f); if (p) bts.openApp(appFor(p), p); }));
 function appFor(p) { const e = p.split('.').pop().toLowerCase(); return e === 'pdf' ? 'pdf' : ['svg', 'btsv'].includes(e) ? 'vector' : ['mp4', 'webm', 'mov', 'mkv', 'btsvid'].includes(e) ? 'video' : 'photo'; }
-UI.setDocTitle('', 'BTS Office');
+UI.setDocTitle('', 'BTS Creative');
 show('home');
 </script>
 </body>

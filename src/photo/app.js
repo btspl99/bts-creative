@@ -41,7 +41,7 @@ UI.titlebar({ logo: 'Ph', menus: [
     { label: 'Save as Photoshop (.psd)…', action: savePsd, disabled: !D },
     { label: 'Export as', sub: [{ label: 'PNG…', action: () => exportImage('png') }, { label: 'JPEG…', action: () => exportImage('jpeg') }, { label: 'WebP…', action: () => exportImage('webp') }], disabled: !D },
     { label: 'Quick export PNG', kbd: 'Ctrl+Alt+Shift+S', action: () => exportImage('png', true), disabled: !D },
-    '-', { label: 'Close document', kbd: 'Ctrl+W', action: closeDoc, disabled: !D }, { label: 'BTS Office home', action: () => bts.openApp('home') }, { label: 'Exit', action: closeWindow } ] },
+    '-', { label: 'Close document', kbd: 'Ctrl+W', action: closeDoc, disabled: !D }, { label: 'BTS Creative home', action: () => bts.openApp('home') }, { label: 'Exit', action: closeWindow } ] },
   { label: 'Edit', items: () => [
     { label: 'Undo ' + (D?.hist[D.hi]?.label || ''), kbd: 'Ctrl+Z', action: undo, disabled: !D || D.hi <= 0 },
     { label: 'Redo', kbd: 'Ctrl+Shift+Z', action: redo, disabled: !D || D.hi >= D.hist.length - 1 },
@@ -84,7 +84,7 @@ UI.titlebar({ logo: 'Ph', menus: [
     '-', { label: 'Pixel preview at high zoom', checked: () => O.pixel, action: () => { O.pixel = !O.pixel; requestRender(); } },
     { label: 'Show grid', kbd: "Ctrl+'", checked: () => O.showGrid, action: () => { O.showGrid = !O.showGrid; drawOverlay(); } },
   ] },
-  { label: 'Help', items: [{ label: 'Keyboard shortcuts', action: shortcutsHelp }, { label: 'Check for updates', action: () => bts.update.check().then(r => toast(r.state === 'dev' ? 'Updates run in the installed version.' : 'Checking for updates…')) }, { label: 'About BTS Photo', action: () => modal({ title: 'BTS Photo', body: 'Part of BTS Office — free and open source for students.<br>Not affiliated with Adobe Inc.' }) }] },
+  { label: 'Help', items: [{ label: 'Keyboard shortcuts', action: shortcutsHelp }, { label: 'Check for updates', action: () => bts.update.check().then(r => toast(r.state === 'dev' ? 'Updates run in the installed version.' : 'Checking for updates…')) }, { label: 'About BTS Photo', action: () => modal({ title: 'BTS Photo', body: 'Part of BTS Creative — free and open source for students.<br>Not affiliated with Adobe Inc.' }) }] },
 ]});
 window.addEventListener('bts:close', closeWindow);
 

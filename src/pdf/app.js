@@ -46,7 +46,7 @@ UI.titlebar({ logo: 'Pdf', menus: [
     { label: 'Document properties…', kbd: 'Ctrl+D', action: propertiesDialog, disabled: !S.pages.length },
     { label: 'Print…', kbd: 'Ctrl+P', action: printDoc, disabled: !S.pages.length },
     '-',
-    { label: 'BTS Office home', action: () => bts.openApp('home') },
+    { label: 'BTS Creative home', action: () => bts.openApp('home') },
     { label: 'Close window', kbd: 'Ctrl+W', action: closeWindow },
   ] },
   { label: 'Edit', items: () => [
@@ -106,7 +106,7 @@ UI.titlebar({ logo: 'Pdf', menus: [
   { label: 'Help', items: [
     { label: 'Keyboard shortcuts', action: shortcutsHelp },
     { label: 'Check for updates', action: () => bts.update.check().then(r => toast(r.state === 'dev' ? 'Updates run in the installed version.' : 'Checking for updates…')) },
-    { label: 'About BTS PDF Pro', action: () => modal({ title: 'BTS PDF Pro', body: 'Part of BTS Office — free and open source for students.<br>Not affiliated with Adobe Inc.' }) },
+    { label: 'About BTS PDF Pro', action: () => modal({ title: 'BTS PDF Pro', body: 'Part of BTS Creative — free and open source for students.<br>Not affiliated with Adobe Inc.' }) },
   ] },
 ]});
 window.addEventListener('bts:close', closeWindow);
@@ -1197,7 +1197,7 @@ async function buildPdf({ pages = S.pages, flatten = true } = {}) {
   }
   try { form.updateFieldAppearances(await getFont(out, 'Helvetica', false)); } catch {}
   if (S.meta) { const m = S.meta; m.title != null && out.setTitle(m.title); m.author != null && out.setAuthor(m.author); m.subject != null && out.setSubject(m.subject); m.keywords != null && out.setKeywords(m.keywords.split(',').map(s => s.trim()).filter(Boolean)); }
-  out.setProducer('BTS PDF Pro (BTS Office)'); out.setModificationDate(new Date());
+  out.setProducer('BTS PDF Pro (BTS Creative)'); out.setModificationDate(new Date());
   let bytes = await out.save({ useObjectStreams: true });
   fontCache.delete(out);
   // true redaction: rasterize pages containing redactions

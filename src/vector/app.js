@@ -40,7 +40,7 @@ UI.titlebar({ logo: 'Vc', menus: [
     { label: 'New…', kbd: 'Ctrl+N', action: newDialog }, { label: 'Open…', kbd: 'Ctrl+O', action: openDialog }, { label: 'Place image…', kbd: 'Ctrl+Shift+P', action: placeImage }, '-',
     { label: 'Save (.btsv)', kbd: 'Ctrl+S', action: () => save(false) }, { label: 'Save as…', kbd: 'Ctrl+Shift+S', action: () => save(true) },
     { label: 'Export', sub: [{ label: 'SVG…', action: exportSVG }, { label: 'PNG…', action: () => exportRaster('png') }, { label: 'JPEG…', action: () => exportRaster('jpeg') }, { label: 'PDF (vector)…', action: exportPDF }] }, '-',
-    { label: 'Document setup…', kbd: 'Ctrl+Alt+P', action: docSetup }, '-', { label: 'BTS Office home', action: () => bts.openApp('home') }, { label: 'Close window', kbd: 'Ctrl+W', action: closeWindow } ] },
+    { label: 'Document setup…', kbd: 'Ctrl+Alt+P', action: docSetup }, '-', { label: 'BTS Creative home', action: () => bts.openApp('home') }, { label: 'Close window', kbd: 'Ctrl+W', action: closeWindow } ] },
   { label: 'Edit', items: () => [
     { label: 'Undo', kbd: 'Ctrl+Z', action: undo, disabled: hi <= 0 }, { label: 'Redo', kbd: 'Ctrl+Shift+Z', action: redo, disabled: hi >= hist.length - 1 }, '-',
     { label: 'Cut', kbd: 'Ctrl+X', action: cut }, { label: 'Copy', kbd: 'Ctrl+C', action: copy }, { label: 'Paste', kbd: 'Ctrl+V', action: () => paste(false) }, { label: 'Paste in place', kbd: 'Ctrl+Shift+V', action: () => paste(true) },
@@ -63,7 +63,7 @@ UI.titlebar({ logo: 'Vc', menus: [
     { label: 'Outline mode', kbd: 'Ctrl+Y', checked: () => O.outline, action: toggleOutline },
     { label: 'Show grid', kbd: "Ctrl+'", checked: () => O.grid, action: () => { O.grid = !O.grid; drawArtboard(); } },
     { label: 'Snap to grid', kbd: "Ctrl+Shift+'", checked: () => O.snap, action: () => { O.snap = !O.snap; } } ] },
-  { label: 'Help', items: [{ label: 'Keyboard shortcuts', action: shortcutsHelp }, { label: 'Check for updates', action: () => bts.update.check().then(r => toast(r.state === 'dev' ? 'Updates run in the installed version.' : 'Checking for updates…')) }, { label: 'About BTS Vector', action: () => modal({ title: 'BTS Vector', body: 'Part of BTS Office — free and open source for students.<br>Not affiliated with Adobe Inc.' }) }] },
+  { label: 'Help', items: [{ label: 'Keyboard shortcuts', action: shortcutsHelp }, { label: 'Check for updates', action: () => bts.update.check().then(r => toast(r.state === 'dev' ? 'Updates run in the installed version.' : 'Checking for updates…')) }, { label: 'About BTS Vector', action: () => modal({ title: 'BTS Vector', body: 'Part of BTS Creative — free and open source for students.<br>Not affiliated with Adobe Inc.' }) }] },
 ]});
 window.addEventListener('bts:close', closeWindow);
 

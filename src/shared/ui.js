@@ -1,4 +1,4 @@
-// BTS Office — shared UI kit: title bar, menus, shortcuts, modals, toasts, icons, history
+// BTS Creative — shared UI kit: title bar, menus, shortcuts, modals, toasts, icons, history
 (function () {
   const $ = (s, r = document) => r.querySelector(s);
   const h = (tag, attrs = {}, ...kids) => {
