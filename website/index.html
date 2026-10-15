@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BTS Office — Free creative suite for students</title>
+<meta name="description" content="BTS Office is a free, open-source creative suite for students: PDF Pro, Photo, Vector and Video. Download for Windows.">
+<link rel="icon" href="icon.png">
+<style>
+  :root { --bg:#0f1013; --card:#17181d; --line:#2a2c33; --tx:#f2f3f5; --mut:#9a9daa; }
+  * { box-sizing: border-box; } body { margin:0; background:var(--bg); color:var(--tx); font:16px/1.6 "Segoe UI", Inter, system-ui, sans-serif; }
+  a { color: inherit; } .wrap { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+  header { display:flex; align-items:center; gap:12px; padding:20px 0; } header img { width:40px; height:40px; border-radius:10px; } header b { font-size:18px; } header nav { margin-left:auto; display:flex; gap:20px; color:var(--mut); font-size:14px; } header nav a { text-decoration:none; }
+  .hero { padding: 70px 0 50px; text-align:center; } .hero h1 { font-size: clamp(34px, 6vw, 60px); line-height:1.1; margin:0 0 16px; letter-spacing:-1px; }
+  .hero h1 span { background: linear-gradient(90deg,#ff5a5f,#9a7bff,#31a8ff); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .hero p { color:var(--mut); font-size:19px; max-width:640px; margin:0 auto 30px; }
+  .btn { display:inline-flex; align-items:center; gap:10px; padding:15px 28px; border-radius:12px; background:linear-gradient(90deg,#ff5a5f,#9a7bff); color:#fff; font-weight:600; text-decoration:none; font-size:17px; box-shadow:0 10px 30px rgba(154,123,255,.3); }
+  .btn.ghost { background:transparent; border:1px solid var(--line); box-shadow:none; }
+  .meta { color:var(--mut); font-size:13px; margin-top:14px; }
+  .apps { display:grid; grid-template-columns: repeat(auto-fit, minmax(230px,1fr)); gap:16px; padding: 30px 0 60px; }
+  .app { background:var(--card); border:1px solid var(--line); border-radius:16px; padding:24px; }
+  .app .ic { width:52px; height:52px; border-radius:13px; display:grid; place-items:center; font-weight:800; color:#fff; margin-bottom:14px; }
+  .app h3 { margin:0 0 6px; } .app p { margin:0; color:var(--mut); font-size:14.5px; } .app ul { color:var(--mut); font-size:13.5px; padding-left:18px; margin:12px 0 0; }
+  footer { border-top:1px solid var(--line); padding:26px 0; color:var(--mut); font-size:13px; text-align:center; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header><img src="icon.png" alt=""><b>BTS Office</b><nav><a href="#apps">Apps</a><a href="https://github.com/" id="gh">GitHub</a><a href="#download">Download</a></nav></header>
+  <section class="hero" id="download">
+    <h1>The creative suite<br><span>free for every student</span></h1>
+    <p>Edit PDFs, retouch photos, design vector graphics and cut videos — one free, open-source app for Windows.</p>
+    <a class="btn" id="dl" href="updates/BTS-Office-Setup-1.0.0.exe">⬇ Download for Windows</a>
+    <div class="meta" id="ver">Version 1.0.0 · Windows 10/11 (64-bit) · Free &amp; open source (MIT)</div>
+  </section>
+  <section class="apps" id="apps">
+    <div class="app"><div class="ic" style="background:#ff5a5f">Pdf</div><h3>BTS PDF Pro</h3><p>View, comment, sign and organize PDFs.</p><ul><li>Highlight, notes, shapes, stamps</li><li>Edit text, fill &amp; create forms</li><li>Merge, split, compress, redact</li></ul></div>
+    <div class="app"><div class="ic" style="background:#31a8ff">Ph</div><h3>BTS Photo</h3><p>Layer-based photo editing.</p><ul><li>Layers, masks, blend modes, styles</li><li>Brushes, clone, heal, selections</li><li>Levels, curves, filters, PSD support</li></ul></div>
+    <div class="app"><div class="ic" style="background:#ff9a00">Vc</div><h3>BTS Vector</h3><p>Vector illustration and design.</p><ul><li>Pen, shapes, type, gradients</li><li>Pathfinder, clipping masks, align</li><li>Export SVG, PNG and vector PDF</li></ul></div>
+    <div class="app"><div class="ic" style="background:#9a7bff">Vd</div><h3>BTS Video</h3><p>Multi-track video editing.</p><ul><li>Timeline, razor, trim, snapping</li><li>Titles, transitions, color looks</li><li>Export MP4, MOV, GIF, MP3</li></ul></div>
+  </section>
+</div>
+<footer>© 2026 Bhoomiputra Tech Solutions Pvt Ltd · BTS Office is not affiliated with Adobe Inc. · Updates install automatically.</footer>
+<script>
+// Always point the download button at the newest version listed in the update feed
+fetch('updates/latest.yml', { cache: 'no-store' }).then(r => r.text()).then(t => {
+  const v = (t.match(/^version:\s*(.+)$/m) || [])[1], p = (t.match(/^path:\s*(.+)$/m) || [])[1];
+  if (v && p) { document.getElementById('dl').href = /^https?:/.test(p) ? p : 'updates/' + p; document.getElementById('ver').innerHTML = `Version ${v} · Windows 10/11 (64-bit) · Free &amp; open source (MIT)`; }
+}).catch(() => {});
+</script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' data: blob:; img-src 'self' data: blob: file:; media-src 'self' data: blob: file:; connect-src 'self' data: blob: file:">
+<title>BTS Video</title>
+<link rel="stylesheet" href="../shared/theme.css">
+<link rel="stylesheet" href="video.css">
+</head>
+<body class="app-video">
+<div class="workspace">
+  <div class="options-bar" id="optbar"></div>
+  <div class="upper">
+    <div class="pane">
+      <div class="tabs" id="ltabs"><div class="tab active" data-t="media">Project</div><div class="tab" data-t="effects">Effects</div><div class="tab" data-t="titles">Titles</div></div>
+      <div class="pane-b" id="lbody"></div>
+    </div>
+    <div class="pane monitor">
+      <div class="mon-h"><span>Program</span><span class="muted" id="seqInfo"></span></div>
+      <div class="mon-view" id="monView"><canvas id="program"></canvas><div class="safe hidden" id="safe"></div></div>
+      <div class="transport">
+        <span class="tc" id="tcCur">00:00:00:00</span>
+        <div class="tbtns">
+          <button class="icon-btn" id="bStart" data-tip="Go to start (Home)"></button>
+          <button class="icon-btn" id="bPrev" data-tip="Step back (←)"></button>
+          <button class="icon-btn play" id="bPlay" data-tip="Play / pause (Space)"></button>
+          <button class="icon-btn" id="bNext" data-tip="Step forward (→)"></button>
+          <button class="icon-btn" id="bEnd" data-tip="Go to end (End)"></button>
+        </div>
+        <span class="tc dim" id="tcDur">00:00:00:00</span>
+      </div>
+    </div>
+    <div class="pane">
+      <div class="mon-h"><span>Effect controls</span></div>
+      <div class="pane-b" id="fx"></div>
+    </div>
+  </div>
+  <div class="timeline" id="timeline">
+    <div class="tl-head" id="tlHead"></div>
+    <div class="tl-body">
+      <div class="tl-tracks-h" id="tlTracksH"></div>
+      <div class="tl-scroll" id="tlScroll">
+        <div class="tl-inner" id="tlInner">
+          <canvas class="tl-ruler" id="ruler"></canvas>
+          <div class="tl-rows" id="tlRows"></div>
+          <div class="playhead" id="playhead"><div class="ph-head"></div></div>
+          <div class="snapline hidden" id="snapline"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="statusbar"><span id="stInfo">Ready</span><div class="right"><span id="stSel"></span></div></div>
+</div>
+<script src="../shared/ui.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

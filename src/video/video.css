@@ -1,0 +1,80 @@
+.workspace { grid-template-rows: 42px minmax(260px, 1fr) 320px 26px; }
+.upper { display: grid; grid-template-columns: 310px 1fr 310px; min-height: 0; border-bottom: 1px solid var(--line); }
+.pane { background: var(--bg-2); display: flex; flex-direction: column; min-height: 0; min-width: 0; }
+.pane + .pane { border-left: 1px solid var(--line); }
+.pane-b { flex: 1; overflow: auto; min-height: 0; }
+.mon-h { height: 34px; display: flex; align-items: center; justify-content: space-between; padding: 0 12px; font-size: 11.5px; font-weight: 600; text-transform: uppercase; letter-spacing: .6px; color: var(--tx-2); border-bottom: 1px solid var(--line); flex-shrink: 0; }
+.monitor { background: var(--bg-1); }
+.mon-view { flex: 1; display: grid; place-items: center; background: #08090b; min-height: 0; position: relative; overflow: hidden; }
+#program { background: #000; box-shadow: 0 0 0 1px #222; max-width: 100%; max-height: 100%; }
+.safe { position: absolute; border: 1px dashed rgba(255,255,255,.35); pointer-events: none; }
+.transport { height: 46px; display: flex; align-items: center; padding: 0 14px; gap: 12px; border-top: 1px solid var(--line); background: var(--bg-2); flex-shrink: 0; }
+.transport .tbtns { flex: 1; display: flex; justify-content: center; gap: 4px; }
+.transport .tc { font-family: var(--mono); color: var(--accent); font-size: 13px; min-width: 96px; }
+.transport .tc.dim { color: var(--tx-2); text-align: right; }
+.transport .play { width: 38px; height: 38px; background: var(--accent); color: #fff; border-radius: 50%; }
+.transport .play:hover { background: var(--accent-2); color: #fff; }
+
+/* media bin */
+.bin-tools { display: flex; gap: 6px; padding: 8px 10px; border-bottom: 1px solid var(--line); position: sticky; top: 0; background: var(--bg-2); z-index: 2; }
+.bin { display: grid; grid-template-columns: repeat(auto-fill, minmax(128px, 1fr)); gap: 10px; padding: 10px; }
+.mi { background: var(--bg-3); border-radius: 7px; overflow: hidden; cursor: grab; border: 1px solid transparent; }
+.mi:hover { border-color: var(--line-2); } .mi.sel { border-color: var(--accent); }
+.mi .th { height: 72px; background: #000 center/cover no-repeat; position: relative; display: grid; place-items: center; color: var(--tx-3); }
+.mi .th .dur { position: absolute; right: 4px; bottom: 4px; background: rgba(0,0,0,.75); color: #fff; font-size: 10.5px; padding: 1px 5px; border-radius: 3px; font-family: var(--mono); }
+.mi .th .kind { position: absolute; left: 4px; top: 4px; background: rgba(0,0,0,.6); color: #fff; font-size: 9.5px; padding: 1px 5px; border-radius: 3px; text-transform: uppercase; }
+.mi .nm { padding: 5px 7px; font-size: 11.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--tx-1); }
+.empty-bin { padding: 30px 16px; text-align: center; color: var(--tx-3); line-height: 1.6; }
+.fx-list .fx-it { display: flex; align-items: center; gap: 10px; padding: 8px 12px; margin: 2px 8px; border-radius: 6px; cursor: grab; color: var(--tx-1); }
+.fx-list .fx-it:hover { background: var(--bg-3); color: var(--tx-0); }
+.fx-list .fx-it .sw { width: 34px; height: 22px; border-radius: 4px; flex-shrink: 0; }
+.fx-list h5 { margin: 12px 14px 6px; font-size: 11px; text-transform: uppercase; letter-spacing: .6px; color: var(--tx-3); font-weight: 600; }
+
+/* effect controls */
+.ec { padding: 4px 0 20px; }
+.ec .grp { border-bottom: 1px solid var(--line); padding: 10px 12px; }
+.ec .grp h5 { margin: 0 0 8px; font-size: 11px; text-transform: uppercase; letter-spacing: .6px; color: var(--tx-2); font-weight: 600; display: flex; justify-content: space-between; }
+.ec .p { display: grid; grid-template-columns: 82px 1fr 54px; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 12px; color: var(--tx-2); }
+.ec .p input[type=number] { width: 54px; height: 24px; font-size: 11.5px; padding: 0 4px; }
+.ec .p2 { display: grid; grid-template-columns: 82px 1fr; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 12px; color: var(--tx-2); }
+.ec .p2 select, .ec .p2 input[type=text] { height: 26px; font-size: 12px; width: 100%; }
+.ec textarea { width: 100%; font-size: 13px; }
+.ec .none { padding: 30px 16px; color: var(--tx-3); text-align: center; }
+
+/* timeline */
+.timeline { display: flex; flex-direction: column; min-height: 0; background: var(--bg-1); }
+.tl-head { height: 38px; display: flex; align-items: center; gap: 8px; padding: 0 10px; border-bottom: 1px solid var(--line); background: var(--bg-2); flex-shrink: 0; }
+.tl-head .tc { font-family: var(--mono); color: var(--accent); font-size: 14px; min-width: 110px; }
+.tl-body { flex: 1; display: grid; grid-template-columns: 150px 1fr; min-height: 0; }
+.tl-tracks-h { background: var(--bg-2); border-right: 1px solid var(--line); overflow: hidden; }
+.tl-tracks-h .th-pad { height: 30px; border-bottom: 1px solid var(--line); }
+.track-h { display: flex; align-items: center; gap: 4px; padding: 0 8px; border-bottom: 1px solid var(--line); }
+.track-h .tn { font-weight: 600; font-size: 12px; width: 26px; color: var(--tx-1); }
+.track-h .tb { width: 24px; height: 24px; border: 0; border-radius: 4px; background: var(--bg-3); color: var(--tx-2); font-size: 11px; cursor: pointer; display: grid; place-items: center; }
+.track-h .tb.on { background: var(--accent-soft); color: var(--accent); }
+.track-h .tb svg { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 2; }
+.tl-scroll { overflow: auto; position: relative; }
+.tl-inner { position: relative; min-height: 100%; }
+.tl-ruler { position: sticky; top: 0; z-index: 5; display: block; height: 30px; background: var(--bg-2); border-bottom: 1px solid var(--line); cursor: pointer; }
+.tl-rows { position: relative; }
+.row-t { position: relative; border-bottom: 1px solid var(--line); background: repeating-linear-gradient(90deg, transparent 0 calc(var(--grid) - 1px), rgba(255,255,255,.025) calc(var(--grid) - 1px) var(--grid)); }
+.row-t.audio { background-color: #121318; }
+.row-t.drop { background-color: var(--accent-soft); }
+.clip { position: absolute; top: 3px; bottom: 3px; border-radius: 5px; overflow: hidden; cursor: grab; font-size: 11px; color: #fff; box-shadow: inset 0 0 0 1px rgba(255,255,255,.18); display: flex; flex-direction: column; user-select: none; }
+.clip.video { background: #3d5fa8; } .clip.image { background: #7a4fb0; } .clip.audio { background: #2f8a63; } .clip.title { background: #b06a2b; } .clip.color { background: #555; }
+.clip.sel { box-shadow: inset 0 0 0 2px #fff, 0 0 0 1px var(--accent); }
+.clip .cl { padding: 2px 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; background: rgba(0,0,0,.25); position: relative; z-index: 2; flex-shrink: 0; }
+.clip .strip { flex: 1; background-repeat: repeat-x; background-size: auto 100%; opacity: .85; }
+.clip canvas.wave { position: absolute; left: 0; bottom: 0; width: 100%; height: 70%; opacity: .9; }
+.clip .edge { position: absolute; top: 0; bottom: 0; width: 7px; cursor: ew-resize; z-index: 3; }
+.clip .edge.l { left: 0; } .clip .edge.r { right: 0; }
+.clip .edge:hover { background: rgba(255,255,255,.35); }
+.clip .tr { position: absolute; left: 0; top: 0; bottom: 0; background: linear-gradient(90deg, rgba(255,255,255,.45), transparent); z-index: 1; pointer-events: none; }
+.clip .tro { position: absolute; right: 0; top: 0; bottom: 0; background: linear-gradient(270deg, rgba(0,0,0,.5), transparent); z-index: 1; pointer-events: none; }
+.clip.missing { background: repeating-linear-gradient(45deg, #6b1d1d 0 8px, #4a1515 8px 16px); }
+.playhead { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--accent); z-index: 6; pointer-events: none; }
+.playhead .ph-head { position: absolute; top: 0; left: -6px; width: 13px; height: 16px; background: var(--accent); clip-path: polygon(0 0, 100% 0, 100% 60%, 50% 100%, 0 60%); }
+.snapline { position: absolute; top: 30px; bottom: 0; width: 1px; background: #ffd400; z-index: 7; pointer-events: none; }
+.tl-scroll.razor .clip { cursor: crosshair; }
+.progress { height: 8px; background: var(--bg-4); border-radius: 4px; overflow: hidden; }
+.progress > div { height: 100%; background: var(--accent); width: 0; transition: width .2s; }

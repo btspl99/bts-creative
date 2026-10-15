@@ -1,0 +1,8 @@
+node_modules/
+dist/
+vendor/ffmpeg/ffmpeg
+vendor/ffmpeg/ffmpeg.exe
+test/*.mp4
+test/*.mp3
+dist/
+website/updates/*.exe

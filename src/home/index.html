@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' data: blob:; img-src 'self' data: blob:">
+<title>BTS Office</title>
+<link rel="stylesheet" href="../shared/theme.css">
+<style>
+  .home { position: absolute; top: var(--titlebar); left: 0; right: 0; bottom: 0; display: grid; grid-template-columns: 230px 1fr; }
+  .side { background: var(--bg-0); border-right: 1px solid var(--line); padding: 18px 12px; display: flex; flex-direction: column; gap: 4px; }
+  .side .nav { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; color: var(--tx-1); cursor: pointer; }
+  .side .nav:hover { background: var(--bg-2); }
+  .side .nav.active { background: var(--bg-3); color: var(--tx-0); }
+  .side .nav svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+  .side .foot { margin-top: auto; color: var(--tx-3); font-size: 11.5px; padding: 0 12px; line-height: 1.6; }
+  .main { overflow: auto; padding: 34px 44px; }
+  .hero { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 26px; gap: 20px; }
+  .hero h1 { margin: 0; font-size: 28px; font-weight: 650; letter-spacing: -.4px; }
+  .hero p { margin: 6px 0 0; color: var(--tx-2); }
+  .apps { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 16px; margin-bottom: 36px; }
+  .app-card { background: var(--bg-2); border: 1px solid var(--line); border-radius: 14px; padding: 20px; cursor: pointer; transition: transform .12s, border-color .12s, background .12s; position: relative; overflow: hidden; }
+  .app-card:hover { transform: translateY(-2px); border-color: var(--c); background: var(--bg-3); }
+  .app-card::after { content: ''; position: absolute; right: -40px; top: -40px; width: 140px; height: 140px; border-radius: 50%; background: var(--c); opacity: .07; }
+  .app-card .ico { width: 52px; height: 52px; border-radius: 13px; display: grid; place-items: center; font-weight: 800; font-size: 19px; color: #fff; background: linear-gradient(140deg, var(--c), color-mix(in srgb, var(--c) 60%, #000)); margin-bottom: 16px; box-shadow: 0 6px 20px color-mix(in srgb, var(--c) 35%, transparent); }
+  .app-card h3 { margin: 0 0 4px; font-size: 16px; font-weight: 600; }
+  .app-card p { margin: 0; color: var(--tx-2); font-size: 12.5px; line-height: 1.5; }
+  .app-card .like { margin-top: 12px; font-size: 11px; color: var(--tx-3); }
+  h2.sec { font-size: 13px; text-transform: uppercase; letter-spacing: .8px; color: var(--tx-2); font-weight: 600; margin: 0 0 12px; }
+  .recent { background: var(--bg-2); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+  .recent .r { display: grid; grid-template-columns: 34px 1fr 140px 160px; align-items: center; padding: 10px 16px; border-bottom: 1px solid var(--line); cursor: pointer; gap: 10px; }
+  .recent .r:last-child { border-bottom: 0; }
+  .recent .r:hover { background: var(--bg-3); }
+  .recent .badge { width: 28px; height: 28px; border-radius: 7px; display: grid; place-items: center; font-size: 10px; font-weight: 800; color: #fff; }
+  .recent .path { color: var(--tx-3); font-size: 11.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .empty { padding: 30px; text-align: center; color: var(--tx-3); }
+  .about-box { background: var(--bg-2); border: 1px solid var(--line); border-radius: 12px; padding: 22px; max-width: 640px; line-height: 1.7; color: var(--tx-1); }
+  .about-box b { color: var(--tx-0); }
+</style>
+</head>
+<body>
+<div class="home">
+  <div class="side">
+    <div class="nav active" data-view="home"><svg viewBox="0 0 24 24"><path d="M3 10l9-7 9 7v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Home</div>
+    <div class="nav" data-view="recent"><svg viewBox="0 0 24 24"><path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM12 6v6l4 2"/></svg>Recent files</div>
+    <div class="nav" data-view="about"><svg viewBox="0 0 24 24"><path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM12 16v-4M12 8h.01"/></svg>About &amp; updates</div>
+    <div class="foot">BTS Office <span id="ver"></span><br>Free &amp; open source for students<br>© Bhoomiputra Tech Solutions</div>
+  </div>
+  <div class="main" id="main"></div>
+</div>
+<script src="../shared/ui.js"></script>
+<script>
+const { h, icon, titlebar, toast } = UI;
+titlebar({ logo: 'BTS', menus: [
+  { label: 'File', items: [
+    { label: 'Open file…', kbd: 'Ctrl+O', action: () => bts.openFileAuto() },
+    '-',
+    { label: 'New PDF Pro window', action: () => bts.openApp('pdf') },
+    { label: 'New Photo window', action: () => bts.openApp('photo') },
+    { label: 'New Vector window', action: () => bts.openApp('vector') },
+    { label: 'New Video window', action: () => bts.openApp('video') },
+    '-', { label: 'Exit', action: () => bts.win.close() } ] },
+  { label: 'Help', items: [
+    { label: 'Check for updates', action: checkUpdates },
+    { label: 'Website', action: () => bts.external('https://office.btspl.tech') },
+    { label: 'About BTS Office', action: () => show('about') } ] },
+]});
+window.addEventListener('bts:close', () => bts.win.close());
+UI.shortcut('ctrl+o', () => bts.openFileAuto());
+
+const APPS = [
+  { id: 'pdf', name: 'BTS PDF Pro', short: 'Pdf', c: '#ff5a5f', desc: 'View, annotate, sign, fill forms, edit and organize PDF pages.', like: 'Acrobat-style workflow' },
+  { id: 'photo', name: 'BTS Photo', short: 'Ph', c: '#31a8ff', desc: 'Layer-based photo editing with brushes, selections, adjustments and filters.', like: 'Photoshop-style workflow' },
+  { id: 'vector', name: 'BTS Vector', short: 'Vc', c: '#ff9a00', desc: 'Vector illustration with pen, shapes, gradients, type and artboards.', like: 'Illustrator-style workflow' },
+  { id: 'video', name: 'BTS Video', short: 'Vd', c: '#9a7bff', desc: 'Multi-track timeline editing with titles, transitions and MP4 export.', like: 'Premiere-style workflow' },
+];
+const colorOf = id => (APPS.find(a => a.id === id) || { c: '#666' }).c;
+const shortOf = id => (APPS.find(a => a.id === id) || { short: '?' }).short;
+
+async function recentList(limit) {
+  const list = (await bts.recent.get()).slice(0, limit);
+  if (!list.length) return h('div', { class: 'recent' }, h('div', { class: 'empty' }, 'No recent files yet. Files you save will appear here.'));
+  return h('div', { class: 'recent' }, ...list.map(r => h('div', { class: 'r', onclick: () => bts.openApp(r.app || 'home', r.path) },
+    h('div', { class: 'badge', style: { background: colorOf(r.app) } }, shortOf(r.app)),
+    h('div', {}, h('div', {}, r.name), h('div', { class: 'path' }, r.path)),
+    h('div', { class: 'muted' }, (APPS.find(a => a.id === r.app) || {}).name || ''),
+    h('div', { class: 'muted' }, new Date(r.at).toLocaleString()))));
+}
+
+async function show(view) {
+  document.querySelectorAll('.nav').forEach(n => n.classList.toggle('active', n.dataset.view === view));
+  const main = document.getElementById('main'); main.innerHTML = '';
+  if (view === 'home') {
+    const hr = new Date().getHours();
+    main.append(h('div', { class: 'hero' },
+      h('div', {}, h('h1', {}, (hr < 12 ? 'Good morning' : hr < 17 ? 'Good afternoon' : 'Good evening') + ' 👋'), h('p', {}, 'Pick an app to start creating, or open a file.')),
+      h('button', { class: 'btn primary', onclick: () => bts.openFileAuto(), html: icon('open') + 'Open file' })));
+    main.append(h('div', { class: 'apps' }, ...APPS.map(a => h('div', { class: 'app-card', style: { '--c': a.c }, onclick: () => bts.openApp(a.id) },
+      h('div', { class: 'ico' }, a.short), h('h3', {}, a.name), h('p', {}, a.desc), h('div', { class: 'like' }, a.like)))));
+    main.append(h('h2', { class: 'sec' }, 'Recent'), await recentList(6));
+  } else if (view === 'recent') {
+    main.append(h('div', { class: 'hero' }, h('div', {}, h('h1', {}, 'Recent files'))), await recentList(20));
+  } else {
+    const v = await bts.version();
+    main.append(h('div', { class: 'hero' }, h('div', {}, h('h1', {}, 'About BTS Office'), h('p', {}, 'Version ' + v))));
+    const st = h('span', { class: 'muted', id: 'updState' }, '');
+    main.append(h('div', { class: 'about-box', html: `<b>BTS Office</b> is a free, open-source creative suite built for students by Bhoomiputra Tech Solutions Pvt Ltd.<br><br>
+      Includes <b>PDF Pro</b>, <b>Photo</b>, <b>Vector</b> and <b>Video</b>. Updates are delivered automatically from <b>office.btspl.tech</b>.<br><br>
+      Licensed under the MIT License. BTS Office is an independent project and is not affiliated with or endorsed by Adobe Inc.<br><br>` },
+      h('div', { class: 'row' }, h('button', { class: 'btn primary', onclick: checkUpdates, html: icon('update') + 'Check for updates' }), st)));
+  }
+}
+async function checkUpdates() {
+  const r = await bts.update.check();
+  if (r.state === 'dev') toast('Updates are checked automatically in the installed version.');
+  else if (r.state === 'error') toast('Could not check for updates: ' + r.message, 'err');
+  else toast('Checking for updates…');
+}
+bts.update.onStatus(s => {
+  const el = document.getElementById('updState'); if (!el) return;
+  el.textContent = { checking: 'Checking…', none: 'You have the latest version.', available: `Downloading v${s.version}…`, downloading: `Downloading ${s.percent}%`, ready: `v${s.version} ready — restart to install`, error: 'Update error: ' + s.message }[s.state] || '';
+  if (s.state === 'none') toast('You have the latest version.', 'ok');
+});
+document.querySelectorAll('.nav').forEach(n => n.onclick = () => show(n.dataset.view));
+bts.version().then(v => document.getElementById('ver').textContent = 'v' + v);
+UI.fileDrop(files => files.forEach(f => { const p = bts.fs.pathOf(f); if (p) bts.openApp(appFor(p), p); }));
+function appFor(p) { const e = p.split('.').pop().toLowerCase(); return e === 'pdf' ? 'pdf' : ['svg', 'btsv'].includes(e) ? 'vector' : ['mp4', 'webm', 'mov', 'mkv', 'btsvid'].includes(e) ? 'video' : 'photo'; }
+UI.setDocTitle('', 'BTS Office');
+show('home');
+</script>
+</body>
+</html>

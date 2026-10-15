@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' data: blob:; img-src 'self' data: blob:">
+<title>BTS Photo</title>
+<link rel="stylesheet" href="../shared/theme.css">
+<link rel="stylesheet" href="photo.css">
+</head>
+<body class="app-photo">
+<div class="workspace" id="ws">
+  <div class="options-bar" id="optbar"></div>
+  <div class="mid">
+    <div class="toolbar" id="toolbar"></div>
+    <div class="center">
+      <div class="doc-tabs" id="docTabs"></div>
+      <div class="viewport" id="viewport">
+        <div class="canvas-wrap" id="canvasWrap"><canvas id="display" class="checker"></canvas></div>
+        <canvas id="overlay"></canvas>
+      </div>
+    </div>
+    <div class="panels" id="panels">
+      <div class="panel">
+        <div class="panel-h">Color</div>
+        <div class="panel-b" id="colorPanel"></div>
+      </div>
+      <div class="panel fill">
+        <div class="tabs" id="rtabs"><div class="tab active" data-t="layers">Layers</div><div class="tab" data-t="history">History</div><div class="tab" data-t="adjust">Adjust</div></div>
+        <div class="rt-body" id="rtBody"></div>
+        <div class="layer-actions" id="layerActions"></div>
+      </div>
+    </div>
+  </div>
+  <div class="statusbar"><span id="stZoom">100%</span><span id="stSize">—</span><span id="stPos"></span><div class="right"><span id="stInfo"></span></div></div>
+</div>
+<script src="../shared/ui.js"></script>
+<script src="../vendor/ag-psd.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

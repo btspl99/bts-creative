@@ -1,0 +1,43 @@
+const { contextBridge, ipcRenderer, webUtils } = require('electron');
+
+contextBridge.exposeInMainWorld('bts', {
+  openApp: (id, file) => ipcRenderer.invoke('app:open', id, file),
+  openFileAuto: () => ipcRenderer.invoke('app:openFileAuto'),
+  version: () => ipcRenderer.invoke('app:version'),
+  external: url => ipcRenderer.invoke('shell:external', url),
+  win: {
+    min: () => ipcRenderer.send('win:min'),
+    max: () => ipcRenderer.send('win:max'),
+    close: () => ipcRenderer.send('win:close'),
+    title: t => ipcRenderer.send('win:title', t),
+  },
+  fs: {
+    open: opts => ipcRenderer.invoke('fs:open', opts),
+    read: p => ipcRenderer.invoke('fs:read', p),
+    saveAs: o => ipcRenderer.invoke('fs:saveAs', o),
+    write: o => ipcRenderer.invoke('fs:write', o),
+    pickSavePath: o => ipcRenderer.invoke('fs:pickSavePath', o),
+    pathOf: file => { try { return webUtils.getPathForFile(file); } catch { return file.path || null; } },
+  },
+  recent: { get: () => ipcRenderer.invoke('recent:get'), add: p => ipcRenderer.invoke('recent:add', p) },
+  ffmpeg: {
+    available: () => ipcRenderer.invoke('ffmpeg:available'),
+    run: args => ipcRenderer.invoke('ffmpeg:run', args),
+    onProgress: cb => ipcRenderer.on('ffmpeg:progress', (_e, s) => cb(s)),
+    tmpWrite: (name, data) => ipcRenderer.invoke('tmp:write', { name, data }),
+    tmpDir: () => ipcRenderer.invoke('tmp:dir'),
+    probe: file => ipcRenderer.invoke('ffmpeg:probe', file),
+    start: args => ipcRenderer.invoke('ffmpeg:start', args),
+    write: (id, data) => ipcRenderer.invoke('ffmpeg:write', id, data),
+    end: id => ipcRenderer.invoke('ffmpeg:end', id),
+    kill: id => ipcRenderer.invoke('ffmpeg:kill', id),
+    framesOpen: o => ipcRenderer.invoke('frames:open', o),
+    framesNext: id => ipcRenderer.invoke('frames:next', id),
+    framesClose: id => ipcRenderer.invoke('frames:close', id),
+  },
+  update: {
+    check: () => ipcRenderer.invoke('update:check'),
+    install: () => ipcRenderer.invoke('update:install'),
+    onStatus: cb => ipcRenderer.on('update:status', (_e, s) => cb(s)),
+  },
+});
