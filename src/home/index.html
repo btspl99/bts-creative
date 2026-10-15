@@ -68,10 +68,10 @@ window.addEventListener('bts:close', () => bts.win.close());
 UI.shortcut('ctrl+o', () => bts.openFileAuto());
 
 const APPS = [
-  { id: 'pdf', name: 'BTS PDF Pro', short: 'Pdf', c: '#ff5a5f', desc: 'View, annotate, sign, fill forms, edit and organize PDF pages.', like: 'Acrobat-style workflow' },
-  { id: 'photo', name: 'BTS Photo', short: 'Ph', c: '#31a8ff', desc: 'Layer-based photo editing with brushes, selections, adjustments and filters.', like: 'Photoshop-style workflow' },
-  { id: 'vector', name: 'BTS Vector', short: 'Vc', c: '#ff9a00', desc: 'Vector illustration with pen, shapes, gradients, type and artboards.', like: 'Illustrator-style workflow' },
-  { id: 'video', name: 'BTS Video', short: 'Vd', c: '#9a7bff', desc: 'Multi-track timeline editing with titles, transitions and MP4 export.', like: 'Premiere-style workflow' },
+  { id: 'pdf', name: 'BTS PDF Pro', short: 'Pdf', c: '#ff5a5f', desc: 'View, annotate, sign, fill forms, edit and organize PDF pages.', like: 'Documents · forms · signatures' },
+  { id: 'photo', name: 'BTS Photo', short: 'Ph', c: '#31a8ff', desc: 'Layer-based photo editing with brushes, selections, adjustments and filters.', like: 'Layers · masks · filters · PSD' },
+  { id: 'vector', name: 'BTS Vector', short: 'Vc', c: '#ff9a00', desc: 'Vector illustration with pen, shapes, gradients, type and artboards.', like: 'Pen · pathfinder · SVG & PDF' },
+  { id: 'video', name: 'BTS Video', short: 'Vd', c: '#9a7bff', desc: 'Multi-track timeline editing with titles, transitions and MP4 export.', like: 'Timeline · titles · MP4 export' },
 ];
 const colorOf = id => (APPS.find(a => a.id === id) || { c: '#666' }).c;
 const shortOf = id => (APPS.find(a => a.id === id) || { short: '?' }).short;
@@ -111,7 +111,7 @@ async function show(view) {
 }
 async function checkUpdates() {
   const r = await bts.update.check();
-  if (r.state === 'dev') toast('Updates are checked automatically in the installed version.');
+  if (r.state === 'store') toast('Updates are delivered by the Microsoft Store.'); else if (r.state === 'dev') toast('Updates are checked automatically in the installed version.');
   else if (r.state === 'error') toast('Could not check for updates: ' + r.message, 'err');
   else toast('Checking for updates…');
 }

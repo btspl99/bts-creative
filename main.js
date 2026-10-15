@@ -203,7 +203,7 @@ ipcMain.handle('tmp:write', (_e, { name, data }) => {
 // ---------- Auto update (from creative.btspl.tech) ----------
 function broadcast(ch, payload) { for (const w of windows) if (!w.isDestroyed()) w.webContents.send(ch, payload); }
 function setupUpdater() {
-  if (!autoUpdater || !app.isPackaged) return;
+  if (!autoUpdater || !app.isPackaged || process.windowsStore) return; // Microsoft Store installs update through the Store
   autoUpdater.autoDownload = true;
   autoUpdater.autoInstallOnAppQuit = true;
   autoUpdater.on('checking-for-update', () => broadcast('update:status', { state: 'checking' }));
@@ -216,6 +216,7 @@ function setupUpdater() {
   setInterval(() => autoUpdater.checkForUpdates().catch(() => {}), 4 * 60 * 60 * 1000);
 }
 ipcMain.handle('update:check', async () => {
+  if (process.windowsStore) return { state: 'store' };
   if (!autoUpdater || !app.isPackaged) return { state: 'dev' };
   try { await autoUpdater.checkForUpdates(); return { state: 'checking' }; } catch (e) { return { state: 'error', message: String(e.message || e) }; }
 });

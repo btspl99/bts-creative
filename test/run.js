@@ -4,6 +4,7 @@ const { app, BrowserWindow } = require('electron');
 const appId = process.env.BTS_APP || 'pdf'; const file = process.env.BTS_FILE || null; const script = process.env.BTS_SCRIPT ? fs.readFileSync(process.env.BTS_SCRIPT, 'utf8') : '';
 const out = process.env.BTS_OUT || '/tmp/shot';
 require(path.join(__dirname, '..', 'main.js'));
+app.setVersion(require('../package.json').version);
 app.whenReady().then(async () => {
   await new Promise(r => setTimeout(r, 800));
   BrowserWindow.getAllWindows().forEach(w => w.close());

@@ -84,7 +84,7 @@ UI.titlebar({ logo: 'Ph', menus: [
     '-', { label: 'Pixel preview at high zoom', checked: () => O.pixel, action: () => { O.pixel = !O.pixel; requestRender(); } },
     { label: 'Show grid', kbd: "Ctrl+'", checked: () => O.showGrid, action: () => { O.showGrid = !O.showGrid; drawOverlay(); } },
   ] },
-  { label: 'Help', items: [{ label: 'Keyboard shortcuts', action: shortcutsHelp }, { label: 'Check for updates', action: () => bts.update.check().then(r => toast(r.state === 'dev' ? 'Updates run in the installed version.' : 'Checking for updates…')) }, { label: 'About BTS Photo', action: () => modal({ title: 'BTS Photo', body: 'Part of BTS Creative — free and open source for students.<br>Not affiliated with Adobe Inc.' }) }] },
+  { label: 'Help', items: [{ label: 'Keyboard shortcuts', action: shortcutsHelp }, { label: 'Check for updates', action: () => bts.update.check().then(r => toast(r.state === 'store' ? 'Updates are delivered by the Microsoft Store.' : r.state === 'dev' ? 'Updates run in the installed version.' : 'Checking for updates…')) }, { label: 'About BTS Photo', action: () => modal({ title: 'BTS Photo', body: 'Part of BTS Creative — free and open source for students.<br>Not affiliated with Adobe Inc.' }) }] },
 ]});
 window.addEventListener('bts:close', closeWindow);
 

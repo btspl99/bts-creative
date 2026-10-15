@@ -105,7 +105,7 @@ UI.titlebar({ logo: 'Pdf', menus: [
   ] },
   { label: 'Help', items: [
     { label: 'Keyboard shortcuts', action: shortcutsHelp },
-    { label: 'Check for updates', action: () => bts.update.check().then(r => toast(r.state === 'dev' ? 'Updates run in the installed version.' : 'Checking for updates…')) },
+    { label: 'Check for updates', action: () => bts.update.check().then(r => toast(r.state === 'store' ? 'Updates are delivered by the Microsoft Store.' : r.state === 'dev' ? 'Updates run in the installed version.' : 'Checking for updates…')) },
     { label: 'About BTS PDF Pro', action: () => modal({ title: 'BTS PDF Pro', body: 'Part of BTS Creative — free and open source for students.<br>Not affiliated with Adobe Inc.' }) },
   ] },
 ]});

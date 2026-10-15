@@ -63,7 +63,7 @@ UI.titlebar({ logo: 'Vc', menus: [
     { label: 'Outline mode', kbd: 'Ctrl+Y', checked: () => O.outline, action: toggleOutline },
     { label: 'Show grid', kbd: "Ctrl+'", checked: () => O.grid, action: () => { O.grid = !O.grid; drawArtboard(); } },
     { label: 'Snap to grid', kbd: "Ctrl+Shift+'", checked: () => O.snap, action: () => { O.snap = !O.snap; } } ] },
-  { label: 'Help', items: [{ label: 'Keyboard shortcuts', action: shortcutsHelp }, { label: 'Check for updates', action: () => bts.update.check().then(r => toast(r.state === 'dev' ? 'Updates run in the installed version.' : 'Checking for updates…')) }, { label: 'About BTS Vector', action: () => modal({ title: 'BTS Vector', body: 'Part of BTS Creative — free and open source for students.<br>Not affiliated with Adobe Inc.' }) }] },
+  { label: 'Help', items: [{ label: 'Keyboard shortcuts', action: shortcutsHelp }, { label: 'Check for updates', action: () => bts.update.check().then(r => toast(r.state === 'store' ? 'Updates are delivered by the Microsoft Store.' : r.state === 'dev' ? 'Updates run in the installed version.' : 'Checking for updates…')) }, { label: 'About BTS Vector', action: () => modal({ title: 'BTS Vector', body: 'Part of BTS Creative — free and open source for students.<br>Not affiliated with Adobe Inc.' }) }] },
 ]});
 window.addEventListener('bts:close', closeWindow);
 

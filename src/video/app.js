@@ -48,7 +48,7 @@ UI.titlebar({ logo: 'Vd', menus: [
   { label: 'View', items: () => [
     { label: 'Zoom timeline in', kbd: '=', action: () => zoomTl(1.4) }, { label: 'Zoom timeline out', kbd: '-', action: () => zoomTl(1 / 1.4) }, { label: 'Fit timeline', kbd: '\\', action: fitTl }, '-',
     { label: 'Safe margins', checked: () => ST.safe, action: () => { ST.safe = !ST.safe; layoutMonitor(); } } ] },
-  { label: 'Help', items: [{ label: 'Keyboard shortcuts', action: shortcutsHelp }, { label: 'Check for updates', action: () => bts.update.check().then(r => toast(r.state === 'dev' ? 'Updates run in the installed version.' : 'Checking for updates…')) }, { label: 'About BTS Video', action: () => modal({ title: 'BTS Video', body: 'Part of BTS Creative — free and open source for students.<br>Video export uses FFmpeg (bundled, GPL).<br>Not affiliated with Adobe Inc.' }) }] },
+  { label: 'Help', items: [{ label: 'Keyboard shortcuts', action: shortcutsHelp }, { label: 'Check for updates', action: () => bts.update.check().then(r => toast(r.state === 'store' ? 'Updates are delivered by the Microsoft Store.' : r.state === 'dev' ? 'Updates run in the installed version.' : 'Checking for updates…')) }, { label: 'About BTS Video', action: () => modal({ title: 'BTS Video', body: 'Part of BTS Creative — free and open source for students.<br>Video export uses FFmpeg (bundled, GPL).<br>Not affiliated with Adobe Inc.' }) }] },
 ]});
 window.addEventListener('bts:close', closeWindow);
 
