@@ -3,6 +3,7 @@ const path = require('path'); const fs = require('fs');
 const { app, BrowserWindow } = require('electron');
 const appId = process.env.BTS_APP || 'pdf'; const file = process.env.BTS_FILE || null; const script = process.env.BTS_SCRIPT ? fs.readFileSync(process.env.BTS_SCRIPT, 'utf8') : '';
 const out = process.env.BTS_OUT || '/tmp/shot';
+app.setPath('userData', fs.mkdtempSync(path.join(require('os').tmpdir(), 'bts-test-')));
 require(path.join(__dirname, '..', 'main.js'));
 app.setVersion(require('../package.json').version);
 app.whenReady().then(async () => {

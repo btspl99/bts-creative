@@ -112,7 +112,9 @@
   }
 
   // ---------- Title bar with menus ----------
+  let registeredMenus = [];
   function titlebar({ logo = 'B', menus = [], actions = null }) {
+    registeredMenus = menus;
     const bar = h('div', { class: 'titlebar' });
     bar.append(h('div', { class: 'logo' }, logo));
     const mwrap = h('div', { class: 'menus' });
@@ -133,7 +135,8 @@
     bar.append(mwrap, h('div', { class: 'doc-title', id: 'docTitle' }), h('div', { class: 'spacer' }));
     const acts = h('div', { class: 'tb-actions' });
     const pill = h('div', { class: 'update-pill', id: 'updatePill', html: icon('update', 14) + '<span>Update</span>' });
-    acts.append(pill); if (actions) acts.append(actions);
+    const cmdBtn = h('button', { class: 'cmd-btn', onclick: () => commandPalette(), html: icon('search') + '<span>Search features</span><kbd>Ctrl+K</kbd>' });
+    acts.append(pill, cmdBtn); if (actions) acts.append(actions);
     bar.append(acts);
     const ctl = h('div', { class: 'win-ctl' },
       h('button', { onclick: () => bts.win.min(), html: '<svg width="10" height="10" viewBox="0 0 10 10"><path d="M0 5h10" stroke="currentColor"/></svg>' }),
@@ -284,6 +287,128 @@
     setTimeout(() => t.remove(), ms);
   }
 
+  // ---------- Settings: skins, accent, UI scale ----------
+  const SKINS = [
+    { id: 'dark', name: 'Dark', sw: ['#0f1013', '#1c1d22'] },
+    { id: 'darkest', name: 'Darkest', sw: ['#050506', '#101013'] },
+    { id: 'midnight', name: 'Midnight blue', sw: ['#0b1020', '#141b33'] },
+    { id: 'gray', name: 'Classic gray', sw: ['#323232', '#444'] },
+    { id: 'light', name: 'Light', sw: ['#e9eaee', '#fbfbfc'] },
+    { id: 'contrast', name: 'High contrast', sw: ['#000', '#000'] },
+  ];
+  const ACCENTS = ['', '#4f8cff', '#31a8ff', '#ff5a5f', '#ff9a00', '#9a7bff', '#3ccf8e', '#ff4fa3', '#14b8a6', '#eab308'];
+  const SKEY = 'bts.settings';
+  function getSettings() { try { return Object.assign({ skin: 'dark', accent: '', scale: 100, reduceMotion: false }, JSON.parse(localStorage.getItem(SKEY) || '{}')); } catch { return { skin: 'dark', accent: '', scale: 100, reduceMotion: false }; } }
+  function applySettings(st = getSettings()) {
+    const r = document.documentElement;
+    if (st.skin && st.skin !== 'dark') r.dataset.skin = st.skin; else delete r.dataset.skin;
+    if (st.accent) { r.dataset.accent = '1'; r.style.setProperty('--user-accent', st.accent); } else { delete r.dataset.accent; r.style.removeProperty('--user-accent'); }
+    if (st.reduceMotion) r.dataset.reduceMotion = ''; else delete r.dataset.reduceMotion;
+    const z = (st.scale || 100) / 100;
+    try { if (window.bts && bts.zoom) bts.zoom(z); else document.body && (document.body.style.zoom = z === 1 ? '' : z); } catch { }
+    window.dispatchEvent(new CustomEvent('bts:settings', { detail: st }));
+  }
+  function setSettings(patch) { const st = { ...getSettings(), ...patch }; try { localStorage.setItem(SKEY, JSON.stringify(st)); } catch { } applySettings(st); return st; }
+  window.addEventListener('storage', e => { if (e.key === SKEY) applySettings(); });
+  applySettings();
+  document.addEventListener('DOMContentLoaded', () => applySettings());
+
+  function appearanceBody() {
+    const st = getSettings(); const wrap = h('div', { style: { display: 'flex', flexDirection: 'column', gap: '14px' } });
+    const render = () => {
+      const s = getSettings(); wrap.innerHTML = '';
+      wrap.append(h('div', { class: 'muted' }, 'Skin'), h('div', { class: 'skin-grid' }, ...SKINS.map(k => h('div', { class: 'skin-card' + (s.skin === k.id ? ' on' : ''), onclick: () => { setSettings({ skin: k.id }); render(); } },
+        h('div', { class: 'sw', html: `<div style="background:${k.sw[0]}"></div><div style="background:${k.sw[1]}"></div>` }), k.name))));
+      wrap.append(h('div', { class: 'muted' }, 'Accent colour'), h('div', { class: 'accent-row' }, ...ACCENTS.map(a => h('div', {
+        class: 'accent-dot' + ((s.accent || '') === a ? ' on' : ''), 'data-tip': a ? a : 'Each app\'s own colour',
+        style: { background: a || 'conic-gradient(#ff5a5f 0 25%,#31a8ff 0 50%,#ff9a00 0 75%,#9a7bff 0)' }, onclick: () => { setSettings({ accent: a }); render(); } })),
+        (() => { const c = h('input', { type: 'color', value: s.accent || '#4f8cff', 'data-tip': 'Custom colour' }); c.oninput = () => setSettings({ accent: c.value }); return c; })()));
+      const sc = h('select', {}, ...[80, 90, 100, 110, 125, 150].map(v => h('option', { value: v, selected: +s.scale === v }, v + '%')));
+      sc.onchange = () => setSettings({ scale: +sc.value });
+      wrap.append(h('label', { class: 'field' }, 'Interface size', sc));
+      const rm = h('input', { type: 'checkbox', checked: !!s.reduceMotion }); rm.onchange = () => setSettings({ reduceMotion: rm.checked });
+      wrap.append(h('label', { class: 'row', style: { color: 'var(--tx-1)' } }, rm, 'Reduce motion (no animations)'));
+    };
+    render(); return wrap;
+  }
+  function appearanceDialog() { return modal({ title: 'Appearance', body: appearanceBody(), width: 520, buttons: [{ label: 'Done', primary: true }] }); }
+
+  // ---------- Command palette & shortcut sheet ----------
+  function flattenMenus(menus = registeredMenus) {
+    const out = [];
+    const walk = (items, path) => (typeof items === 'function' ? items() : items || []).forEach(it => {
+      if (!it || it === '-' || it.sep) return;
+      const dis = typeof it.disabled === 'function' ? it.disabled() : it.disabled;
+      if (it.sub) walk(it.sub, [...path, it.label]);
+      else if (it.action && !dis) out.push({ label: it.label, path: path.join(' › '), kbd: it.kbd || '', action: it.action });
+    });
+    menus.forEach(m => walk(m.items, [m.label]));
+    return out;
+  }
+  const extraCommands = [];
+  function registerCommands(list) { extraCommands.push(...list); }
+  function builtinCommands() {
+    return [
+      { label: 'Appearance: skins, accent colour, interface size', path: 'Settings', action: appearanceDialog },
+      { label: 'Keyboard shortcuts', path: 'Help', kbd: 'Ctrl+/', action: shortcutSheet },
+      ...SKINS.map(k => ({ label: 'Skin: ' + k.name, path: 'Settings', action: () => setSettings({ skin: k.id }) })),
+    ];
+  }
+  function fuzzy(q, text) {
+    q = q.toLowerCase(); const t = text.toLowerCase();
+    if (!q) return { score: 0, html: esc(text) };
+    const i = t.indexOf(q);
+    if (i >= 0) return { score: 100 - i, html: esc(text.slice(0, i)) + '<mark>' + esc(text.slice(i, i + q.length)) + '</mark>' + esc(text.slice(i + q.length)) };
+    const words = q.split(/\s+/).filter(Boolean);
+    if (words.length > 1 && words.every(w => t.includes(w))) return { score: 40, html: esc(text) };
+    let j = 0, html = '';
+    for (let k = 0; k < text.length; k++) { if (j < q.length && t[k] === q[j]) { html += '<mark>' + esc(text[k]) + '</mark>'; j++; } else html += esc(text[k]); }
+    return j === q.length ? { score: 10, html } : null;
+  }
+  function esc(s) { return String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+  let paletteOpen = false;
+  function commandPalette() {
+    if (paletteOpen) return; paletteOpen = true;
+    document.querySelectorAll('.dropdown').forEach(d => d.remove());
+    const all = [...flattenMenus(), ...extraCommands, ...builtinCommands()];
+    const back = h('div', { class: 'cmd-back' }), box = h('div', { class: 'cmd' });
+    const inp = h('input', { type: 'text', placeholder: 'Search for a feature, filter, tool or command…' });
+    const list = h('div', { class: 'list' }); box.append(inp, list); back.append(box); document.body.append(back);
+    let rows = [], sel = 0;
+    const close = () => { back.remove(); paletteOpen = false; };
+    const run = r => { close(); setTimeout(() => r.action(), 30); };
+    const render = () => {
+      const q = inp.value.trim();
+      rows = all.map(c => { const m = fuzzy(q, c.label) || (q && fuzzy(q, c.path + ' ' + c.label) ? { score: 5, html: esc(c.label) } : null); return m && { ...c, ...m }; }).filter(Boolean);
+      if (q) rows.sort((a, b) => b.score - a.score);
+      rows = rows.slice(0, 80); sel = Math.min(sel, Math.max(0, rows.length - 1));
+      list.innerHTML = '';
+      if (!rows.length) { list.append(h('div', { class: 'empty' }, 'No matching features')); return; }
+      rows.forEach((r, i) => {
+        const el = h('div', { class: 'it' + (i === sel ? ' sel' : '') }, h('span', { html: r.html }), r.path ? h('span', { class: 'path' }, r.path) : null, h('span', { class: 'kbd' }, r.kbd || ''));
+        el.onmousemove = () => { if (sel !== i) { sel = i; list.querySelectorAll('.it').forEach((x, k) => x.classList.toggle('sel', k === i)); } };
+        el.onclick = () => run(r); list.append(el);
+      });
+    };
+    inp.oninput = () => { sel = 0; render(); };
+    inp.onkeydown = e => {
+      if (e.key === 'ArrowDown') { sel = Math.min(rows.length - 1, sel + 1); render(); list.querySelector('.sel')?.scrollIntoView({ block: 'nearest' }); e.preventDefault(); }
+      else if (e.key === 'ArrowUp') { sel = Math.max(0, sel - 1); render(); list.querySelector('.sel')?.scrollIntoView({ block: 'nearest' }); e.preventDefault(); }
+      else if (e.key === 'Enter') { if (rows[sel]) run(rows[sel]); }
+      else if (e.key === 'Escape') close();
+      e.stopPropagation();
+    };
+    back.addEventListener('mousedown', e => { if (e.target === back) close(); });
+    render(); inp.focus();
+  }
+  function shortcutSheet() {
+    const rows = [...flattenMenus(), ...builtinCommands()].filter(r => r.kbd);
+    const tb = h('table', { class: 'kb-table' }, ...rows.map(r => h('tr', {}, h('td', {}, r.label), h('td', {}, r.kbd))));
+    return modal({ title: 'Keyboard shortcuts', body: h('div', {}, h('div', { class: 'muted', style: { marginBottom: '8px' } }, 'Press Ctrl+K anywhere to search every feature.'), tb), width: 520 });
+  }
+  shortcut('ctrl+k', () => commandPalette(), { global: true });
+  shortcut('ctrl+/', () => shortcutSheet());
+
   // ---------- Undo / redo history ----------
   class History {
     constructor(limit = 60) { this.stack = []; this.idx = -1; this.limit = limit; this.listeners = []; }
@@ -316,5 +441,5 @@
   const fmtTime = s => { s = Math.max(0, s); const m = Math.floor(s / 60), ss = Math.floor(s % 60), f = Math.floor((s % 1) * 30); return `${String(m).padStart(2, '0')}:${String(ss).padStart(2, '0')}:${String(f).padStart(2, '0')}`; };
   async function blobToU8(b) { return new Uint8Array(await b.arrayBuffer()); }
 
-  window.UI = { $, h, icon, titlebar, showDropdown, contextMenu, setDocTitle, shortcut, modal, prompt, confirm, form, toast, History, fileDrop, queryFile, sleep, clamp, download, fmtTime, blobToU8 };
+  window.UI = { appearanceBody, getSettings, setSettings, applySettings, appearanceDialog, commandPalette, shortcutSheet, registerCommands, SKINS, $, h, icon, titlebar, showDropdown, contextMenu, setDocTitle, shortcut, modal, prompt, confirm, form, toast, History, fileDrop, queryFile, sleep, clamp, download, fmtTime, blobToU8 };
 })();

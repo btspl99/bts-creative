@@ -1,10 +1,11 @@
-const { contextBridge, ipcRenderer, webUtils } = require('electron');
+const { contextBridge, ipcRenderer, webUtils, webFrame } = require('electron');
 
 contextBridge.exposeInMainWorld('bts', {
   openApp: (id, file) => ipcRenderer.invoke('app:open', id, file),
   openFileAuto: () => ipcRenderer.invoke('app:openFileAuto'),
   version: () => ipcRenderer.invoke('app:version'),
   external: url => ipcRenderer.invoke('shell:external', url),
+  zoom: f => webFrame.setZoomFactor(Math.max(0.5, Math.min(2, +f || 1))),
   win: {
     min: () => ipcRenderer.send('win:min'),
     max: () => ipcRenderer.send('win:max'),

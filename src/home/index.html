@@ -42,6 +42,7 @@
   <div class="side">
     <div class="nav active" data-view="home"><svg viewBox="0 0 24 24"><path d="M3 10l9-7 9 7v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Home</div>
     <div class="nav" data-view="recent"><svg viewBox="0 0 24 24"><path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM12 6v6l4 2"/></svg>Recent files</div>
+    <div class="nav" data-view="appearance"><svg viewBox="0 0 24 24"><path d="M12 22a10 10 0 1 1 0-20c5.5 0 10 4 10 9a5 5 0 0 1-5 5h-2a2 2 0 0 0-1 3.7A1.6 1.6 0 0 1 12 22zM7.5 11.5h.01M10.5 7.5h.01M15.5 7.5h.01"/></svg>Appearance</div>
     <div class="nav" data-view="about"><svg viewBox="0 0 24 24"><path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM12 16v-4M12 8h.01"/></svg>About &amp; updates</div>
     <div class="foot">BTS Creative <span id="ver"></span><br>Free &amp; open source for students<br>© Bhoomiputra Tech Solutions</div>
   </div>
@@ -59,8 +60,12 @@ titlebar({ logo: 'BTS', menus: [
     { label: 'New Vector window', action: () => bts.openApp('vector') },
     { label: 'New Video window', action: () => bts.openApp('video') },
     '-', { label: 'Exit', action: () => bts.win.close() } ] },
+  { label: 'View', items: [
+    { label: 'Appearance…', action: () => show('appearance') },
+    { label: 'Skin', sub: UI.SKINS.map(k => ({ label: k.name, checked: () => UI.getSettings().skin === k.id, action: () => UI.setSettings({ skin: k.id }) })) } ] },
   { label: 'Help', items: [
     { label: 'Check for updates', action: checkUpdates },
+    { label: 'Keyboard shortcuts', kbd: 'Ctrl+/', action: () => UI.shortcutSheet() },
     { label: 'Website', action: () => bts.external('https://creative.btspl.tech') },
     { label: 'About BTS Creative', action: () => show('about') } ] },
 ]});
@@ -99,12 +104,15 @@ async function show(view) {
     main.append(h('h2', { class: 'sec' }, 'Recent'), await recentList(6));
   } else if (view === 'recent') {
     main.append(h('div', { class: 'hero' }, h('div', {}, h('h1', {}, 'Recent files'))), await recentList(20));
+  } else if (view === 'appearance') {
+    main.append(h('div', { class: 'hero' }, h('div', {}, h('h1', {}, 'Appearance'), h('p', {}, 'Skins, accent colour and interface size apply to every BTS Creative app.'))),
+      h('div', { class: 'about-box' }, UI.appearanceBody()));
   } else {
     const v = await bts.version();
     main.append(h('div', { class: 'hero' }, h('div', {}, h('h1', {}, 'About BTS Creative'), h('p', {}, 'Version ' + v))));
     const st = h('span', { class: 'muted', id: 'updState' }, '');
     main.append(h('div', { class: 'about-box', html: `<b>BTS Creative</b> is a free, open-source creative suite built for students by Bhoomiputra Tech Solutions Pvt Ltd.<br><br>
-      Includes <b>PDF Pro</b>, <b>Photo</b>, <b>Vector</b> and <b>Video</b>. Updates are delivered automatically from <b>creative.btspl.tech</b>.<br><br>
+      Includes <b>PDF Pro</b>, <b>Photo</b>, <b>Vector</b> and <b>Video</b>. Updates are delivered automatically.<br><br>
       Licensed under the MIT License. BTS Creative is an independent project and is not affiliated with or endorsed by Adobe Inc.<br><br>` },
       h('div', { class: 'row' }, h('button', { class: 'btn primary', onclick: checkUpdates, html: icon('update') + 'Check for updates' }), st)));
   }
