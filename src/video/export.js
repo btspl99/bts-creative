@@ -35,9 +35,17 @@ async function exportFrame() {
 }
 // make sure the preview elements show the exact frame at t
 async function prepareStill(t) { const save = ST.t; ST.t = t; syncMedia(false); ST.t = save; await seekForExport(t); }
+// every video clip that is visible at t — including the ones inside nested sequences — with its source time and effective speed
+function videoSourcesAt(t, depth = 0, rate = 1, out = []) {
+  videoClipsAt(t).forEach(c => {
+    if (c.type === 'video') out.push({ c, st: srcTime(c, t), sp: (c.props.freeze != null ? 1 : spd(c) * rate) });
+    else if (c.type === 'nest' && depth < 4) { const sd = nestSeq(c); if (sd) { const tau = srcTime(c, t); withSeq(sd, () => videoSourcesAt(tau, depth + 1, rate * spd(c), out)); } }
+  });
+  return out;
+}
 async function seekForExport(t) {
-  const act = videoClipsAt(t).filter(c => c.type === 'video');
-  await Promise.all(act.map(c => new Promise(res => { const e = elFor(c); if (!e) return res(); e.pause(); const m = mediaById(c.mediaId); const target = clamp(srcTime(c, t), 0, Math.max(0, (e.duration || m?.dur || 1e9) - 0.04)); const go = () => { if (Math.abs(e.currentTime - target) < 0.5 / PJ.seq.fps && e.readyState >= 2) return res(); const done = () => { e.removeEventListener('seeked', done); res(); }; e.addEventListener('seeked', done); e.currentTime = target; setTimeout(done, 4000); }; if (e.readyState >= 1) go(); else e.addEventListener('loadedmetadata', go, { once: true }); })));
+  const act = videoSourcesAt(t);
+  await Promise.all(act.map(({ c, st }) => new Promise(res => { const e = elFor(c); if (!e) return res(); e.pause(); const m = mediaById(c.mediaId); const target = clamp(st, 0, Math.max(0, (e.duration || m?.dur || 1e9) - 0.04)); const go = () => { if (Math.abs(e.currentTime - target) < 0.5 / PJ.seq.fps && e.readyState >= 2) return res(); const done = () => { e.removeEventListener('seeked', done); res(); }; e.addEventListener('seeked', done); e.currentTime = target; setTimeout(done, 4000); }; if (e.readyState >= 1) go(); else e.addEventListener('loadedmetadata', go, { once: true }); })));
 }
 function estimateSize(o, secs) {
   if (o.fmt === 'png') return 2e6; if (o.fmt === 'mp3') return o.abr * 1000 / 8 * secs;
@@ -102,15 +110,21 @@ async function runExport(out, v) { const fmt = v.pr.fmt; if (fmt === 'webm') ret
 // ---------------------------------------------------------------------  frame server (sequential decode per clip)
 const readers = new Map(); // clip id -> {id, s0, sp, idx, bmp}
 async function framesFor(t, fps) {
-  const act = new Set(videoClipsAt(t).filter(c => c.type === 'video').map(c => c.id));
+  const list = videoSourcesAt(t); const act = new Map(list.map(v => [v.c.id, v]));
   for (const [cid, r] of readers) if (!act.has(cid)) { bts.ffmpeg.framesClose(r.id); r.bmp?.close?.(); readers.delete(cid); EXP.frames.delete(cid); }
-  for (const cid of act) {
-    const c = clipById(cid); const m = mediaById(c.mediaId); if (!m || m.missing) continue;
-    const frozen = c.props.freeze != null; const sp = frozen ? 1 : spd(c); const want = clamp(srcTime(c, t), 0, Math.max(0, m.dur - 0.5 / fps));
+  for (const [cid, v] of act) {
+    const c = v.c; const m = mediaById(c.mediaId); if (!m || m.missing) continue;
+    const sp = v.sp; const want = clamp(v.st, 0, Math.max(0, m.dur - 0.5 / fps));
     let r = readers.get(cid); let k = r ? Math.round((want - r.s0) * fps / r.sp) : 0;
-    if (r && (k < r.idx || k - r.idx > fps * 4)) { bts.ffmpeg.framesClose(r.id); r.bmp?.close?.(); readers.delete(cid); r = null; }
-    if (!r) { const box = Math.ceil(Math.max(PJ.seq.w, PJ.seq.h) * 1.5); const w = Math.min(m.w || PJ.seq.w, box), hh = Math.min(m.h || PJ.seq.h, box); const id = await bts.ffmpeg.framesOpen({ file: m.proxy || m.path, start: want, fps, w, h: hh, speed: sp }); r = { id, s0: want, sp, idx: -1, bmp: null }; readers.set(cid, r); k = 0; }
-    while (r.idx < k) { const buf = await bts.ffmpeg.framesNext(r.id); if (!buf) { r.idx = k; break; } r.idx++; if (r.idx === k) { const nb = await createImageBitmap(new Blob([buf], { type: 'image/jpeg' })); r.bmp?.close?.(); r.bmp = nb; } }
+    if (r && (Math.abs(sp - r.sp) > 1e-6 || k < r.idx || k - r.idx > fps * 4)) { bts.ffmpeg.framesClose(r.id); r.bmp?.close?.(); readers.delete(cid); r = null; }
+    if (!r) {
+      const box = Math.ceil(Math.max(PJ.seq.w, PJ.seq.h) * 1.5); const w = Math.min(m.w || PJ.seq.w, box), hh = Math.min(m.h || PJ.seq.h, box); let id, raw = null;
+      if (m.alpha && bts.ffmpeg.framesOpenRaw) { const k2 = Math.min(1, box / Math.max(m.w || 1, m.h || 1)); raw = { w: Math.max(2, Math.round((m.w || w) * k2 / 2) * 2), h: Math.max(2, Math.round((m.h || hh) * k2 / 2) * 2) }; id = await bts.ffmpeg.framesOpenRaw({ file: m.proxy || m.path, start: want, fps, w: raw.w, h: raw.h, speed: sp, pix: 'rgba', decoder: 'libvpx-vp9' }); }
+      else id = await bts.ffmpeg.framesOpen({ file: m.proxy || m.path, start: want, fps, w, h: hh, speed: sp });
+      r = { id, s0: want, sp, idx: -1, bmp: null, raw }; readers.set(cid, r); k = 0;
+    }
+    while (r.idx < k) { const buf = await bts.ffmpeg.framesNext(r.id); if (!buf) { r.idx = k; break; } r.idx++;
+      if (r.idx === k) { const nb = r.raw ? await createImageBitmap(new ImageData(new Uint8ClampedArray(buf.buffer, buf.byteOffset, buf.byteLength), r.raw.w, r.raw.h)) : await createImageBitmap(new Blob([buf], { type: 'image/jpeg' })); r.bmp?.close?.(); r.bmp = nb; } }
     if (r.bmp) EXP.frames.set(cid, r.bmp);
   }
 }
@@ -139,22 +153,54 @@ function cleanupChain(P, forBake) {
   let f = ''; if (P.denoise) f += ',afftdn=nf=-25:nr=14:tn=1'; if (P.voice) f += ',highpass=f=85,lowpass=f=12000,acompressor=threshold=0.08:ratio=3.5:attack=8:release=120:makeup=2,equalizer=f=3000:t=q:w=1.2:g=3';
   if (P.normalize || P.voice) f += ',loudnorm=I=-16:TP=-1.5:LRA=11,aresample=48000'; return f;
 }
+// Collects every audio source between lo and hi of the current sequence, recursing into nested sequences.
+// ctx maps the current sequence's time to the top (exported) timeline and carries the outer gain.
+function collectAudio(lo, hi, ctx, depth, items) {
+  PJ.clips.forEach(c => {
+    if (!hasAudioOf(c) || trackById(c.track)?.muted) return;
+    const x = Math.max(c.start, lo), y = Math.min(cEnd(c), hi); if (y - x < 0.01) return;
+    const own = gainEnvelope(c, x, y).map(([r]) => ctx.toTop(x + r));
+    const gIn = T => { const lt = ctx.fromTop(T) - c.start; const PP = evalProps(c, lt); return (PP.volume / 100) * fadeK(PP, lt, tlDur(c)); };
+    const gain = T => ctx.gain(T) * gIn(T); const A = ctx.toTop(x), B = ctx.toTop(y);
+    const bps = [...new Set([...own, ...ctx.bps.filter(T => T > A && T < B), A, B])].sort((p, q) => p - q);
+    if (c.type === 'nest') {
+      if (depth > 4) return; const sd = nestSeq(c); if (!sd) return; const sp = spd(c);
+      const sub = { toTop: tau => ctx.toTop(c.start + (tau - c.in) / sp), fromTop: T => c.in + (ctx.fromTop(T) - c.start) * sp, gain, bps };
+      withSeq(sd, () => collectAudio(srcTime(c, x), srcTime(c, y), sub, depth + 1, items)); return;
+    }
+    const m = mediaById(c.mediaId); if (!m || m.missing || (!m.hasAudio && m.kind !== 'audio')) return;
+    const rate = (B - A) > 1e-6 ? (y - x) / (B - A) : 1; // local seconds per exported second (nest speeds)
+    items.push({ c, m, A, B, sIn: srcTime(c, x), sOut: srcTime(c, y), speed: spd(c) * rate, gain, bps, P: c.props });
+  });
+  return items;
+}
+const TOP_CTX = { toTop: t => t, fromTop: t => t, gain: () => 1, bps: [] };
+function bleepExportRanges(t0, t1) { if (!PJ.censor || !PJ.censor.on || !PJ.censor.bleep || !PJ.censor.words.length) return []; return VCAP.bleepRanges(PJ.captions, PJ.censor.words, PJ.censor.estimate).map(([a, b]) => [Math.max(a, t0) - t0, Math.min(b, t1) - t0]).filter(([a, b]) => b > a); }
 function buildAudio(t0, t1, inputOffset) {
   const inputs = [], filt = [], labels = [];
-  const aud = PJ.clips.filter(c => hasAudioOf(c) && !trackById(c.track).muted && cEnd(c) > t0 + 1e-6 && c.start < t1 - 1e-6);
-  aud.forEach((c, i) => {
-    const m = mediaById(c.mediaId); if (!m || m.missing || !m.hasAudio && m.kind !== 'audio') return;
-    const P = c.props; const visStart = Math.max(c.start, t0), visEnd = Math.min(cEnd(c), t1); if (visEnd - visStart < 0.01) return;
-    const env = gainEnvelope(c, visStart, visEnd); if (env.every(p => p[1] <= 1e-4)) return;
-    const k = inputs.length / 2 + inputOffset; inputs.push('-i', m.proxy || m.path);
-    const sIn = srcTime(c, visStart), sOut = srcTime(c, visEnd); const delay = Math.max(0, Math.round((visStart - t0) * 1000));
-    let f = `[${k}:a]atrim=start=${sIn.toFixed(4)}:end=${sOut.toFixed(4)},asetpts=PTS-STARTPTS,aformat=sample_rates=48000:channel_layouts=stereo${atempoChain(spd(c))}${cleanupChain(P)}`;
+  const items = collectAudio(t0, t1, TOP_CTX, 0, []);
+  items.forEach((it, i) => {
+    const P = it.P; if (it.B - it.A < 0.01) return;
+    let env = it.bps.filter(T => T >= it.A - 1e-6 && T <= it.B + 1e-6).map(T => [T - it.A, it.gain(T)]);
+    env = env.filter((p, j, arr) => j === 0 || j === arr.length - 1 || Math.abs((arr[j + 1][1] - arr[j - 1][1]) * (p[0] - arr[j - 1][0]) / ((arr[j + 1][0] - arr[j - 1][0]) || 1) + arr[j - 1][1] - p[1]) > 1e-4);
+    if (!env.length || env.every(p => p[1] <= 1e-4)) return;
+    const k = inputs.length / 2 + inputOffset; inputs.push('-i', it.m.proxy || it.m.path);
+    const delay = Math.max(0, Math.round((it.A - t0) * 1000));
+    let f = `[${k}:a]atrim=start=${it.sIn.toFixed(4)}:end=${it.sOut.toFixed(4)},asetpts=PTS-STARTPTS,aformat=sample_rates=48000:channel_layouts=stereo${atempoChain(Math.round(it.speed * 1e5) / 1e5)}${cleanupChain(P)}`;
     f += `,volume='${envExpr(env)}':eval=frame`;
     if (P.pan) { const pn = clamp(P.pan / 100, -1, 1); const L = pn > 0 ? 1 - pn : 1, R = pn < 0 ? 1 + pn : 1; f += `,pan=stereo|c0=${L.toFixed(3)}*c0|c1=${R.toFixed(3)}*c1`; }
     f += `,adelay=${delay}|${delay}[a${i}]`; filt.push(f); labels.push(`[a${i}]`);
   });
-  const graph = labels.length ? [...filt, `${labels.join('')}amix=inputs=${labels.length}:normalize=0:dropout_transition=0,alimiter=limit=0.98:level=disabled,apad[aout]`].join(';\n') : null;
-  return { inputs, graph, n: labels.length };
+  if (!labels.length) return { inputs, graph: null, n: 0 };
+  const bl = bleepExportRanges(t0, t1);
+  if (!bl.length) return { inputs, graph: [...filt, `${labels.join('')}amix=inputs=${labels.length}:normalize=0:dropout_transition=0,alimiter=limit=0.98:level=disabled,apad[aout]`].join(';\n'), n: labels.length };
+  // censor bleep: mute the programme and add a 1 kHz tone over every censored word
+  const cond = bl.map(([a, b]) => `between(t,${a.toFixed(3)},${b.toFixed(3)})`).join('+');
+  const k = inputs.length / 2 + inputOffset; inputs.push('-f', 'lavfi', '-i', `sine=frequency=1000:sample_rate=48000:duration=${(t1 - t0 + 1).toFixed(3)}`);
+  filt.push(`${labels.join('')}amix=inputs=${labels.length}:normalize=0:dropout_transition=0,volume='if(${cond},0,1)':eval=frame[prog]`);
+  filt.push(`[${k}:a]aformat=sample_rates=48000:channel_layouts=stereo,volume='if(${cond},0.3,0)':eval=frame[beep]`);
+  filt.push(`[prog][beep]amix=inputs=2:normalize=0:duration=first,alimiter=limit=0.98:level=disabled,apad[aout]`);
+  return { inputs, graph: filt.join(';\n'), n: labels.length, bleeps: bl.length };
 }
 // short graphs go inline; long ones (many keyframes) go through a script file (FFmpeg 7+ `-/filter_complex`)
 async function graphArgs(graph) {

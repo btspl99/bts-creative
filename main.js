@@ -194,6 +194,24 @@ ipcMain.handle('frames:next', (_e, id) => new Promise(res => {
   r.waiters.push(f => { if (r.frames.length < 30) r.p.stdout.resume(); res(f); }); r.p.stdout.resume();
 }));
 ipcMain.handle('frames:close', (_e, id) => { const r = readers.get(id); if (r) { try { r.p.kill(); } catch {} readers.delete(id); } return true; });
+// BTS Video: raw frame server (exact w×h, RGBA keeps alpha, GRAY for motion tracking). Frames are read with frames:next / frames:close.
+ipcMain.handle('frames:openRaw', (_e, { file, start, fps, w, h, speed, pix, decoder, dur }) => {
+  const id = ++rdN; const bpp = pix === 'gray' ? 1 : 4; const size = w * h * bpp;
+  const vf = [`setpts=(PTS-STARTPTS)/${speed || 1}`, `fps=${fps}`, `scale=${w}:${h}:flags=bilinear`].join(',');
+  const args = ['-hide_banner', '-loglevel', 'error', ...(decoder ? ['-c:v', decoder] : []), '-ss', String(Math.max(0, start || 0)), ...(dur ? ['-t', String(dur)] : []), '-i', file, '-an', '-vf', vf, '-f', 'rawvideo', '-pix_fmt', pix === 'gray' ? 'gray' : 'rgba', 'pipe:1'];
+  const p = spawn(ffmpegPath(), args);
+  const r = { p, buf: Buffer.alloc(0), frames: [], waiters: [], ended: false };
+  const flush = () => { while (r.waiters.length && (r.frames.length || r.ended)) r.waiters.shift()(r.frames.shift() || null); };
+  p.stdout.on('data', d => {
+    r.buf = r.buf.length ? Buffer.concat([r.buf, d]) : d;
+    while (r.buf.length >= size) { r.frames.push(Buffer.from(r.buf.subarray(0, size))); r.buf = r.buf.subarray(size); }
+    if (r.frames.length > 60) p.stdout.pause();
+    flush();
+  });
+  p.stderr.on('data', () => {});
+  p.on('close', () => { r.ended = true; flush(); }); p.on('error', () => { r.ended = true; flush(); });
+  readers.set(id, r); return id;
+});
 ipcMain.handle('tmp:dir', () => { const d = path.join(os.tmpdir(), 'bts-video'); fs.mkdirSync(d, { recursive: true }); return d; });
 ipcMain.handle('tmp:write', (_e, { name, data }) => {
   const dir = path.join(os.tmpdir(), 'bts-video'); fs.mkdirSync(dir, { recursive: true });

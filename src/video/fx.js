@@ -20,7 +20,9 @@ function evalKf(keys, t) {
   if (t >= keys[n - 1].t) return keys[n - 1].v;
   for (let i = 0; i < n - 1; i++) {
     const a = keys[i], b = keys[i + 1];
-    if (t >= a.t && t < b.t) { const u = (t - a.t) / ((b.t - a.t) || 1); return a.v + (b.v - a.v) * (easeFn[a.e] || easeFn.linear)(u); }
+    if (t >= a.t && t < b.t) { const u = (t - a.t) / ((b.t - a.t) || 1); const k = (easeFn[a.e] || easeFn.linear)(u);
+      if (Array.isArray(a.v)) return a.v.map((v, j) => Array.isArray(b.v) && b.v.length === a.v.length ? v + (b.v[j] - v) * k : v);
+      return a.v + (b.v - a.v) * k; }
   }
   return keys[n - 1].v;
 }
@@ -45,7 +47,7 @@ function copyOf(src) { const c = getCanvas(src.width, src.height); c.getContext(
 
 // =====================================================================  WebGL pipeline
 const GL = (() => {
-  let cv = null, gl = null, ok = null, vbo = null, texIn = null; const progs = {}; const fbs = [], txs = []; let W = 0, H = 0;
+  let cv = null, gl = null, ok = null, vbo = null, texIn = null, texB = null; const progs = {}; const fbs = [], txs = []; let W = 0, H = 0;
   const VS = `#version 300 es
 in vec2 p; out vec2 uv; void main(){ uv = p * 0.5 + 0.5; gl_Position = vec4(p, 0.0, 1.0); }`;
   const HEAD = `#version 300 es
@@ -119,6 +121,88 @@ void main(){ float k = amt / 100.0; vec2 u = uv;
   c += band * 0.15 * k;
   c = mix(c, c * vec3(1.06, 0.97, 1.08), k);
   o = vec4(clamp(c, 0.0, 1.0), cg.a); }`,
+    crt: `uniform float amt, curve;
+void main(){ float k = amt / 100.0; vec2 c = uv - 0.5; float r2 = dot(c, c); vec2 u = 0.5 + c * (1.0 + curve / 100.0 * 0.35 * r2) / (1.0 + curve / 100.0 * 0.09);
+  if (u.x < 0.0 || u.x > 1.0 || u.y < 0.0 || u.y > 1.0) { o = vec4(0.0, 0.0, 0.0, texture(tex, uv).a); return; }
+  vec3 s = vec3(texture(tex, u + vec2(0.0012 * k, 0.0)).r, texture(tex, u).g, texture(tex, u - vec2(0.0012 * k, 0.0)).b);
+  float line = 0.5 + 0.5 * sin(u.y * res.y * 3.14159 * 0.5); s *= 1.0 - k * 0.45 * (1.0 - line);
+  float m = mod(floor(uv.x * res.x), 3.0); vec3 mask = m < 1.0 ? vec3(1.0, 0.75, 0.75) : m < 2.0 ? vec3(0.75, 1.0, 0.75) : vec3(0.75, 0.75, 1.0); s *= mix(vec3(1.0), mask, k * 0.6);
+  s *= 1.0 + 0.25 * k; s *= 1.0 - k * 0.6 * smoothstep(0.18, 0.5, r2 * 1.6); s *= 0.97 + 0.03 * sin(time * 120.0);
+  o = vec4(clamp(s, 0.0, 1.0), texture(tex, u).a); }`,
+    kaleido: `uniform float seg, ang, zoom;
+void main(){ vec2 a = vec2(res.x / res.y, 1.0); vec2 c = (uv - 0.5) * a; float r = length(c) / max(zoom / 100.0, 0.05); float t = atan(c.y, c.x) + ang * 0.0174533;
+  float sl = 6.28318 / max(seg, 2.0); t = mod(t, sl); t = abs(t - sl * 0.5); vec2 p = vec2(cos(t), sin(t)) * r / a + 0.5; p = abs(mod(p + 1.0, 2.0) - 1.0);
+  o = texture(tex, p); }`,
+    duotone: `uniform vec3 c1, c2; uniform float amt;
+void main(){ vec4 s = texture(tex, uv); float L = smoothstep(0.0, 1.0, luma(s.rgb)); o = vec4(mix(s.rgb, mix(c1, c2, L), amt / 100.0), s.a); }`,
+    posterize: `uniform float levels, amt;
+void main(){ vec4 s = texture(tex, uv); float n = max(levels, 2.0) - 1.0; vec3 q = floor(s.rgb * n + 0.5) / n; o = vec4(mix(s.rgb, q, amt / 100.0), s.a); }`,
+    edgeglow: `uniform vec3 col; uniform float amt, dark;
+void main(){ vec2 px = 1.0 / res; float tl = luma(texture(tex, uv + px * vec2(-1.0, 1.0)).rgb), t = luma(texture(tex, uv + px * vec2(0.0, 1.0)).rgb), tr = luma(texture(tex, uv + px * vec2(1.0, 1.0)).rgb);
+  float l = luma(texture(tex, uv + px * vec2(-1.0, 0.0)).rgb), r = luma(texture(tex, uv + px * vec2(1.0, 0.0)).rgb);
+  float bl = luma(texture(tex, uv + px * vec2(-1.0, -1.0)).rgb), b = luma(texture(tex, uv + px * vec2(0.0, -1.0)).rgb), br = luma(texture(tex, uv + px * vec2(1.0, -1.0)).rgb);
+  float gx = -tl - 2.0 * l - bl + tr + 2.0 * r + br, gy = -bl - 2.0 * b - br + tl + 2.0 * t + tr; float e = clamp(length(vec2(gx, gy)) * amt / 25.0, 0.0, 1.0);
+  vec4 s = texture(tex, uv); vec3 c = s.rgb * (1.0 - dark / 100.0) + col * e * 1.4; o = vec4(clamp(c, 0.0, 1.0), s.a); }`,
+    lens: `uniform float k, zoom;
+void main(){ vec2 a = vec2(res.x / res.y, 1.0); vec2 c = (uv - 0.5) * a; float r2 = dot(c, c); vec2 u = c * (1.0 + k / 100.0 * r2 * 1.6) / max(zoom / 100.0, 0.1); u = u / a + 0.5;
+  if (u.x < 0.0 || u.x > 1.0 || u.y < 0.0 || u.y > 1.0) { o = vec4(0.0); return; } o = texture(tex, u); }`,
+    pixelsort: `uniform float thr, len, vert;
+void main(){ vec4 s = texture(tex, uv); float L = luma(s.rgb); if (L < thr / 100.0) { o = s; return; } vec2 d = vert > 0.5 ? vec2(0.0, 1.0 / res.y) : vec2(1.0 / res.x, 0.0); vec4 best = s; float bl = L;
+  for (int i = 1; i <= 48; i++) { float fi = float(i); if (fi > len) break; vec2 q = uv + d * fi * 2.0; if (q.x > 1.0 || q.y > 1.0) break; vec4 c = texture(tex, q); float lc = luma(c.rgb); if (lc < thr / 100.0) break; if (lc > bl) { bl = lc; best = c; } }
+  o = vec4(mix(s.rgb, best.rgb, 0.85), s.a); }`,
+    oldfilm: `uniform float amt;
+void main(){ float k = amt / 100.0; float fr = floor(time * 18.0); vec2 jit = vec2(0.0, (hash(vec2(fr, 3.0)) - 0.5) * 0.004 * k); vec4 s = texture(tex, clamp(uv + jit, 0.0, 1.0));
+  float L = luma(s.rgb); vec3 sep = vec3(L * 1.07 + 0.03, L * 0.92 + 0.02, L * 0.72); vec3 c = mix(s.rgb, sep, k * 0.9);
+  c *= 1.0 + (hash(vec2(fr, 7.0)) - 0.5) * 0.18 * k;
+  float x = uv.x * res.x; float sc = 0.0; for (int i = 0; i < 3; i++) { float fi = float(i); float px = hash(vec2(fr * 0.37 + fi, 11.0)) * res.x; if (hash(vec2(fr, fi + 20.0)) < 0.55) sc += (1.0 - smoothstep(0.0, 1.6, abs(x - px))) * 0.5; }
+  c = mix(c, vec3(0.9, 0.85, 0.7), sc * k);
+  float dust = hash(floor(uv * res / 3.0) + vec2(fr * 13.0, fr)); if (dust > 0.9993) c *= 1.0 - 0.8 * k;
+  c += (hash(uv * res + vec2(time * 37.0, time * 11.0)) - 0.5) * 0.12 * k;
+  vec2 a = vec2(res.x / res.y, 1.0); float r = length((uv - 0.5) * a) / (0.5 * length(a)); c *= 1.0 - k * 0.55 * smoothstep(0.45, 1.0, r);
+  o = vec4(clamp(c, 0.0, 1.0), s.a); }`,
+    dirblur: `uniform vec2 dir;
+void main(){ vec4 acc = vec4(0.0); for (int i = -12; i <= 12; i++) { acc += texture(tex, clamp(uv + dir / res * float(i) / 12.0, 0.0, 1.0)); } o = acc / 25.0; }`,
+    radblur: `uniform float amt; uniform vec2 ctr;
+void main(){ vec4 acc = vec4(0.0); vec2 d = uv - ctr; for (int i = 0; i < 24; i++) { float s = 1.0 - amt / 100.0 * 0.35 * float(i) / 23.0; acc += texture(tex, clamp(ctr + d * s, 0.0, 1.0)); } o = acc / 24.0; }`,
+    wave: `uniform float amp, freq, speed, vert;
+void main(){ vec2 u = uv; if (vert > 0.5) u.y += sin(u.x * freq + time * speed) * amp / res.y; else u.x += sin(u.y * freq + time * speed) * amp / res.x; o = texture(tex, clamp(u, 0.0, 1.0)); }`,
+    halftone: `uniform float size, amt, ang;
+void main(){ float a = ang * 0.0174533; mat2 R = mat2(cos(a), -sin(a), sin(a), cos(a)); vec2 p = R * (uv * res); vec2 cell = floor(p / size) * size + size * 0.5; vec2 cuv = (transpose(R) * cell) / res;
+  vec4 s = texture(tex, uv); float L = luma(texture(tex, clamp(cuv, 0.0, 1.0)).rgb); float r = (1.0 - L) * size * 0.72; float d = length(p - cell); float ink = 1.0 - smoothstep(r - 1.0, r + 1.0, d);
+  vec3 c = mix(vec3(1.0), vec3(0.06), ink); o = vec4(mix(s.rgb, c, amt / 100.0), s.a); }`,
+    threshold: `uniform float thr, amt;
+void main(){ vec4 s = texture(tex, uv); float v = step(thr / 100.0, luma(s.rgb)); o = vec4(mix(s.rgb, vec3(v), amt / 100.0), s.a); }`,
+    emboss: `uniform float amt;
+void main(){ vec2 px = 1.0 / res; vec4 s = texture(tex, uv); float a = luma(texture(tex, uv - px).rgb), b = luma(texture(tex, uv + px).rgb); float e = clamp(0.5 + (b - a) * amt / 20.0, 0.0, 1.0); o = vec4(vec3(e), s.a); }`,
+    colorize: `uniform vec3 col; uniform float amt;
+void main(){ vec4 s = texture(tex, uv); float L = luma(s.rgb); vec3 c = L < 0.5 ? 2.0 * L * col : 1.0 - 2.0 * (1.0 - L) * (1.0 - col); o = vec4(mix(s.rgb, c, amt / 100.0), s.a); }`,
+    // ---- two-input transitions (tex = outgoing A, texB = incoming B, p = progress 0..1)
+    trLuma: `uniform sampler2D texB; uniform float p, soft;
+void main(){ vec4 a = texture(tex, uv), b = texture(texB, uv); float e = p * (1.0 + soft); float m = smoothstep(1.0 - e, 1.0 - e + soft, luma(b.rgb) * 0.85 + 0.15 * uv.y); o = mix(a, b, m); }`,
+    trBurn: `uniform sampler2D texB; uniform float p, seed;
+float vn(vec2 x){ vec2 i = floor(x), f = fract(x); f = f * f * (3.0 - 2.0 * f); return mix(mix(hash(i), hash(i + vec2(1.0, 0.0)), f.x), mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), f.x), f.y); }
+void main(){ vec4 a = texture(tex, uv), b = texture(texB, uv); vec2 q = uv * vec2(res.x / res.y, 1.0) * 3.0 + seed; float n = vn(q) * 0.55 + vn(q * 2.3) * 0.3 + vn(q * 5.1) * 0.15; n = n * 0.8 + 0.2 * (1.0 - uv.x);
+  float f = p * 1.3 - 0.15; float m = smoothstep(f - 0.03, f + 0.03, 1.0 - n); vec4 c = mix(a, b, 1.0 - m);
+  float edge = 1.0 - smoothstep(0.0, 0.12, abs((1.0 - n) - f)); vec3 fire = mix(vec3(1.0, 0.35, 0.05), vec3(1.0, 0.95, 0.75), edge * edge);
+  c.rgb += fire * edge * 1.6 * sin(p * 3.14159); c.rgb += vec3(1.0, 0.55, 0.2) * pow(sin(p * 3.14159), 3.0) * 0.45; o = vec4(clamp(c.rgb, 0.0, 1.0), max(a.a, b.a)); }`,
+    trLeak: `uniform sampler2D texB; uniform float p, seed;
+void main(){ vec4 a = texture(tex, uv), b = texture(texB, uv); vec4 c = mix(a, b, smoothstep(0.3, 0.7, p)); float k = sin(p * 3.14159);
+  vec2 ar = vec2(res.x / res.y, 1.0); vec2 p1 = vec2(-0.2 + p * 1.4, 0.3 + 0.2 * sin(seed + p * 3.0)), p2 = vec2(1.2 - p * 1.1, 0.75); float d1 = length((uv - p1) * ar), d2 = length((uv - p2) * ar);
+  vec3 leak = vec3(1.0, 0.45, 0.15) * exp(-d1 * d1 * 3.0) * 1.3 + vec3(1.0, 0.8, 0.4) * exp(-d2 * d2 * 5.0) * 0.9 + vec3(1.0, 0.3, 0.4) * smoothstep(0.6, 1.0, uv.x) * 0.35;
+  vec3 col = 1.0 - (1.0 - c.rgb) * (1.0 - clamp(leak * k, 0.0, 1.0)); o = vec4(clamp(col + k * k * 0.15, 0.0, 1.0), max(a.a, b.a)); }`,
+    trZoomBlur: `uniform sampler2D texB; uniform float p;
+void main(){ float k = sin(p * 3.14159) * 0.3; vec2 ctr = vec2(0.5); vec4 acc = vec4(0.0); float zA = 1.0 + p * 0.5, zB = 1.5 - p * 0.5; float m = smoothstep(0.42, 0.58, p);
+  for (int i = 0; i < 20; i++) { float s = 1.0 - k * float(i) / 19.0; vec2 ua = ctr + (uv - ctr) / zA * s, ub = ctr + (uv - ctr) / zB * s; acc += mix(texture(tex, clamp(ua, 0.0, 1.0)), texture(texB, clamp(ub, 0.0, 1.0)), m); }
+  o = acc / 20.0; }`,
+    trWhip: `uniform sampler2D texB; uniform float p, dir;
+void main(){ float e = p < 0.5 ? 4.0 * p * p * p : 1.0 - pow(-2.0 * p + 2.0, 3.0) / 2.0; float bl = sin(p * 3.14159) * 0.16; vec4 acc = vec4(0.0); float x0 = uv.x + dir * e;
+  for (int i = -10; i <= 10; i++) { float x = x0 + bl * float(i) / 10.0; vec4 c; if (dir > 0.0) c = x < 1.0 ? texture(tex, vec2(clamp(x, 0.0, 1.0), uv.y)) : texture(texB, vec2(clamp(x - 1.0, 0.0, 1.0), uv.y)); else c = x >= 0.0 ? texture(tex, vec2(clamp(x, 0.0, 1.0), uv.y)) : texture(texB, vec2(clamp(x + 1.0, 0.0, 1.0), uv.y)); acc += c; }
+  o = acc / 21.0; }`,
+    trSwipe: `uniform sampler2D texB; uniform float p;
+void main(){ vec4 a = texture(tex, uv), b = texture(texB, uv); float d = (uv.x + uv.y) * 0.5; float e = p * 1.3 - 0.15; float m = smoothstep(e + 0.08, e - 0.08, d); o = mix(a, b, m); }`,
+    trPixel: `uniform sampler2D texB; uniform float p;
+void main(){ float cells = mix(600.0, 14.0, pow(sin(p * 3.14159), 0.6)); vec2 g = vec2(cells * res.x / res.y, cells); vec2 q = (floor(uv * g) + 0.5) / g;
+  o = mix(texture(tex, q), texture(texB, q), smoothstep(0.4, 0.6, p)); }`,
   };
   function init() {
     if (ok !== null) return ok;
@@ -127,7 +211,7 @@ void main(){ float k = amt / 100.0; vec2 u = uv;
       gl = cv.getContext('webgl2', { premultipliedAlpha: false, preserveDrawingBuffer: true, alpha: true, antialias: false, depth: false, stencil: false });
       if (!gl) return (ok = false);
       vbo = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, vbo); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]), gl.STATIC_DRAW);
-      texIn = mkTex();
+      texIn = mkTex(); texB = mkTex();
       for (let i = 0; i < 2; i++) { txs.push(mkTex()); fbs.push(gl.createFramebuffer()); }
       ok = true;
     } catch (e) { console.warn('WebGL unavailable', e); ok = false; }
@@ -165,7 +249,7 @@ void main(){ float k = amt / 100.0; vec2 u = uv;
       const u = { tex: 0, res: [W, H], time: time || 0, ...ps.u };
       for (const [k, v] of Object.entries(u)) {
         let l = pr.loc[k]; if (l === undefined) l = pr.loc[k] = gl.getUniformLocation(pr.p, k); if (l == null) continue;
-        if (k === 'tex') gl.uniform1i(l, 0); else if (Array.isArray(v)) (v.length === 2 ? gl.uniform2fv : v.length === 3 ? gl.uniform3fv : gl.uniform4fv).call(gl, l, v); else gl.uniform1f(l, +v || 0);
+        if (k === 'tex') gl.uniform1i(l, 0); else if (k === 'texB') gl.uniform1i(l, 1); else if (Array.isArray(v)) (v.length === 2 ? gl.uniform2fv : v.length === 3 ? gl.uniform3fv : gl.uniform4fv).call(gl, l, v); else gl.uniform1f(l, +v || 0);
       }
       gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT); gl.drawArrays(gl.TRIANGLES, 0, 6);
       input = last ? null : txs[i % 2];
@@ -173,7 +257,23 @@ void main(){ float k = amt / 100.0; vec2 u = uv;
     const x = canvas.getContext('2d'); x.save(); x.setTransform(1, 0, 0, 1, 0, 0); x.globalAlpha = 1; x.filter = 'none'; x.globalCompositeOperation = 'copy'; x.drawImage(cv, 0, 0); x.restore();
     return true;
   }
-  return { apply, init, get ok() { return init(); } };
+  // two-input pass (transitions): A → tex, B → texB; result is written into `out`
+  function apply2(out, A, B, name, uni, time) {
+    if (!init()) return false;
+    try { program(name); } catch (e) { console.warn(e); return false; }
+    size(out.width, out.height); gl.viewport(0, 0, W, H);
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true); gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
+    gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, texB); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, B);
+    gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, texIn); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, A);
+    gl.bindBuffer(gl.ARRAY_BUFFER, vbo); gl.enableVertexAttribArray(0); gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0); gl.disable(gl.BLEND);
+    const pr = program(name); gl.useProgram(pr.p); gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    const u = { tex: 0, texB: 1, res: [W, H], time: time || 0, ...uni };
+    for (const [k, v] of Object.entries(u)) { let l = pr.loc[k]; if (l === undefined) l = pr.loc[k] = gl.getUniformLocation(pr.p, k); if (l == null) continue; if (k === 'tex') gl.uniform1i(l, 0); else if (k === 'texB') gl.uniform1i(l, 1); else if (Array.isArray(v)) (v.length === 2 ? gl.uniform2fv : v.length === 3 ? gl.uniform3fv : gl.uniform4fv).call(gl, l, v); else gl.uniform1f(l, +v || 0); }
+    gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT); gl.drawArrays(gl.TRIANGLES, 0, 6);
+    const x = out.getContext('2d'); x.save(); x.setTransform(1, 0, 0, 1, 0, 0); x.globalAlpha = 1; x.filter = 'none'; x.globalCompositeOperation = 'copy'; x.drawImage(cv, 0, 0); x.restore();
+    return true;
+  }
+  return { apply, apply2, init, get ok() { return init(); } };
 })();
 
 // CPU fallback for the two per-pixel effects people rely on most (colour + chroma key).
@@ -270,9 +370,27 @@ const EFFECTS = {
   shadow: { name: 'Drop shadow', cat: 'Composite', stage: 'composite', params: [{ k: 'color', label: 'Colour', type: 'color', def: '#000000' }, P('opacity', 'Opacity %', 0, 100, 70), P('blur', 'Softness', 0, 100, 24), P('dist', 'Distance', 0, 200, 16), P('angle', 'Direction°', -180, 180, 135)] },
   rounded: { name: 'Rounded corners', cat: 'Composite', stage: 'composite', params: [P('radius', 'Radius px', 0, 400, 40)] },
   border: { name: 'Border', cat: 'Composite', stage: 'composite', params: [P('width', 'Width px', 0, 60, 8), { k: 'color', label: 'Colour', type: 'color', def: '#ffffff' }] },
+  crt: { name: 'CRT scanlines', cat: 'Retro', params: [P('amount', 'Amount', 0, 100, 70), P('curve', 'Curvature', 0, 100, 40)] },
+  oldfilm: { name: 'Old film', cat: 'Retro', params: [P('amount', 'Amount', 0, 100, 75)] },
+  kaleido: { name: 'Kaleidoscope', cat: 'Distort', params: [P('seg', 'Segments', 2, 24, 6), P('angle', 'Angle°', -180, 180, 0), P('zoom', 'Zoom %', 20, 400, 100)] },
+  lens: { name: 'Lens distortion', cat: 'Distort', params: [P('k', 'Curvature', -100, 100, 40), P('zoom', 'Zoom %', 50, 200, 100)] },
+  wave: { name: 'Wave warp', cat: 'Distort', params: [P('amp', 'Amplitude px', 0, 120, 18), P('freq', 'Frequency', 1, 80, 18), P('speed', 'Speed', 0, 20, 4), { k: 'vert', label: 'Vertical', type: 'bool', def: false }] },
+  shake: { name: 'Camera shake', cat: 'Distort', params: [P('amount', 'Amount px', 0, 120, 18), P('rot', 'Rotation°', 0, 10, 1.5, 0.1), P('speed', 'Speed', 0.5, 30, 9, 0.5), P('zoom', 'Zoom (hide edges) %', 100, 140, 108)] },
+  pixelsort: { name: 'Pixel sort', cat: 'Stylize', params: [P('thr', 'Threshold', 0, 100, 55), P('len', 'Length', 2, 48, 30), { k: 'vert', label: 'Vertical', type: 'bool', def: true }] },
+  edgeglow: { name: 'Edge glow', cat: 'Stylize', params: [{ k: 'color', label: 'Glow colour', type: 'color', def: '#38e8ff' }, P('amount', 'Strength', 0, 100, 60), P('dark', 'Darken image', 0, 100, 70)] },
+  halftone: { name: 'Halftone', cat: 'Stylize', params: [P('size', 'Dot size', 3, 40, 9), P('angle', 'Angle°', -90, 90, 45), P('amount', 'Mix', 0, 100, 100)] },
+  emboss: { name: 'Emboss', cat: 'Stylize', params: [P('amount', 'Amount', 0, 100, 50)] },
+  duotone: { name: 'Duotone', cat: 'Colour', params: [{ k: 'c1', label: 'Shadows', type: 'color', def: '#1b1446' }, { k: 'c2', label: 'Highlights', type: 'color', def: '#ff8a3d' }, P('amount', 'Mix', 0, 100, 100)] },
+  posterize: { name: 'Posterize', cat: 'Colour', params: [P('levels', 'Levels', 2, 32, 5), P('amount', 'Mix', 0, 100, 100)] },
+  threshold: { name: 'Threshold', cat: 'Colour', params: [P('thr', 'Level', 0, 100, 50), P('amount', 'Mix', 0, 100, 100)] },
+  colorize: { name: 'Colorize / tint', cat: 'Colour', params: [{ k: 'color', label: 'Tint', type: 'color', def: '#3aa0ff' }, P('amount', 'Amount', 0, 100, 70)] },
+  dirblur: { name: 'Directional blur', cat: 'Blur & sharpen', params: [P('amount', 'Length px', 0, 200, 30), P('angle', 'Angle°', -180, 180, 0)] },
+  radblur: { name: 'Zoom blur', cat: 'Blur & sharpen', params: [P('amount', 'Amount', 0, 100, 35), P('cx', 'Centre X %', 0, 100, 50), P('cy', 'Centre Y %', 0, 100, 50)] },
+  letterbox: { name: 'Letterbox bars', cat: 'Composite', params: [{ k: 'aspect', label: 'Aspect', type: 'select', def: '2.39', opts: [['2.39', '2.39:1 Scope'], ['2', '2:1'], ['1.85', '1.85:1'], ['1.33', '4:3 pillarbox'], ['1', '1:1 square']] }, { k: 'color', label: 'Colour', type: 'color', def: '#000000' }, P('amount', 'Amount %', 0, 100, 100)] },
 };
 const FX_PRESETS = [
   ['Green screen key', 'chroma', { color: '#00b140' }], ['Blue screen key', 'chroma', { color: '#0047bb', tol: 28 }],
+  ['VHS tape', 'vhs', { amount: 80 }], ['Cinematic bars 2.39:1', 'letterbox', {}], ['Neon edges', 'edgeglow', { color: '#ff3df2', dark: 85 }], ['Comic halftone', 'halftone', { size: 7 }], ['Retro TV', 'crt', { amount: 85, curve: 60 }], ['Handheld shake', 'shake', { amount: 8, rot: 0.6, speed: 4 }], ['Earthquake', 'shake', { amount: 40, rot: 3, speed: 22 }],
   ['Face blur (pixelate)', 'mosaic', {}], ['Face blur (soft)', 'mosaic', { mode: 'blur', size: 30 }], ['Pixelate whole frame', 'mosaic', { whole: true, size: 32 }],
 ];
 function newFx(type, over = {}) { const d = EFFECTS[type]; const f = { id: 'f' + Math.random().toString(36).slice(2, 9), type, on: true }; d.params.forEach(p => f[p.k] = p.def); return Object.assign(f, over); }
@@ -291,6 +409,21 @@ function applyStack(canvas, fxs, env) {
       case 'rgbsplit': if (f.amount > 0) { const a = f.angle * Math.PI / 180; passes.push({ name: 'rgbsplit', u: { off: [Math.cos(a) * f.amount * rs, -Math.sin(a) * f.amount * rs] } }); } break;
       case 'glitch': if (f.amount > 0) passes.push({ name: 'glitch', u: { amt: f.amount, seed: Math.floor((env.t || 0) * f.speed) % 991 + 1 } }); break;
       case 'vhs': if (f.amount > 0) passes.push({ name: 'vhs', u: { amt: f.amount } }); break;
+      case 'crt': if (f.amount > 0 || f.curve > 0) passes.push({ name: 'crt', u: { amt: f.amount, curve: f.curve } }); break;
+      case 'oldfilm': if (f.amount > 0) passes.push({ name: 'oldfilm', u: { amt: f.amount } }); break;
+      case 'kaleido': passes.push({ name: 'kaleido', u: { seg: f.seg, ang: f.angle, zoom: f.zoom } }); break;
+      case 'lens': if (f.k || f.zoom !== 100) passes.push({ name: 'lens', u: { k: f.k, zoom: f.zoom } }); break;
+      case 'wave': if (f.amp > 0) passes.push({ name: 'wave', u: { amp: f.amp * rs, freq: f.freq, speed: f.speed, vert: f.vert ? 1 : 0 } }); break;
+      case 'pixelsort': passes.push({ name: 'pixelsort', u: { thr: f.thr, len: f.len, vert: f.vert ? 1 : 0 } }); break;
+      case 'edgeglow': if (f.amount > 0) passes.push({ name: 'edgeglow', u: { col: hex2rgb(f.color), amt: f.amount, dark: f.dark } }); break;
+      case 'halftone': if (f.amount > 0) passes.push({ name: 'halftone', u: { size: Math.max(2, f.size * rs), amt: f.amount, ang: f.angle } }); break;
+      case 'emboss': if (f.amount > 0) passes.push({ name: 'emboss', u: { amt: f.amount } }); break;
+      case 'duotone': if (f.amount > 0) passes.push({ name: 'duotone', u: { c1: hex2rgb(f.c1), c2: hex2rgb(f.c2), amt: f.amount } }); break;
+      case 'posterize': if (f.amount > 0) passes.push({ name: 'posterize', u: { levels: f.levels, amt: f.amount } }); break;
+      case 'threshold': if (f.amount > 0) passes.push({ name: 'threshold', u: { thr: f.thr, amt: f.amount } }); break;
+      case 'colorize': if (f.amount > 0) passes.push({ name: 'colorize', u: { col: hex2rgb(f.color), amt: f.amount } }); break;
+      case 'dirblur': if (f.amount > 0) { const a = f.angle * Math.PI / 180; passes.push({ name: 'dirblur', u: { dir: [Math.cos(a) * f.amount * rs / 2, -Math.sin(a) * f.amount * rs / 2] } }); } break;
+      case 'radblur': if (f.amount > 0) passes.push({ name: 'radblur', u: { amt: f.amount, ctr: [f.cx / 100, 1 - f.cy / 100] } }); break;
       default: flush(); apply2d(canvas, f, env, W, H, rs);
     }
   }
@@ -316,6 +449,11 @@ function apply2d(canvas, f, env, W, H, rs) {
       const tmp = getCanvas(W, H), tx = tmp.getContext('2d'); const th = f.threshold / 100;
       tx.filter = `brightness(${1 - th * 0.6}) contrast(${1 + th * 2.5}) blur(${f.radius * rs}px)`; tx.drawImage(canvas, 0, 0);
       x.save(); x.setTransform(1, 0, 0, 1, 0, 0); x.globalCompositeOperation = 'lighter'; x.globalAlpha = clamp(f.strength / 100, 0, 1); x.drawImage(tmp, 0, 0); if (f.strength > 100) { x.globalAlpha = (f.strength - 100) / 100; x.drawImage(tmp, 0, 0); } x.restore(); release(tmp); } break;
+    case 'shake': if (f.amount > 0 || f.rot > 0) { const t = (env.t || 0) * f.speed; let sd = 0; for (const ch of String(f.id)) sd = (sd * 31 + ch.charCodeAt(0)) % 9973; const ph = i => (sd * (i + 1) * 0.618) % 6.283;
+      const n = i => Math.sin(t * 1.31 + ph(i)) * 0.55 + Math.sin(t * 2.71 + ph(i + 3)) * 0.3 + Math.sin(t * 5.07 + ph(i + 6)) * 0.15;
+      redraw(null, tmp => { x.translate(W / 2 + n(0) * f.amount * rs, H / 2 + n(1) * f.amount * rs); x.rotate(n(2) * f.rot * Math.PI / 180); const z = f.zoom / 100; x.scale(z, z); x.drawImage(tmp, -W / 2, -H / 2); }); } break;
+    case 'letterbox': { const ar = +f.aspect || 2.39, k = clamp(f.amount / 100, 0, 1); x.save(); x.setTransform(1, 0, 0, 1, 0, 0); x.fillStyle = f.color;
+      if (W / H < ar) { const bh = (H - W / ar) / 2 * k; x.fillRect(0, 0, W, bh); x.fillRect(0, H - bh, W, bh); } else { const bw = (W - H * ar) / 2 * k; x.fillRect(0, 0, bw, H); x.fillRect(W - bw, 0, bw, H); } x.restore(); break; }
     case 'mosaic': {
       const rx = f.whole ? 0 : f.rx / 100 * W, ry = f.whole ? 0 : f.ry / 100 * H, rw = f.whole ? W : f.rw / 100 * W, rh = f.whole ? H : f.rh / 100 * H; if (rw < 1 || rh < 1) break;
       const eff = getCanvas(W, H), ex = eff.getContext('2d');
@@ -345,12 +483,21 @@ const TRANSITIONS = [
   ['wipeL', 'Wipe left → right'], ['wipeR', 'Wipe right → left'], ['wipeU', 'Wipe up'], ['wipeD', 'Wipe down'],
   ['slide', 'Slide'], ['push', 'Push'], ['zoom', 'Zoom'], ['spin', 'Spin'], ['blurDissolve', 'Blur dissolve'],
   ['iris', 'Circle iris'], ['clock', 'Clock wipe'], ['glitch', 'Glitch'],
+  ['whipL', 'Whip pan left'], ['whipR', 'Whip pan right'], ['zoomBlur', 'Zoom blur'], ['lightLeak', 'Light leak'], ['filmBurn', 'Film burn'], ['cube', 'Cube spin (2D)'],
+  ['swipe', 'Swipe (diagonal)'], ['heart', 'Heart wipe'], ['star', 'Star wipe'], ['diamond', 'Diamond iris'], ['lumaFade', 'Luma fade'], ['barnDoor', 'Barn door'],
+  ['blinds', 'Venetian blinds'], ['checker', 'Checkerboard'], ['pixelate', 'Pixelate'], ['flash', 'Flash (white)'], ['pushUp', 'Push up'], ['slideUp', 'Slide up'],
 ];
 const TR_SWATCH = {
   cross: 'linear-gradient(90deg,#3d5fa8,#b06a2b)', dipBlack: 'linear-gradient(90deg,#3d5fa8,#000,#b06a2b)', dipWhite: 'linear-gradient(90deg,#3d5fa8,#fff,#b06a2b)',
   wipeL: 'linear-gradient(90deg,#b06a2b 50%,#3d5fa8 50%)', wipeR: 'linear-gradient(270deg,#b06a2b 50%,#3d5fa8 50%)', wipeU: 'linear-gradient(0deg,#b06a2b 50%,#3d5fa8 50%)', wipeD: 'linear-gradient(180deg,#b06a2b 50%,#3d5fa8 50%)',
   slide: 'linear-gradient(90deg,#3d5fa8 35%,#b06a2b 35%)', push: 'linear-gradient(90deg,#3d5fa8 50%,#b06a2b 50%)', zoom: 'radial-gradient(#b06a2b 30%,#3d5fa8 31%)', spin: 'conic-gradient(#b06a2b 0 30%,#3d5fa8 0)',
   blurDissolve: 'linear-gradient(90deg,#3d5fa8,#7a6a8b,#b06a2b)', iris: 'radial-gradient(circle,#b06a2b 40%,#3d5fa8 41%)', clock: 'conic-gradient(#b06a2b 0 65%,#3d5fa8 0)', glitch: 'repeating-linear-gradient(0deg,#3d5fa8 0 4px,#b06a2b 4px 7px,#9a7bff 7px 9px)',
+  whipL: 'linear-gradient(90deg,#3d5fa8,#8aa0d0 40%,#d0a070 60%,#b06a2b)', whipR: 'linear-gradient(270deg,#3d5fa8,#8aa0d0 40%,#d0a070 60%,#b06a2b)', zoomBlur: 'radial-gradient(#b06a2b 10%,#8a7a9a 45%,#3d5fa8 75%)',
+  lightLeak: 'radial-gradient(circle at 30% 40%,#ffd08a,#ff7a3d 35%,#3d5fa8 75%)', filmBurn: 'radial-gradient(circle at 60% 50%,#fff3c0 5%,#ff7a1a 25%,#5a1a05 45%,#3d5fa8 70%)', cube: 'linear-gradient(90deg,#2c457a 0 55%,#d08a4b 55%)',
+  swipe: 'linear-gradient(135deg,#b06a2b 45%,#3d5fa8 55%)', heart: 'radial-gradient(circle,#b06a2b 35%,#3d5fa8 36%)', star: 'conic-gradient(#b06a2b 0 10%,#3d5fa8 0 20%,#b06a2b 0 30%,#3d5fa8 0 40%,#b06a2b 0 50%,#3d5fa8 0 60%,#b06a2b 0 70%,#3d5fa8 0 80%,#b06a2b 0 90%,#3d5fa8 0)',
+  diamond: 'linear-gradient(45deg,#3d5fa8 30%,#b06a2b 30% 70%,#3d5fa8 70%)', lumaFade: 'linear-gradient(90deg,#000,#3d5fa8,#b06a2b,#fff)', barnDoor: 'linear-gradient(90deg,#3d5fa8 30%,#b06a2b 30% 70%,#3d5fa8 70%)',
+  blinds: 'repeating-linear-gradient(0deg,#3d5fa8 0 4px,#b06a2b 4px 8px)', checker: 'repeating-conic-gradient(#3d5fa8 0 25%,#b06a2b 0 50%) 0 0/10px 10px', pixelate: 'repeating-conic-gradient(#5b77b8 0 25%,#c07a3b 0 50%) 0 0/8px 8px',
+  flash: 'linear-gradient(90deg,#3d5fa8,#fff,#b06a2b)', pushUp: 'linear-gradient(0deg,#3d5fa8 50%,#b06a2b 50%)', slideUp: 'linear-gradient(0deg,#b06a2b 35%,#3d5fa8 35%)',
 };
 const easeIO = u => easeFn.easeInOut(clamp(u, 0, 1));
 const LEGACY_TR = { fade: 'cross', wipe: 'wipeL', slide: 'slide', zoom: 'zoom', blur: 'blurDissolve', iris: 'iris' };
@@ -388,6 +535,25 @@ function drawTransition(ctx, kind, A, B, p, seed) {
       ctx.globalAlpha = 1; let y = 0; while (y < H) { const hh = Math.max(4, R() * H * 0.12); const dx = (R() - 0.5) * W * 0.18 * k * (R() < 0.6 ? 1 : 0); ctx.drawImage(tmp, 0, y, W, hh, dx, y, W, hh); y += hh; }
       ctx.globalCompositeOperation = 'screen'; ctx.globalAlpha = 0.45 * k; ctx.filter = 'hue-rotate(120deg)'; ctx.drawImage(tmp, 14 * k * W / 1920, 0, W, H); ctx.filter = 'hue-rotate(-120deg)'; ctx.drawImage(tmp, -14 * k * W / 1920, 0, W, H);
       release(tmp); break; }
+    case 'whipL': case 'whipR': case 'zoomBlur': case 'lightLeak': case 'filmBurn': case 'swipe': case 'lumaFade': case 'pixelate': {
+      const name = { whipL: 'trWhip', whipR: 'trWhip', zoomBlur: 'trZoomBlur', lightLeak: 'trLeak', filmBurn: 'trBurn', swipe: 'trSwipe', lumaFade: 'trLuma', pixelate: 'trPixel' }[kind];
+      const u = { p, dir: kind === 'whipR' ? -1 : 1, seed: ((seed || 1) % 97) * 0.37, soft: 0.25 };
+      const out = getCanvas(W, H), ea = A || getCanvas(W, H), eb = B || getCanvas(W, H);
+      if (GL.apply2(out, ea, eb, name, u, p)) ctx.drawImage(out, 0, 0); else cross();
+      release(out); if (!A) release(ea); if (!B) release(eb); break; }
+    case 'cube': { const z = 1 - 0.08 * Math.sin(p * Math.PI), wa = W * (1 - e), wb = W * e;
+      const face = (L, x0, w, shade) => { if (!L || w < 0.5) return; ctx.save(); ctx.translate(W / 2, H / 2); ctx.scale(1, z); ctx.translate(-W / 2, -H / 2); ctx.drawImage(L, x0, 0, w, H); ctx.fillStyle = `rgba(0,0,0,${shade})`; ctx.fillRect(x0, 0, w, H); ctx.restore(); };
+      face(A, 0, wa, e * 0.55); face(B, wa, wb, (1 - e) * 0.55); break; }
+    case 'heart': { const s = e * Math.max(W, H) * 2.4; regions(() => { ctx.moveTo(W / 2, H / 2 + s * 0.35); ctx.bezierCurveTo(W / 2 - s * 0.6, H / 2 - s * 0.1, W / 2 - s * 0.3, H / 2 - s * 0.62, W / 2, H / 2 - s * 0.25); ctx.bezierCurveTo(W / 2 + s * 0.3, H / 2 - s * 0.62, W / 2 + s * 0.6, H / 2 - s * 0.1, W / 2, H / 2 + s * 0.35); ctx.closePath(); }); break; }
+    case 'star': { const r = e * Math.max(W, H) * 1.5; regions(() => { for (let i = 0; i < 10; i++) { const a = -Math.PI / 2 + i * Math.PI / 5 + e * 0.6, rr = i % 2 ? r * 0.45 : r; i ? ctx.lineTo(W / 2 + Math.cos(a) * rr, H / 2 + Math.sin(a) * rr) : ctx.moveTo(W / 2 + Math.cos(a) * rr, H / 2 + Math.sin(a) * rr); } ctx.closePath(); }); break; }
+    case 'diamond': { const r = e * (W + H) / 2; regions(() => { ctx.moveTo(W / 2, H / 2 - r); ctx.lineTo(W / 2 + r, H / 2); ctx.lineTo(W / 2, H / 2 + r); ctx.lineTo(W / 2 - r, H / 2); ctx.closePath(); }); break; }
+    case 'barnDoor': regions(() => ctx.rect(W / 2 * (1 - e), 0, W * e, H)); break;
+    case 'blinds': { const n = 10, bh = H / n; regions(() => { for (let i = 0; i < n; i++) ctx.rect(0, i * bh, W, bh * e + 0.5); }); break; }
+    case 'checker': { const cols = 10, rows = Math.max(2, Math.round(cols * H / W)), cw = W / cols, chh = H / rows; let rnd = (seed || 7) * 7919; const R = () => { rnd = (rnd * 16807) % 2147483647; return rnd / 2147483647; };
+      const order = []; for (let i = 0; i < cols * rows; i++) order.push(R()); regions(() => { for (let i = 0; i < cols * rows; i++) if (order[i] < e) ctx.rect((i % cols) * cw, Math.floor(i / cols) * chh, cw + 0.5, chh + 0.5); }); break; }
+    case 'flash': { cross(); ctx.globalAlpha = Math.pow(Math.sin(p * Math.PI), 1.5); ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, W, H); break; }
+    case 'pushUp': draw(A, 1, () => ctx.translate(0, -H * e)); draw(B, 1, () => ctx.translate(0, H * (1 - e))); break;
+    case 'slideUp': draw(A); draw(B, 1, () => ctx.translate(0, H * (1 - e))); break;
     default: cross(); // cross dissolve
   }
   ctx.restore();

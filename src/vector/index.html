@@ -99,6 +99,22 @@
   .seg button { border: 0; background: var(--bg-3); color: var(--tx-1); height: 26px; min-width: 28px; cursor: pointer; font-size: 12px; }
   .seg button.on { background: var(--accent); color: #fff; }
   .seg button + button { border-left: 1px solid var(--line-2); }
+  .vx-taskbar { position: absolute; z-index: 8; display: flex; align-items: center; gap: 2px; padding: 3px; background: var(--bg-2); border: 1px solid var(--line-2); border-radius: 9px; box-shadow: 0 6px 22px rgba(0,0,0,.28); white-space: nowrap; }
+  .vx-taskbar.hide { display: none; }
+  .vx-taskbar .tb-btn { display: inline-flex; align-items: center; gap: 5px; height: 26px; padding: 0 8px; border: 0; border-radius: 6px; background: transparent; color: var(--tx-1); font-size: 12px; cursor: pointer; }
+  .vx-taskbar .tb-btn:hover { background: var(--bg-4); color: var(--tx-0); }
+  .vx-taskbar .tb-ic svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; display: block; }
+  .vx-taskbar .tb-x { color: var(--tx-3); padding: 0 6px; }
+  .fontbrowse { border: 1px solid var(--line-2); border-radius: 6px; background: var(--bg-1); max-height: 520px; overflow: auto; }
+  .fontbrowse .fb-row { padding: 6px 9px 7px; border-bottom: 1px solid var(--line); cursor: pointer; }
+  .fontbrowse .fb-row:hover { background: var(--bg-3); }
+  .fontbrowse .fb-row.on { background: var(--accent-soft); }
+  .fontbrowse .fb-head { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--tx-2); }
+  .fontbrowse .fb-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--tx-1); }
+  .fontbrowse .fb-star { font-size: 14px; color: var(--tx-3); width: 18px; text-align: center; }
+  .fontbrowse .fb-star.on { color: #f5b301; }
+  .fontbrowse .fb-prev { color: var(--tx-0); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.25; margin-top: 2px; }
+  #rtabs .tab { padding: 7px 1px; font-size: 11px; }
 </style>
 </head>
 <body class="app-vector">
@@ -127,6 +143,8 @@
 <script src="vx-type.js"></script>
 <script src="vx-trace.js"></script>
 <script src="vx-symbols.js"></script>
+<script src="vx-modern.js"></script>
+<script src="vx-workflow.js"></script>
 <script src="boot.js"></script>
 </body>
 </html>

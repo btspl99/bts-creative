@@ -49,22 +49,35 @@ function videoClipsAt(t) {
 function normGain(c) { const m = mediaById(c.mediaId); if (!m || !m.peaks) return 1; const n = m.peaks.length; let mx = 0; const a = Math.floor(c.in / m.dur * n), b = Math.ceil(c.out / m.dur * n); for (let i = Math.max(0, a); i < Math.min(n, b); i++) mx = Math.max(mx, m.peaks[i]); return mx > 0.01 ? clamp(0.89 / mx, 0.25, 8) : 1; }
 function audioGainAt(c, t) { const lt = t - c.start, D = tlDur(c); const P = evalProps(c, lt); return (P.volume / 100) * fadeK(P, lt, D) * (P.normalize ? normGain(c) : 1); }
 function syncMedia(playing) {
-  const t = ST.t; const vis = new Set(videoClipsAt(t).filter(c => c.type === 'video').map(c => c.id));
-  const aud = new Set(activeClips(t).filter(c => c.type === 'audio' || c.type === 'video').map(c => c.id));
+  const touched = new Set();
+  syncSeq(ST.t, playing, { rate: 1, gain: 1 }, touched, 0);
+  els.forEach((e, id) => { if (!touched.has(id) && !e.paused) e.pause(); });
+  if (typeof updateBleep === 'function') updateBleep(playing);
+}
+// syncs the media elements of the current sequence at time t; nested sequences recurse with their own time,
+// rate (nest speed) and gain (nest volume × fades)
+function syncSeq(t, playing, outer, touched, depth) {
+  const vlist = videoClipsAt(t); const vis = new Set(vlist.filter(c => c.type === 'video').map(c => c.id));
+  const alist = activeClips(t); const aud = new Set(alist.filter(c => c.type === 'audio' || c.type === 'video').map(c => c.id));
   const fwd = ST.rate > 0 ? ST.rate : 1;
   PJ.clips.forEach(c => {
+    if (c.type === 'nest') {
+      if (depth > 4 || !(vlist.includes(c) || alist.includes(c))) return; const sd = nestSeq(c); if (!sd) return;
+      const tr = trackById(c.track); const g = alist.includes(c) && !tr.muted && !c.props.detached && !EXP.silent ? audioGainAt(c, t) : 0;
+      const tau = srcTime(c, t); withSeq(sd, () => syncSeq(tau, playing, { rate: outer.rate * spd(c), gain: outer.gain * g }, touched, depth + 1)); return;
+    }
     if (c.type !== 'video' && c.type !== 'audio') return;
     const need = vis.has(c.id) || (c.type === 'audio' && aud.has(c.id));
     const e = need ? elFor(c) : els.get(c.id); if (!e) return;
-    if (!need) { if (!e.paused) e.pause(); return; }
+    if (!need) return; touched.add(c.id);
     const m = mediaById(c.mediaId); const target = clamp(srcTime(c, t), 0, Math.max(0, (m.dur || 1e9) - 0.04));
     const tr = trackById(c.track); const P = c.props;
     const audible = aud.has(c.id) && hasAudioOf(c) && !tr.muted && !(c.type === 'video' && tr.muted);
-    const vol = audible && !EXP.silent ? audioGainAt(c, t) : 0;
+    const vol = audible && !EXP.silent ? audioGainAt(c, t) * outer.gain : 0;
     e.muted = false; if (e._gain) { e._gain.gain.value = vol; e.volume = 1; e._pan.pan.value = clamp((P.pan || 0) / 100, -1, 1); e._hp.frequency.value = P.voice ? 90 : 10; e._comp.threshold.value = P.voice ? -26 : 0; e._comp.ratio.value = P.voice ? 4 : 1; } else e.volume = clamp(vol, 0, 1);
     const frozen = P.freeze != null; const inRange = srcTime(c, t) >= 0 && srcTime(c, t) < (m.dur || 1e9) - 0.04;
-    e.playbackRate = clamp(spd(c) * fwd, 0.0625, 16);
-    if (playing && !frozen && inRange && ST.rate > 0) { if (Math.abs(e.currentTime - target) > 0.3 * Math.max(1, fwd)) e.currentTime = target; if (e.paused) e.play().catch(() => { }); }
+    const sp = spd(c) * outer.rate; e.playbackRate = clamp(sp * fwd, 0.0625, 16);
+    if (playing && !frozen && inRange && ST.rate > 0) { if (Math.abs(e.currentTime - target) > 0.3 * Math.max(1, fwd * outer.rate)) e.currentTime = target; if (e.paused) e.play().catch(() => { }); }
     else { if (!e.paused) e.pause(); if (Math.abs(e.currentTime - target) > 0.02) e.currentTime = target; }
   });
 }
@@ -72,11 +85,19 @@ function syncMedia(playing) {
 // ---------------------------------------------------------------------  clip drawing
 function legacyFilter(P) { const f = []; if (P.brightness !== 100) f.push(`brightness(${P.brightness / 100})`); if (P.contrast !== 100) f.push(`contrast(${P.contrast / 100})`); if (P.saturation !== 100) f.push(`saturate(${P.saturation / 100})`); if (P.hue) f.push(`hue-rotate(${P.hue}deg)`); if (P.grayscale) f.push(`grayscale(${P.grayscale / 100})`); if (P.sepia) f.push(`sepia(${P.sepia / 100})`); if (P.blur) f.push(`blur(${P.blur}px)`); return f.join(' ') || 'none'; }
 function applyTransform(x, P) { x.translate(PJ.seq.w / 2 + P.x, PJ.seq.h / 2 + P.y); if (P.rotation) x.rotate(P.rotation * Math.PI / 180); const s = P.scale / 100; x.scale(s, s); }
-function frameSourceOf(c) { if (c.type === 'image') return mediaById(c.mediaId)?.el || null; return EXP.frames?.get(c.id) || els.get(c.id) || null; }
+function frameSourceOf(c) { if (c.type === 'image') return mediaById(c.mediaId)?.el || null; if (c.type === 'nest') return null; return EXP.frames?.get(c.id) || els.get(c.id) || null; }
+// renders a nested sequence at the nest clip's source time into a reusable canvas (transparent where the nest is empty)
+const nestCv = new Map();
+function nestFrame(c, t) {
+  const sd = nestSeq(c); if (!sd || seqDepth > 4) return null; const rs = EXP.on ? 1 : ST.rs;
+  const w = Math.max(2, Math.round(sd.seq.w * rs)), hh = Math.max(2, Math.round(sd.seq.h * rs)); const key = c.id + ':' + seqDepth;
+  let cv = nestCv.get(key); if (!cv) { cv = document.createElement('canvas'); nestCv.set(key, cv); } if (cv.width !== w || cv.height !== hh) { cv.width = w; cv.height = hh; }
+  const x = cv.getContext('2d'); const tau = srcTime(c, t); withSeq(sd, () => renderAt(x, tau, rs, { transparent: true })); return cv;
+}
 // rectangle the media occupies (centred coordinates, before the clip transform)
-function mediaRect(c, P) {
-  const W = PJ.seq.w, H = PJ.seq.h; const m = mediaById(c.mediaId); const e = frameSourceOf(c);
-  const sw = (e && (e.videoWidth || e.naturalWidth || e.width)) || m?.w || W, sh = (e && (e.videoHeight || e.naturalHeight || e.height)) || m?.h || H;
+function mediaRect(c, P, eOver) {
+  const W = PJ.seq.w, H = PJ.seq.h; const m = mediaById(c.mediaId); const e = eOver || frameSourceOf(c); const nsd = c.type === 'nest' && !eOver ? nestSeq(c) : null;
+  const sw = nsd ? nsd.seq.w : (e && (e.videoWidth || e.naturalWidth || e.width)) || m?.w || W, sh = nsd ? nsd.seq.h : (e && (e.videoHeight || e.naturalHeight || e.height)) || m?.h || H;
   let dw, dh; if (P.fit === 'stretch') { dw = W; dh = H; } else { const k = P.fit === 'fill' ? Math.max(W / sw, H / sh) : Math.min(W / sw, H / sh); dw = sw * k; dh = sh * k; }
   const cl = clamp(P.cropL, 0, 100) / 100, cr = clamp(P.cropR, 0, 100) / 100, ct = clamp(P.cropT, 0, 100) / 100, cb = clamp(P.cropB, 0, 100) / 100;
   return { sw, sh, dw, dh, cl, cr, ct, cb, x: -dw / 2 + dw * cl, y: -dh / 2 + dh * ct, w: Math.max(0, dw * (1 - cl - cr)), h: Math.max(0, dh * (1 - ct - cb)) };
@@ -92,9 +113,9 @@ function drawSource(x, c, P, t, lt, D) {
   }
   if (c.type === 'title') { drawTitle(x, P, clamp(lt, 0, D), D); return full; }
   if (c.type === 'shape') return drawShape(x, P);
-  const e = frameSourceOf(c); const R = mediaRect(c, P);
+  const e = c.type === 'nest' ? nestFrame(c, t) : frameSourceOf(c); const R = mediaRect(c, P, c.type === 'nest' ? e : null);
   if (!e) return R;
-  const ready = c.type === 'image' || e instanceof ImageBitmap || e.readyState >= 2; if (!ready || !R.sw || !R.sh || R.w <= 0 || R.h <= 0) return R;
+  const ready = c.type === 'image' || c.type === 'nest' || e instanceof ImageBitmap || e instanceof HTMLCanvasElement || e.readyState >= 2; if (!ready || !R.sw || !R.sh || R.w <= 0 || R.h <= 0) return R;
   if (P.bgFill === 'blur' && P.fit === 'fit') { x.save(); const k = Math.max(W / R.sw, H / R.sh); x.filter = `blur(${Math.round(Math.min(W, H) / 22)}px) brightness(0.75)`; x.drawImage(e, -R.sw * k / 2, -R.sh * k / 2, R.sw * k, R.sh * k); x.restore(); }
   x.drawImage(e, R.sw * R.cl, R.sh * R.ct, R.sw * (1 - R.cl - R.cr), R.sh * (1 - R.ct - R.cb), R.x, R.y, R.w, R.h);
   return R;
@@ -115,25 +136,47 @@ function drawShape(x, P) {
   x.fill(); if (P.strokeW > 0) x.stroke(); x.restore(); return R;
 }
 const easeOut = u => 1 - Math.pow(1 - u, 3);
+const easeOutBack = u => { const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(u - 1, 3) + c1 * Math.pow(u - 1, 2); };
+const easeOutBounce = u => { const n = 7.5625, d = 2.75; if (u < 1 / d) return n * u * u; if (u < 2 / d) return n * (u -= 1.5 / d) * u + 0.75; if (u < 2.5 / d) return n * (u -= 2.25 / d) * u + 0.9375; return n * (u -= 2.625 / d) * u + 0.984375; };
+const hash2 = (a, b) => { const v = Math.sin(a * 127.1 + b * 311.7) * 43758.5453; return v - Math.floor(v); };
+const GLITCH_CH = '!<>-_\\/[]{}=+*^?#%&$@';
+// per-glyph animations: return the transform/opacity of glyph i (of n) in word wi
+const GLYPH_ANIMS = {
+  letters: (g, lt, sz) => { const u = clamp((lt - g.i * 0.045) / 0.3, 0, 1); return { al: u, dy: (1 - easeOut(u)) * sz * 0.4 }; },
+  words: (g, lt, sz) => { const u = clamp((lt - g.wi * 0.2) / 0.28, 0, 1); const e = easeOut(u); return { al: u, dy: (1 - e) * sz * 0.3, sc: 0.85 + 0.15 * e }; },
+  bounce: (g, lt, sz) => { const u = clamp((lt - g.i * 0.04) / 0.7, 0, 1); return { al: clamp(u * 5, 0, 1), dy: -(1 - easeOutBounce(u)) * sz * 1.2 }; },
+  wave: (g, lt, sz) => ({ al: clamp(lt / 0.4, 0, 1), dy: Math.sin(lt * 6 - g.i * 0.55) * sz * 0.14 }),
+  trackIn: (g, lt, sz) => { const u = clamp(lt / 0.9, 0, 1); return { al: u, dx: (g.li - (g.ln - 1) / 2) * sz * 0.7 * (1 - easeOut(u)) }; },
+  drop: (g, lt, sz) => { const u = clamp((lt - g.i * 0.05) / 0.5, 0, 1); return { al: u > 0 ? 1 : 0, dy: -(1 - easeOutBounce(u)) * sz * 2.2, rot: (1 - u) * 0.6 * (g.i % 2 ? 1 : -1) }; },
+  flip: (g, lt) => { const u = clamp((lt - g.i * 0.035) / 0.4, 0, 1); return { al: u > 0 ? 1 : 0, sy: Math.max(0.02, easeOutBack(u)) }; },
+  scramble: (g, lt) => { const r = 0.25 + g.i * 0.035; return { al: clamp(lt / 0.2, 0, 1), txt: lt < r && g.ch.trim() ? GLITCH_CH[Math.floor(hash2(Math.floor(lt * 20), g.i) * GLITCH_CH.length)] : g.ch }; },
+  karaoke: (g, lt, sz, D) => ({ al: clamp(lt / 0.25, 0, 1), hi: g.i / Math.max(1, g.n) < lt / Math.max(0.3, D * 0.8) }),
+  glitch: (g, lt, sz) => { const fr = Math.floor(lt * 14); const burst = lt < 0.6 || (lt % 1.3) < 0.18; const k = lt < 0.6 ? 0.6 : 0.25;
+    if (!burst || hash2(fr, g.i) > k) return { al: 1 }; return { al: 1, dx: (hash2(fr, g.i + 9) - 0.5) * sz * 0.35, dy: (hash2(fr + 3, g.i) - 0.5) * sz * 0.12, txt: hash2(fr, g.i + 5) < 0.4 && g.ch.trim() ? GLITCH_CH[Math.floor(hash2(fr, g.i + 7) * GLITCH_CH.length)] : g.ch, split: true }; },
+  neon: () => ({ al: 1 }),
+};
 function bellPath(x, s) { x.beginPath(); x.moveTo(-s * 0.5, s * 0.32); x.quadraticCurveTo(-s * 0.36, s * 0.18, -s * 0.36, -s * 0.05); x.quadraticCurveTo(-s * 0.36, -s * 0.42, 0, -s * 0.44); x.quadraticCurveTo(s * 0.36, -s * 0.42, s * 0.36, -s * 0.05); x.quadraticCurveTo(s * 0.36, s * 0.18, s * 0.5, s * 0.32); x.closePath(); x.moveTo(s * 0.12, s * 0.4); x.arc(0, s * 0.4, s * 0.12, 0, Math.PI); }
 function drawTitle(x, P, lt, D) {
   const W = PJ.seq.w, H = PJ.seq.h;
   let text = P.text;
   if (P.style === 'countdown') { const n = Math.max(1, Math.ceil(P.count - lt / D * P.count - 1e-6)); text = String(n); }
   const lines = String(text).split('\n'); const size = P.size; const lh = size * (P.lineH || 1.2);
-  let a = 1, dy = 0, dx = 0, sc = 1, chars = Infinity, wipe = 1, letters = false;
+  let a = 1, dy = 0, dx = 0, sc = 1, chars = Infinity, wipe = 1, glyph = null, blurPx = 0, cursor = false, neon = false;
   const ai = clamp(lt / 0.6, 0, 1), ao = clamp((D - lt) / 0.6, 0, 1);
   switch (P.anim) {
     case 'fade': a = Math.min(ai, ao); break;
     case 'pop': sc = 0.6 + 0.4 * easeOut(clamp(lt / 0.35, 0, 1)) + (lt < 0.35 ? Math.sin(lt / 0.35 * Math.PI) * 0.08 : 0); a = Math.min(clamp(lt / 0.15, 0, 1), ao); break;
     case 'slide': dx = -(1 - easeOut(ai)) * W * 0.25; a = Math.min(ai, ao); break;
     case 'rise': dy = (1 - easeOut(ai)) * 90; a = Math.min(ai, ao); break;
-    case 'type': chars = Math.floor(lt * 18); a = ao; break;
+    case 'type': chars = Math.floor(lt * 18); cursor = true; a = ao; break;
     case 'wipe': wipe = easeOut(clamp(lt / 0.8, 0, 1)); a = ao; break;
-    case 'letters': letters = true; a = ao; break;
     case 'roll': dy = H / 2 + lines.length * lh / 2 - (lt / D) * (lines.length * lh + H); break;
+    case 'zoomIn': { const u = easeOut(clamp(lt / 0.7, 0, 1)); sc = 2.2 - 1.2 * u; a = Math.min(clamp(lt / 0.35, 0, 1), ao); break; }
+    case 'blurIn': { const u = easeOut(clamp(lt / 0.8, 0, 1)); blurPx = (1 - u) * size * 0.3; sc = 1.08 - 0.08 * u; a = Math.min(clamp(lt / 0.5, 0, 1), ao); break; }
+    case 'neon': { neon = true; glyph = GLYPH_ANIMS.neon; const fr = Math.floor(lt * 16); a = (lt < 1.4 ? (hash2(fr, 1) > 0.62 - lt * 0.4 ? 1 : 0.15) : 0.92 + 0.08 * hash2(fr, 2)) * ao; break; }
+    default: if (GLYPH_ANIMS[P.anim]) { glyph = GLYPH_ANIMS[P.anim]; a = ao; }
   }
-  x.globalAlpha *= clamp(a, 0, 1); x.translate(dx, dy); x.scale(sc, sc);
+  x.globalAlpha *= clamp(a, 0, 1); x.translate(dx, dy); x.scale(sc, sc); if (blurPx > 0.3) x.filter = `blur(${blurPx * (x.getTransform().a || 1)}px)`;
   const fontOf = (sz, wt) => `${P.italic ? 'italic ' : ''}${wt} ${sz}px "${P.font}", "Segoe UI", sans-serif`;
   x.font = fontOf(size, P.weight); x.textBaseline = 'middle'; try { x.letterSpacing = (P.spacing || 0) + 'px'; } catch { }
   // per-line sizes: lower thirds / quotes use a smaller second line
@@ -158,20 +201,73 @@ function drawTitle(x, P, lt, D) {
   }
   if (P.box && P.style !== 'lower3' && P.style !== 'cta' && P.style !== 'card') { x.save(); x.globalAlpha *= P.boxOpacity / 100; x.fillStyle = P.boxColor; x.beginPath(); x.roundRect(-maxW / 2 - pad, -totalH / 2 - pad * 0.6, maxW + pad * 2, totalH + pad * 1.2, size * 0.15); x.fill(); x.restore(); }
   if (wipe < 1) { x.save(); x.beginPath(); x.rect(-maxW / 2 - pad, -totalH / 2 - pad - H, (maxW + pad * 2) * wipe, totalH + pad * 2 + H * 2); x.clip(); }
-  let shown = 0, idx = 0, y = -totalH / 2;
+  const nChars = lines.reduce((s, l) => s + [...l].length, 0); let wordsN = 0; lines.forEach(l => { wordsN += l.split(/\s+/).filter(Boolean).length; });
+  let shown = 0, idx = 0, wi = -1, y = -totalH / 2;
   lines.forEach((ln, i) => {
     const cy = y + lhs[i] / 2; y += lhs[i]; const wt = i > 0 && P.style === 'lower3' ? 400 : P.weight; x.font = fontOf(lsz[i], wt);
     const lw = widths[i]; const startX = P.align === 'left' ? -maxW / 2 : P.align === 'right' ? maxW / 2 - lw : -lw / 2;
-    const style = () => { if (P.shadow) { x.shadowColor = VFX.rgba(P.shadowColor || '#000000', 0.6); x.shadowBlur = lsz[i] * 0.15; x.shadowOffsetY = lsz[i] * 0.04; } };
-    const paint = (txt, px, py) => { x.textAlign = 'left'; style(); if (P.outline) { x.lineWidth = P.outline * 2; x.strokeStyle = P.outlineColor; x.lineJoin = 'round'; x.strokeText(txt, px, py); x.shadowColor = 'transparent'; } x.fillStyle = P.color; x.fillText(txt, px, py); x.shadowColor = 'transparent'; };
-    if (letters) {
-      let px = startX; for (const ch of ln) { const u = clamp((lt - idx * 0.045) / 0.3, 0, 1); idx++; const cw = x.measureText(ch).width; if (u > 0) { x.save(); x.globalAlpha *= u; paint(ch, px, cy + (1 - easeOut(u)) * lsz[i] * 0.4); x.restore(); } px += cw; }
+    const glowCol = P.outline ? P.outlineColor : P.accent;
+    const style = () => { if (neon) { x.shadowColor = glowCol; x.shadowBlur = lsz[i] * 0.45; } else if (P.shadow) { x.shadowColor = VFX.rgba(P.shadowColor || '#000000', 0.6); x.shadowBlur = lsz[i] * 0.15; x.shadowOffsetY = lsz[i] * 0.04; } };
+    const paint = (txt, px, py, col) => { x.textAlign = 'left'; style(); if (P.outline) { x.lineWidth = P.outline * 2; x.strokeStyle = P.outlineColor; x.lineJoin = 'round'; x.strokeText(txt, px, py); if (!neon) x.shadowColor = 'transparent'; } x.fillStyle = col || P.color; x.fillText(txt, px, py); if (neon) x.fillText(txt, px, py); x.shadowColor = 'transparent'; x.shadowBlur = 0; x.shadowOffsetY = 0; };
+    if (glyph) {
+      const glyphs = [...ln]; let px = startX; let prevSpace = true;
+      glyphs.forEach((ch, li) => {
+        const space = !ch.trim(); if (!space && prevSpace) wi++; prevSpace = space; const cw = x.measureText(ch).width;
+        const g = glyph({ i: idx, n: nChars, wi: Math.max(0, wi), nw: wordsN, li, ln: glyphs.length, ch }, lt, lsz[i], D); idx++;
+        if ((g.al ?? 1) > 0.001 && !space) {
+          x.save(); x.globalAlpha *= clamp(g.al ?? 1, 0, 1); x.translate(px + cw / 2 + (g.dx || 0), cy + (g.dy || 0)); if (g.rot) x.rotate(g.rot); x.scale(g.sc || 1, (g.sc || 1) * (g.sy ?? 1));
+          const txt = g.txt ?? ch; const tw = x.measureText(txt).width;
+          if (g.split) { x.save(); x.globalCompositeOperation = 'lighter'; x.globalAlpha *= 0.75; x.fillStyle = '#ff2a6d'; x.fillText(txt, -tw / 2 - lsz[i] * 0.05, 0); x.fillStyle = '#05d9e8'; x.fillText(txt, -tw / 2 + lsz[i] * 0.05, 0); x.restore(); }
+          paint(txt, -tw / 2, 0, g.hi ? P.accent : null); x.restore();
+        }
+        px += cw;
+      });
     } else {
       let txt = ln; if (chars !== Infinity) { txt = ln.slice(0, Math.max(0, chars - shown)); shown += ln.length; }
       if (txt) paint(txt, startX, cy);
+      if (cursor && chars !== Infinity && (chars < shown || i === lines.length - 1) && (chars - (shown - ln.length)) >= 0 && (chars - (shown - ln.length)) <= ln.length && Math.floor(lt * 2.5) % 2 === 0) { const cx2 = startX + x.measureText(txt).width + size * 0.04; x.fillStyle = P.color; x.fillRect(cx2, cy - lsz[i] * 0.42, Math.max(2, lsz[i] * 0.06), lsz[i] * 0.84); }
     }
   });
   if (wipe < 1) x.restore();
+  x.filter = 'none';
+}
+// ---------------------------------------------------------------------  masks (ellipse / rectangle / pen-bezier, keyframeable)
+const MASK_KEYS = ['x', 'y', 'w', 'h', 'rot', 'feather', 'expand', 'opacity'];
+function evalMasks(c, lt) {
+  if (!c.masks || !c.masks.length) return []; const kf = c.kf || {};
+  return c.masks.filter(m => m.on !== false).map(m => {
+    const g = { ...m }; MASK_KEYS.forEach(k => { const kk = kf[`mask:${m.id}:${k}`]; if (kk && kk.length) g[k] = VFX.evalKf(kk, lt); });
+    const kp = kf[`mask:${m.id}:pts`]; if (kp && kp.length) { const flat = VFX.evalKf(kp, lt); g.pts = []; for (let i = 0; i + 1 < flat.length; i += 2) g.pts.push([flat[i], flat[i + 1]]); }
+    return g;
+  });
+}
+// builds the mask outline in clip-local units (origin = clip centre, before the clip's motion transform)
+function maskPath(x, m, noBegin) {
+  if (!noBegin) x.beginPath(); const a = (m.rot || 0) * Math.PI / 180, ca = Math.cos(a), sa = Math.sin(a); const P = (px, py) => [m.x + px * ca - py * sa, m.y + px * sa + py * ca];
+  if (m.type === 'ellipse') { x.ellipse(m.x, m.y, Math.max(0.5, Math.abs(m.w) / 2), Math.max(0.5, Math.abs(m.h) / 2), a, 0, Math.PI * 2); return; }
+  if (m.type === 'rect') { const w = m.w / 2, hh = m.h / 2; [[-w, -hh], [w, -hh], [w, hh], [-w, hh]].forEach(([px, py], i) => { const q = P(px, py); i ? x.lineTo(...q) : x.moveTo(...q); }); x.closePath(); return; }
+  const pts = (m.pts || []).map(([px, py]) => P(px, py)); const n = pts.length; if (n < 2) return;
+  if (!m.smooth || n < 3) { pts.forEach((q, i) => i ? x.lineTo(...q) : x.moveTo(...q)); x.closePath(); return; }
+  // closed Catmull-Rom spline through the points, drawn as cubic Béziers
+  x.moveTo(...pts[0]);
+  for (let i = 0; i < n; i++) { const p0 = pts[(i - 1 + n) % n], p1 = pts[i], p2 = pts[(i + 1) % n], p3 = pts[(i + 2) % n];
+    x.bezierCurveTo(p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6, p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6, p2[0], p2[1]); }
+  x.closePath();
+}
+function applyMasks(L, masks, rs) {
+  const W = L.width, H = L.height; const M = VFX.getCanvas(W, H), mx = M.getContext('2d');
+  if ((masks[0].mode || 'add') !== 'add') { mx.fillStyle = '#fff'; mx.fillRect(0, 0, W, H); }
+  masks.forEach((m, i) => {
+    const S = VFX.getCanvas(W, H), sx = S.getContext('2d'); sx.setTransform(rs, 0, 0, rs, W / 2, H / 2); sx.fillStyle = sx.strokeStyle = '#fff'; sx.lineJoin = 'round';
+    if (m.invert) { sx.save(); sx.setTransform(1, 0, 0, 1, 0, 0); sx.fillRect(0, 0, W, H); sx.restore(); sx.globalCompositeOperation = 'destination-out'; }
+    maskPath(sx, m); sx.fill();
+    if (m.expand > 0) { sx.lineWidth = m.expand * 2; sx.stroke(); }
+    else if (m.expand < 0) { sx.globalCompositeOperation = m.invert ? 'source-over' : 'destination-out'; sx.lineWidth = -m.expand * 2; sx.stroke(); }
+    let src = S; if (m.feather > 0) { const F = VFX.getCanvas(W, H), fx = F.getContext('2d'); fx.filter = `blur(${m.feather * rs / 2}px)`; fx.drawImage(S, 0, 0); VFX.release(S); src = F; }
+    mx.globalAlpha = clamp((m.opacity ?? 100) / 100, 0, 1); const mode = m.mode || 'add'; mx.globalCompositeOperation = mode === 'subtract' ? 'destination-out' : mode === 'intersect' && i > 0 ? 'destination-in' : 'source-over';
+    mx.drawImage(src, 0, 0); VFX.release(src);
+  });
+  const lx = L.getContext('2d'); lx.save(); lx.setTransform(1, 0, 0, 1, 0, 0); lx.globalAlpha = 1; lx.filter = 'none'; lx.globalCompositeOperation = 'destination-in'; lx.drawImage(M, 0, 0); lx.restore(); VFX.release(M);
 }
 // Renders a single clip onto ctx (ctx pixel size = seq × rs)
 function drawClipTo(ctx, c, t, rs) {
@@ -179,28 +275,28 @@ function drawClipTo(ctx, c, t, rs) {
   const P = evalProps(c, lt); const alpha = clamp(P.opacity / 100, 0, 1) * fadeK(P, lt, D); if (alpha <= 0.001) return;
   const fxs = evalFx(c, lt).filter(f => f.on && VFX.EFFECTS[f.type]);
   const pix = fxs.filter(f => VFX.EFFECTS[f.type].stage !== 'composite'), comp = fxs.filter(f => VFX.EFFECTS[f.type].stage === 'composite');
-  const lu = VFX.luActive(P.lu); const lf = legacyFilter(P);
+  const lu = VFX.luActive(P.lu); const lf = legacyFilter(P); const mk = evalMasks(c, lt);
   if (c.type === 'adjust') {
-    const L = VFX.copyOf(ctx.canvas); VFX.applyStack(L, pix, { rs, t }); if (lu) VFX.runPasses(L, [VFX.luPass(P.lu)], t);
+    const L = VFX.copyOf(ctx.canvas); VFX.applyStack(L, pix, { rs, t }); if (lu) VFX.runPasses(L, [VFX.luPass(P.lu)], t); if (mk.length) applyMasks(L, mk, rs);
     ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = alpha; ctx.filter = lf; ctx.drawImage(L, 0, 0); ctx.restore(); VFX.release(L); return;
   }
   ctx.save();
-  if (!pix.length && !comp.length && !lu) {
+  if (!pix.length && !comp.length && !lu && !mk.length) {
     ctx.setTransform(rs, 0, 0, rs, 0, 0); ctx.globalAlpha = alpha; ctx.filter = lf; applyTransform(ctx, P);
     drawSource(ctx, c, P, t, lt, D); ctx.restore(); return;
   }
   const L = VFX.getCanvas(ctx.canvas.width, ctx.canvas.height); const lx = L.getContext('2d'); lx.setTransform(rs, 0, 0, rs, L.width / 2, L.height / 2); lx.filter = lf;
   const R = drawSource(lx, c, P, t, lt, D) || { x: -W / 2, y: -H / 2, w: W, h: H }; lx.filter = 'none';
-  VFX.applyStack(L, pix, { rs, t }); if (lu) VFX.runPasses(L, [VFX.luPass(P.lu)], t);
+  VFX.applyStack(L, pix, { rs, t }); if (lu) VFX.runPasses(L, [VFX.luPass(P.lu)], t); if (mk.length) applyMasks(L, mk, rs);
   const cs = VFX.compositeStage(L, comp, R, rs);
   ctx.setTransform(rs, 0, 0, rs, 0, 0); ctx.globalAlpha = alpha; applyTransform(ctx, P);
   if (cs.shadow) { const s = cs.shadow, k = rs * P.scale / 100, a = s.angle * Math.PI / 180; ctx.shadowColor = VFX.rgba(s.color, s.opacity / 100); ctx.shadowBlur = s.blur * k; ctx.shadowOffsetX = Math.cos(a) * s.dist * k; ctx.shadowOffsetY = Math.sin(a) * s.dist * k; }
   ctx.drawImage(cs.canvas, -W / 2, -H / 2, W, H);
   ctx.restore(); VFX.release(L); if (cs.made) VFX.release(cs.made);
 }
-function renderAt(ctx, t, rs = 1) {
+function renderAt(ctx, t, rs = 1, opts = {}) {
   const cw = ctx.canvas.width, ch = ctx.canvas.height;
-  ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; ctx.filter = 'none'; ctx.globalCompositeOperation = 'source-over'; ctx.fillStyle = PJ.seq.bg; ctx.fillRect(0, 0, cw, ch); ctx.restore();
+  ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; ctx.filter = 'none'; ctx.globalCompositeOperation = 'source-over'; if (opts.transparent) ctx.clearRect(0, 0, cw, ch); else { ctx.fillStyle = PJ.seq.bg; ctx.fillRect(0, 0, cw, ch); } ctx.restore();
   const vids = PJ.tracks.filter(k => k.kind === 'video' && !k.hidden).reverse(); // V1 (bottom) first
   const act = videoClipsAt(t); const trs = transitionsAt(t);
   for (const tk of vids) {
@@ -212,7 +308,7 @@ function renderAt(ctx, t, rs = 1) {
       VFX.drawTransition(ctx, T.tr.kind, LA, LB, p, T.tr.id.length * 7 + 3); VFX.release(LA); VFX.release(LB);
     }
   }
-  if (PJ.capBurn || !EXP.on) { const cap = captionAt(t); if (cap && (EXP.on ? PJ.capBurn : ST.capShow !== false)) { ctx.save(); ctx.setTransform(rs, 0, 0, rs, 0, 0); VCAP.draw(ctx, cap, PJ.capStyle, PJ.seq.w, PJ.seq.h); ctx.restore(); } }
+  if (PJ.capBurn || !EXP.on) { const cap = captionAt(t); if (cap && (EXP.on ? PJ.capBurn : ST.capShow !== false)) { ctx.save(); ctx.setTransform(rs, 0, 0, rs, 0, 0); VCAP.draw(ctx, PJ.censor && PJ.censor.on && PJ.censor.words.length ? { ...cap, text: VCAP.censor(cap.text, PJ.censor.words) } : cap, PJ.capStyle, PJ.seq.w, PJ.seq.h); ctx.restore(); } }
 }
 function captionAt(t) { return PJ.captions.find(c => t >= c.start && t < c.end); }
 function drawFrame() { if (!EXP.on) { renderAt(pctx, ST.t, ST.rs); drawOverlay(); } }
@@ -242,6 +338,20 @@ function loop() {
   if (ST.rate < 0 && ST.t <= 0) { ST.t = 0; pause(); placePlayhead(); return; }
   syncMedia(ST.rate > 0); renderAt(pctx, ST.t, ST.rs); drawOverlay(); placePlayhead(); autoscroll(); if (ST.recording) updateRecording();
   requestAnimationFrame(loop);
+}
+
+// ---------------------------------------------------------------------  censor bleep in the preview (1 kHz tone, programme muted)
+let bleepOsc = null, bleepGain = null; const bleepCache = { key: null, ranges: [] };
+function bleepRanges() {
+  const key = hi + ':' + PJ.activeSeq + ':' + JSON.stringify(PJ.censor); if (bleepCache.key === key) return bleepCache.ranges;
+  bleepCache.key = key; bleepCache.ranges = PJ.censor && PJ.censor.words.length ? VCAP.bleepRanges(PJ.captions, PJ.censor.words, PJ.censor.estimate) : []; return bleepCache.ranges;
+}
+function updateBleep(playing) {
+  if (!audioCtx || !masterGain) return;
+  const on = playing && !EXP.on && PJ.censor && PJ.censor.on && PJ.censor.bleep && PJ.censor.words.length > 0;
+  const hit = on && bleepRanges().some(([a, b]) => ST.t >= a && ST.t < b);
+  if (hit && !bleepOsc) { bleepOsc = audioCtx.createOscillator(); bleepOsc.frequency.value = 1000; bleepGain = audioCtx.createGain(); bleepGain.gain.value = 0; bleepOsc.connect(bleepGain); bleepGain.connect(audioCtx.destination); bleepOsc.start(); }
+  masterGain.gain.value = hit ? 0 : 1; if (bleepGain) bleepGain.gain.value = hit ? 0.2 : 0;
 }
 
 // ---------------------------------------------------------------------  audio meters

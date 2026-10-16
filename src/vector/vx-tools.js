@@ -240,9 +240,9 @@ T.artboard = {
   move: e => { const i = DOC.ab; const k = boardHandles(i).findIndex(p => p.getDistance(e.point) < 7 / z()); document.getElementById('cv').style.cursor = k >= 0 ? (k % 4 === 1 ? 'ns-resize' : k % 4 === 3 ? 'ew-resize' : k === 0 || k === 4 ? 'nwse-resize' : 'nesw-resize') : VX.boardAt(e.point) >= 0 ? 'move' : 'crosshair'; },
   down: (e, dbl) => {
     const k = boardHandles(DOC.ab).findIndex(p => p.getDistance(e.point) < 7 / z());
-    if (k >= 0) { abd = { kind: 'resize', k, r0: VX.abRect() }; return; }
+    if (k >= 0) { if (VX.boardLocked(DOC.ab)) return; abd = { kind: 'resize', k, r0: VX.abRect() }; return; }
     const i = VX.boardAt(e.point);
-    if (i >= 0) { if (dbl) return VX.renameBoard(i); if (i !== DOC.ab) VX.setActiveBoard(i); abd = { kind: 'move', i, items: O.moveArtWithBoard && !e.modifiers.alt ? VX.itemsOnBoard(i) : [], last: e.point }; if (e.modifiers.alt) { VX.duplicateBoard(i); abd.i = DOC.ab; abd.items = []; } return; }
+    if (i >= 0) { if (dbl) return VX.renameBoard(i); if (i !== DOC.ab) VX.setActiveBoard(i); if (!e.modifiers.alt && VX.boardLocked(i)) return; abd = { kind: 'move', i, items: O.moveArtWithBoard && !e.modifiers.alt ? VX.itemsOnBoard(i) : [], last: e.point }; if (e.modifiers.alt) { VX.duplicateBoard(i); abd.i = DOC.ab; abd.items = []; } return; }
     abd = { kind: 'new', a: VX.snapPt(e.point), b: null };
   },
   drag: e => {

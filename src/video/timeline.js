@@ -66,8 +66,9 @@ function kfTimes(c) { const s = new Set(); for (const k in (c.kf || {})) c.kf[k]
 function clipEl(c, t) {
   const m = c.mediaId ? mediaById(c.mediaId) : null; const W = Math.max(4, tlDur(c) * ST.pps); const P = c.props;
   const el = h('div', { class: `clip ${c.type}${ST.sel.has(c.id) ? ' sel' : ''}${m?.missing ? ' missing' : ''}${c.link ? ' linked' : ''}`, style: { left: c.start * ST.pps + 'px', width: W + 'px' }, 'data-id': c.id });
-  const tags = [P.speed && P.speed !== 1 ? `${Math.round(P.speed * 100)}%` : '', P.freeze != null ? 'HOLD' : '', c.fx?.some(f => f.on) ? 'fx' : '', VFX.luActive(P.lu) ? 'LU' : '', m?.gen === 'reverse' ? 'REV' : ''].filter(Boolean).join(' · ');
-  const name = c.type === 'title' ? 'T  ' + (P.text || '').split('\n')[0] : c.type === 'shape' ? '◆ ' + (P.shape === 'emoji' ? P.text : P.shape) : c.type === 'adjust' ? 'Adjustment layer' : c.name;
+  const tags = [P.speed && P.speed !== 1 ? `${Math.round(P.speed * 100)}%` : '', P.freeze != null ? 'HOLD' : '', c.fx?.some(f => f.on) ? 'fx' : '', VFX.luActive(P.lu) ? 'LU' : '', c.masks?.length ? 'MASK' : '', m?.gen === 'reverse' ? 'REV' : '', m?.anim ? 'GIF' : ''].filter(Boolean).join(' · ');
+  const name = c.type === 'title' ? 'T  ' + (P.text || '').split('\n')[0] : c.type === 'shape' ? '◆ ' + (P.shape === 'emoji' ? P.text : P.shape) : c.type === 'adjust' ? 'Adjustment layer' : c.type === 'nest' ? '⧉ ' + (seqById(c.seqId)?.name || 'Missing sequence') : c.name;
+  if (c.masks?.length) el.classList.add('masked');
   el.append(h('div', { class: 'cl' }, (tags ? tags + ' · ' : '') + name));
   if (c.type === 'video' && m?.strip) { const stripPx = ROWH.video - 24; el.append(h('div', { class: 'strip', style: { backgroundImage: `url(${m.strip})`, backgroundSize: `${stripPx * (m.w && m.h ? m.w / m.h : 16 / 9) * (m.stripN || 1)}px 100%` } })); }
   if (c.type === 'image' && m?.thumb) el.append(h('div', { class: 'strip', style: { backgroundImage: `url(${m.thumb})`, backgroundSize: 'auto 100%' } }));
@@ -80,7 +81,7 @@ function clipEl(c, t) {
   kfTimes(c).forEach(kt => { const d = h('div', { class: 'kfd', 'data-t': kt, style: { left: kt * ST.pps + 'px' }, title: 'Keyframe ' + kt.toFixed(2) + 's' }); el.append(d); });
   el.append(h('div', { class: 'edge l' }), h('div', { class: 'edge r' }));
   el.addEventListener('pointerdown', e => clipPointerDown(e, c, el));
-  el.addEventListener('dblclick', e => { if (e.target.classList.contains('kfd')) return; select([c.id]); if (c.type === 'title') setTimeout(() => document.querySelector('#fx textarea')?.focus(), 30); });
+  el.addEventListener('dblclick', e => { if (e.target.classList.contains('kfd')) return; if (c.type === 'nest') return openNest(c); select([c.id]); if (c.type === 'title') setTimeout(() => document.querySelector('#fx textarea')?.focus(), 30); });
   el.addEventListener('contextmenu', e => { if (e.target.classList.contains('kfd')) return kfMenu(e, c, +e.target.dataset.t); if (!ST.sel.has(c.id)) selectClick(c, {}); contextMenu(e, clipMenu(c)); });
   el.ondragover = e => { const ty = e.dataTransfer.types; if (['text/bts-tr', 'text/bts-look', 'text/bts-fx', 'text/bts-kfp', 'text/bts-layout'].some(k => ty.includes(k))) { e.preventDefault(); e.stopPropagation(); el.classList.add('drop'); } };
   el.ondragleave = () => el.classList.remove('drop');
@@ -90,6 +91,8 @@ function clipEl(c, t) {
 function clipMenu(c) {
   const vis = isVisual(c);
   return [{ label: 'Split at playhead', kbd: 'Ctrl+Shift+K', action: splitAtPlayhead }, { label: 'Duplicate', action: duplicateClips }, { label: 'Copy', action: copyClips }, '-',
+    c.type === 'nest' ? { label: 'Open nested sequence', action: () => openNest(c) } : { label: 'Nest…', action: nestSelected }, { label: 'Add mask', disabled: !vis, sub: [['ellipse', 'Ellipse'], ['rect', 'Rectangle'], ['pen', 'Pen (bezier)']].map(([k, l]) => ({ label: l, action: () => addMask(k, [c]) })) },
+    { label: 'Track mask / blur forward', disabled: c.type !== 'video', action: () => trackSelected(1) }, { label: 'Scene edit detection', disabled: c.type !== 'video', action: sceneDetectDialog }, '-',
     { label: 'Transition at start', disabled: !vis, sub: VFX.TRANSITIONS.map(([k, l]) => ({ label: l, action: () => addTransition(c, 'in', k) })) },
     { label: 'Transition at end', disabled: !vis, sub: VFX.TRANSITIONS.map(([k, l]) => ({ label: l, action: () => addTransition(c, 'out', k) })) },
     { label: 'Keyframe preset', disabled: !vis, sub: KF_PRESETS.map(([n]) => ({ label: n, action: () => applyKfPreset(n, [c]) })) },
@@ -105,7 +108,9 @@ function drawWave(cv, m, c) {
 }
 function trEl(tr) {
   const I = trInfo(tr); if (!I) return null; const lbl = (VFX.TRANSITIONS.find(t => t[0] === tr.kind) || [, tr.kind])[1];
-  const el = h('div', { class: 'trx' + (ST.selTr === tr.id ? ' sel' : ''), style: { left: I.t0 * ST.pps + 'px', width: Math.max(8, (I.t1 - I.t0) * ST.pps) + 'px' }, title: `${lbl} · ${tr.dur.toFixed(2)}s` }, h('span', {}, lbl), h('div', { class: 'tre' }));
+  const hd = trHandles(tr); const fmtH = v => v === Infinity ? '∞' : v.toFixed(2) + 's';
+  const el = h('div', { class: 'trx' + (ST.selTr === tr.id ? ' sel' : '') + (hd?.short ? ' short' : ''), style: { left: I.t0 * ST.pps + 'px', width: Math.max(8, (I.t1 - I.t0) * ST.pps) + 'px' }, title: `${lbl} · ${tr.dur.toFixed(2)}s` + (hd ? ` · handles: A ${fmtH(hd.a)} after Out, B ${fmtH(hd.b)} before In (needs ${hd.need.toFixed(2)}s each)${hd.short ? ' — INSUFFICIENT MEDIA: frames will be held' : ''}` : '') }, h('span', {}, (hd?.short ? '⚠ ' : '') + lbl), h('div', { class: 'tre' }));
+  if (hd) { const lw = Math.max(8, (I.t1 - I.t0) * ST.pps); const mk = (side, have) => { if (have >= hd.need) return; const wv = Math.max(0, hd.need - have) * ST.pps; el.append(h('div', { class: 'tr-short ' + side, style: { width: Math.min(lw / 2, wv) + 'px' } })); }; mk('l', hd.b); mk('r', hd.a); }
   el.addEventListener('pointerdown', e => {
     if (e.button !== 0) return; e.stopPropagation(); selectTransition(tr.id);
     if (!e.target.classList.contains('tre')) return;
@@ -170,7 +175,14 @@ function selectAll() { PJ.clips.forEach(c => ST.sel.add(c.id)); renderTimeline()
 function shiftKf(c, d) { if (!d || !c.kf) return; for (const k in c.kf) c.kf[k].forEach(kk => kk.t += d); }
 function trimLeft(c, newStart) { const d = newStart - c.start; c.in += d * spd(c); c.start = newStart; shiftKf(c, -d); }
 function neighbour(c, side) { return PJ.clips.find(o => o !== c && o.track === c.track && (side === 'r' ? Math.abs(o.start - cEnd(c)) < 1e-3 : Math.abs(cEnd(o) - c.start) < 1e-3)); }
-const srcMax = c => { const m = mediaById(c.mediaId); return m && m.kind !== 'image' && c.props.freeze == null ? m.dur : Infinity; };
+const srcMax = c => { if (c.type === 'nest') return Math.max(nestDur(c), c.out); const m = mediaById(c.mediaId); return m && m.kind !== 'image' && c.props.freeze == null ? m.dur : Infinity; };
+// how much extra media a clip has before its In point / after its Out point (timeline seconds; generated clips are unlimited)
+const handleBefore = c => ['video', 'audio', 'nest'].includes(c.type) && c.props.freeze == null ? c.in / spd(c) : Infinity;
+const handleAfter = c => ['video', 'audio', 'nest'].includes(c.type) && c.props.freeze == null ? Math.max(0, srcMax(c) - c.out) / spd(c) : Infinity;
+function trHandles(tr) {
+  const I = trInfo(tr); if (!I || !I.A || !I.B) return null; const need = tr.dur / 2;
+  const a = handleAfter(I.A), b = handleBefore(I.B); return { need, a, b, short: a + 1e-3 < need || b + 1e-3 < need };
+}
 function clipPointerDown(e, c, el) {
   if (e.button !== 0) return; e.stopPropagation(); const t = trackById(c.track); if (t.locked) return;
   const sc = $('#tlScroll'), r = sc.getBoundingClientRect(); const tAt = ev => (ev.clientX - r.left + sc.scrollLeft) / ST.pps;
@@ -577,4 +589,60 @@ async function clipVolumeDialog() {
   const cs = selected().filter(hasAudioOf); if (!cs.length) return toast('Select an audio clip or a video clip with audio'); const c = cs[0];
   const v = await form({ title: 'Clip volume & pan', fields: [{ key: 'vol', label: 'Volume %', type: 'range', value: c.props.volume, min: 0, max: 200 }, { key: 'pan', label: 'Pan (−100 left … 100 right)', type: 'range', value: c.props.pan || 0, min: -100, max: 100 }] });
   if (!v) return; cs.forEach(x => { x.props.volume = +v.vol; delete x.kf.volume; x.props.pan = +v.pan; }); commit('Clip volume'); renderTimeline(); renderFx();
+}
+
+// =====================================================================  sequences, nesting & the sequence tab bar
+function switchSequence(id) {
+  if (id === PJ.activeSeq) return true; const tgt = PJ.sequences.find(s => s.id === id); if (!tgt || !tgt.clips) return false;
+  pause(); const cur = PJ.sequences.find(s => s.id === PJ.activeSeq); if (cur) Object.assign(cur, liveSeqData(), { t: ST.t });
+  SEQ_KEYS.forEach(k => { PJ[k] = tgt[k]; delete tgt[k]; }); PJ.activeSeq = id; ST.t = tgt.t || 0;
+  ST.sel.clear(); ST.selTr = ST.selCap = null; ST.inP = ST.outP = null;
+  renderAll(); renderSeqTabs(); seek(ST.t); setStatus('Editing ' + tgt.name); return true;
+}
+function seqUsers(id) { const out = []; PJ.sequences.forEach(s => { const sd = seqById(s.id); (sd.clips || []).forEach(c => { if (c.type === 'nest' && c.seqId === id) out.push({ seq: s, c }); }); }); return out; }
+function newSequenceData(name, seq) { return { id: uid('S'), name, seq: { ...(seq || PJ.seq) }, tracks: newTracks(), clips: [], transitions: [], markers: [], captions: [], capStyle: { ...PJ.capStyle }, capBurn: true }; }
+async function newSequenceDialog() {
+  const v = await form({ title: 'New sequence', width: 420, fields: [{ key: 'name', label: 'Name', value: `Sequence ${String(PJ.sequences.length + 1).padStart(2, '0')}` }, { key: 'size', label: 'Frame size', type: 'select', value: `${PJ.seq.w}x${PJ.seq.h}`, options: [...new Set([`${PJ.seq.w}x${PJ.seq.h}`, ...SEQ_SIZES.map(s => s[0])])].map(sz => ({ value: sz, label: (SEQ_SIZES.find(s => s[0] === sz) || [, sz.replace('x', '×')])[1] })) }, { key: 'fps', label: 'Frame rate', type: 'select', value: String(PJ.seq.fps), options: FPS_LIST.map(String) }] });
+  if (!v) return; const [w, hh] = v.size.split('x').map(Number); return newSequence(v.name || 'Sequence', { ...PJ.seq, w, h: hh, fps: +v.fps });
+}
+function newSequence(name, seq) { const sd = newSequenceData(name, seq); PJ.sequences.push(sd); switchSequence(sd.id); commit('New sequence'); renderSeqTabs(); return sd; }
+async function renameSequence(id = PJ.activeSeq) { const s = PJ.sequences.find(x => x.id === id); if (!s) return; const v = await prompt('Rename sequence', 'Name', s.name); if (!v) return; s.name = v; commit('Rename sequence'); renderSeqTabs(); renderTimeline(); }
+function duplicateSequence(id = PJ.activeSeq) {
+  const src = seqById(id); if (!src) return; const sd = JSON.parse(JSON.stringify({ ...src, id: undefined, t: undefined })); sd.id = uid('S'); sd.name = src.name + ' copy';
+  const remap = {}; sd.clips.forEach(c => { const n = uid('c'); remap[c.id] = n; c.id = n; }); sd.transitions.forEach(tr => { tr.id = uid('t'); if (tr.a) tr.a = remap[tr.a]; if (tr.b) tr.b = remap[tr.b]; });
+  PJ.sequences.push(sd); commit('Duplicate sequence'); renderSeqTabs(); return sd;
+}
+function deleteSequence(id = PJ.activeSeq) {
+  if (PJ.sequences.length < 2) return toast('A project needs at least one sequence'); const users = seqUsers(id); if (users.length) return toast(`This sequence is nested in ${users.map(u => u.seq.name).join(', ')} — delete those nest clips first`, 'err', 6000);
+  if (id === PJ.activeSeq) switchSequence(PJ.sequences.find(s => s.id !== id).id); PJ.sequences = PJ.sequences.filter(s => s.id !== id); commit('Delete sequence'); renderSeqTabs();
+}
+// turns the selected clips into one nested-sequence clip (Premiere's Nest)
+function nestSelected(name) {
+  const sel = selected(); if (!sel.length) return toast('Select the clips to nest');
+  const ids = new Set(sel.map(c => c.id)); const t0 = Math.min(...sel.map(c => c.start)), t1 = Math.max(...sel.map(cEnd));
+  const trs = PJ.transitions.filter(tr => (tr.a ? ids.has(tr.a) : true) && (tr.b ? ids.has(tr.b) : true));
+  const n = PJ.sequences.filter(s => /^Nested sequence/.test(s.name)).length + 1;
+  const sd = { id: uid('S'), name: typeof name === 'string' && name ? name : `Nested sequence ${String(n).padStart(2, '0')}`, seq: { ...PJ.seq }, tracks: PJ.tracks.map(t => ({ ...t, muted: false, hidden: false, locked: false, voice: t.voice })), clips: sel.map(c => { c.start -= t0; c.link = c.link && sel.filter(o => o.link === c.link).length > 1 ? c.link : null; return c; }), transitions: trs, markers: [], captions: [], capStyle: { ...PJ.capStyle }, capBurn: false };
+  PJ.clips = PJ.clips.filter(c => !ids.has(c.id)); PJ.transitions = PJ.transitions.filter(tr => !trs.includes(tr)); PJ.sequences.push(sd);
+  const order = PJ.tracks.map(t => t.id); const vis = sel.filter(isVisual);
+  const track = (vis.length ? vis : sel).map(c => c.track).sort((a, b) => vis.length ? order.indexOf(b) - order.indexOf(a) : order.indexOf(a) - order.indexOf(b))[0];
+  const c = newClip('nest', track, t0, t1 - t0, { name: sd.name }); c.seqId = sd.id; if (!vis.length) c.props.audioOnly = true;
+  placeClip(c, 'overwrite'); select([c.id]); commit('Nest'); renderSeqTabs(); drawFrame(); toast(`Nested ${sel.length} clip(s) into “${sd.name}” — double-click it to edit its contents`, 'ok', 5000); return c;
+}
+function openNest(c) { c = c || selected().find(x => x.type === 'nest'); if (!c) return toast('Select a nested sequence clip'); if (!switchSequence(c.seqId)) toast('The nested sequence is missing', 'err'); }
+function matchNestLength(c) { c = c || selected().find(x => x.type === 'nest'); if (!c) return; c.out = Math.max(c.in + 1 / PJ.seq.fps, nestDur(c)); overwrite(c); commit('Match nest length'); renderTimeline(); drawFrame(); }
+function renderSeqTabs() {
+  const bar = $('#seqTabs'); if (!bar) return; bar.innerHTML = '';
+  const used = new Set(); PJ.sequences.forEach(s => (seqById(s.id).clips || []).forEach(c => { if (c.type === 'nest') used.add(c.seqId); }));
+  PJ.sequences.forEach(s => {
+    const t = h('div', { class: 'seq-tab' + (s.id === PJ.activeSeq ? ' on' : ''), 'data-id': s.id, title: used.has(s.id) ? 'Nested sequence (used inside another sequence)' : 'Sequence' }, h('span', { class: 'ic' }, used.has(s.id) ? '⧉' : '▤'), h('span', { class: 'nm' }, s.name));
+    t.onclick = () => switchSequence(s.id); t.ondblclick = () => renameSequence(s.id);
+    t.oncontextmenu = e => contextMenu(e, [{ label: 'Open', action: () => switchSequence(s.id) }, { label: 'Rename…', action: () => renameSequence(s.id) }, { label: 'Duplicate', action: () => duplicateSequence(s.id) }, { label: 'Insert into active sequence as nest', disabled: s.id === PJ.activeSeq, action: () => insertSequenceAsNest(s.id) }, '-', { label: 'Delete sequence', action: () => deleteSequence(s.id), disabled: PJ.sequences.length < 2 }]);
+    bar.append(t);
+  });
+  bar.append(h('button', { class: 'seq-add', 'data-tip': 'New sequence', onclick: newSequenceDialog }, '+'));
+}
+function insertSequenceAsNest(id, at = ST.t) {
+  if (seqContains(id, PJ.activeSeq)) return toast('That would nest a sequence inside itself', 'err'); const sd = seqById(id); if (!sd) return;
+  const d = withSeq(sd, () => seqDuration()) || 5; const c = newClip('nest', freeTrack('video', at, d, 'V1'), at, d, { name: sd.name }); c.seqId = id; placeClip(c, ST.editMode); select([c.id]); commit('Insert nested sequence'); renderSeqTabs(); drawFrame(); return c;
 }

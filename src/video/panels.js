@@ -92,13 +92,16 @@ function renderCaptions() {
   const preset = h('select', {}, ...Object.keys(VCAP.PRESETS).map(k => h('option', { selected: PJ.capStyle.preset === k }, k))); preset.onchange = () => { PJ.capStyle = { ...PJ.capStyle, preset: preset.value, ...VCAP.PRESETS[preset.value] }; commit('Caption style'); drawFrame(); };
   const burn = h('input', { type: 'checkbox', checked: PJ.capBurn }); burn.onchange = () => { PJ.capBurn = burn.checked; commit('Caption burn-in'); renderTimeline(); };
   b.append(h('div', { class: 'bin-tools wrap' }, h('button', { class: 'btn sm primary', html: icon('plus') + 'Add', onclick: () => addCaption(ST.t) }), h('button', { class: 'btn sm', onclick: importCaptions }, 'Import SRT/VTT'), h('button', { class: 'btn sm', onclick: () => exportCaptions('srt') }, 'SRT'), h('button', { class: 'btn sm', onclick: () => exportCaptions('vtt') }, 'VTT')),
-    h('div', { class: 'bin-tools wrap' }, h('span', { class: 'muted' }, 'Style'), preset, h('button', { class: 'btn sm ghost', onclick: captionStyleDialog }, 'Customize…'), h('label', { class: 'row', style: { color: 'var(--tx-1)', fontSize: '12px' } }, burn, 'Burn into export')));
-  if (!PJ.captions.length) { b.append(h('div', { class: 'empty-bin' }, 'No captions yet. Import an SRT or WebVTT file, click Add, or double-click the CC track on the timeline.', h('br'), h('br'), h('span', { class: 'muted' }, 'Automatic speech-to-text needs a large offline speech model, so it is not included.'))); return; }
+    h('div', { class: 'bin-tools wrap' }, h('span', { class: 'muted' }, 'Style'), preset, h('button', { class: 'btn sm ghost', onclick: captionStyleDialog }, 'Customize…'), h('label', { class: 'row', style: { color: 'var(--tx-1)', fontSize: '12px' } }, burn, 'Burn into export')),
+    h('div', { class: 'bin-tools wrap' }, h('button', { class: 'btn sm', onclick: transcriptDialog, 'data-tip': 'Paste what is said — BTS Video times it to the speech (offline)' }, 'Auto-time transcript…'), h('button', { class: 'btn sm' + (PJ.censor.words.length ? ' primary' : ''), onclick: censorDialog }, `Censor words${PJ.censor.words.length ? ` (${PJ.censor.words.length})` : ''}…`), (() => { const i = h('input', { type: 'checkbox', checked: !!PJ.censor.bleep }); i.onchange = () => setCensor({ bleep: i.checked }); return h('label', { class: 'row', style: { color: 'var(--tx-1)', fontSize: '12px' }, 'data-tip': 'Mute + 1 kHz tone over censored words' }, i, 'Bleep'); })()));
+  if (!PJ.captions.length) { b.append(h('div', { class: 'empty-bin' }, 'No captions yet. Import an SRT or WebVTT file, paste a transcript with “Auto-time transcript…”, click Add, or double-click the CC track on the timeline.')); return; }
   const list = h('div', { class: 'cap-list' });
   PJ.captions.forEach(cp => {
     const num = (v, on) => { const i = h('input', { type: 'number', step: 0.1, min: 0, value: v.toFixed(2) }); i.onchange = () => { on(Math.max(0, +i.value)); PJ.captions.sort((a, b2) => a.start - b2.start); commit('Caption timing'); renderTimeline(); renderCaptions(); drawFrame(); }; return i; };
     const ta = h('textarea', { rows: 2 }, cp.text); ta.oninput = () => { cp.text = ta.value; drawFrameSoon(); commitDebounced('Caption text'); renderTimelineSoon(); };
+    const cens = PJ.censor.words.length ? VCAP.wordTimes(cp, true).filter(wd => VCAP.isCensored(wd.w, PJ.censor.words)).length : 0;
     const row = h('div', { class: 'cap-row' + (ST.selCap === cp.id ? ' sel' : '') + (ST.t >= cp.start && ST.t < cp.end ? ' now' : ''), 'data-id': cp.id },
+      (cp.words && cp.words.length === VCAP.tokens(cp.text).length) || cens ? h('div', { class: 'wd' }, [(cp.words && cp.words.length === VCAP.tokens(cp.text).length) ? `${cp.words.length} timed words` : '', cens ? `${cens} censored${PJ.censor.bleep ? ' · bleep' : ''}` : ''].filter(Boolean).join(' · ')) : '',
       h('div', { class: 'tm' }, num(cp.start, v => { cp.start = v; if (cp.end <= v) cp.end = v + 0.5; }), h('span', { class: 'muted' }, '→'), num(cp.end, v => { cp.end = Math.max(cp.start + 0.1, v); }), h('button', { class: 'icon-btn sm', 'data-tip': 'Go to caption', html: icon('play'), onclick: () => seek(cp.start) }), h('button', { class: 'icon-btn sm', 'data-tip': 'Delete caption', html: icon('trash'), onclick: () => { PJ.captions = PJ.captions.filter(x => x !== cp); commit('Delete caption'); renderTimeline(); renderCaptions(); drawFrame(); } })), ta);
     row.onclick = e => { if (e.target.tagName === 'INPUT' || e.target.closest('button')) return; ST.selCap = cp.id; ST.sel.clear(); if (e.target.tagName !== 'TEXTAREA') seek(cp.start + 0.01); document.querySelectorAll('.cap-row.sel').forEach(x => x.classList.remove('sel')); row.classList.add('sel'); renderTimeline(); };
     list.append(row);
@@ -121,7 +124,7 @@ async function importCaptions() {
   addCaptionsFromList(caps, replace); toast(`Imported ${caps.length} captions`, 'ok');
 }
 function addCaptionsFromList(caps, replace) { if (replace) PJ.captions = []; caps.forEach(c => PJ.captions.push({ id: uid('cc'), ...c })); PJ.captions.sort((a, b) => a.start - b.start); commit('Import captions'); showLeft('captions'); renderTimeline(); drawFrame(); }
-async function exportCaptions(fmt) { if (!PJ.captions.length) return toast('There are no captions'); const txt = fmt === 'vtt' ? VCAP.toVTT(PJ.captions) : VCAP.toSRT(PJ.captions); const p = await bts.fs.saveAs({ data: new TextEncoder().encode(txt), defaultPath: PJ.name.replace(/\.btsvid$/, '') + '.' + fmt, filters: [{ name: fmt.toUpperCase(), extensions: [fmt] }] }); if (p) toast('Saved ' + p.split(/[\\/]/).pop(), 'ok'); }
+async function exportCaptions(fmt) { if (!PJ.captions.length) return toast('There are no captions'); const caps = PJ.censor.on && PJ.censor.words.length ? PJ.captions.map(c => ({ ...c, text: VCAP.censor(c.text, PJ.censor.words) })) : PJ.captions; const txt = fmt === 'vtt' ? VCAP.toVTT(caps) : VCAP.toSRT(caps); const p = await bts.fs.saveAs({ data: new TextEncoder().encode(txt), defaultPath: PJ.name.replace(/\.btsvid$/, '') + '.' + fmt, filters: [{ name: fmt.toUpperCase(), extensions: [fmt] }] }); if (p) toast('Saved ' + p.split(/[\\/]/).pop(), 'ok'); }
 
 // ---------------------------------------------------------------------  history panel
 function renderHistory() {
@@ -134,11 +137,12 @@ function renderHistory() {
 
 // =====================================================================  Effect Controls inspector
 const FONTS = ['Segoe UI', 'Arial', 'Arial Black', 'Impact', 'Georgia', 'Times New Roman', 'Verdana', 'Trebuchet MS', 'Courier New', 'Comic Sans MS', 'Segoe Script', 'Nirmala UI', 'Tahoma', 'Calibri', 'Cambria', 'Consolas'];
-const ANIMS = [['none', 'None'], ['fade', 'Fade'], ['rise', 'Fade up'], ['pop', 'Pop'], ['slide', 'Slide in'], ['type', 'Typewriter'], ['wipe', 'Wipe reveal'], ['letters', 'Letter by letter'], ['roll', 'Credits roll']];
+const ANIMS = [['none', 'None'], ['fade', 'Fade'], ['rise', 'Fade up'], ['pop', 'Pop'], ['slide', 'Slide in'], ['type', 'Typewriter'], ['wipe', 'Wipe reveal'], ['letters', 'Letter by letter'], ['roll', 'Credits roll'],
+  ['words', 'Word by word'], ['bounce', 'Bounce'], ['wave', 'Wave'], ['blurIn', 'Blur in'], ['trackIn', 'Track in (letter spacing)'], ['zoomIn', 'Zoom in'], ['glitch', 'Glitch text'], ['neon', 'Neon flicker'], ['drop', 'Drop in'], ['flip', 'Flip in'], ['scramble', 'Scramble / decode'], ['karaoke', 'Karaoke highlight']];
 const isCollapsed = t => (PREFS.collapsed || []).includes(t);
 function toggleCollapsed(t) { const s = new Set(PREFS.collapsed || []); s.has(t) ? s.delete(t) : s.add(t); PREFS.collapsed = [...s]; savePrefs(); }
-function animGet(c, key, lt) { if (c.kf?.[key]?.length) return VFX.evalKf(c.kf[key], lt); if (key.startsWith('fx:')) { const [, id, p] = key.split(':'); return c.fx.find(f => f.id === id)?.[p]; } return c.props[key]; }
-function animSet(c, key, v, lt) { if (c.kf?.[key]?.length) { VFX.setKey(c.kf, key, lt, v); return; } if (key.startsWith('fx:')) { const [, id, p] = key.split(':'); const f = c.fx.find(x => x.id === id); if (f) f[p] = v; } else c.props[key] = v; }
+function animGet(c, key, lt) { if (c.kf?.[key]?.length) return VFX.evalKf(c.kf[key], lt); if (key.startsWith('fx:')) { const [, id, p] = key.split(':'); return c.fx.find(f => f.id === id)?.[p]; } if (key.startsWith('mask:')) { const [, id, p] = key.split(':'); return (c.masks || []).find(m => m.id === id)?.[p]; } return c.props[key]; }
+function animSet(c, key, v, lt) { if (c.kf?.[key]?.length) { VFX.setKey(c.kf, key, lt, v); return; } if (key.startsWith('fx:')) { const [, id, p] = key.split(':'); const f = c.fx.find(x => x.id === id); if (f) f[p] = v; } else if (key.startsWith('mask:')) { const [, id, p] = key.split(':'); const m = (c.masks || []).find(x => x.id === id); if (m) m[p] = v; } else c.props[key] = v; }
 let rfT = null; function renderFxSoon() { if (ST.playing) return; clearTimeout(rfT); rfT = setTimeout(() => { const a = document.activeElement; if (a && $('#fx').contains(a) && /INPUT|TEXTAREA|SELECT/.test(a.tagName) && a.type !== 'range') return; const c = selected()[0]; if (c && Object.keys(c.kf || {}).length) renderFx(); if (ltab === 'captions') renderCaptions(); }, 60); }
 function renderFx() {
   const b = $('#fx'); const scroll = b.scrollTop; b.innerHTML = ''; const s = selected();
@@ -152,7 +156,7 @@ function renderFx() {
   const live = () => drawFrameSoon(); const done = l => { commitDebounced(l); };
   // generic animatable slider
   const slider = (label, key, min, max, step = 1, opts = {}) => {
-    const animated = !!c.kf?.[key]?.length; const canAnim = opts.anim !== false && (ANIM_KEYS.includes(key) || key.startsWith('fx:'));
+    const animated = !!c.kf?.[key]?.length; const canAnim = opts.anim !== false && (ANIM_KEYS.includes(key) || key.startsWith('fx:') || key.startsWith('mask:'));
     const val = animGet(c, key, lt()) ?? 0; const r = h('input', { type: 'range', min, max, step, value: val }); const n = h('input', { type: 'number', min, max, step, value: +(+val).toFixed(step < 1 ? 2 : 0) });
     const set = v => { animSet(c, key, v, lt()); live(); done(label); if (opts.onSet) opts.onSet(v); if (['fadeIn', 'fadeOut', 'volume', 'speed'].includes(key) || animated) renderTimelineSoon(); };
     r.oninput = () => { n.value = r.value; set(+r.value); }; n.oninput = () => { if (n.value === '') return; r.value = n.value; set(+n.value); };
@@ -181,6 +185,9 @@ function renderFx() {
       p.style === 'countdown' ? plain('Count from', p, 'count', 1, 60) : ''));
   }
   if (c.type === 'shape') w.append(grp('Shape', sel('Shape', p, 'shape', [...SHAPES, ['emoji', 'Sticker / emoji']], () => renderFx()), p.shape === 'emoji' ? (() => { const i = h('input', { type: 'text', value: p.text }); i.oninput = () => { p.text = i.value; live(); done('Sticker'); }; return h('div', { class: 'p2' }, h('span', {}, 'Character'), i); })() : '', col('Fill', p, 'fill'), col('Stroke', p, 'stroke'), plain('Stroke width', p, 'strokeW', 0, 40), plain('Width', p, 'w', 4, 3000), plain('Height', p, 'h', 2, 3000), p.shape === 'rect' ? plain('Corner radius', p, 'radius', 0, 500) : ''));
+  if (c.type === 'nest') { const sd = nestSeq(c); const nd = nestDur(c);
+    w.append(grp('Nested sequence', h('div', { class: 'okmsg' }, sd ? `“${sd.name}” · ${sd.seq.w}×${sd.seq.h} · ${nd.toFixed(2)} s · ${sd.clips.length} clip(s)` : 'The nested sequence is missing.'), nd > c.out + 0.05 || nd < c.out - 0.05 ? h('div', { class: 'warn' }, `The nested sequence is ${nd.toFixed(2)} s long; this clip shows ${c.in.toFixed(2)}–${c.out.toFixed(2)} s of it.`) : '',
+      h('div', { class: 'btn-row' }, h('button', { class: 'btn sm primary', onclick: () => openNest(c) }, 'Open (edit contents)'), h('button', { class: 'btn sm', onclick: () => matchNestLength(c) }, 'Match sequence length'), h('button', { class: 'btn sm', onclick: () => renameSequence(c.seqId) }, 'Rename…')))); }
   if (c.type === 'color') w.append(grp('Colour matte', col('Colour', p, 'color'), sel('Gradient', p, 'grad', [['none', 'Solid'], ['linear', 'Linear gradient'], ['radial', 'Radial gradient']], () => { renderFx(); renderTimeline(); }), p.grad !== 'none' ? col('Colour 2', p, 'color2') : '', p.grad === 'linear' ? plain('Angle°', p, 'angle', 0, 360) : ''));
   if (isVisual(c)) {
     if (c.type !== 'adjust') {
@@ -191,6 +198,20 @@ function renderFx() {
       w.append(grp('Opacity', slider('Opacity %', 'opacity', 0, 100), slider('Fade in (s)', 'fadeIn', 0, Math.max(0.1, Math.min(10, D)), 0.05, { anim: false }), slider('Fade out (s)', 'fadeOut', 0, Math.max(0.1, Math.min(10, D)), 0.05, { anim: false })));
       if (['video', 'image', 'color'].includes(c.type)) w.append(grp('Crop', slider('Left %', 'cropL', 0, 100), slider('Right %', 'cropR', 0, 100), slider('Top %', 'cropT', 0, 100), slider('Bottom %', 'cropB', 0, 100)));
     }
+    // masks
+    const mlist = h('div'); const lt0 = lt();
+    (c.masks || []).forEach(m => {
+      const foc = focusMask(c) === m; const on = h('input', { type: 'checkbox', checked: m.on !== false, 'data-tip': 'Mask on/off' }); on.onchange = () => { m.on = on.checked; commit('Mask on/off'); drawFrame(); };
+      const card = h('div', { class: 'mask-card' + (foc ? ' focus' : '') }, h('div', { class: 'mask-h' }, on, h('span', { class: 'nm', onclick: () => { ST.maskFocus = m.id; renderFx(); drawOverlay(); } }, (foc ? '▾ ' : '▸ ') + m.name + ' · ' + (MASK_TYPES.find(t => t[0] === m.type) || [, m.type])[1]), h('button', { class: 'icon-btn sm', 'data-tip': 'Delete mask', html: icon('trash'), onclick: () => removeMask(c, m.id) })));
+      if (foc) card.append(slider('Position X', `mask:${m.id}:x`, -PJ.seq.w, PJ.seq.w), slider('Position Y', `mask:${m.id}:y`, -PJ.seq.h, PJ.seq.h), m.type !== 'pen' ? slider('Width', `mask:${m.id}:w`, 2, PJ.seq.w * 2) : '', m.type !== 'pen' ? slider('Height', `mask:${m.id}:h`, 2, PJ.seq.h * 2) : '', slider('Rotation°', `mask:${m.id}:rot`, -180, 180),
+        slider('Feather', `mask:${m.id}:feather`, 0, 300), slider('Expansion', `mask:${m.id}:expand`, -300, 300), slider('Opacity %', `mask:${m.id}:opacity`, 0, 100), chk('Inverted', m, 'invert'), m.type === 'pen' ? chk('Smooth (bezier)', m, 'smooth') : '',
+        sel('Mode', m, 'mode', [['add', 'Add'], ['subtract', 'Subtract'], ['intersect', 'Intersect']]),
+        m.type === 'pen' ? h('div', { class: 'btn-row' }, h('button', { class: 'btn sm' + (c.kf[`mask:${m.id}:pts`]?.length ? ' primary' : ''), onclick: () => toggleMaskPathKf(c, m, lt0), 'data-tip': 'Animate the mask shape (keyframe the path at the playhead)' }, c.kf[`mask:${m.id}:pts`]?.length ? '◆ Path animated' : 'Animate path'), h('button', { class: 'btn sm', onclick: () => { if (c.kf[`mask:${m.id}:pts`]?.length) VFX.setKey(c.kf, `mask:${m.id}:pts`, frameSnap(lt0), flatPts(maskAt(c, m, lt0).pts)); commit('Path keyframe'); renderTimeline(); renderFx(); } }, '+ Path key')) : '',
+        c.type === 'video' ? h('div', { class: 'btn-row' }, h('button', { class: 'btn sm', onclick: () => trackSelected(-1, { target: 'mask' }), 'data-tip': 'Track the masked area backward from the playhead' }, '◀ Track'), h('button', { class: 'btn sm', onclick: () => trackSelected(1, { target: 'mask' }), 'data-tip': 'Track the masked area forward from the playhead (writes position keyframes)' }, 'Track ▶')) : '');
+      mlist.append(card);
+    });
+    w.append(grp('Masks', mlist, h('div', { class: 'btn-row' }, h('button', { class: 'btn sm', onclick: () => addMask('ellipse', [c]) }, '+ Ellipse'), h('button', { class: 'btn sm', onclick: () => addMask('rect', [c]) }, '+ Rectangle'), h('button', { class: 'btn sm', onclick: () => addMask('pen', [c]) }, '+ Pen'), h('button', { class: 'btn sm ghost', onclick: startPenMask, 'data-tip': 'Click points on the program monitor' }, 'Draw pen…')),
+      !(c.masks || []).length ? h('div', { class: 'muted', style: { fontSize: '11.5px' } }, 'Masks cut out part of this clip. Drag them on the program monitor; animate or track them.') : ''));
     // effect stack
     const stack = h('div', { class: 'fx-stack' });
     c.fx.forEach((f, i) => {
@@ -208,7 +229,7 @@ function renderFx() {
         else body.append(slider(pp.label, `fx:${f.id}:${pp.k}`, pp.min, pp.max, pp.step || 1, { onSet: () => drawOverlay() }));
       });
       if (f.type === 'chroma') body.append(h('div', { class: 'p2' }, h('span', {}, 'Pick key'), h('button', { class: 'btn sm', onclick: () => pickKeyColor(c, f) }, 'Eyedropper on monitor')));
-      if (f.type === 'mosaic' && !f.whole) body.append(h('div', { class: 'hint' }, 'Drag the region box on the program monitor to cover a face. Animate Region X/Y with the stopwatches to follow movement.'));
+      if (f.type === 'mosaic' && !f.whole) body.append(h('div', { class: 'hint' }, 'Drag the region box on the program monitor to cover a face, then track it — or animate Region X/Y with the stopwatches.'), c.type === 'video' ? h('div', { class: 'btn-row' }, h('button', { class: 'btn sm', onclick: () => { ST.fxFocus = f.id; trackSelected(-1, { target: 'blur' }); } }, '◀ Track face'), h('button', { class: 'btn sm', onclick: () => { ST.fxFocus = f.id; trackSelected(1, { target: 'blur' }); } }, 'Track face ▶')) : '');
       stack.append(h('div', { class: 'fx-card' + (f.on ? '' : ' off') + (ST.fxFocus === f.id ? ' focus' : '') }, hd, body));
     });
     const add = h('select', {}, h('option', { value: '' }, '+ Add effect…'), ...Object.entries(VFX.EFFECTS).map(([k, d]) => h('option', { value: k }, `${d.cat} › ${d.name}`))); add.onchange = () => { if (add.value) addEffect(add.value, {}, [c]); };
@@ -239,7 +260,11 @@ function renderTransitionInspector(w, tr, grp) {
   const I = trInfo(tr); const lbl = (VFX.TRANSITIONS.find(t => t[0] === tr.kind) || [, tr.kind])[1];
   const k = h('select', {}, ...VFX.TRANSITIONS.map(([v, l]) => h('option', { value: v, selected: tr.kind === v }, l))); k.onchange = () => { tr.kind = k.value; commit('Transition'); renderTimeline(); drawFrame(); renderFx(); };
   const dn = h('input', { type: 'number', min: 0.04, max: 20, step: 0.05, value: tr.dur.toFixed(2) }); dn.onchange = () => { tr.dur = Math.max(1 / PJ.seq.fps, +dn.value || 1); commit('Transition duration'); renderTimeline(); drawFrame(); renderFx(); };
-  w.append(h('div', { class: 'grp' }, h('div', { class: 'ttl' }, lbl), h('div', { class: 'muted sub' }, `${tr.track} · ${I ? tc(I.t0) + ' → ' + tc(I.t1) : ''} · ${tr.a && tr.b ? 'between two clips' : tr.b ? 'at clip start' : 'at clip end'}`)),
+  const hd = trHandles(tr); const fh = v => v === Infinity ? 'unlimited (generated)' : v.toFixed(2) + ' s';
+  const hInfo = hd ? h('div', {}, h('div', { class: 'okmsg' }, `Media handles — outgoing clip: ${fh(hd.a)} after its Out point · incoming clip: ${fh(hd.b)} before its In point. This transition needs ${hd.need.toFixed(2)} s on each side.`),
+    hd.short ? h('div', { class: 'warn' }, `⚠ Insufficient media: ${hd.a < hd.need ? `the outgoing clip is ${(hd.need - hd.a).toFixed(2)} s short` : ''}${hd.a < hd.need && hd.b < hd.need ? ' and ' : ''}${hd.b < hd.need ? `the incoming clip is ${(hd.need - hd.b).toFixed(2)} s short` : ''} — the edge frames will be held (frozen). Shorten the transition to ${(2 * Math.min(hd.a, hd.b)).toFixed(2)} s or trim the clips.`) : '',
+    hd.short ? h('button', { class: 'btn sm', onclick: () => { tr.dur = Math.max(1 / PJ.seq.fps, 2 * Math.min(hd.a, hd.b)); commit('Fit transition to handles'); renderTimeline(); renderFx(); drawFrame(); } }, 'Fit to available media') : '') : h('div', { class: 'okmsg' }, 'One-sided transition — no extra media needed.');
+  w.append(h('div', { class: 'grp' }, h('div', { class: 'ttl' }, lbl), h('div', { class: 'muted sub' }, `${tr.track} · ${I ? tc(I.t0) + ' → ' + tc(I.t1) : ''} · ${tr.a && tr.b ? 'between two clips' : tr.b ? 'at clip start' : 'at clip end'}`), hInfo),
     grp('Transition', h('div', { class: 'p2' }, h('span', {}, 'Type'), k), h('div', { class: 'p2' }, h('span', {}, 'Duration (s)'), dn), h('div', { class: 'row', style: { marginTop: '8px', gap: '6px' } }, h('button', { class: 'btn sm', onclick: () => I && seek(I.t0) }, 'Go to start'), h('button', { class: 'btn sm', onclick: () => { if (!I) return; ST.inP = I.t0; ST.outP = I.t1; seek(I.t0); play(); ST.loopIO = false; } }, 'Preview'), h('button', { class: 'btn sm', onclick: () => deleteTransition(tr.id) }, 'Delete'))));
 }
 
@@ -259,18 +284,20 @@ function drawOverlay() {
   if (!ovl) return; const r = prog.getBoundingClientRect(); const dpr = devicePixelRatio || 1;
   ovl.style.width = r.width + 'px'; ovl.style.height = r.height + 'px'; if (ovl.width !== Math.round(r.width * dpr)) ovl.width = Math.round(r.width * dpr); if (ovl.height !== Math.round(r.height * dpr)) ovl.height = Math.round(r.height * dpr);
   const x = ovl.getContext('2d'); x.setTransform(dpr, 0, 0, dpr, 0, 0); x.clearRect(0, 0, r.width, r.height);
-  const c = overlayState(); ovl.style.cursor = picking ? 'crosshair' : c ? 'move' : 'default'; if (!c) return;
+  const c = overlayState(); ovl.style.cursor = picking || ST.penDraw ? 'crosshair' : c ? 'move' : 'default'; if (!c) return;
   const M = clipScreenMap(c); const W = PJ.seq.w, H = PJ.seq.h; const R = ['video', 'image'].includes(c.type) ? mediaRect(c, M.P) : c.type === 'shape' ? { x: -M.P.w / 2, y: -M.P.h / 2, w: M.P.w, h: M.P.h } : { x: -W / 2, y: -H / 2, w: W, h: H };
   const poly = pts => { x.beginPath(); pts.forEach((p, i) => i ? x.lineTo(...p) : x.moveTo(...p)); x.closePath(); };
   x.setLineDash([5, 4]); x.lineWidth = 1.5; x.strokeStyle = 'rgba(255,255,255,.85)'; poly([M.toS(R.x, R.y), M.toS(R.x + R.w, R.y), M.toS(R.x + R.w, R.y + R.h), M.toS(R.x, R.y + R.h)]); x.stroke();
   x.setLineDash([]); x.strokeStyle = cssVar('--accent', '#9a7bff'); const [cx, cy] = M.toS(0, 0); x.beginPath(); x.arc(cx, cy, 5, 0, Math.PI * 2); x.stroke();
   const mos = mosaicFx(c); if (mos) { const f = evalFx(c, ST.t - c.start).find(g => g.id === mos.id); const rx = f.rx / 100 * W - W / 2, ry = f.ry / 100 * H - H / 2, rw = f.rw / 100 * W, rh = f.rh / 100 * H;
     x.lineWidth = 2; x.strokeStyle = '#ffd400'; poly([M.toS(rx, ry), M.toS(rx + rw, ry), M.toS(rx + rw, ry + rh), M.toS(rx, ry + rh)]); x.stroke(); const [hx, hy] = M.toS(rx + rw, ry + rh); x.fillStyle = '#ffd400'; x.fillRect(hx - 5, hy - 5, 10, 10); x.font = '11px sans-serif'; x.fillText('blur region', ...M.toS(rx, ry - 8 / M.k)); }
+  if ((c.masks && c.masks.length) || ST.penDraw) drawMaskOverlay(x, c, M);
 }
 function mosaicFx(c) { const ms = c.fx.filter(f => f.type === 'mosaic' && f.on && !f.whole); return ms.find(f => f.id === ST.fxFocus) || ms[0] || null; }
 ovl && ovl.addEventListener('pointerdown', e => {
   const r = ovl.getBoundingClientRect(); const sx = e.clientX - r.left, sy = e.clientY - r.top;
   if (picking) { const k = prog.width / r.width; const px = pctx.getImageData(Math.floor(sx * k), Math.floor(sy * k), 1, 1).data; const hex = '#' + [px[0], px[1], px[2]].map(v => v.toString(16).padStart(2, '0')).join(''); picking.f.color = hex; picking = null; commit('Pick key colour'); renderFx(); drawFrame(); toast('Key colour ' + hex, 'ok'); return; }
+  if (maskPointerDown(e, r)) return;
   const c = overlayState(); if (!c) return; const M = clipScreenMap(c); const lt = clamp(ST.t - c.start, 0, tlDur(c)); const W = PJ.seq.w, H = PJ.seq.h;
   const mos = mosaicFx(c); let mode = 'move', f0 = null;
   if (mos) { const f = evalFx(c, lt).find(g => g.id === mos.id); const [lx, ly] = M.toL(sx, sy); const rx = f.rx / 100 * W - W / 2, ry = f.ry / 100 * H - H / 2, rw = f.rw / 100 * W, rh = f.rh / 100 * H;

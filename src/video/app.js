@@ -70,7 +70,7 @@ function exportWithPreset(id) { return id === 'png' ? exportFrame() : exportDial
 const tools = () => TOOLS.map(([id, , label, k]) => ({ label, kbd: k, checked: () => ST.tool === id, action: () => setTool(id) }));
 UI.titlebar({ logo: 'Vd', menus: [
   { label: 'File', items: () => [
-    { label: 'New project', kbd: 'Ctrl+Alt+N', action: newProject }, { label: 'Open project…', kbd: 'Ctrl+O', action: openProject }, { label: 'Recover autosaved project…', action: () => recoverAutosave(true), disabled: !getAutosave() }, '-',
+    { label: 'New project', kbd: 'Ctrl+Alt+N', action: newProject }, { label: 'Open project…', kbd: 'Ctrl+O', action: openProject }, { label: 'Recover autosaved project…', action: () => recoverAutosave(true), disabled: !hasRecoverable() }, { label: 'New from template', sub: TEMPLATES.map(([k, l]) => ({ label: l, action: () => newFromTemplate(k) })) }, '-',
     { label: 'Import media…', kbd: 'Ctrl+I', action: importDialog }, { label: 'Import image sequence…', action: importImageSequence }, { label: 'Import captions (SRT / VTT)…', action: importCaptions }, '-',
     { label: 'Save project', kbd: 'Ctrl+S', action: () => saveProject(false) }, { label: 'Save project as…', kbd: 'Ctrl+Shift+S', action: () => saveProject(true) }, '-',
     { label: 'Export…', kbd: 'Ctrl+M', action: exportDialog }, { label: 'Export with preset', sub: EXP_MENU() }, { label: 'Export current frame (PNG)…', kbd: 'Ctrl+Shift+E', action: exportFrame }, { label: 'Export captions as SRT…', action: () => exportCaptions('srt') }, { label: 'Export captions as WebVTT…', action: () => exportCaptions('vtt') }, '-',
@@ -83,6 +83,10 @@ UI.titlebar({ logo: 'Vd', menus: [
   { label: 'Clip', items: () => [
     { label: 'Add edit (split at playhead)', kbd: 'Ctrl+Shift+K', action: splitAtPlayhead }, { label: 'Speed / duration…', kbd: 'Ctrl+R', action: speedDialog }, { label: 'Speed ramp…', action: speedRampDialog }, { label: 'Reverse clip', action: reverseClip },
     { label: 'Add frame hold segment (freeze frame)…', kbd: 'Shift+F', action: freezeFrame }, { label: 'Frame hold (whole clip)', action: frameHold }, '-',
+    { label: 'Nest… (selected clips → nested sequence)', kbd: 'Alt+N', action: () => nestSelected() }, { label: 'Open nested sequence', action: () => openNest(), disabled: !selected().some(c => c.type === 'nest') }, { label: 'Match nest to sequence length', action: () => matchNestLength(), disabled: !selected().some(c => c.type === 'nest') }, '-',
+    { label: 'Masks', sub: [...MASK_TYPES.map(([k, l]) => ({ label: 'Add ' + l.toLowerCase() + ' mask', action: () => addMask(k) })), { label: 'Draw pen mask on monitor…', action: startPenMask }, '-', { label: 'Track mask forward', kbd: 'Ctrl+Alt+→', action: () => trackSelected(1, { target: 'mask' }) }, { label: 'Track mask backward', kbd: 'Ctrl+Alt+←', action: () => trackSelected(-1, { target: 'mask' }) }, '-', { label: 'Remove all masks', action: () => { selected().forEach(c => (c.masks || []).slice().forEach(m => removeMask(c, m.id))); } }] },
+    { label: 'Face blur', sub: [{ label: 'Add face blur (pixelate)', action: () => addEffect('mosaic') }, { label: 'Add face blur (soft)', action: () => addEffect('mosaic', { mode: 'blur', size: 30 }) }, { label: 'Track face-blur region forward', action: () => trackSelected(1, { target: 'blur' }) }, { label: 'Track face-blur region backward', action: () => trackSelected(-1, { target: 'blur' }) }] },
+    { label: 'Scene edit detection…', action: sceneDetectDialog }, { label: 'Check transition handles', action: checkTransitionHandles }, '-',
     { label: 'Link / unlink', kbd: 'Ctrl+L', action: toggleLink }, { label: 'Unlink audio to an A track', action: unlinkAudio }, { label: 'Group', kbd: 'Ctrl+G', action: groupClips }, { label: 'Ungroup', kbd: 'Ctrl+Shift+G', action: ungroupClips }, '-',
     { label: 'Video effects', sub: Object.entries(VFX.EFFECTS).map(([k, d]) => ({ label: d.name, action: () => addEffect(k) })) },
     { label: 'Effect presets', sub: VFX.FX_PRESETS.map(([n, k, o]) => ({ label: n, action: () => addEffect(k, o) })) },
@@ -94,9 +98,11 @@ UI.titlebar({ logo: 'Vd', menus: [
     { label: 'Effects on / off (bypass)', action: toggleAllEffects }, { label: 'Show Lumetri Color controls', action: () => showInspectorGroup('Lumetri Color') }, { label: 'Show Effect controls › Effects', action: () => showInspectorGroup('Effects') }, '-',
     { label: 'Fit to frame', action: () => setProp('fit', 'fit') }, { label: 'Fill frame', action: () => setProp('fit', 'fill') }, { label: 'Fade in / out (0.5 s)', action: quickFades }, { label: 'Reset effects', action: resetEffects }] },
   { label: 'Sequence', items: () => [
+    { label: 'New sequence…', action: newSequenceDialog }, { label: 'Switch to sequence', sub: PJ.sequences.map(sq => ({ label: sq.name, checked: sq.id === PJ.activeSeq, action: () => switchSequence(sq.id) })) }, { label: 'Rename sequence…', action: () => renameSequence() }, { label: 'Duplicate sequence', action: () => duplicateSequence() }, { label: 'Delete sequence', action: () => deleteSequence(), disabled: PJ.sequences.length < 2 }, { label: 'Insert sequence as nest', sub: PJ.sequences.filter(sq => sq.id !== PJ.activeSeq).map(sq => ({ label: sq.name, action: () => insertSequenceAsNest(sq.id) })).concat(PJ.sequences.length < 2 ? [{ label: '(no other sequences)', disabled: true }] : []) }, '-',
     { label: 'Sequence settings…', action: seqSettings }, { label: 'Aspect ratio', sub: ASPECTS.map(([a, w, hh]) => ({ label: `${a} (${w}×${hh})`, checked: PJ.seq.w * hh === PJ.seq.h * w, action: () => changeSequence(w, hh) })) },
     { label: 'Frame size', sub: SEQ_SIZES.map(([s, l]) => { const [w, hh] = s.split('x').map(Number); return { label: l, checked: PJ.seq.w === w && PJ.seq.h === hh, action: () => changeSequence(w, hh) }; }) },
-    { label: 'Frame rate', sub: FPS_LIST.map(f => ({ label: f + ' fps', checked: PJ.seq.fps === f, action: () => changeSequence(PJ.seq.w, PJ.seq.h, f) })) }, { label: 'Auto reframe for social…', action: autoReframe }, '-',
+    { label: 'Frame rate', sub: FPS_LIST.map(f => ({ label: f + ' fps', checked: PJ.seq.fps === f, action: () => changeSequence(PJ.seq.w, PJ.seq.h, f) })) }, { label: 'Auto reframe for social…', action: autoReframe }, { label: 'Smart reframe (follow subject)…', action: smartReframeDialog }, '-',
+    { label: 'Detect beats → markers', action: () => beatDetect() }, { label: 'Auto-cut selected clips to beats…', action: autoCutDialog }, { label: 'Clear beat markers', action: clearBeatMarkers }, '-',
     { label: 'Playback', sub: [{ label: 'Play / pause', kbd: 'Space', action: togglePlay }, { label: 'Shuttle reverse', kbd: 'J', action: () => shuttle(-1) }, { label: 'Stop', kbd: 'K', action: () => shuttle(0) }, { label: 'Shuttle forward', kbd: 'L', action: () => shuttle(1) }, { label: 'Step back one frame', kbd: '←', action: () => seek(ST.t - 1 / PJ.seq.fps) }, { label: 'Step forward one frame', kbd: '→', action: () => seek(ST.t + 1 / PJ.seq.fps) }, { label: 'Back 5 frames', kbd: 'Shift+←', action: () => seek(ST.t - 5 / PJ.seq.fps) }, { label: 'Forward 5 frames', kbd: 'Shift+→', action: () => seek(ST.t + 5 / PJ.seq.fps) }, { label: 'Previous edit point', kbd: '↑', action: () => jumpEdit(-1) }, { label: 'Next edit point', kbd: '↓', action: () => jumpEdit(1) }, { label: 'Go to start', kbd: 'Home', action: () => seek(0) }, { label: 'Go to end', kbd: 'End', action: () => seek(seqDuration()) }, { label: 'Loop In/Out playback', checked: () => !!ST.loopIO, action: () => { ST.loopIO = !ST.loopIO; } }] },
     { label: 'Tools', sub: tools() }, '-',
     { label: 'Mark In', kbd: 'I', action: () => setIn() }, { label: 'Mark Out', kbd: 'O', action: () => setOut() }, { label: 'Mark clip', kbd: 'X', action: markClip }, { label: 'Clear In and Out', kbd: 'Ctrl+Shift+X', action: clearIO }, { label: 'Go to In', kbd: 'Shift+I', action: () => ST.inP != null && seek(ST.inP) }, { label: 'Go to Out', kbd: 'Shift+O', action: () => ST.outP != null && seek(ST.outP) },
@@ -112,10 +118,14 @@ UI.titlebar({ logo: 'Vd', menus: [
     { label: 'Shapes', sub: SHAPES.map(([k, l]) => ({ label: l, action: () => addShape({ shape: k }) })) }, { label: 'Stickers', sub: STICKERS.map(s => ({ label: s + '  sticker', action: () => addShape({ shape: 'emoji', text: s }) })) }, '-',
     { label: 'Colour matte / solid', action: () => addGenerator('color') }, { label: 'Gradient background', action: () => addGenerator('gradient') }, { label: 'Black video', action: () => addGenerator('black') }, { label: 'Adjustment layer', action: () => addGenerator('adjust') }, { label: 'Countdown leader', action: () => addGenerator('countdown') }, '-',
     { label: 'Text animation', sub: ANIMS.map(([k, l]) => ({ label: l, action: () => setTextAnim(k) })) }, '-',
-    { label: 'Add caption at playhead', kbd: 'Ctrl+Alt+C', action: () => addCaption(ST.t) }, { label: 'Caption list', action: () => showLeft('captions') }, { label: 'Caption style…', action: captionStyleDialog }, { label: 'Caption style preset', sub: Object.keys(VCAP.PRESETS).map(k => ({ label: k, checked: PJ.capStyle.preset === k, action: () => { PJ.capStyle = { ...PJ.capStyle, preset: k, ...VCAP.PRESETS[k] }; commit('Caption style'); drawFrame(); renderLeft(); } })) },
-    { label: 'Burn captions into export', checked: () => PJ.capBurn, action: () => { PJ.capBurn = !PJ.capBurn; commit('Caption burn-in'); renderTimeline(); renderLeft(); } }] },
+    { label: 'Captions menu…', action: () => showLeft('captions') }] },
+  { label: 'Captions', items: () => [
+    { label: 'Add caption at playhead', kbd: 'Ctrl+Alt+C', action: () => addCaption(ST.t) }, { label: 'Auto-time transcript (paste text, offline)…', action: transcriptDialog }, { label: 'Import captions (SRT / VTT)…', action: importCaptions }, { label: 'Export captions as SRT…', action: () => exportCaptions('srt') }, { label: 'Export captions as WebVTT…', action: () => exportCaptions('vtt') }, '-',
+    { label: 'Filter censored words…', action: censorDialog }, { label: 'Mask censored words (f***)', checked: () => PJ.censor.on, action: () => setCensor({ on: !PJ.censor.on }) }, { label: 'Bleep censored words', checked: () => PJ.censor.bleep, action: () => setCensor({ bleep: !PJ.censor.bleep }) }, '-',
+    { label: 'Caption list', action: () => showLeft('captions') }, { label: 'Caption style…', action: captionStyleDialog }, { label: 'Caption style preset', sub: Object.keys(VCAP.PRESETS).map(k => ({ label: k, checked: PJ.capStyle.preset === k, action: () => { PJ.capStyle = { ...PJ.capStyle, preset: k, ...VCAP.PRESETS[k] }; commit('Caption style'); drawFrame(); renderLeft(); } })) },
+    { label: 'Burn captions into export', checked: () => PJ.capBurn, action: () => { PJ.capBurn = !PJ.capBurn; commit('Caption burn-in'); renderTimeline(); renderLeft(); } }, { label: 'Show captions in preview', checked: () => ST.capShow !== false, action: () => { ST.capShow = ST.capShow === false; drawFrame(); renderTimeline(); } }] },
   { label: 'Audio', items: () => [
-    { label: ST.recording ? 'Stop recording voice-over' : 'Record voice-over…', kbd: 'Shift+R', action: recordVoiceOver }, { label: 'Auto-duck music under voice…', action: autoDuckDialog }, { label: 'Remove auto-ducking', action: removeDucking }, '-',
+    { label: ST.recording ? 'Stop recording voice-over' : 'Record voice-over…', kbd: 'Shift+R', action: recordVoiceOver }, { label: 'Detect beats in music → markers', action: () => beatDetect() }, { label: 'Auto-cut to beats…', action: autoCutDialog }, { label: 'Auto-duck music under voice…', action: autoDuckDialog }, { label: 'Remove auto-ducking', action: removeDucking }, '-',
     { label: 'Normalize', action: () => toggleAudioFx('normalize') }, { label: 'Noise reduction', action: () => toggleAudioFx('denoise') }, { label: 'Voice enhance', action: () => toggleAudioFx('voice') }, { label: 'Bake audio effects (hear them now)', action: () => { const c = selected()[0]; c ? bakeAudio(c) : toast('Select a clip'); } }, '-',
     { label: 'Clip volume & pan…', action: clipVolumeDialog }, { label: 'Fade in / out (0.5 s)', action: quickFades }, { label: 'Unlink audio to an A track', action: unlinkAudio }, { label: 'Mute clip', action: () => setProp('volume', 0) }, { label: 'Pan left', action: () => setProp('pan', -100) }, { label: 'Pan centre', action: () => setProp('pan', 0) }, { label: 'Pan right', action: () => setProp('pan', 100) }] },
   { label: 'View', items: () => [
@@ -145,6 +155,7 @@ S('=', () => zoomTl(1.4)); S('+', () => zoomTl(1.4)); S('shift+=', () => zoomTl(
 TOOLS.forEach(([id, , , k]) => S(k.toLowerCase(), () => setTool(id))); S('s', toggleSnap);
 S('i', () => setIn()); S('o', () => setOut()); S('x', markClip); S('ctrl+shift+x', clearIO); S('shift+i', () => ST.inP != null && seek(ST.inP)); S('shift+o', () => ST.outP != null && seek(ST.outP));
 S(';', () => liftExtract(false)); S("'", () => liftExtract(true)); S(',', () => editFromBin('insert')); S('.', () => editFromBin('overwrite')); S('q', () => rippleTrimToPlayhead('prev')); S('w', () => rippleTrimToPlayhead('next'));
+S('alt+n', () => nestSelected()); S('ctrl+alt+arrowright', () => trackSelected(1)); S('ctrl+alt+arrowleft', () => trackSelected(-1));
 S('m', () => { const mk = markerAtPlayhead(); mk ? editMarker(mk) : addMarker(); }); S('shift+m', () => jumpMarker(1)); S('ctrl+shift+m', () => jumpMarker(-1));
 
 // =====================================================================  options bar & transport
@@ -180,7 +191,7 @@ function wireTransport() {
 // =====================================================================  project lifecycle
 async function newProject() {
   if (PJ.dirty && !(await confirm('Discard changes?', 'The current project has unsaved changes.', 'Discard'))) return;
-  pause(); resetElements(); Object.assign(PJ, { name: 'Untitled project', path: null, media: [], clips: [], transitions: [], markers: [], captions: [], tracks: newTracks(), capStyle: { ...VCAP.DEFAULT_STYLE }, capBurn: true });
+  pause(); resetElements(); Object.assign(PJ, { name: 'Untitled project', path: null, media: [], clips: [], transitions: [], markers: [], captions: [], tracks: newTracks(), capStyle: { ...VCAP.DEFAULT_STYLE }, capBurn: true, sequences: [{ id: 'S1', name: 'Sequence 01' }], activeSeq: 'S1', censor: { words: [], on: true, bleep: false, estimate: true } });
   ST.sel.clear(); ST.selTr = ST.selCap = null; ST.t = 0; ST.inP = ST.outP = null; hist = []; hi = -1; commit('New'); PJ.dirty = false; clearAutosave(); UI.setDocTitle(PJ.name, 'BTS Video'); renderAll();
 }
 async function closeWindow() {
@@ -190,7 +201,12 @@ async function closeWindow() {
 }
 let autosaveTimer = null;
 function startAutosave() { clearInterval(autosaveTimer); if (PREFS.autosave > 0) autosaveTimer = setInterval(() => { if (PJ.dirty && !EXP.on) autosaveNow(); }, PREFS.autosave * 1000); }
-function renderAll() { renderOptions(); renderHead(); renderLeft(); renderTimeline(); renderFx(); layoutMonitor(); }
+function renderAll() { renderOptions(); renderHead(); renderLeft(); renderTimeline(); renderFx(); layoutMonitor(); renderSeqTabs(); }
+function checkTransitionHandles() {
+  const bad = PJ.transitions.map(tr => ({ tr, hd: trHandles(tr) })).filter(x => x.hd && x.hd.short);
+  if (!bad.length) return toast(`All ${PJ.transitions.length} transition(s) have enough media`, 'ok');
+  selectTransition(bad[0].tr.id); const I = trInfo(bad[0].tr); if (I) seek(I.t0); toast(`${bad.length} transition(s) don't have enough media (marked ⚠ on the timeline) — the edge frames are held`, 'err', 6000); return bad.length;
+}
 UI.fileDrop(async files => { for (const f of files) { const p = bts.fs.pathOf(f); if (!p) continue; if (/\.btsvid$/i.test(p)) { const r = await bts.fs.read(p); await loadProject({ ...r, data: new Uint8Array(r.data) }); } else if (/\.(srt|vtt)$/i.test(p)) { const r = await bts.fs.read(p); addCaptionsFromList(VCAP.parse(new TextDecoder().decode(new Uint8Array(r.data))), !PJ.captions.length); } else { const m = await importPath(p, f.name); if (m && !m.missing && PJ.clips.length === 0) appendMedia(m); } } }, 'Drop media, captions or projects to import');
 (async () => {
   wireTransport(); if (PREFS.rs) ST.rs = PREFS.rs;
@@ -199,7 +215,7 @@ UI.fileDrop(async files => { for (const f of files) { const p = bts.fs.pathOf(f)
   if (!ST.ffmpeg) setStatus('FFmpeg not found — exporting uses built-in WebM');
   const qf = UI.queryFile();
   if (qf) { if (/\.btsvid$/i.test(qf)) { const r = await bts.fs.read(qf); loadProject({ ...r, data: new Uint8Array(r.data) }); } else { const m = await importPath(qf); if (m && !m.missing) appendMedia(m); } }
-  else if (getAutosave()) setTimeout(() => recoverAutosave(true), 400);
+  else if (hasRecoverable()) setTimeout(() => recoverAutosave(true), 400);
   startAutosave(); drawMeters($('#meters'));
 })();
-window.__bts = { PJ, ST, importPath, appendMedia, addTitle, seek, renderAt, splitAtPlayhead, applyTransition, exportFFmpeg, select, renderTimeline, drawFrame, applyLook, commit, get EXP() { return EXP; } };
+window.__bts = { PJ, ST, nestSelected, switchSequence, addMask, trackSelected, beatDetect, autoCutToBeats, sceneDetect, autoTimeTranscript, setCensor, newFromTemplate, smartReframe, importPath, appendMedia, addTitle, seek, renderAt, splitAtPlayhead, applyTransition, exportFFmpeg, select, renderTimeline, drawFrame, applyLook, commit, get EXP() { return EXP; } };

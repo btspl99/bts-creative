@@ -13,7 +13,10 @@ G.hasText = items => items.some(i => i instanceof P.PointText || (i.getItems && 
 // Offsets along a path that include every anchor (so corners survive resampling)
 G.sampleOffsets = (path, step) => { const len = path.length; if (!len) return [0]; const n = Math.max(4, Math.ceil(len / Math.max(0.5, step))); const set = []; for (let k = 0; k <= n; k++) set.push(len * k / n); path.segments.forEach(s => { const o = s.location?.offset; if (o != null) set.push(o); }); set.sort((a, b) => a - b); const out = []; set.forEach(o => { if (!out.length || o - out[out.length - 1] > 1e-3) out.push(o); }); if (path.closed && out.length > 1 && len - out[out.length - 1] < 1e-3) out.pop(); return out; };
 G.resample = (path, step) => G.sampleOffsets(path, step).map(o => path.getPointAt(Math.min(o, path.length))).filter(Boolean);
-G.setPoints = (path, pts, simplifyTol) => { const closed = path.closed; path.removeSegments(); path.addSegments(pts); path.closed = closed; if (simplifyTol) path.simplify(simplifyTol); };
+// closed paths are fitted as an open loop and re-joined: paper's simplify() of a closed path leaves a visibly flattened seam
+G.setPoints = (path, pts, simplifyTol) => { const closed = path.closed; path.removeSegments();
+  if (closed && simplifyTol && pts.length > 3) { path.closed = false; path.addSegments([...pts, pts[0]]); path.simplify(simplifyTol); if (path.segments.length > 2) { const last = path.lastSegment; path.firstSegment.handleIn = last.handleIn; last.remove(); } path.closed = true; return; }
+  path.addSegments(pts); path.closed = closed; if (simplifyTol) path.simplify(simplifyTol); };
 // map every point of every path through fn (dense resample first)
 G.mapItem = (item, fn, { step = 4, simplify = 0.25 } = {}) => G.eachPath(item, p => { if (p.segments.length < 2 && !p.closed) return; const pts = G.resample(p, step).map(fn); G.setPoints(p, pts, simplify); });
 G.lerp = (a, b, t) => a + (b - a) * t;
@@ -135,6 +138,70 @@ const FX = G.FX = {
   round: { name: 'Round corners', fields: p => [{ key: 'r', label: 'Radius (px)', type: 'range', value: p.r ?? 12, min: 0, max: 300 }], apply: (it, p) => { G.roundAll(it, p.r); return it; } },
   blur: { name: 'Gaussian blur', fields: p => [{ key: 'r', label: 'Radius (px)', type: 'range', value: p.r ?? 6, min: 0, max: 100, step: 0.5 }], apply: (it, p) => G.blurRaster(it, p.r) },
 };
+// ---------------------------------------------------------------- 3D Extrude & Bevel (vector-only): polygons are extruded in 3D, rotated,
+// projected, back-face culled, painter-sorted and shaded with a single directional light. Live (editable) and expandable to paths.
+G.extrude3D = (it, p, B) => {
+  const c = B.center; const diag = Math.hypot(B.width, B.height) || 1; const depth = p.depth, bev = Math.min(p.bevel || 0, diag / 6);
+  const rad = Math.PI / 180, ax = p.rx * rad, ay = p.ry * rad, az = (p.rz || 0) * rad;
+  const rot = ([x, y, z]) => { let y1 = y * Math.cos(ax) - z * Math.sin(ax), z1 = y * Math.sin(ax) + z * Math.cos(ax); let x2 = x * Math.cos(ay) + z1 * Math.sin(ay), z2 = -x * Math.sin(ay) + z1 * Math.cos(ay); return [x2 * Math.cos(az) - y1 * Math.sin(az), x2 * Math.sin(az) + y1 * Math.cos(az), z2]; };
+  const D = p.persp > 0 ? diag * 2.2 * (100 / p.persp) : 0;
+  const proj = q => { const [x, y, z] = rot(q); const k = D ? D / Math.max(D * 0.15, D + z) : 1; return { pt: new P.Point(c.x + x * k, c.y + y * k), z }; };
+  const L = (() => { const a = (p.light ?? 315) * rad; const v = [Math.cos(a), Math.sin(a), -(p.lightZ ?? 0.9)]; const n = Math.hypot(...v); return v.map(x => x / n); })();
+  const shadeOf = n3 => { const n = rot(n3); const ln = Math.hypot(...n) || 1; const d = Math.max(0, (n[0] * L[0] + n[1] * L[1] + n[2] * L[2]) / ln); return { k: (p.ambient / 100) + (p.intensity / 100) * d, facing: n[2] < 1e-6 }; };
+  const baseOf = item => { const f = item.fillColor || item.strokeColor; if (!f) return new P.Color(0.6, 0.6, 0.65); if (f.gradient) return f.gradient.stops[0].color.clone(); return f.clone(); };
+  const shadeCol = (col, k) => { const o = new P.Color(clamp(col.red * k, 0, 1), clamp(col.green * k, 0, 1), clamp(col.blue * k, 0, 1)); o.alpha = col.alpha; return o; };
+  const faces = [];
+  const shapes = []; G.eachPath(it, path => { if (path.parent instanceof P.CompoundPath) return; shapes.push(path); }); if (it instanceof P.CompoundPath) shapes.length = 0;
+  const units = []; (function collect(x) { if (x instanceof P.CompoundPath) units.push(x); else if (x instanceof P.Path) units.push(x); else if (x.children) x.children.forEach(collect); })(it);
+  units.forEach(u => {
+    const base = baseOf(u); const loops = (u instanceof P.CompoundPath ? u.children : [u]).filter(q => q.segments.length > 1);
+    const polys = loops.map(q => { const f = q.clone({ insert: false }); if (!f.closed) f.closed = true; f.flatten(Math.max(0.6, diag / 160)); let pts = f.segments.map(s => s.point); if (pts.length > 600) { const st = Math.ceil(pts.length / 600); pts = pts.filter((_, i) => i % st === 0); } return pts; }).filter(ps => ps.length > 2);
+    const area = ps => { let a = 0; for (let i = 0; i < ps.length; i++) { const p1 = ps[i], p2 = ps[(i + 1) % ps.length]; a += p1.x * p2.y - p2.x * p1.y; } return a / 2; };
+    const inside = (pt, ps) => { let r = false; for (let i = 0, j = ps.length - 1; i < ps.length; j = i++) { const a = ps[i], b = ps[j]; if ((a.y > pt.y) !== (b.y > pt.y) && pt.x < (b.x - a.x) * (pt.y - a.y) / (b.y - a.y) + a.x) r = !r; } return r; };
+    const zf = -depth / 2, zb = depth / 2;
+    const to3 = (q, z) => [q.x - c.x, q.y - c.y, z];
+    const fronts = [], backs = [];
+    polys.forEach((ps, li) => {
+      const hole = polys.reduce((n, other, oi) => n + (oi !== li && inside(ps[0], other) ? 1 : 0), 0) % 2 === 1; const sg = (area(ps) > 0 ? 1 : -1) * (hole ? -1 : 1);
+      const N = ps.length; const n2 = ps.map((q, i) => { const r = ps[(i + 1) % N]; const dx = r.x - q.x, dy = r.y - q.y; const l = Math.hypot(dx, dy) || 1; return [dy / l * sg, -dx / l * sg]; });
+      let ring = ps, zFront = zf;
+      if (bev > 0) { // inset (bevelled) front contour, pulled towards the viewer
+        const vn = ps.map((q, i) => { const a = n2[(i - 1 + N) % N], b = n2[i]; let x = a[0] + b[0], y = a[1] + b[1]; const l = Math.hypot(x, y) || 1; x /= l; y /= l; const cosH = Math.max(0.35, x * b[0] + y * b[1]); return [x / cosH, y / cosH]; });
+        const inner = ps.map((q, i) => new P.Point(q.x - vn[i][0] * bev, q.y - vn[i][1] * bev)); zFront = zf - bev;
+        for (let i = 0; i < N; i++) { const j = (i + 1) % N; const quad = [to3(ps[i], zf), to3(ps[j], zf), to3(inner[j], zFront), to3(inner[i], zFront)];
+          const e1 = [quad[1][0] - quad[0][0], quad[1][1] - quad[0][1], 0], e2 = [quad[3][0] - quad[0][0], quad[3][1] - quad[0][1], quad[3][2] - quad[0][2]]; let nn = [e1[1] * e2[2] - e1[2] * e2[1], e1[2] * e2[0] - e1[0] * e2[2], e1[0] * e2[1] - e1[1] * e2[0]]; if (nn[0] * n2[i][0] + nn[1] * n2[i][1] - nn[2] < 0) nn = nn.map(v => -v);
+          faces.push({ q: quad, n: nn, col: base, kind: 'bevel' }); }
+        ring = inner;
+      }
+      fronts.push(ring.map(q => to3(q, zFront))); backs.push(ps.map(q => to3(q, zb)));
+      if (depth > 0) for (let i = 0; i < N; i++) { const j = (i + 1) % N; faces.push({ q: [to3(ps[i], zf), to3(ps[j], zf), to3(ps[j], zb), to3(ps[i], zb)], n: [n2[i][0], n2[i][1], 0], col: base, kind: 'side' }); }
+    });
+    faces.push({ loops: fronts, n: [0, 0, -1], col: base, kind: 'front', rule: u.fillRule }); if (depth > 0) faces.push({ loops: backs, n: [0, 0, 1], col: base, kind: 'back', rule: u.fillRule });
+  });
+  const g = new P.Group({ insert: false }); g.name = '3D extrude';
+  const drawn = faces.map(f => { const sh = shadeOf(f.n); if (!sh.facing && f.kind !== 'front') return null; if (!sh.facing && f.kind === 'front') return null; const loops = f.loops || [f.q]; const pl = loops.map(lp => lp.map(proj)); const z = pl.flat().reduce((a, b) => a + b.z, 0) / Math.max(1, pl.flat().length); return { f, pl, z, k: sh.k }; }).filter(Boolean).sort((a, b) => b.z - a.z);
+  drawn.forEach(({ f, pl, k }) => {
+    const kk = f.kind === 'front' ? Math.max(k, (p.ambient + p.intensity) / 100 * 0.92) : k; const col = shadeCol(f.col, kk);
+    let item; if (pl.length > 1) item = new P.CompoundPath({ children: pl.map(lp => new P.Path({ segments: lp.map(v => v.pt), closed: true, insert: false })), insert: false, fillRule: f.rule || 'evenodd' }); else item = new P.Path({ segments: pl[0].map(v => v.pt), closed: true, insert: false });
+    item.fillColor = col; if (f.kind !== 'front' && f.kind !== 'back') { item.strokeColor = col; item.strokeWidth = 0.6; item.strokeJoin = 'round'; }
+    item.data.face3d = f.kind; g.addChild(item);
+  });
+  return g;
+};
+FX.extrude = { name: '3D Extrude & Bevel',
+  fields: p => [{ key: 'depth', label: 'Extrude depth (px)', type: 'range', value: p.depth ?? 60, min: 0, max: 600 }, { key: 'rx', label: 'Rotate X — tilt (°)', type: 'range', value: p.rx ?? -18, min: -180, max: 180 }, { key: 'ry', label: 'Rotate Y — turn (°)', type: 'range', value: p.ry ?? 28, min: -180, max: 180 }, { key: 'rz', label: 'Rotate Z — spin (°)', type: 'range', value: p.rz ?? 0, min: -180, max: 180 }, { key: 'persp', label: 'Perspective (%)', type: 'range', value: p.persp ?? 0, min: 0, max: 100 }, { key: 'bevel', label: 'Bevel size (px)', type: 'range', value: p.bevel ?? 0, min: 0, max: 60, step: 0.5 }, { key: 'light', label: 'Light direction (°)', type: 'range', value: p.light ?? 315, min: 0, max: 360 }, { key: 'intensity', label: 'Light intensity (%)', type: 'range', value: p.intensity ?? 65, min: 0, max: 150 }, { key: 'ambient', label: 'Ambient light (%)', type: 'range', value: p.ambient ?? 40, min: 0, max: 100 }],
+  apply: (it, p, B) => G.extrude3D(it, p, B),
+  // turntable: animate the Y rotation in the live preview (rotate-around preview)
+  setup: (api, preset) => {
+    const m = api.modal; const foot = m?.querySelector('.m-f'); if (!foot) return null; let tmr = null, yaw = 0;
+    const btn = h('button', { class: 'btn tt-btn', style: { marginRight: 'auto' } }, '▶ Turntable');
+    const slider = () => [...m.querySelectorAll('label.field')].find(l => l.textContent.startsWith('Rotate Y'));
+    const stop = () => { if (!tmr) return; clearInterval(tmr); tmr = null; btn.textContent = '▶ Turntable'; const sl = slider(); const rng = sl?.querySelector('input[type=range]'); if (rng) { rng.value = Math.round(((yaw + 180) % 360 + 360) % 360 - 180); rng.dispatchEvent(new Event('input')); } };
+    const start = () => { yaw = +api.vals().ry || 0; btn.textContent = '■ Stop'; tmr = setInterval(() => { yaw = (yaw + 8) % 360; api.run({ ry: ((yaw + 180) % 360) - 180 }); }, 70); };
+    btn.onclick = () => tmr ? stop() : start(); foot.prepend(btn); VX._turntable = { start, stop, get spinning() { return !!tmr; } };
+    if (preset === 'turntable') start();
+    return () => { if (tmr) clearInterval(tmr); tmr = null; VX._turntable = null; };
+  } };
 G.blurRaster = (it, r) => { const tmp = it.clone(); tmp.shadowColor = null; const pad = r * 3; const res = 2; const ras = tmp.rasterize({ resolution: 72 * res, insert: false }); tmp.remove(); const c = document.createElement('canvas'); c.width = Math.ceil(ras.width + pad * 2 * res); c.height = Math.ceil(ras.height + pad * 2 * res); const x = c.getContext('2d'); x.filter = `blur(${r * res / 2}px)`; x.drawImage(ras.canvas, pad * res, pad * res); const out = new P.Raster({ canvas: c, insert: false }); out.scale(1 / res); out.position = ras.position; return out; };
 
 // ---------------------------------------------------------------- live effect groups: Group{ data.live:{kind:'fx', fx:[{type,p}]}, children:[source(hidden), result] }
@@ -156,23 +223,29 @@ async function ensureOutlinesForFx() { if (G.hasText(sel()) && VX.f.createOutlin
 async function fxDialog(type, preset) {
   const def = FX[type]; if (!def) return;
   if (!sel().length) return toast('Select one or more objects first');
+  // re-applying 3D to an object that already has it edits the existing effect instead of stacking a second extrusion
+  const s0 = sel()[0]; const ei = sel().length === 1 && type === 'extrude' && s0.data?.live?.kind === 'fx' ? s0.data.live.fx.findIndex(f => f.type === 'extrude') : -1;
+  if (ei >= 0) return editFxAt(s0, ei, preset);
   if (type !== 'blur' && !(await ensureOutlinesForFx())) return;
-  const p0 = preset ? { style: preset } : {};
+  const p0 = preset && type === 'warp' ? { style: preset } : {};
   const fields = def.fields(p0);
-  return VX.withPreview({ title: def.name, fields, label: def.name, apply: v => { const items = sel(); const out = items.map(it => { const g = wrapFx(it); g.data.live.fx.push({ type, p: { ...v } }); regenFx(g); return g; }); VX.setSel(out); } });
+  return VX.withPreview({ title: def.name, fields, label: def.name, width: def.setup ? 440 : undefined, setup: def.setup ? api => def.setup(api, preset) : undefined, apply: v => { const items = sel(); const out = items.map(it => { const g = wrapFx(it); g.data.live.fx.push({ type, p: { ...v } }); regenFx(g); return g; }); VX.setSel(out); } });
 }
 async function editFxChain(g) {
   const fx = g.data.live.fx; if (!fx.length) return;
   let idx = fx.length - 1;
   if (fx.length > 1) { const v = await form({ title: 'Edit effect', fields: [{ key: 'i', label: 'Effect', type: 'select', value: String(idx), options: fx.map((f, i) => ({ value: String(i), label: `${i + 1}. ${FX[f.type]?.name || f.type}` })) }], ok: 'Edit' }); if (!v) return; idx = +v.i; }
-  const f = fx[idx]; const def = FX[f.type];
+  return editFxAt(g, idx);
+}
+function editFxAt(g, idx, preset) {
+  const f = g.data.live.fx[idx]; const def = FX[f.type];
   VX.setSel([g]);
-  return VX.withPreview({ title: 'Edit ' + def.name, fields: def.fields(f.p), label: 'Edit ' + def.name, apply: v => { const gg = sel()[0]; gg.data.live.fx[idx].p = { ...v }; regenFx(gg); } });
+  return VX.withPreview({ title: 'Edit ' + def.name, fields: def.fields(f.p), label: 'Edit ' + def.name, setup: def.setup ? api => def.setup(api, preset) : undefined, apply: v => { const gg = sel()[0]; gg.data.live.fx[idx].p = { ...v }; regenFx(gg); } });
 }
 function fxSection(items) {
   const g = items.length === 1 && items[0].data?.live ? items[0] : null; if (!g) return null;
   const L = g.data.live; const sec = VX.sec;
-  if (L.kind === 'fx') return sec('Effects (live)', ...L.fx.map((f, i) => h('div', { class: 'colrow' }, h('span', { style: { flex: 1, color: 'var(--tx-1)' } }, `fx  ${FX[f.type]?.name || f.type}`), h('button', { class: 'btn sm', onclick: () => { VX.setSel([g]); const def = FX[f.type]; VX.withPreview({ title: 'Edit ' + def.name, fields: def.fields(f.p), label: 'Edit effect', apply: v => { const gg = sel()[0]; gg.data.live.fx[i].p = { ...v }; regenFx(gg); } }); } }, 'Edit'), h('button', { class: 'btn sm', onclick: () => { g.data.live.fx.splice(i, 1); if (!g.data.live.fx.length) { const src = srcOf(g); src.visible = true; src.remove(); src.opacity = g.opacity; g.parent.insertChild(g.index, src); g.remove(); VX.setSel([src]); } else { regenFx(g); VX.setSel([g]); } VX.commit('Remove effect'); } }, '✕'))),
+  if (L.kind === 'fx') return sec('Effects (live)', ...L.fx.map((f, i) => h('div', { class: 'colrow' }, h('span', { style: { flex: 1, color: 'var(--tx-1)' } }, `fx  ${FX[f.type]?.name || f.type}`), h('button', { class: 'btn sm', onclick: () => editFxAt(g, i) }, 'Edit'), h('button', { class: 'btn sm', onclick: () => { g.data.live.fx.splice(i, 1); if (!g.data.live.fx.length) { const src = srcOf(g); src.visible = true; src.remove(); src.opacity = g.opacity; g.parent.insertChild(g.index, src); g.remove(); VX.setSel([src]); } else { regenFx(g); VX.setSel([g]); } VX.commit('Remove effect'); } }, '✕'))),
     h('div', { class: 'row', style: { gap: '4px' } }, h('button', { class: 'btn sm', onclick: VX.F('expandAppearance') }, 'Expand appearance')));
   const def = VX.live[L.kind]; if (!def) return null;
   return sec((def.name || 'Live object'), h('div', { class: 'muted', style: { fontSize: '11px', marginBottom: '6px' } }, def.describe ? def.describe(g) : 'Live, editable object'), h('div', { class: 'row', style: { gap: '4px', flexWrap: 'wrap' } }, def.edit ? h('button', { class: 'btn sm', onclick: () => def.edit(g) }, 'Edit…') : '', h('button', { class: 'btn sm', onclick: VX.F('expandAppearance') }, 'Expand')));

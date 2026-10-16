@@ -67,7 +67,9 @@ function traceTextOutline(t) {
   const td = ImageTracer.imagedataToTracedata(id, { numberofcolors: 2, colorsampling: 0, colorquantcycles: 1, pal: [{ r: 0, g: 0, b: 0, a: 255 }, { r: 255, g: 255, b: 255, a: 255 }], ltres: 0.6, qtres: 0.6, pathomit: 4, rightangleenhance: false, blurradius: 0, roundcoords: 2 });
   const svg = ImageTracer.getsvgstring(td, { ...td.options, viewbox: false, strokewidth: 0, desc: false, scale: 1, roundcoords: 2, lcpr: 0, qcpr: 0 });
   const it = new P.Group({ insert: false }); it.importSVG(svg, { insert: true, expandShapes: true });
-  const blacks = it.getItems({ class: P.Path, match: p => p.fillColor && p.fillColor.brightness < 0.5 }).concat(it.getItems({ class: P.CompoundPath, match: p => p.fillColor && p.fillColor.brightness < 0.5 }));
+  // top-level dark shapes only (children of compound paths were collected twice before) and never the image-sized frame the tracer emits
+  const isFrame = p => p.bounds.width > c.width * 0.9 && p.bounds.height > c.height * 0.9;
+  const blacks = it.getItems({ match: p => (p instanceof P.CompoundPath || (p instanceof P.Path && !(p.parent instanceof P.CompoundPath))) && p.fillColor && p.fillColor.brightness < 0.5 && !isFrame(p) });
   if (!blacks.length) return null;
   const cp = new P.CompoundPath({ insert: false }); blacks.forEach(b => { (b instanceof P.CompoundPath ? b.children.slice() : [b]).forEach(ch => cp.addChild(ch.clone({ insert: false }))); });
   cp.translate([-ox, -oy]); cp.scale(1 / k, new P.Point(0, 0)); return cp;

@@ -35,6 +35,7 @@ contextBridge.exposeInMainWorld('bts', {
     framesOpen: o => ipcRenderer.invoke('frames:open', o),
     framesNext: id => ipcRenderer.invoke('frames:next', id),
     framesClose: id => ipcRenderer.invoke('frames:close', id),
+    framesOpenRaw: o => ipcRenderer.invoke('frames:openRaw', o),
   },
   update: {
     check: () => ipcRenderer.invoke('update:check'),

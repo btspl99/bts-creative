@@ -6,7 +6,7 @@ const P = paper; P.setup(document.getElementById('cv'));
 P.settings.hitTolerance = 4; P.settings.handleSize = 7;
 const view = P.view, project = P.project;
 const cv = document.getElementById('cv'), vpEl = $('#viewport');
-const VX = window.VX = { P, view, project, tools: {}, live: {}, f: {}, propSections: [], tabs: {}, menus: {}, smartLines: [] };
+const VX = window.VX = { P, view, project, tools: {}, live: {}, f: {}, propSections: [], tabs: {}, menus: {}, smartLines: [], beforeCommit: [], afterGuides: [], svgPost: [], boardLabels: [] };
 
 // ---------------------------------------------------------------- icons (24px stroke, like UI.icon)
 const ICONS = {
@@ -26,6 +26,8 @@ const ICONS = {
   knife: 'M3 21L21 3c-2 6-6 10-11 13M3 21l4-6',
   typePath: 'M3 18c4-8 14-8 18 0M8 6h8M12 6v8',
   rotateTool: 'M21 12a9 9 0 1 1-3-6.7L21 8M21 3v5h-5M12 12h.01',
+  recolor: 'M12 3a9 9 0 1 0 0 18c1 0 1.5-.7 1.5-1.5 0-.4-.2-.8-.4-1.1-.3-.3-.4-.6-.4-1 0-.8.7-1.5 1.5-1.5H16a5 5 0 0 0 5-5c0-4.4-4-8-9-8zM7.5 12h.01M10 7.5h.01M14 7.5h.01M17 11h.01',
+  dimension: 'M3 7v10M21 7v10M3 12h18M6 9l-3 3 3 3M18 9l3 3-3 3',
   repeat: 'M12 3a2 2 0 1 0 0 .01M12 19a2 2 0 1 0 0 .01M4 11a2 2 0 1 0 0 .01M20 11a2 2 0 1 0 0 .01M6.5 5.5a2 2 0 1 0 0 .01M17.5 16.5a2 2 0 1 0 0 .01',
 };
 VX.ICONS = ICONS;
@@ -57,7 +59,7 @@ function setupSystemLayers() {
 const cssVar = n => getComputedStyle(document.body).getPropertyValue(n).trim() || '#888';
 function drawArtboard() {
   if (!artLayer) return;
-  const keep = project.activeLayer; artLayer.removeChildren(); const z = view.zoom;
+  const keep = project.activeLayer; artLayer.removeChildren(); const z = view.zoom; VX.boardLabels = [];
   const accent = cssVar('--accent'), lab = cssVar('--tx-2');
   DOC.boards.forEach((b, i) => {
     const r = new P.Rectangle(b.x, b.y, b.w, b.h);
@@ -65,9 +67,10 @@ function drawArtboard() {
     if (!b.bg || b.bg === 'transparent') { new P.Path.Rectangle({ rectangle: r, fillColor: '#ffffff', parent: artLayer }); }
     else new P.Path.Rectangle({ rectangle: r, fillColor: b.bg, parent: artLayer });
     if (O.grid) { const g = new P.Group({ parent: artLayer }); const step = O.gridSize; if (r.width / step < 400 && r.height / step < 400) { for (let x = step; x < b.w; x += step) g.addChild(new P.Path.Line({ from: [b.x + x, b.y], to: [b.x + x, b.y + b.h], strokeColor: (x / step) % 5 ? '#e8eaf0' : '#cdd2de', strokeWidth: 1 / z })); for (let y = step; y < b.h; y += step) g.addChild(new P.Path.Line({ from: [b.x, b.y + y], to: [b.x + b.w, b.y + y], strokeColor: (y / step) % 5 ? '#e8eaf0' : '#cdd2de', strokeWidth: 1 / z })); } }
-    if (DOC.boards.length > 1 || O.tool === 'artboard') {
-      new P.PointText({ point: [b.x, b.y - 6 / z], content: `${i + 1}  ${b.name}`, fontSize: 11 / z, fontFamily: 'Segoe UI, Inter, sans-serif', fillColor: i === DOC.ab ? accent : lab, parent: artLayer });
-      if (i === DOC.ab) new P.Path.Rectangle({ rectangle: r.expand(1 / z), strokeColor: accent, strokeWidth: 1.5 / z, parent: artLayer });
+    if (O.boardNames || DOC.boards.length > 1 || O.tool === 'artboard') {
+      const t = new P.PointText({ point: [b.x, b.y - 6 / z], content: `${i + 1}  ${b.name}${b.locked ? '  🔒' : ''}${b.picked ? '  ✓ export' : ''}`, fontSize: 11 / z, fontFamily: 'Segoe UI, Inter, sans-serif', fillColor: i === DOC.ab ? accent : lab, parent: artLayer });
+      const lr = t.bounds.expand(3 / z); if (lr.bottom > b.y - 2 / z) lr.height = Math.max(1 / z, b.y - 2 / z - lr.y); VX.boardLabels.push({ i, rect: lr });
+      if (i === DOC.ab && (DOC.boards.length > 1 || O.tool === 'artboard')) new P.Path.Rectangle({ rectangle: r.expand(1 / z), strokeColor: accent, strokeWidth: 1.5 / z, parent: artLayer });
     }
   });
   $('#stArt').textContent = `${DOC.boards[DOC.ab]?.name || 'Artboard'} · ${DOC.w} × ${DOC.h} px` + (DOC.boards.length > 1 ? ` · ${DOC.ab + 1}/${DOC.boards.length}` : '');
@@ -82,7 +85,8 @@ function newSubLayer() { const parent = project.activeLayer && !isSys(project.ac
 const O = { tool: 'select', fill: '#ffffff', stroke: '#000000', sw: 1, front: 'fill', grid: false, snap: false, gridSize: 20, outline: false,
   smart: true, snapPoint: true, snapPixel: false, rulers: true, showGuides: true, lockGuides: false,
   font: 'Segoe UI', fontSize: 36, fontWeight: 'normal', fontStyle: 'normal', justify: 'left', leading: 1.2, tracking: 0,
-  radius: 0, sides: 6, starRatio: 0.5, brushW: 4, smooth: 8, alignTo: 'auto' };
+  radius: 0, sides: 6, starRatio: 0.5, brushW: 4, smooth: 8, alignTo: 'auto',
+  snapGuides: true, snapTangent: true, snapPerp: true, snapColor: false, snapTol: 6, taskbar: true, boardNames: true };
 VX.O = O;
 let sel = []; let selSegs = [];
 
@@ -94,8 +98,8 @@ UI.titlebar({ logo: 'Vc', menus: [
     { label: 'New…', kbd: 'Ctrl+N', action: newDialog }, { label: 'New from template…', action: () => newDialog(true) }, { label: 'Open…', kbd: 'Ctrl+O', action: openDialog }, { label: 'Open SVG…', action: () => openDialog(['svg']) }, { label: 'Place image…', kbd: 'Ctrl+Shift+P', action: placeImage }, '-',
     { label: 'Save (.btsv)', kbd: 'Ctrl+S', action: () => save(false) }, { label: 'Save as…', kbd: 'Ctrl+Shift+S', action: () => save(true) },
     { label: 'Export', sub: [{ label: 'Export…', kbd: 'Ctrl+Alt+E', action: () => exportDialog() }, '-', { label: 'SVG…', action: () => exportDialog('svg') }, { label: 'PNG…', action: () => exportDialog('png') }, { label: 'JPEG…', action: () => exportDialog('jpeg') }, { label: 'WebP…', action: () => exportDialog('webp') }, { label: 'PDF (vector)…', action: () => exportDialog('pdf') }, '-',
-      { label: 'Export selection…', action: () => exportDialog('png', 'selection') }, { label: 'Export all artboards…', action: () => exportDialog('png', 'all') }, { label: 'Multi-page PDF (all artboards)…', action: () => exportDialog('pdf', 'all') }] },
-    { label: 'Copy as SVG', kbd: 'Ctrl+Alt+C', action: copyAsSVG }, '-',
+      { label: 'Export selection…', action: () => exportDialog('png', 'selection') }, { label: 'Export all artboards…', action: () => exportDialog('png', 'all') }, { label: 'Export selected artboards…', action: () => exportDialog('png', 'selected') }, { label: 'Multi-page PDF (all artboards)…', action: () => exportDialog('pdf', 'all') }, { label: 'PNG with gradient dithering…', action: () => exportDialog('png', null, { dither: true }) }] },
+    { label: 'Copy as SVG', kbd: 'Ctrl+Alt+C', action: copyAsSVG }, '-', { label: 'Recover autosaved document…', action: F('recoverDialog') }, { label: 'Autosave settings…', action: F('autosaveDialog') }, '-',
     { label: 'Document setup…', kbd: 'Ctrl+Alt+P', action: docSetup }, '-', { label: 'BTS Creative home', action: () => bts.openApp('home') }, { label: 'Close window', kbd: 'Ctrl+W', action: closeWindow } ] },
   { label: 'Edit', items: () => [
     { label: 'Undo', kbd: 'Ctrl+Z', action: undo, disabled: hi <= 0 }, { label: 'Redo', kbd: 'Ctrl+Shift+Z', action: redo, disabled: hi >= hist.length - 1 }, '-',
@@ -115,19 +119,22 @@ UI.titlebar({ logo: 'Vc', menus: [
     '-', { label: 'Expand appearance', action: F('expandAppearance') }, { label: 'Expand (outline strokes)', action: F('outlineStroke') },
     { label: 'Path', sub: [{ label: 'Join', kbd: 'Ctrl+J', action: joinPaths }, { label: 'Average anchors…', action: F('averageAnchors') }, { label: 'Outline stroke', action: F('outlineStroke') }, { label: 'Offset path…', action: F('fx', 'offset') }, { label: 'Simplify…', action: F('simplifyDialog') }, { label: 'Smooth…', action: F('smoothDialog') }, { label: 'Add anchor points', action: F('addAnchors') }, { label: 'Round corners…', action: F('roundCornersDialog') }, { label: 'Flatten curves', action: () => pathOp('flatten') }, { label: 'Reverse direction', action: () => pathOp('reverse') }, { label: 'Close path', action: () => pathOp('close') }, { label: 'Split into grid…', action: F('splitGrid') }] },
     { label: 'Shape', sub: [{ label: 'Spiral…', action: F('shape', 'spiral') }, { label: 'Flare…', action: F('shape', 'flare') }, { label: 'Polygon…', action: F('shape', 'polygon') }, { label: 'Star…', action: F('shape', 'star') }, { label: 'Rounded rectangle…', action: F('shape', 'rrect') }] },
+    { label: 'Objects on path…', action: F('objectsOnPath') }, { label: 'Mockup…', action: F('mockup') },
+    { label: 'Gradient', sub: [{ label: 'Gradient presets…', action: F('gradientPresets') }, '-', ...[['srgb', 'Blend in sRGB (classic)'], ['linear', 'Blend in linear light'], ['oklab', 'Blend perceptually (OKLab)']].map(([k, l]) => ({ label: l, checked: () => (VX.gradState?.blend || 'srgb') === k, action: F('gradientBlend', k) })), '-', { label: 'Gradient panel', action: () => showTab('color') }] },
     { label: 'Repeat', sub: [{ label: 'Radial…', action: F('repeat', 'radial') }, { label: 'Grid…', action: F('repeat', 'grid') }, { label: 'Mirror…', action: F('repeat', 'mirror') }, { label: 'Repeat options…', action: F('editLive') }, { label: 'Release repeat', action: F('expandAppearance') }] },
     { label: 'Blend', sub: [{ label: 'Make (between two objects)…', kbd: 'Ctrl+Alt+B', action: F('blendMake') }, { label: 'Blend options…', action: F('editLive') }, { label: 'Expand blend', action: F('expandAppearance') }, { label: 'Release blend', action: F('blendRelease') }] },
     { label: 'Envelope distort', sub: [{ label: 'Make with warp…', kbd: 'Ctrl+Alt+Shift+W', action: F('fx', 'warp') }, { label: 'Free distort…', action: F('fx', 'freeDistort') }] },
     { label: 'Image trace', sub: [{ label: 'Make (trace image)…', action: F('trace') }, { label: 'Trace with preset', sub: ['Black & white logo', 'Sketched art', '3 colours', '6 colours', '16 colours', 'Grayscale', 'Silhouette'].map(p => ({ label: p, action: F('trace', p) })) }] },
     { label: 'Compound path', sub: [{ label: 'Make', kbd: 'Ctrl+8', action: makeCompound }, { label: 'Release', kbd: 'Ctrl+Alt+Shift+8', action: releaseCompound }] },
     { label: 'Clipping mask', sub: [{ label: 'Make', kbd: 'Ctrl+7', action: makeClip }, { label: 'Release', kbd: 'Ctrl+Alt+7', action: ungroup }] },
+    { label: 'Opacity mask', sub: [{ label: 'Make opacity mask', action: F('opacityMask', false) }, { label: 'Make inverted opacity mask', action: F('opacityMask', true) }, { label: 'Mask options…', action: F('editLive') }, { label: 'Release opacity mask', action: F('releaseOpacityMask') }] },
     { label: 'Pathfinder', sub: [['unite', 'Unite'], ['subtract', 'Minus front'], ['intersect', 'Intersect'], ['exclude', 'Exclude'], '-', ['divide', 'Divide'], ['trim', 'Trim'], ['merge', 'Merge'], ['crop', 'Crop'], ['outline', 'Outline'], ['minusBack', 'Minus back']].map(x => x === '-' ? '-' : ({ label: x[1], action: () => pathfinder(x[0]) })) },
     { label: 'Symbols', sub: [{ label: 'New symbol from selection', kbd: 'F8', action: F('newSymbol') }, { label: 'Redefine symbol', action: F('redefineSymbol') }, { label: 'Break link to symbol', action: F('breakSymbol') }, { label: 'Show symbols library', action: () => showTab('symbols') }] },
-    { label: 'Pattern', sub: [{ label: 'Make pattern swatch from selection', action: F('patternFromSel') }, { label: 'Apply pattern…', action: () => showTab('color') }] },
-    '-', { label: 'Artboards', sub: [{ label: 'New artboard', action: () => addBoard() }, { label: 'Duplicate artboard', action: () => duplicateBoard() }, { label: 'Delete artboard', action: () => deleteBoard() }, { label: 'Rename artboard…', action: () => renameBoard() }, { label: 'Fit artboard to artwork', action: fitBoardToArt }, { label: 'Fit artboard to selection', action: fitBoardToSel }, { label: 'Rearrange all artboards…', action: rearrangeBoards }, { label: 'Artboards panel', action: () => showTab('boards') }] },
+    { label: 'Pattern', sub: [{ label: 'Pattern maker (generate from selection)…', action: F('patternMaker') }, { label: 'Make pattern swatch from selection', action: F('patternFromSel') }, { label: 'Apply pattern…', action: () => showTab('color') }] },
+    '-', { label: 'Artboards', sub: [{ label: 'New artboard', action: () => addBoard() }, { label: 'Duplicate artboard', action: () => duplicateBoard() }, { label: 'Delete artboard', action: () => deleteBoard() }, { label: 'Rename artboard…', action: () => renameBoard() }, { label: 'Fit artboard to artwork', action: fitBoardToArt }, { label: 'Fit artboard to selection', action: fitBoardToSel }, { label: 'Rearrange all artboards…', action: rearrangeBoards }, '-', { label: 'Lock artboard', checked: () => !!DOC.boards[DOC.ab]?.locked, action: () => toggleBoardLock() }, { label: 'Artboard background colour…', action: boardBgDialog }, { label: 'Select artboard for export', checked: () => !!DOC.boards[DOC.ab]?.picked, action: () => { const b = DOC.boards[DOC.ab]; b.picked = !b.picked; renderRight(); } }, { label: 'Show artboard names on canvas', checked: () => O.boardNames, action: () => { O.boardNames = !O.boardNames; drawArtboard(); } }, { label: 'Artboards panel', action: () => showTab('boards') }] },
     { label: 'Rasterize to image', action: rasterizeSel } ] },
   { label: 'Type', items: () => [
-    { label: 'Character panel', kbd: 'Ctrl+T', action: () => showTab('type') }, { label: 'Type on a path', action: F('typeOnPath') }, { label: 'Text on a circle…', action: F('textOnCircle') }, { label: 'Edit type on path…', action: F('editLive') }, '-',
+    { label: 'Character panel', kbd: 'Ctrl+T', action: () => showTab('type') }, { label: 'Font browser…', kbd: 'Ctrl+Alt+T', action: () => showTab('fonts') }, { label: 'Type on a path', action: F('typeOnPath') }, { label: 'Text on a circle…', action: F('textOnCircle') }, { label: 'Edit type on path…', action: F('editLive') }, '-',
     { label: 'Create outlines', kbd: 'Ctrl+Shift+O', action: F('createOutlines') }, { label: 'Warp text…', action: F('warpText') }, '-',
     { label: 'Bold', action: F('typeStyle', 'bold') }, { label: 'Italic', action: F('typeStyle', 'italic') }, { label: 'Align left', action: F('typeStyle', 'left') }, { label: 'Align centre', action: F('typeStyle', 'center') }, { label: 'Align right', action: F('typeStyle', 'right') },
     { label: 'Font size up', kbd: 'Ctrl+Shift+.', action: () => bumpFont(2) }, { label: 'Font size down', kbd: 'Ctrl+Shift+,', action: () => bumpFont(-2) }, { label: 'Rasterize type', action: rasterizeSel }] },
@@ -135,6 +142,7 @@ UI.titlebar({ logo: 'Vc', menus: [
     { label: 'Distort & Transform', sub: [{ label: 'Roughen…', action: F('fx', 'roughen') }, { label: 'Zig zag…', action: F('fx', 'zigzag') }, { label: 'Pucker & bloat…', action: F('fx', 'pucker') }, { label: 'Twist…', action: F('fx', 'twist') }, { label: 'Tweak…', action: F('fx', 'tweak') }, { label: 'Free distort…', action: F('fx', 'freeDistort') }, { label: 'Transform…', action: F('fx', 'transform') }] },
     { label: 'Warp', sub: ['Arc', 'Arch', 'Bulge', 'Flag', 'Wave', 'Fish', 'Rise', 'Fisheye', 'Inflate', 'Squeeze', 'Twist'].map(s => ({ label: s + '…', action: F('fx', 'warp', s) })) },
     { label: 'Path', sub: [{ label: 'Offset path…', action: F('fx', 'offset') }, { label: 'Round corners…', action: F('fx', 'round') }, { label: 'Outline stroke', action: F('outlineStroke') }] },
+    { label: '3D', sub: [{ label: 'Extrude & Bevel…', action: F('fx', 'extrude') }, { label: 'Turntable preview (spin 360°)…', action: F('fx', 'extrude', 'turntable') }, { label: 'Expand 3D to paths', action: F('expandAppearance') }] },
     { label: 'Stylize', sub: [{ label: 'Drop shadow…', action: F('shadowDialog') }, { label: 'Outer glow…', action: F('glowDialog') }, { label: 'Gaussian blur…', action: F('fx', 'blur') }, { label: 'Remove shadow / glow', action: F('removeShadow') }] },
     '-', { label: 'Edit effects on selection…', action: F('editLive') }, { label: 'Expand appearance', action: F('expandAppearance') }] },
   { label: 'View', items: () => [
@@ -144,11 +152,18 @@ UI.titlebar({ logo: 'Vc', menus: [
     { label: 'Guides', sub: [{ label: 'Show guides', kbd: 'Ctrl+;', checked: () => O.showGuides, action: () => { O.showGuides = !O.showGuides; drawGuides(); } }, { label: 'Lock guides', checked: () => O.lockGuides, action: () => { O.lockGuides = !O.lockGuides; } }, { label: 'Add guide…', action: addGuideDialog }, { label: 'Make guides from selection', kbd: 'Ctrl+5', action: guidesFromSel }, { label: 'Clear guides', action: () => { DOC.guides = []; drawGuides(); commit('Clear guides'); } }] },
     { label: 'Show grid', kbd: "Ctrl+'", checked: () => O.grid, action: () => { O.grid = !O.grid; drawArtboard(); } },
     '-', { label: 'Smart guides', kbd: 'Ctrl+U', checked: () => O.smart, action: () => { O.smart = !O.smart; } },
-    { label: 'Snap to grid', kbd: "Ctrl+Shift+'", checked: () => O.snap, action: () => { O.snap = !O.snap; } },
-    { label: 'Snap to point', kbd: 'Ctrl+Alt+\'', checked: () => O.snapPoint, action: () => { O.snapPoint = !O.snapPoint; } },
-    { label: 'Snap to pixel', checked: () => O.snapPixel, action: () => { O.snapPixel = !O.snapPixel; } },
+    { label: 'Snapping', sub: [{ label: 'Snap to grid', kbd: "Ctrl+Shift+'", checked: () => O.snap, action: () => { O.snap = !O.snap; } },
+      { label: 'Snap to point', kbd: 'Ctrl+Alt+\'', checked: () => O.snapPoint, action: () => { O.snapPoint = !O.snapPoint; } },
+      { label: 'Snap to pixel', checked: () => O.snapPixel, action: () => { O.snapPixel = !O.snapPixel; } },
+      { label: 'Snap to guides', checked: () => O.snapGuides, action: () => { O.snapGuides = !O.snapGuides; } },
+      '-', { label: 'Tangent snapping (lines to curves)', checked: () => O.snapTangent, action: () => { O.snapTangent = !O.snapTangent; } },
+      { label: 'Perpendicular snapping', checked: () => O.snapPerp, action: () => { O.snapPerp = !O.snapPerp; } },
+      { label: 'Colour snapping (nearest swatch for new fills)', checked: () => O.snapColor, action: () => { O.snapColor = !O.snapColor; toast('Colour snapping ' + (O.snapColor ? 'on' : 'off')); } },
+      '-', { label: 'Snapping options…', action: F('snapOptions') }] },
+    { label: 'Contextual task bar', checked: () => O.taskbar, action: () => { O.taskbar = !O.taskbar; drawGuides(); } },
+    { label: 'Artboard names', checked: () => O.boardNames, action: () => { O.boardNames = !O.boardNames; drawArtboard(); } },
     '-', { label: 'Appearance…', action: UI.appearanceDialog }, { label: 'Skin', sub: UI.SKINS.map(k => ({ label: k.name, checked: () => (UI.getSettings().skin || 'dark') === k.id, action: () => UI.setSettings({ skin: k.id }) })) } ] },
-  { label: 'Window', items: () => [['props', 'Properties'], ['layers', 'Layers'], ['boards', 'Artboards'], ['color', 'Color, swatches & gradients'], ['type', 'Character'], ['symbols', 'Symbols & shapes library']].map(([t, l]) => ({ label: l, checked: () => rtab === t, action: () => showTab(t) })) },
+  { label: 'Window', items: () => [['props', 'Properties'], ['layers', 'Layers'], ['boards', 'Artboards'], ['color', 'Color, swatches & gradients'], ['type', 'Character'], ['fonts', 'Font browser'], ['symbols', 'Symbols & shapes library']].map(([t, l]) => ({ label: l, checked: () => rtab === t, action: () => showTab(t) })).concat(['-', { label: 'Tools', sub: TOOLS.map(([id, , tip, key]) => ({ label: tip.replace(/ \(.*\)$/, '') + ' tool', kbd: key || undefined, checked: () => O.tool === id, action: () => setTool(id) })) }]) },
   { label: 'Help', items: [{ label: 'Keyboard shortcuts', kbd: 'Ctrl+/', action: UI.shortcutSheet }, { label: 'Tool reference', action: shortcutsHelp }, { label: 'Check for updates', action: () => bts.update.check().then(r => toast(r.state === 'store' ? 'Updates are delivered by the Microsoft Store.' : r.state === 'dev' ? 'Updates run in the installed version.' : 'Checking for updates…')) }, { label: 'About BTS Vector', action: () => modal({ title: 'BTS Vector', body: 'Part of BTS Creative — free and open source for students.<br>Image trace by imagetracerjs (public domain), type outlines by opentype.js (MIT).<br>Not affiliated with Adobe Inc.' }) }] },
 ]});
 window.addEventListener('bts:close', closeWindow);
@@ -162,14 +177,14 @@ const TOOLS = [['select', 'select', 'Selection', 'V'], ['direct', 'direct', 'Dir
   ['eraser', 'eraser', 'Eraser', 'Shift+E'], ['scissors', 'scissors', 'Scissors', 'C'], ['knife', 'knife', 'Knife', ''],
   ['rotate', 'rotateTool', 'Rotate (click = reference point)', 'R'], ['reflect', 'reflect', 'Reflect (click = reference point)', 'O'], ['scale', 'scale', 'Scale (click = reference point)', 'S'], ['width', 'width', 'Width (variable stroke)', 'Shift+W'], ['distort', 'distort', 'Free distort (drag corners)', 'Shift+D'],
   ['shapeBuilder', 'shapeBuilder', 'Shape builder (drag to merge, Alt to delete)', 'Shift+Q'], ['livePaint', 'livePaint', 'Live paint bucket', 'K'], ['blendTool', 'blend', 'Blend (click two objects)', 'W'], ['sprayer', 'sprayer', 'Symbol sprayer', 'Shift+S'],
-  ['gradient', 'gradient', 'Gradient (edit on canvas)', 'G'], ['eyedrop', 'eyedrop', 'Eyedropper (copy appearance)', 'I'], ['measure', 'measure', 'Measure', 'Shift+I'],
+  ['gradient', 'gradient', 'Gradient (edit on canvas)', 'G'], ['eyedrop', 'eyedrop', 'Eyedropper (copy appearance)', 'I'], ['measure', 'measure', 'Measure', 'Shift+I'], ['dimension', 'dimension', 'Dimension (linear / angular / radial)', 'Shift+K'],
   ['artboard', 'artboard', 'Artboard', 'Shift+O'], ['hand', 'hand', 'Hand', 'H'], ['zoom', 'zoom', 'Zoom', 'Z']];
 const tb = $('#toolbar');
 const toolGrid = h('div', { class: 'tool-grid' }); tb.append(toolGrid);
 TOOLS.forEach(([id, ic, tip, key]) => toolGrid.append(h('button', { class: 'icon-btn', 'data-tool': id, 'data-tip': tip, 'data-key': key, html: vicon(ic), onclick: () => setTool(id) })));
 const fsw = h('div', { class: 'fs' }, h('div', { class: 'sw fill', id: 'swFill', 'data-tip': 'Fill (click to edit, X to toggle)', onclick: () => { O.front = 'fill'; pickStyle('fill'); } }), h('div', { class: 'sw stroke', id: 'swStroke', 'data-tip': 'Stroke', onclick: () => { O.front = 'stroke'; pickStyle('stroke'); } }));
 tb.append(fsw, h('div', { class: 'row', style: { gap: '2px', marginTop: '4px' } }, h('button', { class: 'icon-btn mini', 'data-tip': 'None (/)', onclick: () => applyColor(null) }, '⌀'), h('button', { class: 'icon-btn mini', 'data-tip': 'Swap (Shift+X)', onclick: swapFS }, '⇄'), h('button', { class: 'icon-btn mini', 'data-tip': 'Default fill & stroke (D)', onclick: () => { O.fill = '#ffffff'; O.stroke = '#000000'; O.sw = 1; applyStyleToSel(); renderFS(); } }, '◩')));
-const keyTools = { v: 'select', a: 'direct', p: 'pen', 'shift+t': 'typePath', n: 'pencil', b: 'brush', 'shift+b': 'blob', t: 'text', m: 'rect', l: 'ellipse', 'shift+m': 'polygon', 'shift+l': 'star', '\\': 'line', 'shift+e': 'eraser', c: 'scissors', r: 'rotate', o: 'reflect', s: 'scale', 'shift+w': 'width', 'shift+d': 'distort', 'shift+q': 'shapeBuilder', k: 'livePaint', w: 'blendTool', 'shift+s': 'sprayer', i: 'eyedrop', 'shift+i': 'measure', g: 'gradient', 'shift+o': 'artboard', h: 'hand', z: 'zoom' };
+const keyTools = { v: 'select', a: 'direct', p: 'pen', 'shift+t': 'typePath', n: 'pencil', b: 'brush', 'shift+b': 'blob', t: 'text', m: 'rect', l: 'ellipse', 'shift+m': 'polygon', 'shift+l': 'star', '\\': 'line', 'shift+e': 'eraser', c: 'scissors', r: 'rotate', o: 'reflect', s: 'scale', 'shift+w': 'width', 'shift+d': 'distort', 'shift+q': 'shapeBuilder', k: 'livePaint', w: 'blendTool', 'shift+s': 'sprayer', i: 'eyedrop', 'shift+i': 'measure', 'shift+k': 'dimension', g: 'gradient', 'shift+o': 'artboard', h: 'hand', z: 'zoom' };
 Object.entries(keyTools).forEach(([k, t]) => UI.shortcut(k, () => setTool(t)));
 UI.shortcut('x', () => { O.front = O.front === 'fill' ? 'stroke' : 'fill'; renderFS(); }); UI.shortcut('shift+x', swapFS); UI.shortcut('/', () => applyColor(null)); UI.shortcut('d', () => { O.fill = '#ffffff'; O.stroke = '#000000'; O.sw = 1; applyStyleToSel(); renderFS(); });
 function applyStyleToSel() { if (!sel.length) return; sel.forEach(it => eachStyled(it, i => { if (i instanceof P.Raster) return; i.fillColor = O.fill; i.strokeColor = O.stroke; i.strokeWidth = O.sw; })); commit('Default colors'); }
@@ -242,11 +257,11 @@ function bumpFont(d) { sel.filter(i => i instanceof P.PointText).forEach(t => t.
 
 // ---------------------------------------------------------------- right panel
 let rtab = 'props';
-const TABS = [['props', 'Props'], ['layers', 'Layers'], ['boards', 'Boards'], ['color', 'Color'], ['type', 'Type'], ['symbols', 'Symbols']];
+const TABS = [['props', 'Props'], ['layers', 'Layers'], ['boards', 'Boards'], ['color', 'Color'], ['type', 'Type'], ['fonts', 'Fonts'], ['symbols', 'Symbols']];
 $('#rtabs').innerHTML = ''; TABS.forEach(([t, l]) => $('#rtabs').append(h('div', { class: 'tab' + (t === rtab ? ' active' : ''), 'data-t': t }, l)));
 $('#rtabs').addEventListener('click', e => { const t = e.target.closest('.tab'); if (!t) return; showTab(t.dataset.t); });
 function showTab(t) { rtab = t; document.querySelectorAll('#rtabs .tab').forEach(x => x.classList.toggle('active', x.dataset.t === t)); renderRight(); }
-UI.shortcut('ctrl+t', () => showTab('type')); UI.shortcut('f7', () => showTab('layers'));
+UI.shortcut('ctrl+t', () => showTab('type')); UI.shortcut('ctrl+alt+t', () => showTab('fonts')); UI.shortcut('f7', () => showTab('layers'));
 function renderRight() { if (rtab === 'props') renderProps(); else if (rtab === 'layers') renderLayersPanel(); else if (rtab === 'boards') renderBoardsPanel(); else if (VX.tabs[rtab]) { const rp = $('#rp'); const st = rp.scrollTop; rp.innerHTML = ''; VX.tabs[rtab](rp); rp.scrollTop = st; } }
 const sec = (title, ...kids) => h('div', { class: 'sec' }, h('h4', {}, title), ...kids);
 VX.sec = sec;
@@ -362,8 +377,8 @@ function setActiveBoard(i, zoom) { DOC.ab = clamp(i, 0, DOC.boards.length - 1); 
 function nextBoardPos() { const r = DOC.boards.reduce((a, b) => Math.max(a, b.x + b.w), -Infinity); const top = DOC.boards[0]?.y || 0; return [r + 60, top]; }
 function addBoard(w = DOC.w, hh = DOC.h, name) { const [x, y] = nextBoardPos(); DOC.boards.push({ name: name || `Artboard ${DOC.boards.length + 1}`, x, y, w, h: hh, bg: '#ffffff' }); setActiveBoard(DOC.boards.length - 1); fitArt(); commit('New artboard'); }
 function itemsOnBoard(i) { const r = abRect(i); return selectableItems().filter(it => r.contains(it.bounds.center)); }
-function duplicateBoard(i = DOC.ab) { const b = DOC.boards[i]; const [x, y] = nextBoardPos(); const nb = { ...b, name: b.name + ' copy', x, y }; const d = new P.Point(x - b.x, y - b.y); itemsOnBoard(i).forEach(it => { const c = it.clone(); c.translate(d); }); DOC.boards.push(nb); setActiveBoard(DOC.boards.length - 1); fitArt(); commit('Duplicate artboard'); }
-async function deleteBoard(i = DOC.ab) { if (DOC.boards.length < 2) return toast('A document needs at least one artboard'); const items = itemsOnBoard(i); let delArt = false; if (items.length) { const r = await modal({ title: 'Delete artboard', body: `Delete “${DOC.boards[i].name}”. Also delete the ${items.length} object(s) on it?`, buttons: [{ label: 'Cancel', value: null }, { label: 'Keep artwork', value: 'keep' }, { label: 'Delete artwork too', primary: true, value: 'del' }] }); if (!r) return; delArt = r === 'del'; } if (delArt) items.forEach(it => it.remove()); DOC.boards.splice(i, 1); setActiveBoard(Math.min(DOC.ab, DOC.boards.length - 1)); setSel([]); commit('Delete artboard'); }
+function duplicateBoard(i = DOC.ab) { const b = DOC.boards[i]; const [x, y] = nextBoardPos(); const nb = { ...b, name: b.name + ' copy', x, y, locked: false }; const d = new P.Point(x - b.x, y - b.y); itemsOnBoard(i).forEach(it => { const c = it.clone(); c.translate(d); }); DOC.boards.push(nb); setActiveBoard(DOC.boards.length - 1); fitArt(); commit('Duplicate artboard'); }
+async function deleteBoard(i = DOC.ab) { if (DOC.boards.length < 2) return toast('A document needs at least one artboard'); if (boardLocked(i)) return; const items = itemsOnBoard(i); let delArt = false; if (items.length) { const r = await modal({ title: 'Delete artboard', body: `Delete “${DOC.boards[i].name}”. Also delete the ${items.length} object(s) on it?`, buttons: [{ label: 'Cancel', value: null }, { label: 'Keep artwork', value: 'keep' }, { label: 'Delete artwork too', primary: true, value: 'del' }] }); if (!r) return; delArt = r === 'del'; } if (delArt) items.forEach(it => it.remove()); DOC.boards.splice(i, 1); setActiveBoard(Math.min(DOC.ab, DOC.boards.length - 1)); setSel([]); commit('Delete artboard'); }
 async function renameBoard(i = DOC.ab) { const n = await prompt('Rename artboard', 'Name', DOC.boards[i].name); if (n) { DOC.boards[i].name = n; drawArtboard(); renderRight(); commit('Rename artboard'); } }
 function moveBoard(i, dir) { const j = i + dir; if (j < 0 || j >= DOC.boards.length) return; [DOC.boards[i], DOC.boards[j]] = [DOC.boards[j], DOC.boards[i]]; DOC.ab = j; drawArtboard(); renderRight(); commit('Reorder artboards'); }
 function fitBoardToArt() { const its = itemsOnBoard(DOC.ab); const all = its.length ? its : selectableItems(); if (!all.length) return toast('No artwork'); const r = all.reduce((a, i) => a ? a.unite(i.strokeBounds) : i.strokeBounds.clone(), null); Object.assign(DOC.boards[DOC.ab], { x: Math.floor(r.x), y: Math.floor(r.y), w: Math.ceil(r.width), h: Math.ceil(r.height) }); drawArtboard(); commit('Fit artboard'); }
@@ -373,21 +388,29 @@ async function rearrangeBoards() {
   if (!v) return; const cols = Math.max(1, +v.cols), gap = +v.gap; const n = DOC.boards.length; const rows = Math.ceil(n / cols);
   const cw = Math.max(...DOC.boards.map(b => b.w)), ch = Math.max(...DOC.boards.map(b => b.h));
   const groups = DOC.boards.map((b, i) => itemsOnBoard(i));
-  DOC.boards.forEach((b, i) => { const c = v.order === 'row' ? i % cols : Math.floor(i / rows), r = v.order === 'row' ? Math.floor(i / cols) : i % rows; const nx = c * (cw + gap), ny = r * (ch + gap); if (v.art) groups[i].forEach(it => it.translate([nx - b.x, ny - b.y])); b.x = nx; b.y = ny; });
-  drawArtboard(); fitAll(); commit('Rearrange artboards');
+  const ox = Math.min(...DOC.boards.map(b => b.x)), oy = Math.min(...DOC.boards.map(b => b.y)); let k = 0, skipped = 0;
+  DOC.boards.forEach((b, i) => { if (b.locked) { skipped++; return; } const kk = k++; const c = v.order === 'row' ? kk % cols : Math.floor(kk / rows), r = v.order === 'row' ? Math.floor(kk / cols) : kk % rows; const nx = ox + c * (cw + gap), ny = oy + r * (ch + gap); if (v.art) groups[i].forEach(it => it.translate([nx - b.x, ny - b.y])); b.x = nx; b.y = ny; });
+  drawArtboard(); fitAll(); commit('Rearrange artboards'); if (skipped) toast(`${skipped} locked artboard(s) kept in place`);
 }
+function toggleBoardLock(i = DOC.ab) { const b = DOC.boards[i]; b.locked = !b.locked; drawArtboard(); renderRight(); commit(b.locked ? 'Lock artboard' : 'Unlock artboard'); toast(`“${b.name}” ${b.locked ? 'locked — it can no longer be moved, resized or deleted' : 'unlocked'}`); }
+const boardLocked = (i, quiet) => { const b = DOC.boards[i]; if (b?.locked && !quiet) toast(`Artboard “${b.name}” is locked (Object › Artboards › Lock artboard)`); return !!b?.locked; };
+async function boardBgDialog(i = DOC.ab) { const b = DOC.boards[i]; const v = await form({ title: 'Artboard background — ' + b.name, fields: [{ key: 'bg', label: 'Background colour', type: 'color', value: toHex(b.bg && b.bg !== 'transparent' ? b.bg : '#ffffff') }, { key: 't', label: 'Transparent (shows white on screen, exports transparent)', type: 'checkbox', value: !b.bg || b.bg === 'transparent' }, { key: 'all', label: 'Apply to all artboards', type: 'checkbox', value: false }] }); if (!v) return; (v.all ? DOC.boards : [b]).forEach(x => x.bg = v.t ? 'transparent' : v.bg); drawArtboard(); renderRight(); commit('Artboard background'); }
 function renderBoardsPanel() {
   const rp = $('#rp'); rp.innerHTML = '';
   const list = h('div', { class: 'layers-list', style: { padding: '6px' } });
   DOC.boards.forEach((b, i) => list.append(h('div', { class: 'li' + (i === DOC.ab ? ' sel' : ''), onclick: () => setActiveBoard(i, true), ondblclick: () => renameBoard(i) },
-    h('span', { class: 'muted', style: { width: '18px' } }, String(i + 1)), h('span', { class: 't' }, b.name), h('span', { class: 'muted' }, `${b.w}×${b.h}`),
+    h('input', { type: 'checkbox', checked: !!b.picked, 'data-tip': 'Include in “Export selected artboards”', onclick: e => e.stopPropagation(), onchange: e => { b.picked = e.target.checked; drawArtboard(); renderBoardsPanel(); } }),
+    h('span', { class: 'muted', style: { width: '18px' } }, String(i + 1)), h('span', { class: 'chip', style: { background: !b.bg || b.bg === 'transparent' ? 'repeating-conic-gradient(#ccc 0 25%, #fff 0 50%) 0 0/6px 6px' : b.bg } }), h('span', { class: 't' }, b.name), h('span', { class: 'muted' }, `${b.w}×${b.h}`),
+    h('span', { class: 'ib', 'data-tip': b.locked ? 'Unlock artboard' : 'Lock artboard', html: UI.icon(b.locked ? 'lock' : 'unlock'), onclick: e => { e.stopPropagation(); toggleBoardLock(i); } }),
     h('span', { class: 'ib', 'data-tip': 'Move up', onclick: e => { e.stopPropagation(); moveBoard(i, -1); } }, '↑'), h('span', { class: 'ib', 'data-tip': 'Move down', onclick: e => { e.stopPropagation(); moveBoard(i, 1); } }, '↓'))));
   rp.append(sec('Artboards', h('div', { class: 'row', style: { flexWrap: 'wrap', gap: '4px' } }, h('button', { class: 'btn sm', onclick: () => addBoard() }, '+ New'), h('button', { class: 'btn sm', onclick: () => duplicateBoard() }, 'Duplicate'), h('button', { class: 'btn sm', onclick: () => renameBoard() }, 'Rename'), h('button', { class: 'btn sm', onclick: () => deleteBoard() }, 'Delete'), h('button', { class: 'btn sm', onclick: rearrangeBoards }, 'Rearrange…'), h('button', { class: 'btn sm', onclick: () => setTool('artboard') }, 'Artboard tool'))), list);
   const b = DOC.boards[DOC.ab];
-  const f = (k, lbl) => { const i = h('input', { type: 'number', value: b[k] }); i.onchange = () => { b[k] = k === 'w' || k === 'h' ? Math.max(1, +i.value) : +i.value; drawArtboard(); commit('Artboard'); renderBoardsPanel(); }; return h('label', {}, lbl, i); };
+  const f = (k, lbl) => { const i = h('input', { type: 'number', value: b[k], disabled: !!b.locked }); i.onchange = () => { b[k] = k === 'w' || k === 'h' ? Math.max(1, +i.value) : +i.value; drawArtboard(); commit('Artboard'); renderBoardsPanel(); }; return h('label', {}, lbl, i); };
   const presets = h('select', {}, h('option', { value: '' }, 'Preset size…'), ...Object.entries(PRESETS).map(([k, p]) => h('option', { value: k }, p.label))); presets.onchange = () => { const p = PRESETS[presets.value]; if (!p) return; b.w = p.w; b.h = p.h; drawArtboard(); commit('Artboard preset'); renderBoardsPanel(); };
   rp.append(sec('Active artboard', h('div', { class: 'grid2' }, f('x', 'X'), f('y', 'Y'), f('w', 'W'), f('h', 'H')), h('div', { class: 'row', style: { marginTop: '8px' } }, presets), h('div', { class: 'row', style: { marginTop: '8px', flexWrap: 'wrap', gap: '4px' } }, h('button', { class: 'btn sm', onclick: fitBoardToArt }, 'Fit to artwork'), h('button', { class: 'btn sm', onclick: fitBoardToSel }, 'Fit to selection'))),
-    sec('Export artboards', h('div', { class: 'row', style: { flexWrap: 'wrap', gap: '4px' } }, h('button', { class: 'btn sm', onclick: () => exportDialog('png', 'all') }, 'PNG (each)'), h('button', { class: 'btn sm', onclick: () => exportDialog('svg', 'all') }, 'SVG (each)'), h('button', { class: 'btn sm', onclick: () => exportDialog('pdf', 'all') }, 'Multi-page PDF'))));
+    sec('Background', h('div', { class: 'colrow' }, h('span', { class: 'lbl' }, 'Colour'), (() => { const c = h('input', { type: 'color', value: toHex(b.bg && b.bg !== 'transparent' ? b.bg : '#ffffff') }); c.oninput = () => { b.bg = c.value; drawArtboard(); commitDebounced('Artboard background'); }; return c; })(), h('button', { class: 'btn sm', onclick: () => { b.bg = 'transparent'; drawArtboard(); commit('Transparent artboard'); renderBoardsPanel(); } }, 'Transparent'), h('button', { class: 'btn sm', onclick: () => boardBgDialog() }, 'More…')),
+      h('label', { class: 'row', style: { color: 'var(--tx-1)', marginTop: '4px' } }, (() => { const c = h('input', { type: 'checkbox', checked: !!b.locked }); c.onchange = () => toggleBoardLock(); return c; })(), 'Lock artboard (no move / resize / delete)')),
+    sec('Export artboards', h('div', { class: 'muted', style: { fontSize: '11px', marginBottom: '6px' } }, `${DOC.boards.filter(x => x.picked).length} of ${DOC.boards.length} ticked for “selected” export`), h('div', { class: 'row', style: { flexWrap: 'wrap', gap: '4px' } }, h('button', { class: 'btn sm', onclick: () => exportDialog('png', 'selected') }, 'Selected…'), h('button', { class: 'btn sm', onclick: () => { const all = DOC.boards.every(x => x.picked); DOC.boards.forEach(x => x.picked = !all); drawArtboard(); renderBoardsPanel(); } }, 'Tick all / none'), h('button', { class: 'btn sm', onclick: () => exportDialog('png', 'all') }, 'PNG (each)'), h('button', { class: 'btn sm', onclick: () => exportDialog('svg', 'all') }, 'SVG (each)'), h('button', { class: 'btn sm', onclick: () => exportDialog('pdf', 'all') }, 'Multi-page PDF'))));
 }
 
 // ---------------------------------------------------------------- selection, isolation & guides
@@ -421,8 +444,10 @@ function drawGuides() {
   if (penPreview) { const pp = penPreview.clone(); pp.parent = guideLayer; }
   VX.smartLines.forEach(l => { new P.Path.Line({ from: l.from, to: l.to, strokeColor: '#ff2bd1', strokeWidth: 1 / z, parent: guideLayer }); });
   if (VX.snapHit) new P.Path.Rectangle({ point: VX.snapHit.subtract(3.5 / z), size: 7 / z, strokeColor: '#ff2bd1', strokeWidth: 1.2 / z, parent: guideLayer });
+  if (VX.snapHint) { const hp = VX.snapHint.pt; new P.Path.Circle({ center: hp, radius: 4 / z, strokeColor: '#ff2bd1', strokeWidth: 1.4 / z, parent: guideLayer }); const tx = new P.PointText({ point: hp.add([8 / z, -8 / z]), content: VX.snapHint.label, fontSize: 11 / z, fillColor: '#ff2bd1', fontFamily: 'Segoe UI, Inter, sans-serif', parent: guideLayer }); new P.Path.Rectangle({ rectangle: tx.bounds.expand(3 / z), radius: 2 / z, fillColor: new P.Color(1, 1, 1, 0.9), parent: guideLayer }).insertBelow(tx); }
   tt?.guides?.(guideLayer, z);
   guideLayer.bringToFront();
+  VX.afterGuides.forEach(fn => { try { fn(); } catch (e) { console.warn(e); } });
 }
 function enterIsolation(g) { if (!(g instanceof P.Group) || g.data?.live) return toast('Select a group to isolate'); VX.iso = g; setSel([]); renderOptions(); drawGuides(); toast('Isolation mode — Esc or double-click outside to exit'); }
 function exitIsolation() { if (!VX.iso) return; const g = VX.iso; VX.iso = null; setSel(g.parent ? [g] : []); renderOptions(); drawGuides(); }
@@ -481,10 +506,10 @@ function anchorPoints(exclude = []) { const pts = []; const vb = view.bounds; se
 function snapPt(p, exclude = []) {
   VX.snapHit = null; VX.smartLines = [];
   if (O.snap) return snapGrid(p);
-  const tol = 6 / view.zoom;
+  const tol = (O.snapTol || 6) / view.zoom;
   if (O.snapPoint) { let best = null, bd = tol; anchorPoints(exclude).forEach(q => { const d = q.getDistance(p); if (d < bd) { bd = d; best = q; } }); if (best) { VX.snapHit = best; return best.clone(); } }
   let q = p.clone();
-  if (O.showGuides && !O.lockGuides) DOC.guides.forEach(g => { if (g.axis === 'v' && Math.abs(q.x - g.pos) < tol) q.x = g.pos; if (g.axis === 'h' && Math.abs(q.y - g.pos) < tol) q.y = g.pos; });
+  if (O.snapGuides !== false && O.showGuides && !O.lockGuides) DOC.guides.forEach(g => { if (g.axis === 'v' && Math.abs(q.x - g.pos) < tol) q.x = g.pos; if (g.axis === 'h' && Math.abs(q.y - g.pos) < tol) q.y = g.pos; });
   if (O.snapPixel) q = q.round();
   return q;
 }
@@ -511,22 +536,45 @@ function snapMove(b0, raw, cands) {
   if (by) { const r = by.c.b; VX.smartLines.push({ from: [r ? Math.min(r.left, nb.left) : vb.left, by.c.v], to: [r ? Math.max(r.right, nb.right) : vb.right, by.c.v] }); }
   return d;
 }
-Object.assign(VX, { snapPt, snapGrid });
+// tangent / perpendicular snapping for line ends: finds points q on nearby curves where (q - a) is tangent or normal to the curve
+function snapLineEnd(a, p, exclude = []) {
+  VX.snapHint = null; if (!O.snapTangent && !O.snapPerp) return null;
+  const tol = Math.max(8, (O.snapTol || 6) * 1.6) / view.zoom; let best = null;
+  selectableItems().forEach(it => {
+    if (exclude.some(x => x === it || it.isDescendant?.(x))) return; if (!it.bounds.expand(tol * 3).contains(p)) return;
+    const paths = it instanceof P.Path ? [it] : it.getItems ? it.getItems({ class: P.Path, match: q => q.visible }) : [];
+    paths.forEach(path => { if (path.length < 1 || path.segments.length > 2000) return;
+      path.curves.forEach(c => { if (!c.bounds.expand(tol * 2).contains(p)) return;
+        const fn = (kind, t) => { const q = c.getPointAtTime(t), tg = c.getTangentAtTime(t); const v = q.subtract(a); return kind === 'tan' ? tg.cross(v) : tg.dot(v); };
+        [['tan', O.snapTangent], ['perp', O.snapPerp]].forEach(([kind, on]) => { if (!on || (kind === 'tan' && c.isStraight())) return;
+          const N = 32; let t0 = 0, f0 = fn(kind, 0);
+          for (let k = 1; k <= N; k++) { const t1 = k / N, f1 = fn(kind, t1);
+            if (f0 * f1 <= 0) { let lo = t0, hi = t1, flo = f0; for (let n = 0; n < 32; n++) { const m = (lo + hi) / 2, fm = fn(kind, m); if (flo * fm <= 0) hi = m; else { lo = m; flo = fm; } } const q = c.getPointAtTime((lo + hi) / 2); const d = q.getDistance(p); if (d < tol && q.getDistance(a) > 0.5 && (!best || d < best.d)) best = { pt: q, d, kind }; }
+            t0 = t1; f0 = f1; } });
+      }); });
+  });
+  if (!best) return null; VX.snapHint = { pt: best.pt, a, label: best.kind === 'tan' ? 'tangent' : 'perpendicular' }; return best.pt.clone();
+}
+const snapFillColor = c => (O.snapColor && c && VX.f.nearestSwatch) ? VX.f.nearestSwatch(c) : c;
+Object.assign(VX, { snapPt, snapGrid, snapLineEnd, snapFillColor });
 
 // ---------------------------------------------------------------- tools (single paper tool dispatcher)
 const tool = new P.Tool(); tool.minDistance = 0;
-let spaceDown = false, panStart = null, drag = null, cur = null, pen = null, lastClick = 0;
+let spaceDown = false, panStart = null, drag = null, cur = null, pen = null, lastClick = 0, labelDrag = null;
+// on-canvas artboard name labels: click to activate, drag to move the artboard (and its artwork), double-click to rename
+function labelAt(p) { return [...(VX.boardLabels || [])].reverse().find(l => l.rect.contains(p)) || null; }
 window.addEventListener('keydown', e => { if (e.code === 'Space' && !e.target.closest('input,textarea,select') && !spaceDown) { spaceDown = true; cv.style.cursor = 'grab'; e.preventDefault(); } });
 window.addEventListener('keyup', e => { if (e.code === 'Space') { spaceDown = false; updateCursor(); } });
 const hitOpts = extra => ({ fill: true, stroke: true, segments: true, tolerance: 6 / view.zoom, match: r => !isSys(r.item) && !r.item.locked && r.item.visible && !r.item.layer?.locked && (!VX.iso || r.item.isDescendant(VX.iso)), ...extra });
 function hitTop(pt, extra) { const hit = project.hitTest(pt, hitOpts({ segments: false, ...extra })); return hit ? topItem(hit.item) : null; }
-function styleNew(item, opts = {}) { item.fillColor = opts.noFill ? null : O.fill; item.strokeColor = O.stroke; item.strokeWidth = O.stroke ? (O.sw || 1) : 0; if (opts.line && !O.stroke) { item.strokeColor = O.fill || '#000'; item.strokeWidth = O.sw || 1; } if (VX.iso && item.parent !== VX.iso) VX.iso.addChild(item); return item; }
+function styleNew(item, opts = {}) { item.fillColor = opts.noFill ? null : snapFillColor(O.fill); item.strokeColor = O.stroke; item.strokeWidth = O.stroke ? (O.sw || 1) : 0; if (opts.line && !O.stroke) { item.strokeColor = O.fill || '#000'; item.strokeWidth = O.sw || 1; } if (VX.iso && item.parent !== VX.iso) VX.iso.addChild(item); return item; }
 tool.onMouseDown = e => {
   const ev = e.event; const now = Date.now(); const dbl = now - lastClick < 320; lastClick = now;
   if (spaceDown || O.tool === 'hand' || ev.button === 1) { panStart = { pt: new P.Point(ev.clientX, ev.clientY), c: view.center.clone() }; return; }
   if (ev.button === 2) return;
   if (textEd) finishText(true);
   const t = O.tool;
+  if (['select', 'direct', 'artboard'].includes(t)) { const lb = labelAt(e.point); if (lb) { if (dbl) { renameBoard(lb.i); return; } if (lb.i !== DOC.ab) setActiveBoard(lb.i); labelDrag = { i: lb.i, last: e.point, items: O.moveArtWithBoard !== false && !e.modifiers.alt ? itemsOnBoard(lb.i) : [], locked: boardLocked(lb.i, true) }; return; } }
   if (VX.tools[t]?.down) { try { VX.tools[t].down(e, dbl); } catch (err) { console.error(err); toast(String(err.message || err), 'err'); } return; }
   const pt = snapPt(e.point);
   switch (t) {
@@ -545,6 +593,7 @@ tool.onMouseDown = e => {
 tool.onMouseDrag = e => {
   const ev = e.event;
   if (panStart) { const d = new P.Point(ev.clientX, ev.clientY).subtract(panStart.pt).divide(view.zoom); view.center = panStart.c.subtract(d); afterView(); return; }
+  if (labelDrag) { const L = labelDrag; if (L.locked) { if (!L.warned) { boardLocked(L.i); L.warned = true; } return; } const d = e.point.subtract(L.last); L.last = e.point; const b = DOC.boards[L.i]; b.x += d.x; b.y += d.y; L.items.forEach(it => it.translate(d)); L.moved = true; drawArtboard(); drawGuides(); $('#stPos').textContent = `Artboard X ${Math.round(b.x)}  Y ${Math.round(b.y)}`; return; }
   const t = O.tool;
   if (VX.tools[t]?.drag) { try { VX.tools[t].drag(e); } catch (err) { console.error(err); } return; }
   if (t === 'select') return selectDrag(e);
@@ -555,6 +604,7 @@ tool.onMouseDrag = e => {
   if (['rect', 'ellipse', 'polygon', 'star', 'line'].includes(t) && drag) {
     cur?.remove(); let a = drag.start, b = pt;
     if (e.modifiers.shift) { if (t === 'line') { const v = b.subtract(a); const ang = Math.round(v.angle / 45) * 45; b = a.add(new P.Point({ length: v.length, angle: ang })); } else { const d = Math.max(Math.abs(b.x - a.x), Math.abs(b.y - a.y)); b = new P.Point(a.x + Math.sign(b.x - a.x || 1) * d, a.y + Math.sign(b.y - a.y || 1) * d); } }
+    if (t === 'line' && !e.modifiers.shift && !VX.snapHit) { const sl = snapLineEnd(a, e.point); if (sl) b = sl; }
     if (e.modifiers.alt && t !== 'line') a = a.subtract(b.subtract(a));
     const r = new P.Rectangle(a, b);
     if (t === 'rect') cur = new P.Path.Rectangle({ rectangle: r, radius: Math.min(O.radius, r.width / 2, r.height / 2) });
@@ -568,10 +618,11 @@ tool.onMouseDrag = e => {
 };
 tool.onMouseUp = e => {
   if (panStart) { panStart = null; return; }
+  if (labelDrag) { const L = labelDrag; labelDrag = null; if (L.moved) { const b = DOC.boards[L.i]; const dx = Math.round(b.x) - b.x, dy = Math.round(b.y) - b.y; b.x += dx; b.y += dy; L.items.forEach(it => it.translate([dx, dy])); drawArtboard(); drawRulers(); commit('Move artboard'); renderRight(); } return; }
   const t = O.tool;
   if (t === 'pen') { if (drag?.closing) { drag = null; finishPen(); return; } drag = null; return; }
   if (VX.tools[t]?.up) { try { VX.tools[t].up(e); } catch (err) { console.error(err); toast(String(err.message || err), 'err'); } return; }
-  VX.smartLines = []; VX.snapHit = null;
+  VX.smartLines = []; VX.snapHit = null; VX.snapHint = null;
   if (t === 'select') return selectUp(e);
   if (t === 'direct') return directUp(e);
   if (t === 'pencil' && cur) { const p = cur; cur = null; if (p.segments.length < 2) { p.remove(); return; } if (O.smooth) p.simplify(O.smooth / 4); if (p.firstSegment.point.getDistance(p.lastSegment.point) < 8 / view.zoom && p.segments.length > 4) { p.closed = true; if (O.fill) p.fillColor = O.fill; } if (VX.iso) VX.iso.addChild(p); setSel([p]); commit('Pencil'); return; }
@@ -584,7 +635,7 @@ tool.onMouseUp = e => {
 tool.onMouseMove = e => {
   const ab = abRect().topLeft; $('#stPos').textContent = `X ${Math.round(e.point.x - ab.x)}  Y ${Math.round(e.point.y - ab.y)}`;
   const tt = VX.tools[O.tool]; if (tt?.move) { tt.move(e); return; }
-  if (O.tool === 'pen' && pen) { penPreview?.remove(); const last = pen.lastSegment; penPreview = new P.Path({ segments: [new P.Segment(last.point, null, last.handleOut), new P.Segment(snapPt(e.point, [pen]))], strokeColor: '#4f8cff', strokeWidth: 1 / view.zoom, insert: false }); drawGuides(); }
+  if (O.tool === 'pen' && pen) { penPreview?.remove(); const last = pen.lastSegment; let pp = snapPt(e.point, [pen]); if (!VX.snapHit) pp = snapLineEnd(last.point, e.point, [pen]) || pp; penPreview = new P.Path({ segments: [new P.Segment(last.point, null, last.handleOut), new P.Segment(pp)], strokeColor: '#4f8cff', strokeWidth: 1 / view.zoom, insert: false }); drawGuides(); }
   else if (['pen', 'rect', 'ellipse', 'line', 'polygon', 'star', 'text'].includes(O.tool) && O.snapPoint) { const had = VX.snapHit; snapPt(e.point); if (had !== VX.snapHit) drawGuides(); }
   if (O.tool === 'select' && !drag && sel.length) { const b = selBounds(), z = view.zoom; const hi = handlePoints(b).findIndex(p => p.getDistance(e.point) < 7 / z); cv.style.cursor = hi >= 0 ? (hi % 4 === 1 ? 'ns-resize' : hi % 4 === 3 ? 'ew-resize' : hi === 0 || hi === 4 ? 'nwse-resize' : 'nesw-resize') : nearCornerOutside(b, e.point) ? 'alias' : 'default'; }
   if (O.tool === 'select' && !sel.length) cv.style.cursor = guideNear(e.point) ? (guideNear(e.point).axis === 'v' ? 'ew-resize' : 'ns-resize') : 'default';
@@ -696,11 +747,12 @@ function directUp() {
 function penDown(e) {
   const pt = snapPt(e.point, pen ? [pen] : []);
   if (!pen) { pen = styleNew(new P.Path(), {}); if (!O.stroke) { pen.strokeColor = '#000'; pen.strokeWidth = 1; } pen.fillColor = null; pen.add(pt); pen.fullySelected = true; drag = { seg: pen.lastSegment }; return; }
-  if (pen.segments.length > 1 && pt.getDistance(pen.firstSegment.point) < 8 / view.zoom) { pen.closed = true; pen.fillColor = O.fill; drag = { seg: pen.firstSegment, closing: true }; return; }
+  if (!VX.snapHit && !e.modifiers.shift) { const sl = snapLineEnd(pen.lastSegment.point, e.point, [pen]); if (sl) pt.set(sl.x, sl.y); }
+  if (pen.segments.length > 1 && pt.getDistance(pen.firstSegment.point) < 8 / view.zoom) { pen.closed = true; pen.fillColor = snapFillColor(O.fill); drag = { seg: pen.firstSegment, closing: true }; return; }
   pen.add(pt); drag = { seg: pen.lastSegment };
 }
 function penDrag(e) { if (!pen || !drag) return; const s = drag.seg; const v = e.point.subtract(s.point); if (drag.closing) { s.handleIn = v.multiply(-1); if (!e.modifiers.alt) s.handleOut = v; } else { s.handleOut = v; if (!e.modifiers.alt) s.handleIn = v.multiply(-1); } }
-function finishPen() { if (!pen) return; const p = pen; pen = null; penPreview?.remove(); penPreview = null; p.fullySelected = false; if (p.segments.length < 2) { p.remove(); drawGuides(); return; } setSel([p]); commit('Pen path'); }
+function finishPen() { VX.snapHint = null; if (!pen) return; const p = pen; pen = null; penPreview?.remove(); penPreview = null; p.fullySelected = false; if (p.segments.length < 2) { p.remove(); drawGuides(); return; } setSel([p]); commit('Pen path'); }
 UI.shortcut('enter', () => { if (pen) finishPen(); else VX.tools[O.tool]?.enter?.(); });
 UI.shortcut('escape', () => { if (pen) finishPen(); else if (textEd) finishText(false); else if (VX.tools[O.tool]?.escape?.()) return; else if (VX.iso) exitIsolation(); else setSel([]); });
 
@@ -716,7 +768,7 @@ async function shapeDialog(t, at) {
 
 // ---- text
 let textEd = null;
-function createText(pt) { const t = new P.PointText({ point: pt.add([0, O.fontSize * 0.8]), content: '', fontFamily: O.font, fontSize: O.fontSize, fontWeight: VX.fontWeightStr ? VX.fontWeightStr(O) : O.fontWeight, justification: O.justify, leading: O.fontSize * O.leading, fillColor: O.fill && O.fill !== '#ffffff' ? O.fill : '#111111' }); t.data.tracking = O.tracking; if (VX.iso) VX.iso.addChild(t); editText(t, true); }
+function createText(pt) { const t = new P.PointText({ point: pt.add([0, O.fontSize * 0.8]), content: '', fontFamily: O.font, fontSize: O.fontSize, fontWeight: VX.fontWeightStr ? VX.fontWeightStr(O) : O.fontWeight, justification: O.justify, leading: O.fontSize * O.leading, fillColor: snapFillColor(O.fill && O.fill !== '#ffffff' ? O.fill : '#111111') }); t.data.tracking = O.tracking; if (VX.iso) VX.iso.addChild(t); editText(t, true); }
 function editText(t, isNew) {
   const ta = h('textarea', { class: 'text-in', spellcheck: 'false' }); ta.value = t.content;
   const place = () => { const b = t.content ? t.bounds : new P.Rectangle(t.point.subtract([0, t.fontSize * 0.8]), new P.Size(10, t.fontSize)); const tl = view.projectToView(b.topLeft); ta.style.left = tl.x + 'px'; ta.style.top = tl.y + 'px'; ta.style.font = `${t.fontWeight} ${t.fontSize * view.zoom}px "${t.fontFamily}"`; ta.style.letterSpacing = ((t.data.tracking || 0) / 1000 * t.fontSize * view.zoom) + 'px'; const lines = ta.value.split('\n'); const cx = document.createElement('canvas').getContext('2d'); cx.font = ta.style.font; ta.style.width = Math.max(30, ...lines.map(l => cx.measureText(l).width + l.length * ((t.data.tracking || 0) / 1000 * t.fontSize * view.zoom))) + 16 + 'px'; ta.style.lineHeight = (t.leading * view.zoom) + 'px'; ta.style.height = lines.length * t.leading * view.zoom + 6 + 'px'; ta.style.textAlign = t.justification; };
@@ -834,7 +886,7 @@ cv.addEventListener('contextmenu', e => { e.preventDefault(); contextMenu(e, [{ 
 let hist = [], hi = -1;
 function docState() { return { boards: DOC.boards.map(b => ({ ...b })), ab: DOC.ab, guides: DOC.guides.map(g => ({ ...g })), swatches: JSON.parse(JSON.stringify(DOC.swatches)), symbols: DOC.symbols }; }
 function snapshot() { if (O.outline) setOutline(false); try { return JSON.stringify({ doc: docState(), layers: userLayers().map(L => L.exportJSON({ asString: false })), active: userLayers().indexOf(topLayerOf(project.activeLayer)) }); } finally { if (O.outline) setOutline(true); } }
-function commit(label) { hist = hist.slice(0, hi + 1); hist.push({ label, s: snapshot() }); if (hist.length > 100) hist.shift(); hi = hist.length - 1; if (hist.length > 1) { DOC.dirty = true; UI.setDocTitle(DOC.name + ' •', 'BTS Vector'); } if (rtab === 'layers' || rtab === 'boards') renderRight(); }
+function commit(label) { VX.beforeCommit.forEach(fn => { try { fn(label); } catch (e) { console.warn(e); } }); hist = hist.slice(0, hi + 1); hist.push({ label, s: snapshot() }); if (hist.length > 100) hist.shift(); hi = hist.length - 1; if (hist.length > 1) { DOC.dirty = true; UI.setDocTitle(DOC.name + ' •', 'BTS Vector'); } if (rtab === 'layers' || rtab === 'boards') renderRight(); }
 let cdT = null, cdL = null; function commitDebounced(l) { clearTimeout(cdT); cdL = l; cdT = setTimeout(() => { cdT = null; commit(l); }, 400); }
 function flushCommit() { if (cdT) { clearTimeout(cdT); cdT = null; commit(cdL); } }
 function loadDocState(d) {
@@ -854,19 +906,22 @@ function undo() { if (pen) return finishPen(); if (hi > 0) { hi--; restore(hist[
 function redo() { if (hi < hist.length - 1) { hi++; restore(hist[hi].s); } }
 UI.shortcut('ctrl+z', undo); UI.shortcut('ctrl+shift+z', redo);
 // selection keys survive restore() (used by live-preview dialogs)
-function selKeys(items = sel) { return items.map(it => { const path = []; let x = it; while (x && x.parent) { path.unshift(x.index); x = x.parent; } if (x) path.unshift(x.index); return path; }); }
+// indices are looked up with indexOf: paper's cached _index can be stale for layers moved with insertAbove/insertBelow
+function selKeys(items = sel) { return items.map(it => { const path = []; let x = it; while (x && x.parent) { path.unshift(x.parent.children.indexOf(x)); x = x.parent; } if (x) path.unshift(project.layers.indexOf(x)); return path; }); }
 function resolveKeys(keys) { return keys.map(path => { let x = project; for (const i of path) { x = (x === project ? project.layers : x.children)[i]; if (!x) return null; } return x; }).filter(Boolean); }
 function lightenModal() { const m = [...document.querySelectorAll('.modal-back')].pop(); if (m) m.classList.add('vx-preview'); }
-async function withPreview({ title, fields, apply, label, ok = 'OK', width, needSel = true, onDone }) {
+async function withPreview({ title, fields, apply, label, ok = 'OK', width, needSel = true, onDone, setup }) {
   if (needSel && !sel.length) { toast('Select one or more objects first'); return null; }
   flushCommit(); const S = snapshot(); const keys = selKeys(); let lastErr = null;
-  const run = vals => { restoreQuiet(S, keys); try { apply({ ...vals }); lastErr = null; } catch (e) { lastErr = e; console.warn(e); } drawGuides(); view.update(); };
+  const run = (vals, final = false) => { restoreQuiet(S, keys); try { apply({ ...vals }, { final }); lastErr = null; } catch (e) { lastErr = e; console.warn(e); } drawGuides(); view.update(); };
   const defaults = Object.fromEntries(fields.map(f => [f.key, f.value]));
-  run(defaults);
-  const pr = form({ title, fields, ok, width, onChange: v => run(v) }); lightenModal();
-  const v = await pr;
+  run(defaults); let curVals = { ...defaults };
+  const pr = form({ title, fields, ok, width, onChange: v => { curVals = { ...v }; run(v); } }); lightenModal();
+  // setup(api) lets a dialog drive its own preview (e.g. an animated turntable); it returns a cleanup function
+  const cleanup = setup ? setup({ run: patch => run({ ...curVals, ...patch }), vals: () => curVals, modal: [...document.querySelectorAll('.modal-back')].pop() }) : null;
+  const v = await pr; try { cleanup && cleanup(); } catch (e) { console.warn(e); }
   if (!v) { restoreQuiet(S, keys); return null; }
-  run(v); if (lastErr) { toast(String(lastErr.message || lastErr), 'err'); } commit(label || title); onDone && onDone(v); return v;
+  run(v, true); if (lastErr) { toast(String(lastErr.message || lastErr), 'err'); } commit(label || title); onDone && onDone(v); return v;
 }
 function restoreQuiet(S, keys) { restore(S); setSel(resolveKeys(keys)); }
 
@@ -942,7 +997,7 @@ async function save(as, toPath) {
   finishText(true); finishPen();
   const data = new TextEncoder().encode(docJSON());
   let p = toPath || (!as && DOC.path); if (p) await bts.fs.write({ path: p, data }); else { p = await bts.fs.saveAs({ data, defaultPath: DOC.name.replace(/\.\w+$/, '') + '.btsv', filters: [{ name: 'BTS Vector', extensions: ['btsv'] }] }); if (!p) return; }
-  DOC.path = p; DOC.name = p.split(/[\\/]/).pop(); DOC.dirty = false; UI.setDocTitle(DOC.name, 'BTS Vector'); toast('Saved ' + DOC.name, 'ok'); return p;
+  DOC.path = p; DOC.name = p.split(/[\\/]/).pop(); DOC.dirty = false; UI.setDocTitle(DOC.name, 'BTS Vector'); toast('Saved ' + DOC.name, 'ok'); VX.f.autosaveClear?.(); return p;
 }
 UI.shortcut('ctrl+s', () => save(false)); UI.shortcut('ctrl+shift+s', () => save(true));
 
@@ -955,6 +1010,7 @@ function onExportHook(item, node) {
       const fw = String(item.fontWeight || ''); if (/italic/i.test(fw)) { node.setAttribute('font-style', 'italic'); const w = fw.replace(/italic/i, '').trim(); if (w) node.setAttribute('font-weight', w); else node.removeAttribute('font-weight'); }
       if (item.data?.tracking) node.setAttribute('letter-spacing', (item.data.tracking / 1000 * item.fontSize).toFixed(2));
     }
+    if (node.setAttribute) (VX.exportHooks || []).forEach(fn => fn(item, node));
   } catch (e) { console.warn(e); }
   return node;
 }
@@ -970,9 +1026,11 @@ function svgString(forPdf, opts = {}) {
   const board = opts.board ?? DOC.ab; const rect = opts.rect || abRect(board);
   const s = withExportScene(() => project.exportSVG({ asString: true, bounds: rect, matchShapes: !forPdf, precision: 3, onExport: onExportHook }), { ...opts, board, pdf: forPdf });
   const d = new DOMParser().parseFromString(s, 'image/svg+xml'); const root = d.documentElement;
+  VX.svgPost.forEach(fn => { try { fn(root, d, forPdf); } catch (e) { console.warn(e); } });
   root.querySelectorAll('[visibility="hidden"]').forEach(el => el.remove());
   root.querySelectorAll('[font-weight]').forEach(el => { const fw = el.getAttribute('font-weight'); if (/italic/i.test(fw)) { el.setAttribute('font-style', 'italic'); const w = fw.replace(/italic/i, '').trim(); if (w && w !== 'none') el.setAttribute('font-weight', w); else el.removeAttribute('font-weight'); } else if (fw === 'none') el.removeAttribute('font-weight'); });
-  if (forPdf) root.querySelectorAll('[stroke-width="none"],[font-size="none"],[font-family="none"],[font-weight="none"],[text-anchor="none"]').forEach(el => ['stroke-width', 'font-size', 'font-family', 'font-weight', 'text-anchor'].forEach(a => el.getAttribute(a) === 'none' && el.removeAttribute(a)));
+  const NONE_ATTRS = ['stroke-width', 'font-size', 'font-family', 'font-weight', 'text-anchor', 'stroke-linejoin', 'stroke-linecap', 'stroke-miterlimit', 'stroke-dashoffset', 'fill-rule', 'letter-spacing'];
+  if (forPdf) root.querySelectorAll(NONE_ATTRS.map(a => `[${a}="none"]`).join(',')).forEach(el => NONE_ATTRS.forEach(a => el.getAttribute(a) === 'none' && el.removeAttribute(a)));
   let defs = root.querySelector('defs'); let fid = 0;
   root.querySelectorAll('[data-vx-shadow]').forEach(el => { const sh = JSON.parse(el.getAttribute('data-vx-shadow')); el.removeAttribute('data-vx-shadow'); if (forPdf) return; if (!defs) { defs = d.createElementNS('http://www.w3.org/2000/svg', 'defs'); root.insertBefore(defs, root.firstChild); } const f = d.createElementNS('http://www.w3.org/2000/svg', 'filter'); const id = 'vxshadow' + (fid++); f.setAttribute('id', id); f.setAttribute('x', '-50%'); f.setAttribute('y', '-50%'); f.setAttribute('width', '200%'); f.setAttribute('height', '200%'); const ds = d.createElementNS('http://www.w3.org/2000/svg', 'feDropShadow'); ds.setAttribute('dx', sh.dx); ds.setAttribute('dy', sh.dy); ds.setAttribute('stdDeviation', (sh.blur / 2).toFixed(2)); const c = new P.Color(sh.color); ds.setAttribute('flood-color', new P.Color(c.red, c.green, c.blue).toCSS(true)); ds.setAttribute('flood-opacity', sh.op ?? 1); f.append(ds); defs.append(f); el.setAttribute('filter', `url(#${id})`); });
   root.querySelectorAll('[data-paper-data]').forEach(el => el.removeAttribute('data-paper-data'));
@@ -993,16 +1051,18 @@ async function buildPDF(pages) {
 }
 const safeName = s => String(s).replace(/[\\/:*?"<>|]+/g, '_').trim() || 'artboard';
 // exportTo: fmt svg|png|jpeg|webp|pdf; scope board|all|selection; returns written paths. If `path` given, writes there without a dialog.
-async function exportTo({ fmt = 'png', scope = 'board', scale = 1, transparent = false, path = null, quality = 0.92, outlineText = false } = {}) {
+async function exportTo({ fmt = 'png', scope = 'board', scale = 1, transparent = false, path = null, quality = 0.92, outlineText = false, dither = false, ditherAmt = 3 } = {}) {
   flushCommit(); const base = DOC.name.replace(/\.\w+$/, ''); const ext = fmt === 'jpeg' ? 'jpg' : fmt;
   let targets;
   if (scope === 'selection') { if (!sel.length) { toast('Select something to export'); return []; } const only = [...sel]; targets = [{ name: base + '-selection', opts: { rect: selBounds(), only, bg: false } }]; }
-  else if (scope === 'all') targets = DOC.boards.map((b, i) => ({ name: base + '-' + safeName(b.name), opts: { board: i, bg: !transparent } }));
-  else targets = [{ name: base, opts: { board: DOC.ab, bg: !transparent } }];
+  else if (scope === 'all') targets = DOC.boards.map((b, i) => ({ name: base + '-' + safeName(b.name), bname: b.name, opts: { board: i, bg: !transparent } }));
+  else if (scope === 'selected') { const idx = DOC.boards.map((b, i) => b.picked ? i : -1).filter(i => i >= 0); if (!idx.length) { toast('Tick one or more artboards in the Artboards panel first'); return []; } targets = idx.map(i => ({ name: base + '-' + safeName(DOC.boards[i].name), bname: DOC.boards[i].name, opts: { board: i, bg: !transparent } })); }
+  else targets = [{ name: base, bname: DOC.boards[DOC.ab].name, opts: { board: DOC.ab, bg: !transparent } }];
   const rectOf = t => t.opts.rect || abRect(t.opts.board);
   const bytesFor = async t => {
     if (fmt === 'svg') return new TextEncoder().encode(svgString(false, t.opts));
     const r = rectOf(t); const c = await svgToCanvas(svgString(false, t.opts), r.width, r.height, scale, fmt === 'jpeg' ? '#ffffff' : null);
+    if (dither && VX.f.ditherCanvas) await VX.f.ditherCanvas(c, t.opts, r, scale, ditherAmt);
     const blob = await new Promise(res => c.toBlob(res, 'image/' + fmt, quality)); return UI.blobToU8(blob);
   };
   const filters = [{ name: fmt.toUpperCase(), extensions: [ext] }];
@@ -1010,27 +1070,28 @@ async function exportTo({ fmt = 'png', scope = 'board', scale = 1, transparent =
     let S = null, keys = null; const hasText = selectableItems().some(i => i instanceof P.PointText || i.data?.live?.kind === 'top' || (i.getItems && i.getItems({ class: P.PointText }).length));
     if (outlineText && hasText && VX.f.createOutlines) { S = snapshot(); keys = selKeys(); const onlyKeys = targets.map(t => t.opts.only ? selKeys(t.opts.only) : null); setSel(allLayers().flatMap(L => L.getItems({ recursive: true, match: i => i instanceof P.PointText || i.data?.live?.kind === 'top' })).filter(i => !i.parent?.data?.live)); await VX.f.createOutlines({ quiet: true }); targets.forEach((t, k) => { if (onlyKeys[k]) t.opts.only = resolveKeys(onlyKeys[k]); }); }
     let pages; try { pages = targets.map(t => { const r = rectOf(t); return { svg: svgString(true, t.opts), w: r.width, h: r.height }; }); } finally { if (S) { restore(S); setSel(resolveKeys(keys)); } }
-    const data = await buildPDF(pages); const name = scope === 'all' ? base : targets[0].name;
+    const data = await buildPDF(pages); const name = scope === 'all' || scope === 'selected' ? base : targets[0].name;
     const p = path ? await bts.fs.write({ path, data }) : await bts.fs.saveAs({ data, defaultPath: name + '.pdf', filters }); if (p) toast(`Exported ${pages.length}-page vector PDF`, 'ok'); return p ? [p] : [];
   }
   const out = []; let first = path;
   for (let k = 0; k < targets.length; k++) {
     const t = targets[k]; const data = await bytesFor(t);
     if (k === 0) { const p = first ? await bts.fs.write({ path: first, data }) : await bts.fs.saveAs({ data, defaultPath: t.name + '.' + ext, filters }); if (!p) return []; first = p; out.push(p); }
-    else { const dir = first.replace(/[^\\/]*$/, ''); const stem = first.replace(/^.*[\\/]/, '').replace(/\.\w+$/, ''); const p = dir + stem.replace(new RegExp('-' + safeName(DOC.boards[0].name).replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '$'), '') + '-' + safeName(DOC.boards[k].name) + '.' + ext; await bts.fs.write({ path: p, data }); out.push(p); }
+    else { const dir = first.replace(/[^\\/]*$/, ''); const stem = first.replace(/^.*[\\/]/, '').replace(/\.\w+$/, ''); const p = dir + stem.replace(new RegExp('-' + safeName(targets[0].bname).replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '$'), '') + '-' + safeName(t.bname) + '.' + ext; await bts.fs.write({ path: p, data }); out.push(p); }
   }
   toast(`Exported ${out.length} ${ext.toUpperCase()} file${out.length > 1 ? 's' : ''}`, 'ok'); return out;
 }
-async function exportDialog(fmt = 'png', scope) {
-  scope = scope || (sel.length && false ? 'selection' : 'board');
+async function exportDialog(fmt = 'png', scope, extra = {}) {
+  scope = scope || 'board'; const npick = DOC.boards.filter(b => b.picked).length;
   const v = await form({ title: 'Export', ok: 'Export', fields: [
     { key: 'fmt', label: 'Format', type: 'select', value: fmt, options: [{ value: 'svg', label: 'SVG (vector)' }, { value: 'png', label: 'PNG' }, { value: 'jpeg', label: 'JPEG' }, { value: 'webp', label: 'WebP' }, { value: 'pdf', label: 'PDF (vector)' }] },
-    { key: 'scope', label: 'What to export', type: 'select', value: scope, options: [{ value: 'board', label: `Current artboard (${DOC.boards[DOC.ab].name})` }, { value: 'all', label: `All ${DOC.boards.length} artboard(s) — one file each / multi-page PDF` }, { value: 'selection', label: 'Selection only' }] },
+    { key: 'scope', label: 'What to export', type: 'select', value: scope, options: [{ value: 'board', label: `Current artboard (${DOC.boards[DOC.ab].name})` }, { value: 'all', label: `All ${DOC.boards.length} artboard(s) — one file each / multi-page PDF` }, { value: 'selected', label: `Selected artboards (${npick} ticked in the Artboards panel)` }, { value: 'selection', label: 'Selection only' }] },
     { key: 'scale', label: 'Scale (raster formats)', type: 'select', value: '2', options: [{ value: '0.5', label: '0.5×' }, { value: '1', label: '1×' }, { value: '2', label: '2×' }, { value: '3', label: '3×' }, { value: '4', label: '4× (print)' }] },
     { key: 'q', label: 'Quality (JPEG / WebP)', type: 'range', value: 92, min: 30, max: 100 },
     { key: 't', label: 'Transparent background (PNG / WebP / SVG)', type: 'checkbox', value: false },
+    { key: 'dither', label: 'Raster: dither gradients (adds slight noise to stop banding)', type: 'checkbox', value: !!extra.dither },
     { key: 'ol', label: 'PDF: convert type to outlines (keeps exact fonts)', type: 'checkbox', value: true }] });
-  if (!v) return; return exportTo({ fmt: v.fmt, scope: v.scope, scale: +v.scale, transparent: v.t, quality: v.q / 100, outlineText: v.ol });
+  if (!v) return; return exportTo({ fmt: v.fmt, scope: v.scope, scale: +v.scale, transparent: v.t, quality: v.q / 100, outlineText: v.ol, dither: v.dither });
 }
 UI.shortcut('ctrl+alt+e', () => exportDialog());
 async function copyAsSVG() {
@@ -1039,7 +1100,7 @@ async function copyAsSVG() {
   toast('SVG copied to the clipboard (' + Math.round(s.length / 1024) + ' KB)', 'ok'); return s;
 }
 UI.shortcut('ctrl+alt+c', copyAsSVG);
-async function closeWindow() { if (DOC.dirty) { const r = await modal({ title: 'Save changes?', body: `Save changes to “${DOC.name}” before closing?`, buttons: [{ label: 'Cancel', value: null }, { label: "Don't save", value: 'no' }, { label: 'Save', primary: true, value: 'yes' }] }); if (r === null) return; if (r === 'yes') { await save(false); if (DOC.dirty) return; } } bts.win.close(); }
+async function closeWindow() { if (DOC.dirty) { const r = await modal({ title: 'Save changes?', body: `Save changes to “${DOC.name}” before closing?`, buttons: [{ label: 'Cancel', value: null }, { label: "Don't save", value: 'no' }, { label: 'Save', primary: true, value: 'yes' }] }); if (r === null) return; if (r === 'yes') { await save(false); if (DOC.dirty) return; } } try { await VX.f.autosaveClear?.(); } catch { } bts.win.close(); }
 UI.shortcut('ctrl+w', closeWindow);
 function shortcutsHelp() { const rows = TOOLS.map(([id, , tip, key]) => [key || '—', tip]).concat([['Space', 'Pan'], ['X / Shift+X / /', 'Toggle fill-stroke / swap / none'], ['Shift (drag)', 'Constrain'], ['Alt (drag)', 'Duplicate / from center'], ['Double-click group', 'Isolation mode'], ['Double-click live object', 'Edit repeat / blend / effect / type on path']]); modal({ title: 'Tool reference', width: 520, body: '<table class="kb-table">' + rows.map(r => `<tr><td>${r[1]}</td><td>${r[0]}</td></tr>`).join('') + '</table>' }); }
 
@@ -1049,7 +1110,8 @@ Object.defineProperties(VX, Object.getOwnPropertyDescriptors({
   setSel, commit, commitDebounced, flushCommit, drawGuides, drawArtboard, renderProps, renderRight, renderOptions, renderFS, showTab, get rtab() { return rtab; },
   eachStyled, firstStyled, userLayers, allLayers, isSys, topItem, selBounds, selectableItems, hitOpts, hitTop, styleNew, abRect, boardAt, setActiveBoard, addBoard, duplicateBoard, deleteBoard, renameBoard, rearrangeBoards, moveBoard, itemsOnBoard,
   applyColor, toHex, withPreview, snapshot, restore, restoreQuiet, selKeys, resolveKeys, lightenModal, splitCompound, isShape, selPaths, setTool, finishText, editText, enterIsolation, exitIsolation,
-  svgString, exportTo, exportDialog, buildPDF, renderToCanvas, copyAsSVG, save, docJSON, openFile, placeRaster, toDataUrl, createDoc, newDialog, fitArt, fitAll, zoomToSel, zoomAt, afterView,
+  svgString, exportTo, exportDialog, buildPDF, fitRect, renderToCanvas, copyAsSVG, save, docJSON, openFile, placeRaster, toDataUrl, createDoc, newDialog, fitArt, fitAll, zoomToSel, zoomAt, afterView,
+  duplicate, lockSel, hideSel, deleteSel, boardLocked, toggleBoardLock, boardBgDialog, colorToJSON, colorFromJSON, svgToCanvas,
   pathfinder, group, ungroup, align, distribute, distributeSpacing, makeClip, makeCompound, reflect, rotateSel, rotateDialog, scaleDialog, moveSel, undo, redo, get hist() { return hist; }, cssVar, toggleOutline, drawRulers, newSubLayer, newUserLayer,
 }));
 VX.boot = () => {

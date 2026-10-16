@@ -17,6 +17,8 @@ const PJ = {
   markers: [],      // {id,t,label,color}
   captions: [],     // {id,start,end,text}
   capStyle: { ...VCAP.DEFAULT_STYLE }, capBurn: true,
+  sequences: [{ id: 'S1', name: 'Sequence 01' }], activeSeq: 'S1', // the active sequence's data lives in the top-level fields above
+  censor: { words: [], on: true, bleep: false, estimate: true },
 };
 const ST = { t: 0, playing: false, rate: 1, pps: 60, tool: 'select', snap: true, sel: new Set(), selTr: null, selCap: null, ffmpeg: false, safe: false, editMode: 'overwrite', inP: null, outP: null, rs: 1, useProxies: false, binSel: null, binQuery: '', binKind: 'all', fxFocus: null, linkedSel: true };
 const PREFS = Object.assign({ imgDur: 5, trDur: 1, autosave: 60, collapsed: ['Quick adjust'] }, (() => { try { return JSON.parse(localStorage.getItem('btsvid.prefs') || '{}'); } catch { return {}; } })());
@@ -32,8 +34,8 @@ const dur = tlDur, end = cEnd;
 const seqDuration = () => PJ.clips.reduce((m, c) => Math.max(m, cEnd(c)), 0);
 const srcTime = (c, t) => (c.props.freeze != null ? c.props.freeze : c.in + (t - c.start) * spd(c));
 const fileUrl = p => (p.startsWith('/') ? 'file://' : 'file:///') + encodeURI(p.replace(/\\/g, '/')).replace(/#/g, '%23').replace(/\?/g, '%3F');
-const isVisual = c => c.type !== 'audio';
-const hasAudioOf = c => c.type === 'audio' || (c.type === 'video' && !!mediaById(c.mediaId)?.hasAudio && !c.props.detached && c.props.freeze == null);
+const isVisual = c => c.type !== 'audio' && !(c.type === 'nest' && c.props?.audioOnly);
+const hasAudioOf = c => c.type === 'audio' || (c.type === 'video' && !!mediaById(c.mediaId)?.hasAudio && !c.props.detached && c.props.freeze == null) || (c.type === 'nest' && !c.props.detached && nestHasAudio(c));
 const ANIM_KEYS = ['x', 'y', 'scale', 'rotation', 'opacity', 'cropL', 'cropR', 'cropT', 'cropB', 'volume'];
 const defaultProps = type => ({
   x: 0, y: 0, scale: 100, rotation: 0, opacity: 100, volume: 100, pan: 0, fadeIn: 0, fadeOut: 0,
@@ -46,7 +48,7 @@ const defaultProps = type => ({
 });
 function evalProps(c, lt) {
   const P = { ...c.props }; const kf = c.kf;
-  if (kf) for (const k in kf) { if (k.startsWith('fx:')) continue; const v = VFX.evalKf(kf[k], lt); if (v !== undefined) P[k] = v; }
+  if (kf) for (const k in kf) { if (k.includes(':')) continue; const v = VFX.evalKf(kf[k], lt); if (v !== undefined) P[k] = v; }
   return P;
 }
 function evalFx(c, lt) {
@@ -58,6 +60,25 @@ function fadeK(P, lt, D) { if (lt < 0 || lt > D) return 1; let a = 1; if (P.fade
 const tc = s => { const f = PJ.seq.fps; s = Math.max(0, s); const fr = Math.floor(s * f + 1e-6); const hh = Math.floor(fr / (3600 * f)), mm = Math.floor(fr / (60 * f)) % 60, ss = Math.floor(fr / f) % 60, ff = fr % f; return [hh, mm, ss, ff].map(v => String(v).padStart(2, '0')).join(':'); };
 const frameSnap = t => Math.round(t * PJ.seq.fps) / PJ.seq.fps;
 function setStatus(s) { const el = $('#stInfo'); if (el) el.textContent = s; }
+
+// =====================================================================  sequences & nesting
+// Every sequence has {id, name, seq, tracks, clips, transitions, markers, captions, capStyle, capBurn}. The ACTIVE
+// sequence's data lives in the top-level PJ fields (so all editing code works unchanged); the others are stored in PJ.sequences.
+const SEQ_KEYS = ['seq', 'tracks', 'clips', 'transitions', 'markers', 'captions', 'capStyle', 'capBurn'];
+function liveSeqData() { const o = {}; SEQ_KEYS.forEach(k => o[k] = PJ[k]); return o; }
+function seqById(id) { const s = PJ.sequences.find(x => x.id === id); if (!s) return null; return id === PJ.activeSeq ? Object.assign({ id: s.id, name: s.name }, liveSeqData()) : s; }
+// Temporarily make another sequence's data the "current" one (synchronous only) — used to render / analyse nested sequences.
+let seqDepth = 0;
+function withSeq(sd, fn) {
+  if (!sd || sd.id === PJ.activeSeq && seqDepth === 0) return fn();
+  const save = liveSeqData(); SEQ_KEYS.forEach(k => { if (sd[k] !== undefined) PJ[k] = sd[k]; }); seqDepth++;
+  try { return fn(); } finally { seqDepth--; Object.assign(PJ, save); }
+}
+const nestSeq = c => c && c.type === 'nest' ? seqById(c.seqId) : null;
+const nestDur = c => { const sd = nestSeq(c); return sd ? withSeq(sd, () => PJ.clips.reduce((m, x) => Math.max(m, x.start + (x.out - x.in) / ((x.props && x.props.speed) || 1)), 0)) : 0; };
+function nestHasAudio(c, depth = 0) { const sd = nestSeq(c); if (!sd || depth > 6) return false; return withSeq(sd, () => PJ.clips.some(x => x.type === 'audio' || (x.type === 'video' && !!mediaById(x.mediaId)?.hasAudio && !x.props.detached && x.props.freeze == null) || (x.type === 'nest' && nestHasAudio(x, depth + 1)))); }
+// true when sequence `inner` (or anything nested inside it) is `outer` — nesting it would create a loop
+function seqContains(innerId, outerId, depth = 0) { if (innerId === outerId) return true; if (depth > 8) return true; const sd = seqById(innerId); if (!sd) return false; return sd.clips.some(x => x.type === 'nest' && seqContains(x.seqId, outerId, depth + 1)); }
 
 // =====================================================================  transitions model
 function trInfo(tr) {
@@ -86,7 +107,7 @@ function fixTransitions() {
 
 // =====================================================================  history
 let hist = [], hi = -1;
-const docState = () => ({ seq: PJ.seq, tracks: PJ.tracks, clips: PJ.clips, transitions: PJ.transitions, markers: PJ.markers, captions: PJ.captions, capStyle: PJ.capStyle, capBurn: PJ.capBurn });
+const docState = () => ({ seq: PJ.seq, tracks: PJ.tracks, clips: PJ.clips, transitions: PJ.transitions, markers: PJ.markers, captions: PJ.captions, capStyle: PJ.capStyle, capBurn: PJ.capBurn, activeSeq: PJ.activeSeq, sequences: PJ.sequences.map(s => s.id === PJ.activeSeq ? { id: s.id, name: s.name } : s), censor: PJ.censor });
 const snapshot = () => JSON.stringify(docState());
 function commit(label) {
   fixTransitions();
@@ -98,8 +119,9 @@ let cdT = null; function commitDebounced(l) { clearTimeout(cdT); cdT = setTimeou
 function markDirty() { PJ.dirty = true; UI.setDocTitle(PJ.name + ' •', 'BTS Video'); }
 function restore(s) {
   const d = JSON.parse(s); Object.assign(PJ, { seq: d.seq, tracks: d.tracks, clips: d.clips, transitions: d.transitions || [], markers: d.markers || [], captions: d.captions || [], capStyle: d.capStyle || { ...VCAP.DEFAULT_STYLE }, capBurn: d.capBurn !== false });
+  if (d.sequences) { PJ.sequences = d.sequences; PJ.activeSeq = d.activeSeq; } if (d.censor) PJ.censor = d.censor;
   [...ST.sel].forEach(id => { if (!clipById(id)) ST.sel.delete(id); }); if (ST.selTr && !PJ.transitions.some(t => t.id === ST.selTr)) ST.selTr = null; if (ST.selCap && !PJ.captions.some(c => c.id === ST.selCap)) ST.selCap = null;
-  layoutMonitor(); renderTimeline(); renderFx(); renderLeft(); if (typeof renderOptions === 'function') renderOptions(); syncMedia(false); drawFrame();
+  layoutMonitor(); renderTimeline(); renderFx(); renderLeft(); if (typeof renderOptions === 'function') renderOptions(); if (typeof renderSeqTabs === 'function') renderSeqTabs(); syncMedia(false); drawFrame();
 }
 function undo() { if (hi > 0) { hi--; restore(hist[hi].s); renderHistory(); } }
 function redo() { if (hi < hist.length - 1) { hi++; restore(hist[hi].s); renderHistory(); } }
@@ -127,9 +149,10 @@ async function importPath(path, name, existingId) {
   if (!existingId) PJ.media.push(m);
   setStatus(`Importing ${name}…`);
   try {
+    if ((m.kind === 'image' || m.anim) && ST.ffmpeg && /\.(gif|a?png|webp)$/i.test(name)) await transcodeAnimated(m);
     if (m.kind === 'image') { const im = new Image(); im.src = m.url; await im.decode(); m.w = im.naturalWidth; m.h = im.naturalHeight; m.dur = PREFS.imgDur; m.el = im; m.thumb = thumbOf(im, im.naturalWidth || 160, im.naturalHeight || 90); }
     else {
-      if (ST.ffmpeg) { const info = await bts.ffmpeg.probe(path); if (info) { const d = info.match(/Duration: (\d+):(\d+):([\d.]+)/); if (d) m.dur = +d[1] * 3600 + +d[2] * 60 + +d[3]; m.hasAudio = /Stream #.*Audio:/.test(info); const v = info.match(/Stream #.*Video:.*?(\d{2,5})x(\d{2,5})/); if (v && !/Video: (png|mjpeg).*attached pic/.test(info)) { m.w = +v[1]; m.h = +v[2]; } } }
+      if (ST.ffmpeg) { const info = await bts.ffmpeg.probe(m.anim ? m.proxy : path); if (info) { const d = info.match(/Duration: (\d+):(\d+):([\d.]+)/); if (d) m.dur = +d[1] * 3600 + +d[2] * 60 + +d[3]; m.hasAudio = /Stream #.*Audio:/.test(info); const v = info.match(/Stream #.*Video:.*?(\d{2,5})x(\d{2,5})/); if (v && !/Video: (png|mjpeg).*attached pic/.test(info)) { m.w = +v[1]; m.h = +v[2]; } } }
       const el = document.createElement(m.kind === 'audio' ? 'audio' : 'video'); el.preload = 'auto'; el.src = m.url; el.muted = true;
       const ok = await new Promise(res => { el.onloadeddata = () => res(true); el.onerror = () => res(false); setTimeout(() => res(el.readyState >= 1), 15000); });
       if (!ok) {
@@ -145,6 +168,17 @@ async function importPath(path, name, existingId) {
     m.ready = true;
   } catch (e) { console.error(e); m.missing = true; toast(`Could not import ${name}: ${e.message}`, 'err', 6000); }
   setStatus('Ready'); renderBin(); renderTimeline(); markDirty(); return m;
+}
+// Animated GIF / APNG / WebP → a temporary VP9 WebM that keeps the alpha channel, so it plays (and exports) as a moving clip.
+async function transcodeAnimated(m) {
+  const r = await bts.ffmpeg.run(['-hide_banner', '-i', m.path, '-map', '0:v:0', '-f', 'null', '-']);
+  const fr = [...String(r.log || '').matchAll(/frame=\s*(\d+)/g)].pop(); const n = fr ? +fr[1] : 0;
+  if (n < 2) { if (m.anim) { m.anim = false; m.alpha = false; m.kind = 'image'; } return false; }
+  setStatus(`Converting animated ${m.name} (${n} frames)…`);
+  const out = (await bts.ffmpeg.tmpDir()).replace(/\\/g, '/') + `/${m.id}-anim-${Date.now().toString(36)}.webm`;
+  const id = await bts.ffmpeg.start(['-i', m.path, '-an', '-vf', 'pad=ceil(iw/2)*2:ceil(ih/2)*2:color=black@0,format=yuva420p', '-c:v', 'libvpx-vp9', '-pix_fmt', 'yuva420p', '-auto-alt-ref', '0', '-b:v', '0', '-crf', '22', '-deadline', 'good', '-cpu-used', '4', '-row-mt', '1', out]);
+  const res = await bts.ffmpeg.end(id); if (!res.ok) throw new Error('Could not convert the animation: ' + res.log.split('\n').filter(Boolean).slice(-1)[0]);
+  Object.assign(m, { kind: 'video', anim: true, alpha: true, frames: n, proxy: out, url: fileUrl(out), hasAudio: false }); return true;
 }
 async function makeProxy(m) {
   setStatus(`Creating playable proxy for ${m.name}…`);
@@ -214,7 +248,7 @@ async function createProxies(list) {
 
 // =====================================================================  project files & autosave
 function projectJSON() {
-  return JSON.stringify({ app: 'BTS Video', v: 2, ...docState(), media: PJ.media.map(m => ({ id: m.id, name: m.name, path: m.path, kind: m.kind, dur: m.dur, w: m.w, h: m.h, hasAudio: m.hasAudio, gen: m.gen })) }, null, 1);
+  return JSON.stringify({ app: 'BTS Video', v: 2, ...docState(), media: PJ.media.map(m => ({ id: m.id, name: m.name, path: m.path, kind: m.kind, dur: m.dur, w: m.w, h: m.h, hasAudio: m.hasAudio, gen: m.gen, anim: m.anim, alpha: m.alpha })) }, null, 1);
 }
 async function saveProject(as) {
   const data = new TextEncoder().encode(projectJSON());
@@ -227,25 +261,59 @@ async function loadProject(f, fromJSON) {
     const j = fromJSON || JSON.parse(new TextDecoder().decode(new Uint8Array(f.data))); pause(); resetElements();
     PJ.seq = j.seq; PJ.tracks = j.tracks; PJ.transitions = j.transitions || []; PJ.markers = j.markers || []; PJ.captions = j.captions || []; PJ.capStyle = { ...VCAP.DEFAULT_STYLE, ...(j.capStyle || {}) }; PJ.capBurn = j.capBurn !== false;
     PJ.clips = (j.clips || []).map(migrateClip); fixTransitions();
+    PJ.sequences = j.sequences && j.sequences.length ? j.sequences : [{ id: 'S1', name: 'Sequence 01' }]; PJ.activeSeq = j.activeSeq && PJ.sequences.some(x => x.id === j.activeSeq) ? j.activeSeq : PJ.sequences[0].id;
+    PJ.censor = { words: [], on: true, bleep: false, estimate: true, ...(j.censor || {}) };
+    PJ.sequences.forEach(sd => { if (sd.id === PJ.activeSeq || !sd.clips) return; sd.transitions = sd.transitions || []; sd.markers = sd.markers || []; sd.captions = sd.captions || []; sd.capStyle = { ...VCAP.DEFAULT_STYLE, ...(sd.capStyle || {}) }; if (sd.capBurn === undefined) sd.capBurn = true; withSeq(sd, () => { PJ.clips = PJ.clips.map(migrateClip); sd.clips = PJ.clips; fixTransitions(); sd.transitions = PJ.transitions; }); });
     PJ.media = j.media.map(m => ({ ...m, url: fileUrl(m.path) })); PJ.path = f ? f.path : null; PJ.name = f ? f.name : (j.name || 'Recovered project'); ST.sel.clear(); ST.selTr = null; ST.selCap = null; ST.t = 0;
     renderAll(); for (const m of PJ.media) await importPath(m.path, m.name, m.id);
     hist = []; hi = -1; commit('Open'); PJ.dirty = !f; UI.setDocTitle(PJ.name + (f ? '' : ' •'), 'BTS Video'); if (f && f.path) bts.recent.add(f.path);
     const miss = PJ.media.filter(m => m.missing); if (miss.length) toast(`${miss.length} media file(s) are offline. Right-click them in the Project panel to relink.`, 'err', 7000);
   } catch (e) { console.error(e); toast('Could not open project: ' + e.message, 'err'); }
 }
-const AUTOSAVE_KEY = 'btsvid.autosave';
+// Autosave is keyed per WINDOW (an id kept in sessionStorage, so it survives a reload of the same window but is unique per
+// window). Each window writes a heartbeat; on start-up a window only offers to recover autosaves whose owner window is gone.
+const WIN_ID = (() => { try { let id = sessionStorage.getItem('btsvid.win'); if (!id) { id = 'w' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7); sessionStorage.setItem('btsvid.win', id); } return id; } catch { return 'w' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7); } })();
+const AUTOSAVE_PREFIX = 'btsvid.autosave.', ALIVE_PREFIX = 'btsvid.alive.', LEGACY_AUTOSAVE = 'btsvid.autosave';
+const autosaveKey = () => AUTOSAVE_PREFIX + WIN_ID;
+const lsGet = k => { try { return localStorage.getItem(k); } catch { return null; } };
+const lsSet = (k, v) => { try { localStorage.setItem(k, v); return true; } catch { return false; } };
+const lsDel = k => { try { localStorage.removeItem(k); } catch { } };
+function heartbeat() { lsSet(ALIVE_PREFIX + WIN_ID, String(Date.now())); }
+heartbeat(); setInterval(heartbeat, 5000);
+window.addEventListener('beforeunload', () => lsDel(ALIVE_PREFIX + WIN_ID));
 function autosaveNow() {
-  if (!PJ.clips.length && !PJ.media.length) return;
-  const rec = { at: Date.now(), name: PJ.name, path: PJ.path, data: JSON.parse(projectJSON()) };
-  try { localStorage.setItem(AUTOSAVE_KEY, JSON.stringify(rec)); } catch { }
-  if (ST.ffmpeg) bts.ffmpeg.tmpWrite('autosave-' + (PJ.name || 'project').replace(/[^\w.-]+/g, '_').replace(/\.btsvid$/, '') + '.btsvid', new TextEncoder().encode(JSON.stringify(rec.data))).catch(() => { });
+  if (!PJ.clips.length && !PJ.media.length && PJ.sequences.length < 2) return;
+  const rec = { at: Date.now(), name: PJ.name, path: PJ.path, win: WIN_ID, data: JSON.parse(projectJSON()) };
+  lsSet(autosaveKey(), JSON.stringify(rec));
+  if (ST.ffmpeg) bts.ffmpeg.tmpWrite('autosave-' + (PJ.name || 'project').replace(/[^\w.-]+/g, '_').replace(/\.btsvid$/, '') + '-' + WIN_ID + '.btsvid', new TextEncoder().encode(JSON.stringify(rec.data))).catch(() => { });
   setStatus('Autosaved ' + new Date().toLocaleTimeString());
 }
-function clearAutosave() { try { localStorage.removeItem(AUTOSAVE_KEY); } catch { } }
-function getAutosave() { try { return JSON.parse(localStorage.getItem(AUTOSAVE_KEY) || 'null'); } catch { return null; } }
+function clearAutosave() { lsDel(autosaveKey()); }
+function getAutosave() { try { return JSON.parse(lsGet(autosaveKey()) || 'null'); } catch { return null; } }
+// autosaves left behind by windows that are no longer running (crash / power loss), newest first
+function orphanAutosaves() {
+  const out = []; let keys = []; try { keys = Object.keys(localStorage); } catch { }
+  keys.forEach(k => {
+    if (k !== LEGACY_AUTOSAVE && !k.startsWith(AUTOSAVE_PREFIX)) return; if (k === autosaveKey() || k.endsWith('.claim')) return;
+    const owner = k === LEGACY_AUTOSAVE ? null : k.slice(AUTOSAVE_PREFIX.length); const alive = owner ? +lsGet(ALIVE_PREFIX + owner) || 0 : 0;
+    if (owner && Date.now() - alive < 20000) return; // that window is still open
+    try { const rec = JSON.parse(lsGet(k)); if (rec && rec.data) out.push({ key: k, rec }); } catch { }
+  });
+  return out.sort((a, b) => b.rec.at - a.rec.at);
+}
+const hasRecoverable = () => !!getAutosave() || orphanAutosaves().length > 0;
 async function recoverAutosave(ask = true) {
-  const rec = getAutosave(); if (!rec) { if (!ask) return; return toast('No autosaved project to recover'); }
-  if (ask) { const ok = await confirm('Recover project?', `An autosaved copy of “${rec.name}” from ${new Date(rec.at).toLocaleString()} was found. Recover it?`, 'Recover'); if (!ok) { clearAutosave(); return; } }
+  let rec = getAutosave(), key = autosaveKey();
+  if (!rec) {
+    const orph = orphanAutosaves(); if (!orph.length) { if (!ask) return; return toast('No autosaved project to recover'); }
+    let pick = orph[0];
+    if (orph.length > 1 && ask) { const v = await form({ title: 'Recover autosaved project', width: 460, fields: [{ key: 'k', label: 'Autosaved projects from windows that closed unexpectedly', type: 'select', value: orph[0].key, options: orph.map(o => ({ value: o.key, label: `${o.rec.name} — ${new Date(o.rec.at).toLocaleString()}` })) }] }); if (!v) return; pick = orph.find(o => o.key === v.k) || orph[0]; }
+    else if (ask) { const ok = await confirm('Recover project?', `An autosaved copy of “${pick.rec.name}” from ${new Date(pick.rec.at).toLocaleString()} was found. Recover it?`, 'Recover'); if (!ok) { lsDel(pick.key); return; } }
+    // claim it so another window starting at the same time doesn't recover it too
+    lsSet(pick.key + '.claim', WIN_ID); await UI.sleep(60); if (lsGet(pick.key + '.claim') !== WIN_ID) return; lsDel(pick.key + '.claim');
+    rec = pick.rec; key = pick.key;
+  } else if (ask) { const ok = await confirm('Recover project?', `An autosaved copy of “${rec.name}” from ${new Date(rec.at).toLocaleString()} was found. Recover it?`, 'Recover'); if (!ok) { clearAutosave(); return; } }
   await loadProject(rec.path ? { path: rec.path, name: rec.name } : null, rec.data); if (rec.path) { PJ.dirty = true; UI.setDocTitle(PJ.name + ' •', 'BTS Video'); }
+  if (key !== autosaveKey()) { lsDel(key); autosaveNow(); } // the recovered copy now belongs to this window
   toast('Project recovered — save it to keep the changes.', 'ok', 6000);
 }
