@@ -4,6 +4,7 @@
 // optimize, flatten, remove metadata and an accessibility check.
 import { X, today, loadScript, localUrl, progress } from './ctx.js';
 import { appendStream } from './ocr.js';
+import { applyA11y } from './a11y.js';
 
 const L = () => window.PDFLib;
 const { h } = UI;
@@ -45,6 +46,29 @@ export async function postBuild(out, finalPages, { flatten, form }) {
     try { const info = out.getInfoDict(); for (const k of info.keys()) info.delete(k); } catch (e) { console.warn(e); }
     out.catalog.delete(PDFName.of('Metadata')); out.catalog.delete(PDFName.of('PieceInfo'));
     for (const [p] of finalPages) { p.node.delete(PDFName.of('PieceInfo')); p.node.delete(PDFName.of('Metadata')); }
+  }
+  if (S.a11y) applyA11y(out, finalPages, S.a11y);
+  pruneDangling(out);
+}
+// pdf-lib's form.flatten() (and page removal) can leave references to deleted widget objects in
+// /Annots and /AcroForm /Fields; strict readers (poppler, Acrobat) report "Invalid XRef entry".
+export function pruneDangling(out) {
+  const { PDFName, PDFArray, PDFRef, PDFDict } = L(); const ctx = out.context;
+  const alive = r => !(r instanceof PDFRef) || ctx.lookup(r) !== undefined;
+  for (const p of out.getPages()) {
+    const A = p.node.lookup(PDFName.of('Annots'));
+    if (A instanceof PDFArray) { const keep = A.asArray().filter(alive); if (keep.length !== A.size()) { if (keep.length) p.node.set(PDFName.of('Annots'), ctx.obj(keep)); else p.node.delete(PDFName.of('Annots')); } }
+  }
+  const af = out.catalog.lookup(PDFName.of('AcroForm'));
+  if (af instanceof PDFDict) {
+    const prune = arr => arr.filter(r => {
+      if (!alive(r)) return false; const d = ctx.lookup(r); if (!(d instanceof PDFDict)) return true;
+      const K = d.lookup(PDFName.of('Kids'));
+      if (K instanceof PDFArray) { const kk = prune(K.asArray()); if (!kk.length && !d.get(PDFName.of('Rect'))) { if (r instanceof PDFRef) ctx.delete(r); return false; } d.set(PDFName.of('Kids'), ctx.obj(kk)); }
+      return true;
+    });
+    const F = af.lookup(PDFName.of('Fields'));
+    if (F instanceof PDFArray) { const kept = prune(F.asArray()); af.set(PDFName.of('Fields'), ctx.obj(kept)); if (!kept.length) out.catalog.delete(PDFName.of('AcroForm')); }
   }
 }
 function prependStream(doc, page, ops) {
@@ -804,12 +828,17 @@ export async function accessibilityChecks() {
   let noText = []; for (let i = 0; i < S.pages.length; i++) if (!(await X.pageText(S.pages[i])).str.trim()) noText.push(i + 1);
   out.push({ id: 'text', ok: !noText.length, label: 'Document has real text (not just scanned images)', detail: noText.length ? `${noText.length} of ${S.pages.length} page(s) have no text: ${noText.slice(0, 12).join(', ')}${noText.length > 12 ? '…' : ''}` : 'All pages contain text', fix: noText.length ? ['Run OCR', () => import('./ocr.js').then(m => m.ocrDialog())] : null });
   const title = S.meta?.title ?? info.Title ?? '';
-  out.push({ id: 'title', ok: !!String(title).trim(), label: 'Document title is set', detail: title ? `"${title}"` : 'No title in document properties', fix: ['Set title', () => X.propertiesDialog()] });
+  out.push({ id: 'title', ok: !!String(title).trim(), label: 'Document title is set', detail: title ? `"${title}"` : 'No title in document properties', fix: ['Set title', () => import('./a11y.js').then(m => m.makeAccessibleDialog())] });
   const lang = S.lang ?? info.Language ?? '';
-  out.push({ id: 'lang', ok: !!lang, label: 'Document language is set', detail: lang || 'No language — screen readers may mispronounce text', fix: ['Set language', () => X.propertiesDialog()] });
-  let marked = false, struct = false; try { marked = !!(await js.getMarkInfo())?.Marked; } catch { }
-  try { const d = await L().PDFDocument.load(S.sources[0].bytes, { ignoreEncryption: true, updateMetadata: false }); struct = !!d.catalog.get(L().PDFName.of('StructTreeRoot')); } catch { }
-  out.push({ id: 'tagged', ok: marked && struct, warn: true, label: 'Tagged PDF (structure for screen readers)', detail: marked && struct ? 'Document is tagged' : 'Not tagged. Re-export from the original Word/Docs file with "tagged PDF" turned on for best accessibility.' });
+  out.push({ id: 'lang', ok: !!lang, label: 'Document language is set', detail: lang || 'No language — screen readers may mispronounce text', fix: ['Set language', () => import('./a11y.js').then(m => m.makeAccessibleDialog())] });
+  let marked = false, struct = false, minimal = false; try { marked = !!(await js.getMarkInfo())?.Marked; } catch { }
+  try { const d = await L().PDFDocument.load(S.sources[0].bytes, { ignoreEncryption: true, updateMetadata: false }); const root = d.catalog.lookup(L().PDFName.of('StructTreeRoot')); struct = !!root; minimal = !!root?.get?.(L().PDFName.of('BTSMinimal')); } catch { }
+  const makeAcc = ['Make accessible', () => import('./a11y.js').then(m => m.makeAccessibleDialog())];
+  out.push({ id: 'tagged', ok: marked && struct && !minimal, warn: true, label: 'Tagged PDF (structure for screen readers)', detail: minimal ? 'Only images are tagged (alt text added with Make accessible). For full tagging, export a tagged PDF from the original Word/Docs file.' : marked && struct ? 'Document is tagged' : 'Not tagged. Re-export from the original Word/Docs file with "tagged PDF" turned on for best accessibility.' });
+  // images: alternative text
+  let nImg = 0, nAlt = 0;
+  if (S.pages.length <= 80) { try { const { listImages } = await import('./a11y.js'); const imgs = await listImages(); nImg = imgs.length; const pending = S.a11y?.alts; if (pending) nAlt = imgs.filter(im => pending[im.pageId]?.[im.name]?.trim()).length; else for (const pg of S.pages) { await X.ensureJs(pg); const t = await pg._js.getStructTree().catch(() => null); const walk = n => { if (!n) return; if (n.role === 'Figure' && n.alt) nAlt++; (n.children || []).forEach(walk); }; walk(t); } } catch (e) { console.warn(e); } }
+  out.push({ id: 'alt', ok: !nImg || nAlt >= nImg, warn: true, label: 'Images have alternative text', detail: nImg ? `${Math.min(nAlt, nImg)} of ${nImg} image(s) described${S.a11y?.alts ? ' (written when you save)' : ''}` : 'No images found', fix: makeAcc });
   const nOl = S.outline !== undefined ? (S.outline || []).length : ((await js.getOutline().catch(() => null)) || []).length;
   out.push({ id: 'bookmarks', ok: S.pages.length <= 20 || nOl > 0, warn: true, label: 'Bookmarks for navigation (documents over 20 pages)', detail: nOl ? `${nOl} top-level bookmark(s)` : S.pages.length <= 20 ? 'Short document — not required' : 'No bookmarks', fix: ['Add bookmarks', () => X.showLeft('outline')] });
   const fields = S.formFields.length; let tips = 0;

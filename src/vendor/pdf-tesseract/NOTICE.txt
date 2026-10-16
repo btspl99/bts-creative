@@ -1,0 +1,1 @@
+worker.min.js: patched by BTS Creative to silence harmless 'Warning: Parameter not found' messages (printErr filter); otherwise unmodified tesseract.js 7.0.0.

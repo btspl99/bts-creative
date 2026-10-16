@@ -10,6 +10,11 @@ import * as OCR from './ocr.js';
 import * as RD from './reading.js';
 import * as DO from './docops.js';
 import * as RV from './review.js';
+import * as AS from './assist.js';
+import * as EX from './extract.js';
+import * as AY from './a11y.js';
+import * as SE from './session.js';
+import * as QB from './quickbar.js';
 // file I/O goes through X.io so automated tests can intercept dialogs
 const IO = X.io = { open: o => bts.fs.open(o), read: p => bts.fs.read(p), saveAs: o => bts.fs.saveAs(o), write: o => bts.fs.write(o), pickSavePath: o => bts.fs.pickSavePath(o) };
 // extra icons (24px stroke) not in the shared kit
@@ -20,6 +25,7 @@ const P2 = {
   shield: 'M12 2l8 4v6c0 5-3.5 9-8 10-4.5-1-8-5-8-10V6z', book: 'M4 4h6a3 3 0 0 1 2 1 3 3 0 0 1 2-1h6v15h-6a2 2 0 0 0-2 2 2 2 0 0 0-2-2H4z',
   docx: 'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M8 13l1.5 5 1.5-4 1.5 4 1.5-5', ruler: 'M3 8h18v8H3zM7 8v3M11 8v4M15 8v3M19 8v4',
   a11y: 'M12 4a2 2 0 1 0 0-.01M4 8l8 2 8-2M12 10v5l-3 6M12 15l3 6', bookmark: 'M6 3h12v18l-6-4-6 4z', present: 'M3 4h18v12H3zM12 16v4M8 20h8',
+  close: 'M6 6l12 12M18 6L6 18', bulb: 'M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z', cards: 'M4 6h12v13H4zM8 3h12v13', table: 'M3 5h18v14H3zM3 10h18M3 15h18M9 5v14M15 5v14', slides: 'M3 4h18v12H3zM8 20l4-4 4 4M7 8h6M7 11h10', html: 'M8 7l-5 5 5 5M16 7l5 5-5 5M14 4l-4 16',
 };
 const icon = (n, s) => P2[n] ? `<svg viewBox="0 0 24 24"${s ? ` style="width:${s}px;height:${s}px"` : ''}><path d="${P2[n]}"/></svg>` : UI.icon(n, s);
 
@@ -48,9 +54,11 @@ const PX = 4 / 3; // CSS px per PDF point at 100%
 
 // ------------------------------------------------------------------ UI scaffold
 const noDoc = () => !S.pages.length;
-UI.titlebar({ logo: 'Pdf', menus: [
+const MENUS = [
   { label: 'File', items: () => [
     { label: 'Open…', kbd: 'Ctrl+O', action: openDialog },
+    { label: 'Open in new window…', action: () => SE.openInNewWindow() },
+    { label: 'Recent documents', sub: SE.recentItems() },
     { label: 'New blank PDF', kbd: 'Ctrl+N', action: newBlankDoc },
     { label: 'Create PDF from images…', action: () => DO.imagesToPdfDialog() },
     { label: 'Combine files…', action: combineFiles },
@@ -62,6 +70,11 @@ UI.titlebar({ logo: 'Pdf', menus: [
       { label: 'Pages as JPEG images…', action: () => exportImages('jpeg') },
       { label: 'Plain text (.txt)…', action: exportText },
       { label: 'Word document (.docx)…', action: () => DO.exportDocx() },
+      { label: 'PowerPoint (.pptx)…', action: () => EX.exportPptx() },
+      { label: 'Web page (.html)…', action: () => EX.exportHtml() },
+      { label: 'Tables to Excel / CSV…', action: () => EX.tablesDialog() },
+      { label: 'Summary (.txt)…', action: () => AS.exportSummary('txt') },
+      { label: 'Study sheet (flashcards & quiz PDF)…', action: () => AS.exportStudy('pdf') },
       { label: 'Comments summary…', action: () => RV.exportComments() },
       { label: 'Form data (JSON)…', action: () => RV.exportFormData() },
     ], disabled: noDoc() },
@@ -70,6 +83,11 @@ UI.titlebar({ logo: 'Pdf', menus: [
     { label: 'Document properties…', kbd: 'Ctrl+D', action: propertiesDialog, disabled: noDoc() },
     { label: 'Print…', kbd: 'Ctrl+P', action: printDoc, disabled: noDoc() },
     '-',
+    { label: 'Recover unsaved work…', action: () => SE.checkRecovery({ includeLive: false }) },
+    { label: 'Autosave unsaved work', sub: [0, 1, 2, 5].map(m => ({ label: m ? `Every ${m === 1 ? 'minute' : m + ' minutes'}` : 'Off', checked: () => SE.autosaveMinutes() === m, action: () => SE.setAutosave(m) })) },
+    '-',
+    { label: 'Close tab', kbd: 'Ctrl+F4', action: () => SE.closeTab(), disabled: !SE.T.tabs.length },
+    { label: 'Move tab to new window', action: () => SE.moveToWindow(), disabled: noDoc() },
     { label: 'BTS Creative home', action: () => bts.openApp('home') },
     { label: 'Close window', kbd: 'Ctrl+W', action: closeWindow },
   ] },
@@ -119,6 +137,7 @@ UI.titlebar({ logo: 'Pdf', menus: [
       { label: 'Night (low blue light)', checked: () => RD.V.mode === 'night', action: () => RD.setMode('night') },
     ] },
     { label: 'Reading ruler / line focus', kbd: 'Ctrl+Shift+L', checked: () => RD.V.ruler, action: () => RD.toggleRuler() },
+    { label: 'Quick action bar on text selection', checked: () => QB.enabled(), action: () => QB.toggle() },
     { label: 'Full screen', kbd: 'F11', action: () => RD.fullScreen() },
     { label: 'Presentation mode', kbd: 'Ctrl+L', action: () => RD.present(), disabled: noDoc() },
     { label: 'Read aloud', sub: [
@@ -134,6 +153,8 @@ UI.titlebar({ logo: 'Pdf', menus: [
     { label: 'Go to page…', kbd: 'Ctrl+G', action: gotoPageDialog },
     { label: 'Show side panel', checked: () => !$('.mid').classList.contains('no-left'), action: () => $('.mid').classList.toggle('no-left') },
     { label: 'Organize pages', checked: () => S.organizer, kbd: 'Ctrl+Shift+O', action: () => toggleOrganizer() },
+    { label: 'Next document tab', kbd: 'Ctrl+Tab', action: () => SE.nextTab(1), disabled: SE.T.tabs.length < 2 },
+    { label: 'Previous document tab', kbd: 'Ctrl+Shift+Tab', action: () => SE.nextTab(-1), disabled: SE.T.tabs.length < 2 },
     '-',
     { label: 'Appearance…', action: UI.appearanceDialog },
     { label: 'Skin', sub: UI.SKINS.map(k => ({ label: k.name, checked: () => (UI.getSettings().skin || 'dark') === k.id, action: () => UI.setSettings({ skin: k.id }) })) },
@@ -218,15 +239,39 @@ UI.titlebar({ logo: 'Pdf', menus: [
     { label: 'OCR: export recognised text…', action: () => OCR.exportText(), disabled: !OCR.hasResults() },
     { label: 'Enhance scan (grayscale, contrast, deskew)…', action: () => DO.enhanceScanDialog(), disabled: noDoc() },
     '-',
+    { label: 'Document assistant (offline)', sub: [
+      { label: 'Summarise document…', kbd: 'Ctrl+Shift+A', action: () => AS.openAssistant('summary') },
+      { label: 'Key points & keywords', action: () => AS.openAssistant('points') },
+      { label: 'Ask the document (keyword search)…', action: () => AS.openAssistant('ask') },
+      { label: 'Study material: flashcards & quiz', action: () => AS.openAssistant('study') },
+      '-',
+      { label: 'Export summary as text…', action: () => AS.exportSummary('txt') },
+      { label: 'Insert summary as a new page…', action: () => AS.exportSummary('page') },
+      { label: 'Export flashcards (CSV)…', action: () => AS.exportStudy('cards-csv') },
+      { label: 'Export quiz (CSV)…', action: () => AS.exportStudy('quiz-csv') },
+      { label: 'Export study sheet (PDF)…', action: () => AS.exportStudy('pdf') },
+      { label: 'Close assistant', action: () => AS.closeAssistant() },
+    ], disabled: noDoc() },
+    { label: 'Extract tables (CSV / Excel)…', action: () => EX.tablesDialog(), disabled: noDoc() },
+    '-',
     { label: 'Compare files…', action: () => RD.compareDialog(), disabled: noDoc() },
+    { label: 'Compare files — visual overlay / pixel diff…', action: () => RD.compareDialog(null, 'pixel'), disabled: noDoc() },
     { label: 'Protect with password…', action: () => DO.protectDialog(), disabled: noDoc() },
     { label: 'Remove password protection', action: () => DO.removeProtection(), disabled: noDoc() },
     '-',
     { label: 'Optimize / compress…', action: () => DO.optimizeDialog(), disabled: noDoc() },
     { label: 'Remove hidden metadata', action: () => DO.removeMetadata(), disabled: noDoc() },
-    { label: 'Accessibility check…', action: () => DO.accessibilityCheck(), disabled: noDoc() },
+    { label: 'Accessibility', sub: [
+      { label: 'Make accessible (title, language, image alt text)…', action: () => AY.makeAccessibleDialog() },
+      { label: 'Reading order check…', action: () => AY.readingOrderReport() },
+      { label: 'Show reading order on this page', action: () => AY.showOrder(curPage()) },
+      { label: 'Accessibility check…', action: () => DO.accessibilityCheck() },
+    ], disabled: noDoc() },
     { label: 'Convert', sub: [
       { label: 'PDF to Word (.docx)…', action: () => DO.exportDocx() },
+      { label: 'PDF to PowerPoint (.pptx)…', action: () => EX.exportPptx() },
+      { label: 'PDF to HTML…', action: () => EX.exportHtml() },
+      { label: 'PDF tables to Excel (.xlsx) / CSV…', action: () => EX.tablesDialog() },
       { label: 'PDF to images…', action: () => exportImages('png') },
       { label: 'PDF to text…', action: exportText },
       { label: 'Images to PDF…', action: () => DO.imagesToPdfDialog() },
@@ -236,9 +281,11 @@ UI.titlebar({ logo: 'Pdf', menus: [
     { label: 'Keyboard shortcuts', kbd: 'Ctrl+/', action: UI.shortcutSheet },
     { label: 'Tool keys', action: shortcutsHelp },
     { label: 'Check for updates', action: () => bts.update.check().then(r => toast(r.state === 'store' ? 'Updates are delivered by the Microsoft Store.' : r.state === 'dev' ? 'Updates run in the installed version.' : 'Checking for updates…')) },
-    { label: 'About BTS PDF Pro', action: () => modal({ title: 'BTS PDF Pro', body: 'Part of BTS Creative — free and open source for students.<br>OCR by Tesseract (Apache-2.0), encryption by @cantoo/pdf-lib (MIT), Word export by docx (MIT).<br>Not affiliated with Adobe Inc.' }) },
+    { label: 'About BTS PDF Pro', action: () => modal({ title: 'BTS PDF Pro', body: 'Part of BTS Creative — free and open source for students.<br>OCR by Tesseract (Apache-2.0), encryption by @cantoo/pdf-lib (MIT), Word export by docx (MIT), PowerPoint export by PptxGenJS (MIT).<br>The document assistant works offline with classic text-ranking and search methods — no AI model and no internet.<br>Not affiliated with Adobe Inc.' }) },
   ] },
-]});
+];
+UI.titlebar({ logo: 'Pdf', menus: MENUS });
+X.menus = MENUS;
 window.addEventListener('bts:close', closeWindow);
 window.addEventListener('beforeunload', () => {});
 
@@ -263,6 +310,7 @@ const keyTools = { v: 'select', z: 'zoom', h: 'highlight', u: 'underline', k: 's
 Object.entries(keyTools).forEach(([k, t]) => UI.shortcut(k, () => setTool(t)));
 UI.shortcut('i', addImage); UI.shortcut('s', () => signDialog());
 UI.shortcut('ctrl+n', newBlankDoc); UI.shortcut('ctrl+b', () => DO.addBookmark()); UI.shortcut('ctrl+l', () => RD.present()); UI.shortcut('ctrl+shift+l', () => RD.toggleRuler());
+UI.shortcut('ctrl+shift+a', () => AS.openAssistant()); UI.shortcut('ctrl+tab', () => SE.nextTab(1), { global: true }); UI.shortcut('ctrl+shift+tab', () => SE.nextTab(-1), { global: true }); UI.shortcut('ctrl+f4', () => SE.closeTab());
 UI.shortcut('f11', () => RD.fullScreen()); UI.shortcut('ctrl+shift+y', () => RD.readAloud('page')); UI.shortcut('ctrl+shift+t', () => OCR.ocrDialog());
 
 function setTool(t) {
@@ -343,7 +391,7 @@ function renderOptions() {
   } else {
     ob.append(btn('rotateL', 'Rotate left', () => rotatePages([curPage()?.id].filter(Boolean), -90)), btn('rotate', 'Rotate right', () => rotatePages([curPage()?.id].filter(Boolean), 90)), vsep(),
       btn('pages', 'Organize pages', () => toggleOrganizer(), 'Organize'), btn('merge', 'Combine files', combineFiles, 'Combine'), btn('compress', 'Optimize / compress', () => DO.optimizeDialog(), 'Compress'), vsep(),
-      btn('ocr', 'Recognize text (OCR)', () => OCR.ocrDialog(), 'OCR'), btn('speak', 'Read aloud', () => RD.readAloud('page')), btn('book', 'Reading mode', e => RD.modeMenu(e)), btn('present', 'Presentation mode (Ctrl+L)', () => RD.present()));
+      btn('ocr', 'Recognize text (OCR)', () => OCR.ocrDialog(), 'OCR'), btn('bulb', 'Document assistant — summary, key points, ask, study (Ctrl+Shift+A)', () => AS.openAssistant(), 'Assistant'), btn('speak', 'Read aloud', () => RD.readAloud('page')), btn('book', 'Reading mode', e => RD.modeMenu(e)), btn('present', 'Presentation mode (Ctrl+L)', () => RD.present()));
   }
 }
 
@@ -378,13 +426,15 @@ function renderProps() {
     ['form', 'Prepare form', () => setTool('field')], ['search', 'Auto-detect form fields', () => RV.autoDetectFields()],
     ['redact', 'Redact', () => setTool('redact')], ['redact', 'Redact patterns', () => RV.redactPatternsDialog()],
     ['shield', 'Protect (password)', () => DO.protectDialog()], ['compress', 'Optimize / compress', () => DO.optimizeDialog()],
+    ['bulb', 'Document assistant', () => AS.openAssistant('summary')], ['cards', 'Flashcards & quiz', () => AS.openAssistant('study')], ['search', 'Ask the document', () => AS.openAssistant('ask')],
+    ['table', 'Extract tables', () => EX.tablesDialog()], ['slides', 'PDF to PowerPoint', () => EX.exportPptx()], ['html', 'PDF to HTML', () => EX.exportHtml()],
     ['compare', 'Compare files', () => RD.compareDialog()], ['speak', 'Read aloud', () => RD.readAloud('page')],
     ['docx', 'PDF to Word', () => DO.exportDocx()], ['export', 'PDF to images', () => exportImages('png')], ['text', 'PDF to text', exportText],
     ['image', 'Images to PDF', () => DO.imagesToPdfDialog()], ['adjust', 'Enhance scan', () => DO.enhanceScanDialog()],
     ['stamp', 'Watermark', () => DO.watermarkDialog()], ['grid', 'Header, footer & Bates', () => DO.headerFooterDialog()], ['layers', 'Background', () => DO.backgroundDialog()],
     ['bookmark', 'Bookmarks', () => showLeft('outline')], ['link', 'Add link', () => setTool('link')], ['crop', 'Crop pages', () => setTool('crop')],
     ['fit', 'Resize pages', () => DO.resizeDialog()], ['split', 'Split PDF', splitDialog], ['measure', 'Measure', () => setTool('measure')],
-    ['stamp', 'Stamps', () => setTool('stamp')], ['tick', 'Tick / cross marks', () => setTool('mark')], ['a11y', 'Accessibility check', () => DO.accessibilityCheck()],
+    ['stamp', 'Stamps', () => setTool('stamp')], ['tick', 'Tick / cross marks', () => setTool('mark')], ['a11y', 'Make accessible', () => AY.makeAccessibleDialog()], ['a11y', 'Reading order check', () => AY.readingOrderReport()], ['a11y', 'Accessibility check', () => DO.accessibilityCheck()],
     ['info', 'Remove metadata', () => DO.removeMetadata()], ['print', 'Print', printDoc],
   ];
   p.append(h('div', { class: 'panel fill' }, h('div', { class: 'panel-h' }, 'All tools'),
@@ -406,21 +456,23 @@ async function openFiles(files) {
   for (const f of pdfs.slice(1)) await appendPdf(new Uint8Array(f.data), f.name);
 }
 async function openDoc(bytes, name, path, opts = {}) {
-  if (!opts.force && S.pages.length && S.dirty && !(await confirm('Unsaved changes', 'Discard changes to the current document?', 'Discard'))) return;
+  if (opts.replace && !opts.force && S.pages.length && S.dirty && !(await confirm('Unsaved changes', 'Discard changes to the current document?', 'Discard'))) return;
   try {
     const src = await loadPdfBytes(bytes, name);
+    SE.beforeOpen(opts); RD.stopReading?.(); QB.hide();
     S.sources = [src]; S.pages = []; S.formValues = {}; S.textCache = {}; S.sel = null;
     S.outline = undefined; S.pageLabels = undefined; S.lang = undefined; S.meta = null; S.stripMeta = false; S.tabOrder = {};
-    S.protect = null; S.wasEncrypted = !!opts.wasEncrypted; OCR.reset();
+    S.protect = null; S.wasEncrypted = !!opts.wasEncrypted; S.a11y = null; S.organizer = false; S.ogSel.clear(); OCR.reset(); AS.onDocChanged();
+    $('#organizer').classList.add('hidden'); $('#pages').classList.remove('hidden');
     await addSourcePages(0);
     S.filePath = path; S.fileName = name; S.dirty = false;
     await loadFormFields(bytes);
     await buildPages(); hist.reset(snapshot());
     setZoom(S.zoomMode || 'fit-width');
     UI.setDocTitle(name, 'BTS PDF Pro');
-    if (path) bts.recent.add(path);
+    if (path) bts.recent.add(path).then(() => SE.refreshRecent());
     showLeft(S.leftTab); renderOptions(); renderProps();
-    $('.welcome')?.remove();
+    $('.welcome')?.remove(); SE.afterOpen();
   } catch (e) {
     if (/password/i.test(e.name + e.message)) return DO.openEncrypted(bytes, name, path);
     console.error(e); toast('Could not open PDF: ' + e.message, 'err', 6000);
@@ -700,7 +752,7 @@ function wireInteract(pg) {
     if (t === 'note') { const a = { id: nid(), type: 'note', x: px - 9, y: py - 9, color: S.style.hl, text: '', author: S.author, date: new Date().toISOString() }; pg.annots.push(a); commit('Add comment'); select(pg.id, a.id); setTool('select'); select(pg.id, a.id); setTimeout(() => $('#props textarea')?.focus(), 30); return; }
     if (t === 'text') { createTextAt(pg, px, py); return; }
     if (t === 'stamp') { RV.placeStamp(pg, px, py); return; }
-    if (t === 'mark') { const sz = 14, a = { id: nid(), type: 'mark', kind: S.markKind || 'tick', x: px - sz / 2, y: py - sz / 2, w: sz, h: sz, color: S.style.markColor || '#1d3fbb' }; pg.annots.push(a); drawAnnots(pg); commit('Mark'); return; }
+    if (t === 'mark') { const sz = 14, a = { id: nid(), type: 'mark', kind: S.markKind || 'tick', x: px - sz / 2, y: py - sz / 2, w: sz, h: sz, color: S.style.markColor || '#1d3fbb', author: S.author, date: new Date().toISOString() }; pg.annots.push(a); drawAnnots(pg); commit('Mark'); return; }
     if (t === 'measure') { RV.measurePointerDown(pg, e, px, py, layer); return; }
     if (t === 'callout') {
       layer.setPointerCapture(e.pointerId); const s = S.style; const bh = s.fontSize * 1.4 + 4;
@@ -831,10 +883,9 @@ $('#stage').addEventListener('click', e => {
 });
 
 // text markup from selection
-document.addEventListener('mouseup', () => {
-  if (!['highlight', 'underline', 'strike'].includes(S.tool) || S.areaHighlight && S.tool === 'highlight') return;
-  const sel = getSelection(); if (!sel.rangeCount || sel.isCollapsed) return;
-  const byPage = new Map();
+// current text selection as PDF-space rectangles per page: Map(page -> [{x,y,w,h}])
+function selectionRects() {
+  const sel = getSelection(); const byPage = new Map(); if (!sel.rangeCount || sel.isCollapsed) return byPage;
   for (let i = 0; i < sel.rangeCount; i++) {
     for (const cr of sel.getRangeAt(i).getClientRects()) {
       if (cr.width < 1 || cr.height < 1) continue;
@@ -847,8 +898,14 @@ document.addEventListener('mouseup', () => {
       byPage.get(pg).push(r);
     }
   }
+  return byPage;
+}
+document.addEventListener('mouseup', () => {
+  if (!['highlight', 'underline', 'strike'].includes(S.tool) || S.areaHighlight && S.tool === 'highlight') return;
+  const sel = getSelection(); if (!sel.rangeCount || sel.isCollapsed) return;
+  const byPage = selectionRects();
   if (!byPage.size) return;
-  for (const [pg, rects] of byPage) { pg.annots.push({ id: nid(), type: 'hl', kind: S.tool, rects: mergeRects(rects), color: S.style.hl, opacity: 1 }); drawAnnots(pg); }
+  for (const [pg, rects] of byPage) { pg.annots.push({ id: nid(), type: 'hl', kind: S.tool, rects: mergeRects(rects), color: S.style.hl, opacity: 1, author: S.author, date: new Date().toISOString() }); drawAnnots(pg); }
   sel.removeAllRanges(); commit(S.tool[0].toUpperCase() + S.tool.slice(1));
 });
 function mergeRects(rs) {
@@ -918,7 +975,7 @@ let cdT = null; function commitDebounced(l) { clearTimeout(cdT); cdT = setTimeou
 async function undo() { const s = hist.undo(); if (s) await restore(s); }
 async function redo() { const s = hist.redo(); if (s) await restore(s); }
 UI.shortcut('ctrl+z', undo); UI.shortcut('ctrl+y', redo); UI.shortcut('ctrl+shift+z', redo);
-function markDirty() { S.dirty = true; UI.setDocTitle((S.fileName || 'Untitled.pdf') + ' •', 'BTS PDF Pro'); }
+function markDirty() { const was = S.dirty; S.dirty = true; UI.setDocTitle((S.fileName || 'Untitled.pdf') + ' •', 'BTS PDF Pro'); if (!was) SE.render(); }
 
 // ------------------------------------------------------------------ zoom & navigation
 function setZoom(z, ev) {
@@ -1409,11 +1466,12 @@ async function save(as = false) {
     const keepPage = currentPageIdx();
     S.dirty = false; await reloadFromBytes(new Uint8Array(bytes));
     UI.setDocTitle(S.fileName, 'BTS PDF Pro'); toast('Saved ' + S.fileName + (S.protect ? ' (password protected)' : ''), 'ok'); scrollToPage(keepPage);
+    SE.dropRecord(SE.tabId()); SE.render(); SE.refreshRecent();
   } catch (e) { console.error(e); toast('Save failed: ' + e.message, 'err', 6000); }
 }
 async function reloadFromBytes(bytes, keep) {
   const src = await loadPdfBytes(bytes, S.fileName); S.sources = [src]; S.pages = []; S.textCache = {}; S.sel = null;
-  S.outline = undefined; S.pageLabels = undefined; S.tabOrder = {}; S.flattenForms = false;
+  S.outline = undefined; S.pageLabels = undefined; S.tabOrder = {}; S.flattenForms = false; S.a11y = null; AS.onDocChanged();
   await addSourcePages(0);
   if (keep) S.pages.forEach((p, i) => { if (keep[i]) p.annots = keep[i]; });
   S.formValues = {}; await loadFormFields(bytes); await buildPages(); relayout(); hist.reset(snapshot(), keep ? 'Apply' : 'Save'); renderProps(); showLeft(S.leftTab);
@@ -1497,14 +1555,14 @@ UI.shortcut('ctrl+p', printDoc);
 async function openDialog() { const fs = await IO.open({ multi: true, filters: [{ name: 'PDF & images', extensions: ['pdf', 'png', 'jpg', 'jpeg', 'webp', 'bmp', 'gif'] }] }); if (fs) openFiles(fs); }
 UI.shortcut('ctrl+o', openDialog);
 async function closeWindow() {
-  if (S.dirty) { const r = await modal({ title: 'Save changes?', body: `Do you want to save changes to ${S.fileName || 'this document'} before closing?`, buttons: [{ label: 'Cancel', value: null }, { label: "Don't save", value: 'no' }, { label: 'Save', primary: true, value: 'yes' }] });
-    if (r === null) return; if (r === 'yes') { await save(); if (S.dirty) return; } }
+  if (!(await SE.confirmCloseAll())) return;
+  for (const t of SE.T.tabs) await SE.dropRecord(t.id);
   bts.win.close();
 }
 UI.shortcut('ctrl+w', closeWindow);
 function shortcutsHelp() {
   const rows = [['V', 'Select'], ['Space (hold)', 'Hand / pan'], ['Z', 'Zoom tool'], ['H / U / K', 'Highlight / underline / strike'], ['N', 'Sticky note'], ['T', 'Add text'], ['E', 'Edit existing text'], ['P', 'Draw'], ['R / O / L / A', 'Rect / ellipse / line / arrow'], ['S', 'Fill & Sign'], ['I', 'Add image'], ['F', 'Form field'], ['X', 'Redact'], ['C', 'Callout'], ['G', 'Measure'], ['W', 'Link'], ['Y', 'Tick / cross mark'], ['J', 'Crop'], ['M', 'Stamp'],
-    ['Ctrl+Shift+T', 'Recognize text (OCR)'], ['Ctrl+Shift+Y', 'Read page aloud'], ['Ctrl+L', 'Presentation mode'], ['Ctrl+Shift+L', 'Reading ruler'], ['Ctrl+B', 'Add bookmark'], ['Ctrl+N', 'New blank PDF'],
+    ['Ctrl+Shift+T', 'Recognize text (OCR)'], ['Ctrl+Shift+A', 'Document assistant'], ['Ctrl+Tab / Ctrl+Shift+Tab', 'Next / previous document tab'], ['Ctrl+F4', 'Close tab'], ['Ctrl+Shift+Y', 'Read page aloud'], ['Ctrl+L', 'Presentation mode'], ['Ctrl+Shift+L', 'Reading ruler'], ['Ctrl+B', 'Add bookmark'], ['Ctrl+N', 'New blank PDF'],
     ['Ctrl+O / S / Shift+S', 'Open / save / save as'], ['Ctrl+Z / Y', 'Undo / redo'], ['Ctrl+F', 'Find'], ['Ctrl+G', 'Go to page'], ['Ctrl + wheel', 'Zoom'], ['Ctrl+1 / 2 / 0', 'Fit page / width / 100%'], ['Ctrl+Shift+O', 'Organize pages'], ['Del', 'Delete annotation'], ['Arrows', 'Nudge annotation']];
   modal({ title: 'Keyboard shortcuts', width: 460, body: '<table style="width:100%;border-collapse:collapse">' + rows.map(r => `<tr><td style="padding:4px 0;color:var(--tx-0)">${r[0]}</td><td style="color:var(--tx-2)">${r[1]}</td></tr>`).join('') + '</table>' });
 }
@@ -1522,11 +1580,12 @@ UI.fileDrop(async files => {
   } else openFiles(list);
 }, 'Drop PDF or images to open');
 
-setTool('select'); renderProps(); showLeft('thumbs'); welcome();
+setTool('select'); renderProps(); showLeft('thumbs'); welcome(); SE.refreshRecent(); SE.startAutosave();
 UI.setDocTitle('', 'BTS PDF Pro');
 const qf = UI.queryFile(); if (qf) IO.read(qf).then(f => openFiles([{ ...f, data: new Uint8Array(f.data) }]));
 Object.assign(X, { S, hist, IO, PX, pdfjsLib, buildPdf, openFiles, openDoc, loadPdfBytes, reloadFromBytes, rebase, drawAnnots, drawForms, commit, commitDebounced, setTool, select, selAnn, save, rotatePages, toggleOrganizer, signDialog,
   pageText, ensureJs, viewportOf, renderProps, renderOptions, renderThumbs, scrollToPage, currentPageIdx, curPage, pageById, nid, parseRange, pageBox, buildPages, relayout, refreshAfterPageOp, appendPdf,
   addSourcePages, loadFormFields, rasterizePages, imagesToPdf, toPngBytes, u8ToDataUrl, loadImg, dataUrlBytes, hex2rgb, hexArr, pdfDate, getFont, canEncode, textToPng, startPlacement, showLeft, markDirty, fmtSize, svgEl, cssFont,
-  undo, redo, bbox, moveAnn, esc, escRe, trimCanvas, editTextAnnot, insertBlank, newBlankDoc, setZoom, exportImages, exportText, printDoc, gotoDest, deletePages, movePages, duplicatePages, icon, toPdf, propertiesDialog, mergeRects });
+  undo, redo, bbox, moveAnn, esc, escRe, trimCanvas, editTextAnnot, insertBlank, newBlankDoc, setZoom, exportImages, exportText, printDoc, gotoDest, deletePages, movePages, duplicatePages, icon, toPdf, propertiesDialog, mergeRects,
+  snapshot, restore, welcome, selectionRects, openDialog, closeAssistant: AS.closeAssistant, onDocChanged: AS.onDocChanged, markDirty });
 window.__bts = X; // for automated tests

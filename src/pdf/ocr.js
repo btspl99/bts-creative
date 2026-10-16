@@ -8,6 +8,7 @@ let results = {}; // page number (1-based, after OCR) -> { text, words, langs }
 export function reset() { results = {}; }
 export function hasResults() { return Object.keys(results).length > 0; }
 export function getResults() { return results; }
+export function setResults(r) { results = r || {}; }
 
 let Tess = null;
 const SIMD_TEST = new Uint8Array([0, 97, 115, 109, 1, 0, 0, 0, 1, 5, 1, 96, 0, 1, 123, 3, 2, 1, 0, 10, 10, 1, 8, 0, 65, 0, 253, 15, 253, 98, 11]);

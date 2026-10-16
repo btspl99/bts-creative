@@ -104,7 +104,7 @@ export function commentsSummary(fmt = 'txt', saved = []) {
   if (fmt === 'csv') {
     const q = s => '"' + String(s ?? '').replace(/"/g, '""').replace(/\r?\n/g, ' ') + '"';
     const rows = [['Page', 'Type', 'Author', 'Date', 'Status', 'Text', 'Replies'].map(q).join(',')];
-    list.forEach(({ i, a }) => rows.push([i + 1, typeLabel(a), a.author || '', a.saved ? pdfDateStr(a.date) : a.date || '', a.status || 'open', a.text || a.comment || a.label || '', (a.replies || []).map(r => `${r.author}: ${r.text}`).join(' | ')].map(q).join(',')));
+    list.forEach(({ i, a }) => rows.push([i + 1, typeLabel(a), a.author || '', a.saved ? pdfDateStr(a.date) : a.date || '', a.status || 'open', a.text || a.comment || a.label || (a.type === 'measure' ? measureValue(a) : a.type === 'mark' ? a.kind : a.type === 'link' ? (a.url || (a.page ? 'Go to page ' + a.page : '')) : ''), (a.replies || []).map(r => `${r.author}: ${r.text}`).join(' | ')].map(q).join(',')));
     return rows.join('\r\n');
   }
   let out = `Comments summary — ${S.fileName || 'Untitled.pdf'}\nExported ${new Date().toLocaleString()} · ${list.length} item(s)\n`;

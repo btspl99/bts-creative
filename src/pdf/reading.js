@@ -122,17 +122,19 @@ async function pageSentences(pg) {
     }
     if (start < s.length) { cur.text += s.slice(start); cur.parts.push({ k, a: start, b: s.length }); }
     cur.text += it.hasEOL ? ' ' : '';
+    // a heading line (different font size, no full stop) is read as its own sentence
+    if (it.hasEOL && cur.text.trim()) { const nx = items.slice(k + 1).find(n => n.str && n.str.trim()); const hs = v => Math.hypot(v.transform[2], v.transform[3]) || v.height || 0; if (nx && Math.abs(hs(it) - hs(nx)) > Math.max(hs(it), hs(nx)) * 0.2) { out.push(cur); cur = { text: '', parts: [] }; } }
   });
   if (cur.text.trim()) out.push(cur);
   return out;
 }
-export async function readAloud(what = 'page') {
+export async function readAloud(what = 'page', selText) {
   if (!('speechSynthesis' in window)) return UI.toast('Speech is not available on this system', 'err');
   const S = X.S; if (!S.pages.length) return;
   stopReading(true);
   let start = X.currentPageIdx(), fromText = null;
   if (what === 'selection') {
-    const sel = getSelection(); const txt = sel && sel.toString().trim();
+    const sel = getSelection(); const txt = (selText || (sel && sel.toString()) || '').trim();
     if (!txt) return UI.toast('Select some text on the page first');
     const el = sel.anchorNode?.parentElement?.closest('.page'); if (el) start = S.pages.findIndex(p => p.id === el.dataset.id);
     fromText = txt.slice(0, 40);
@@ -258,11 +260,11 @@ export function diffWords(A, B) {
   while (i < n) delA.push(i++); while (j < m) insB.push(j++);
   return { delA, insB };
 }
-export async function compareDialog(fileArg) {
+export async function compareDialog(fileArg, mode) {
   const S = X.S; if (!S.pages.length) return UI.toast('Open the first PDF, then compare');
   const fs = fileArg ? [fileArg] : await X.IO.open({ filters: [{ name: 'PDF', extensions: ['pdf'] }] }); if (!fs) return;
   const other = await X.pdfjsLib.getDocument({ data: new Uint8Array(fs[0].data).slice(), isEvalSupported: false }).promise;
-  return showCompare(other, fs[0].name);
+  return showCompare(other, fs[0].name, mode);
 }
 export async function compareData(other) {
   const S = X.S; const n = Math.max(S.pages.length, other.numPages); const pages = [];
@@ -278,30 +280,99 @@ export async function compareData(other) {
   }
   return { pages, added, removed, changed, nA: S.pages.length, nB: other.numPages };
 }
-async function showCompare(other, name) {
+async function showCompare(other, name, initMode = 'text') {
   const { h } = UI; const S = X.S;
-  const prog = UI.toast('Comparing…');
+  UI.toast('Comparing…');
   const res = await compareData(other);
   const ov = h('div', { class: 'compare' });
   const close = () => { ov.remove(); other.destroy(); };
   const summary = `${res.changed} of ${res.pages.length} page(s) differ · ${res.removed} word(s) removed · ${res.added} word(s) added` + (res.nA !== res.nB ? ` · page count ${res.nA} → ${res.nB}` : '');
-  const head = h('div', { class: 'cmp-head' }, h('b', {}, 'Compare'), h('span', { class: 'cmp-file' }, (S.fileName || 'Current') + '  ⟷  ' + name),
-    h('span', { class: 'cmp-legend' }, h('i', { class: 'del' }), 'Removed', h('i', { class: 'ins' }), 'Added'), h('span', { class: 'grow' }),
+  let mode = 'text', opac = 0.5;
+  const segBtns = [['text', 'Text changes'], ['overlay', 'Overlay'], ['pixel', 'Pixel diff']].map(([k, l]) => h('button', { class: 'btn sm' + (k === mode ? ' primary' : ''), 'data-mode': k, onclick: () => setMode(k) }, l));
+  const slider = h('input', { type: 'range', min: 0, max: 100, value: 50, style: { width: '110px' } }); slider.oninput = () => { opac = slider.value / 100; ov.querySelectorAll('.cmp-top').forEach(c => c.style.opacity = opac); };
+  const sliderWrap = h('label', { class: 'row cmp-op hidden' }, 'Original', slider, 'Revised');
+  const legend = h('span', { class: 'cmp-legend' }, h('i', { class: 'del' }), 'Removed', h('i', { class: 'ins' }), 'Added');
+  const head = h('div', { class: 'cmp-head' }, h('b', {}, 'Compare'), h('span', { class: 'cmp-file' }, (S.fileName || 'Current') + '  ⟷  ' + name), h('div', { class: 'seg' }, ...segBtns), legend, sliderWrap, h('span', { class: 'grow' }),
     h('label', { class: 'row' }, (() => { const c = h('input', { type: 'checkbox' }); c.onchange = () => ov.classList.toggle('only-diff', c.checked); return c; })(), 'Only changed pages'),
     h('button', { class: 'btn sm', onclick: () => exportReport(res, name) }, 'Export report…'), h('button', { class: 'btn sm primary', onclick: close }, 'Close'));
   const sum = h('div', { class: 'cmp-sum' }, summary);
   const body = h('div', { class: 'cmp-body' });
   ov.append(head, sum, body); document.getElementById('stage').parentElement.append(ov);
-  const W = 520;
-  for (const pr of res.pages) {
-    const same = !pr.d.insB.length && !pr.d.delA.length;
-    const row = h('div', { class: 'cmp-row' + (same ? ' same' : '') }, h('div', { class: 'cmp-n' }, `Page ${pr.i + 1}` + (same ? ' — no text changes' : ` — ${pr.d.delA.length} removed, ${pr.d.insB.length} added`)));
-    const cols = h('div', { class: 'cmp-cols' });
-    cols.append(await pane(pr.pa ? await X.ensureJs(pr.pa) : null, pr.pa ? X.viewportOf(pr.pa, 1) : null, pr.wa, pr.itemsA, pr.d.delA, 'del', W, pr.pa));
-    cols.append(await pane(pr.pb, pr.pb ? pr.pb.getViewport({ scale: 1 }) : null, pr.wb, pr.itemsB, pr.d.insB, 'ins', W, null));
-    row.append(cols); body.append(row);
+  const W = 520; let token = 0;
+  async function setMode(m) {
+    mode = m; const my = ++token; segBtns.forEach(b => b.classList.toggle('primary', b.dataset.mode === m)); sliderWrap.classList.toggle('hidden', m !== 'overlay'); legend.classList.toggle('hidden', m === 'overlay');
+    body.innerHTML = ''; ov.dataset.mode = m;
+    if (m === 'text') {
+      sum.textContent = summary;
+      for (const pr of res.pages) {
+        if (my !== token) return;
+        const same = !pr.d.insB.length && !pr.d.delA.length;
+        const row = h('div', { class: 'cmp-row' + (same ? ' same' : '') }, h('div', { class: 'cmp-n' }, `Page ${pr.i + 1}` + (same ? ' — no text changes' : ` — ${pr.d.delA.length} removed, ${pr.d.insB.length} added`)));
+        const cols = h('div', { class: 'cmp-cols' });
+        cols.append(await pane(pr.pa ? await X.ensureJs(pr.pa) : null, pr.pa ? X.viewportOf(pr.pa, 1) : null, pr.wa, pr.itemsA, pr.d.delA, 'del', W, pr.pa));
+        cols.append(await pane(pr.pb, pr.pb ? pr.pb.getViewport({ scale: 1 }) : null, pr.wb, pr.itemsB, pr.d.insB, 'ins', W, null));
+        row.append(cols); body.append(row);
+      }
+      return;
+    }
+    const vis = []; res.visual = vis;
+    for (const pr of res.pages) {
+      if (my !== token) return;
+      const [cA, cB] = await pairCanvases(pr, 640);
+      const row = h('div', { class: 'cmp-row' }); const lab = h('div', { class: 'cmp-n' }, `Page ${pr.i + 1}`); row.append(lab);
+      if (m === 'overlay') {
+        const box = h('div', { class: 'cmp-pane cmp-ov', style: { width: cA.width / 1.5 + 'px', height: cA.height / 1.5 + 'px' } });
+        [cA, cB].forEach((c, k) => { c.style.width = '100%'; c.style.height = '100%'; c.style.position = 'absolute'; c.style.inset = '0'; if (k) { c.classList.add('cmp-top'); c.style.opacity = opac; } box.append(c); });
+        row.append(h('div', { class: 'cmp-cols' }, box));
+      } else {
+        const d = pixelDiff(cA, cB); vis.push({ page: pr.i, pct: d.pct, changed: d.changed });
+        lab.textContent = `Page ${pr.i + 1} — ` + (d.changed ? `${d.pct < 0.01 ? '<0.01' : d.pct.toFixed(2)}% of the page looks different` : 'no visual changes');
+        if (!d.changed) row.classList.add('same');
+        d.canvas.style.width = d.canvas.width / 1.5 + 'px'; row.append(h('div', { class: 'cmp-cols' }, h('div', { class: 'cmp-pane' }, d.canvas)));
+      }
+      body.append(row);
+    }
+    if (m === 'pixel') sum.textContent = `${vis.filter(v => v.changed).length} of ${vis.length} page(s) look different (pixel comparison — red: only in ${S.fileName || 'the original'}, green: only in ${name})`;
+    else sum.textContent = 'Overlay: the revised page is drawn over the original — move the slider to fade between them.';
   }
+  res.setMode = setMode;
+  await setMode(initMode);
   return res;
+}
+// render page i of both documents at the same size (width W css px, 1.5× pixels)
+async function pairCanvases(pr, W) {
+  const mk = async (jsPage, vp1, appPage) => {
+    const c = document.createElement('canvas');
+    if (!jsPage) { c.width = Math.round(W * 1.5); c.height = Math.round(W * 1.5 * 1.414); const x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height); return c; }
+    const sc = W * 1.5 / vp1.width; const vp = appPage ? X.viewportOf(appPage, sc) : jsPage.getViewport({ scale: sc });
+    c.width = Math.round(vp.width); c.height = Math.round(vp.height); const x = c.getContext('2d', { willReadFrequently: true }); x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height);
+    try { await jsPage.render({ canvasContext: x, viewport: vp }).promise; } catch { }
+    return c;
+  };
+  const a = await mk(pr.pa ? await X.ensureJs(pr.pa) : null, pr.pa ? X.viewportOf(pr.pa, 1) : null, pr.pa);
+  const b = await mk(pr.pb, pr.pb ? pr.pb.getViewport({ scale: 1 }) : null, null);
+  return [a, b];
+}
+// per-pixel comparison: unchanged ink is faded grey, ink only in A is red, ink only in B is green
+export function pixelDiff(cA, cB, thr = 48) {
+  const W = Math.max(cA.width, cB.width), H = Math.max(cA.height, cB.height);
+  const get = c => { const t = document.createElement('canvas'); t.width = W; t.height = H; const x = t.getContext('2d', { willReadFrequently: true }); x.fillStyle = '#fff'; x.fillRect(0, 0, W, H); x.drawImage(c, 0, 0); return x.getImageData(0, 0, W, H).data; };
+  const A = get(cA), B = get(cB); const out = document.createElement('canvas'); out.width = W; out.height = H; const ox = out.getContext('2d'); const id = ox.createImageData(W, H); const D = id.data;
+  let changed = 0;
+  for (let i = 0; i < D.length; i += 4) {
+    const la = (A[i] * 299 + A[i + 1] * 587 + A[i + 2] * 114) / 1000, lb = (B[i] * 299 + B[i + 1] * 587 + B[i + 2] * 114) / 1000;
+    const diff = Math.abs(A[i] - B[i]) + Math.abs(A[i + 1] - B[i + 1]) + Math.abs(A[i + 2] - B[i + 2]);
+    if (diff > thr * 1.5) { changed++; if (la < lb) { D[i] = 230; D[i + 1] = 40; D[i + 2] = 40; } else { D[i] = 20; D[i + 1] = 170; D[i + 2] = 80; } }
+    else { const g = 255 - (255 - Math.min(la, lb)) * 0.28; D[i] = D[i + 1] = D[i + 2] = g; }
+    D[i + 3] = 255;
+  }
+  ox.putImageData(id, 0, 0);
+  return { canvas: out, changed, pct: changed / (W * H) * 100 };
+}
+export async function visualCompare(other) {
+  const res = await compareData(other); const out = [];
+  for (const pr of res.pages) { const [a, b] = await pairCanvases(pr, 400); const d = pixelDiff(a, b); out.push({ page: pr.i, pct: d.pct, changed: d.changed }); }
+  return out;
 }
 async function pane(jsPage, vp1, words, items, marks, cls, W, appPage) {
   const { h } = UI; const box = h('div', { class: 'cmp-pane' });
