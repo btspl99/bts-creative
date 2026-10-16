@@ -18,6 +18,16 @@ const XP = {
   camera: 'M3 7h4l2-3h6l2 3h4v13H3zM12 10a4 4 0 1 0 0 8 4 4 0 0 0 0-8z',
   liquify: 'M3 12c3-6 6 6 9 0s6 6 9 0M3 18c3-6 6 6 9 0s6 6 9 0M3 6c3-6 6 6 9 0s6 6 9 0',
   heal: 'M10 2h4v8h8v4h-8v8h-4v-8H2v-4h8z',
+  frame: 'M3 7h18M3 17h18M7 3v18M17 3v18M10 10l4 4M14 10l-4 4',
+  brighten: 'M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1M12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6z',
+  upscale: 'M3 21l7-7M3 21v-5M3 21h5M21 3l-7 7M21 3v5M21 3h-5M4 4h6v6H4zM14 14h6v6h-6z',
+  sky: 'M6 18h11a4 4 0 0 0 0-8 6 6 0 0 0-11.5 1.5A3.3 3.3 0 0 0 6 18zM2 22h20',
+  harmonize: 'M4 12a8 8 0 0 1 16 0M9 12a3 3 0 1 0 6 0 3 3 0 1 0-6 0M2 20h20M7 16h10',
+  subject: 'M12 3a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM4 21c1-4 4-6 8-6s7 2 8 6M2 2h4M2 2v4M22 2h-4M22 2v4M2 22v-4M22 22v-4',
+  check: 'M4 12l5 5L20 6',
+  close: 'M6 6l12 12M18 6L6 18',
+  wires: 'M2 6c6 4 14 4 20 0M2 11c6 4 14 4 20 0M5 3v18M19 3v18',
+  dust: 'M5 5h.01M9 8h.01M16 6h.01M7 15h.01M14 13h.01M18 17h.01M11 19h.01M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z',
 };
 const icon = (n, s) => XP[n] ? `<svg viewBox="0 0 24 24"${s ? ` style="width:${s}px;height:${s}px"` : ''}><path d="${XP[n]}"/></svg>` : UI.icon(n, s);
 
@@ -52,6 +62,7 @@ const O = {
   showGrid: false, gridSize: 0, pixel: true, autoSelect: false, cropRatio: 'free', cropW: 4, cropH: 5, cropFill: false,
   showRulers: false, showGuides: true, snap: true, smartGuides: true, lockGuides: false, showNotes: true,
   pattern: 0, patScale: 1, wet: 0.5, mixLoad: 0.5, crTol: 40, crMode: 'color', healSample: false, removeSize: 60,
+  removeMode: 'object', brightMode: 'teeth', frameShape: 'rect', frameRadius: 0, frameStroke: 0, frameStrokeC: '#ffffff', smartFilters: false,
 };
 let clipboard = null; // {canvas, x, y}
 let fxClipboard = null, lastFilter = null;
@@ -66,14 +77,15 @@ const TOOLDEF = {
   clone: ['clone', 'Clone stamp', 'S'], pstamp: ['pstamp', 'Pattern stamp', 'Shift+S'],
   eraser: ['eraser', 'Eraser', 'E'], gradient: ['gradient', 'Gradient', 'G'], bucket: ['bucket', 'Paint bucket', 'Shift+G'],
   blur: ['blur', 'Blur / Sharpen / Smudge', 'R'], dodge: ['dodge', 'Dodge / Burn / Sponge', 'O'],
+  brighten: ['brighten', 'Teeth & eye brighten', 'Shift+O'], frame: ['frame', 'Frame', 'K'],
   text: ['text', 'Type', 'T'], shape: ['shape', 'Shape', 'U'], hand: ['hand', 'Hand', 'H'], zoom: ['zoom', 'Zoom', 'Z'],
 };
 const GROUPS = [['move'], ['marquee'], ['lasso'], ['wand'], ['crop', 'pcrop'], ['eyedrop', 'ruler', 'note'], '-',
-  ['heal', 'remove', 'patch', 'redeye'], ['brush', 'pencil', 'mixer', 'colorrep'], ['clone', 'pstamp'], ['eraser'], ['gradient', 'bucket'], ['blur'], ['dodge'], '-',
-  ['text'], ['shape'], ['hand'], ['zoom']];
+  ['heal', 'remove', 'patch', 'redeye'], ['brush', 'pencil', 'mixer', 'colorrep'], ['clone', 'pstamp'], ['eraser'], ['gradient', 'bucket'], ['blur'], ['dodge', 'brighten'], '-',
+  ['text'], ['shape'], ['frame'], ['hand'], ['zoom']];
 const groupOf = t => GROUPS.find(g => g !== '-' && g.includes(t));
 const groupCur = {}; GROUPS.forEach(g => { if (g !== '-') groupCur[g[0]] = g[0]; });
-const PAINT_TOOLS = ['brush', 'pencil', 'eraser', 'clone', 'heal', 'remove', 'blur', 'dodge', 'pstamp', 'mixer', 'colorrep', 'redeye'];
+const PAINT_TOOLS = ['brush', 'pencil', 'eraser', 'clone', 'heal', 'remove', 'blur', 'dodge', 'pstamp', 'mixer', 'colorrep', 'redeye', 'brighten'];
 
 // =====================================================================  menus
 const SKIN_ITEMS = () => UI.SKINS.map(k => ({ label: k.name, checked: () => (UI.getSettings().skin || 'dark') === k.id, action: () => { UI.setSettings({ skin: k.id }); requestRender(); } }));
@@ -88,6 +100,7 @@ UI.titlebar({ logo: 'Ph', menus: [
     { label: 'Quick export PNG', kbd: 'Ctrl+Alt+Shift+S', action: quickExportPng, disabled: !D },
     { label: 'Export layers to files…', action: exportLayersDialog, disabled: !D },
     { label: 'Copy merged to clipboard', action: () => copy(true), disabled: !D },
+    '-', { label: 'Autosave & recovery…', action: autosaveSettings }, { label: 'Recover autosaved documents…', action: () => checkRecovery({ manual: true }) },
     '-', { label: 'Close document', kbd: 'Ctrl+W', action: closeDoc, disabled: !D }, { label: 'BTS Creative home', action: () => bts.openApp('home') }, { label: 'Exit', action: closeWindow } ] },
   { label: 'Edit', items: () => [
     { label: 'Undo ' + (D?.hist[D.hi]?.label || ''), kbd: 'Ctrl+Z', action: undo, disabled: !D || D.hi <= 0 },
@@ -95,6 +108,7 @@ UI.titlebar({ logo: 'Ph', menus: [
     '-', { label: 'Cut', kbd: 'Ctrl+X', action: cut }, { label: 'Copy', kbd: 'Ctrl+C', action: copy }, { label: 'Copy merged', kbd: 'Ctrl+Shift+C', action: () => copy(true) },
     { label: 'Paste', kbd: 'Ctrl+V', action: paste }, { label: 'Paste as new layer (from clipboard)', action: paste }, { label: 'Clear', kbd: 'Del', action: clearSel },
     '-', { label: 'Fill…', kbd: 'Shift+F5', action: fillDialog }, { label: 'Content-Aware Fill…', kbd: 'Shift+Backspace', action: contentAwareFillDialog, disabled: noDoc() }, { label: 'Stroke…', action: strokeDialog },
+    { label: 'Remove', sub: [{ label: 'Wires & cables…', action: () => removeDistractions('wires'), disabled: noDoc() }, { label: 'Dust & spots…', action: () => removeDistractions('spots'), disabled: noDoc() }, '-', { label: 'Remove tool (brush over distractions)', action: () => setTool('remove') }] }, { label: 'Sky replacement…', action: skyReplaceDialog, disabled: noDoc() },
     '-', { label: 'Free transform', kbd: 'Ctrl+T', action: startTransform },
     { label: 'Transform', sub: [{ label: 'Flip horizontal', action: () => flipLayer(true) }, { label: 'Flip vertical', action: () => flipLayer(false) }, { label: 'Rotate 90° CW', action: () => rotateLayer(90) }, { label: 'Rotate 90° CCW', action: () => rotateLayer(-90) }, { label: 'Rotate 180°', action: () => rotateLayer(180) }] },
     '-', { label: 'Define pattern…', action: definePattern, disabled: noDoc() }, { label: 'Take history snapshot', action: takeSnapshot, disabled: noDoc() },
@@ -109,6 +123,7 @@ UI.titlebar({ logo: 'Ph', menus: [
     { label: 'Straighten…', action: () => straightenDialog(D?.ruler ? rulerAngle() : 0), disabled: noDoc() }, { label: 'Auto-straighten', action: autoStraighten, disabled: noDoc() },
     { label: 'Crop to selection', action: cropToSelection, disabled: !D?.sel }, { label: 'Trim…', action: trimDialog, disabled: noDoc() }, { label: 'Reveal all', action: revealAll, disabled: noDoc() },
     { label: 'Generative expand canvas…', action: expandDialog, disabled: noDoc() },
+    { label: 'Upscale (super resolution)…', action: upscaleDialog, disabled: noDoc() },
     '-', { label: 'Duplicate', action: duplicateDoc },
   ] },
   { label: 'Layer', items: () => [
@@ -120,7 +135,11 @@ UI.titlebar({ logo: 'Ph', menus: [
     '-', { label: 'Layer mask', sub: [{ label: 'Reveal all', action: () => addMask('all') }, { label: 'Hide all', action: () => addMask('none') }, { label: 'Reveal selection', action: () => addMask('sel'), disabled: !D?.sel }, '-', { label: 'Apply mask', action: applyMask }, { label: 'Delete mask', action: deleteMask }, { label: 'Invert mask', action: invertMask }] },
     { label: 'Layer style', sub: [{ label: 'Blending options / all styles…', action: () => layerStyleDialog() }, '-', ...FX_LIST.map(([k, n]) => ({ label: n + '…', action: () => layerStyleDialog(k) })), '-', { label: 'Copy layer style', action: copyFx }, { label: 'Paste layer style', action: pasteFx, disabled: !fxClipboard }, { label: 'Clear layer style', action: clearFx }] },
     { label: 'Remove background', sub: [{ label: 'Person / portrait (AI)', action: () => removeBackground('ai') }, { label: 'Plain or product background…', action: () => removeBackground('plain') }] },
-    { label: 'Rasterize layer', action: rasterizeLayer, disabled: AL()?.kind !== 'text' },
+    { label: 'Harmonize…', action: harmonizeDialog, disabled: noDoc() },
+    { label: 'Frame', sub: [{ label: 'New rectangle frame', action: () => newFrameCentered('rect'), disabled: noDoc() }, { label: 'New ellipse frame', action: () => newFrameCentered('ellipse'), disabled: noDoc() }, { label: 'Frame from selection / layer', action: frameFromSelectionOrLayer, disabled: noDoc() }, '-', { label: 'Place image into frame…', action: () => placeIntoFrame(), disabled: !activeFrame() }, { label: 'Fill frame', action: () => updateFrame({ fit: 'fill', scale: 1, ox: 0, oy: 0 }), disabled: !activeFrame() }, { label: 'Fit content to frame', action: () => updateFrame({ fit: 'fit', scale: 1, ox: 0, oy: 0 }), disabled: !activeFrame() }, { label: 'Remove image from frame', action: () => updateFrame({ img: null }), disabled: !activeFrame()?.frame.img }] },
+    { label: 'Smart filters', sub: SMART_MENU() },
+    { label: 'Adjustment presets', sub: [{ label: 'Save preset from active adjustment layer…', action: saveActivePreset, disabled: AL()?.kind !== 'adjust' }, { label: 'Apply preset…', action: applyPresetDialog, disabled: noDoc() }, { label: 'Manage presets…', action: managePresetsDialog }] },
+    { label: 'Rasterize layer', action: rasterizeLayer, disabled: !(AL()?.kind === 'text' || AL()?.kind === 'frame' || AL()?.smart) },
     '-', { label: 'Bring forward', kbd: 'Ctrl+]', action: () => moveLayer(1) }, { label: 'Send backward', kbd: 'Ctrl+[', action: () => moveLayer(-1) },
     { label: 'Bring to front', kbd: 'Ctrl+Shift+]', action: () => moveLayer(99) }, { label: 'Send to back', kbd: 'Ctrl+Shift+[', action: () => moveLayer(-99) },
     '-', { label: 'Merge down', kbd: 'Ctrl+E', action: mergeDown }, { label: 'Merge visible', kbd: 'Ctrl+Shift+E', action: mergeVisible }, { label: 'Flatten image', action: flatten },
@@ -138,7 +157,9 @@ UI.titlebar({ logo: 'Ph', menus: [
     { label: 'Repeat last filter' + (lastFilter ? ': ' + lastFilter.F.name : ''), kbd: 'Ctrl+F', action: repeatFilter, disabled: !lastFilter },
     { label: 'Filter Gallery…', action: () => filterDialog(FILTERS.find(f => f.id === 'gauss'), { gallery: true }), disabled: noDoc() },
     { label: 'Liquify…', kbd: 'Ctrl+Shift+X', action: liquifyDialog, disabled: noDoc() }, '-',
-    ...FILTER_CATS.map(cat => ({ label: cat, sub: FILTERS.filter(f => f.cat === cat).map(f => ({ label: f.name + (f.params ? '…' : ''), action: () => runFilter(f) })) })),
+    ...FILTER_CATS.filter(c => c !== 'Portrait').map(cat => ({ label: cat, sub: FILTERS.filter(f => f.cat === cat).map(f => ({ label: f.name + (f.params ? '…' : ''), action: () => runFilter(f) })) })),
+    { label: 'Portrait', sub: [{ label: 'Skin smoothing…', action: () => runFilter(FILTERS.find(f => f.id === 'skin')) }, { label: 'Background blur…', action: backgroundBlurDialog, disabled: noDoc() }, { label: 'Teeth & eye brighten tool', action: () => setTool('brighten') }] },
+    '-', { label: 'Smart filters', sub: SMART_MENU() },
   ] },
   { label: 'Tools', items: () => GROUPS.flatMap(g => g === '-' ? ['-'] : g.map(t => ({ label: TOOLDEF[t][1], kbd: TOOLDEF[t][2], checked: () => O.tool === t, action: () => setTool(t) }))) },
   { label: 'View', items: () => [
@@ -149,6 +170,7 @@ UI.titlebar({ logo: 'Ph', menus: [
     { label: 'Grid', kbd: "Ctrl+'", checked: () => O.showGrid, action: () => { O.showGrid = !O.showGrid; drawOverlay(); } },
     { label: 'Snap', kbd: 'Ctrl+Shift+;', checked: () => O.snap, action: () => { O.snap = !O.snap; } },
     { label: 'Smart guides', checked: () => O.smartGuides, action: () => { O.smartGuides = !O.smartGuides; } },
+    { label: 'Contextual task bar', checked: () => O.taskBar, action: toggleTaskBar },
     { label: 'Notes', checked: () => O.showNotes, action: () => { O.showNotes = !O.showNotes; drawOverlay(); } },
     { label: 'New guide…', action: newGuideDialog, disabled: noDoc() }, { label: 'Lock guides', checked: () => O.lockGuides, action: () => { O.lockGuides = !O.lockGuides; } },
     { label: 'Clear guides', action: () => { if (D) { D.guides = []; drawOverlay(); } } }, { label: 'Grid settings…', action: gridDialog },
@@ -177,10 +199,10 @@ function renderToolbar() {
 const fgbg = h('div', { class: 'fgbg' }, h('div', { class: 'sw fg', id: 'swFg', 'data-tip': 'Foreground color', onclick: () => pickColorDialog('fg') }), h('div', { class: 'sw bg', id: 'swBg', 'data-tip': 'Background color', onclick: () => pickColorDialog('bg') }),
   h('div', { class: 'swap', 'data-tip': 'Swap (X)', onclick: swapColors }, '⇄'), h('div', { class: 'reset', 'data-tip': 'Default colors (D)', onclick: resetColors }, '■□'));
 tbEl.append(fgbg);
-const keyMap = { v: 'move', m: 'marquee', l: 'lasso', w: 'wand', c: 'crop', 'shift+c': 'pcrop', i: 'eyedrop', j: 'heal', b: 'brush', n: 'pencil', s: 'clone', e: 'eraser', g: 'gradient', r: 'blur', o: 'dodge', t: 'text', u: 'shape', h: 'hand', z: 'zoom' };
+const keyMap = { v: 'move', m: 'marquee', l: 'lasso', w: 'wand', c: 'crop', 'shift+c': 'pcrop', i: 'eyedrop', j: 'heal', b: 'brush', n: 'pencil', s: 'clone', e: 'eraser', g: 'gradient', r: 'blur', o: 'dodge', t: 'text', u: 'shape', h: 'hand', z: 'zoom', k: 'frame' };
 Object.entries(keyMap).forEach(([k, t]) => UI.shortcut(k, () => setTool(t)));
 // Shift+key cycles through a tool group
-[['shift+i', 'eyedrop'], ['shift+j', 'heal'], ['shift+b', 'brush'], ['shift+s', 'clone'], ['shift+g', 'gradient']].forEach(([k, g0]) => UI.shortcut(k, () => { const g = GROUPS.find(x => x[0] === g0); const i = g.indexOf(O.tool); setTool(g[(i + 1) % g.length]); }));
+[['shift+i', 'eyedrop'], ['shift+j', 'heal'], ['shift+b', 'brush'], ['shift+s', 'clone'], ['shift+g', 'gradient'], ['shift+o', 'dodge']].forEach(([k, g0]) => UI.shortcut(k, () => { const g = GROUPS.find(x => x[0] === g0); const i = g.indexOf(O.tool); setTool(g[(i + 1) % g.length]); }));
 UI.shortcut('x', swapColors); UI.shortcut('d', resetColors);
 UI.shortcut('[', () => { O.size = Math.max(1, Math.round(O.size / 1.15)); renderOptions(); drawOverlay(); });
 UI.shortcut(']', () => { O.size = Math.min(2000, Math.round(O.size * 1.15 + 1)); renderOptions(); drawOverlay(); });
@@ -228,7 +250,16 @@ function renderOptions() {
   else if (t === 'mixer') { ob.append(num('Size', 'size', 1, 1000, 1, 1, 'px'), num('Wet', 'wet', 0, 100, 1, 100, '%'), num('Load', 'mixLoad', 0, 100, 1, 100, '%'), num('Flow', 'flow', 1, 100, 1, 100, '%'), tip('Mixes the foreground color with the paint already on the canvas')); }
   else if (t === 'colorrep') { ob.append(num('Size', 'size', 1, 1000, 1, 1, 'px'), num('Tolerance', 'crTol', 1, 255), sel('Mode', 'crMode', [['color', 'Color'], ['hue', 'Hue'], ['saturation', 'Saturation'], ['luminosity', 'Luminosity']]), tip('Replaces the color under the brush center with the foreground color')); }
   else if (t === 'heal') ob.append(num('Size', 'size', 1, 500, 1, 1, 'px'), chk('Sample all layers', 'healSample'), tip('Paint over blemishes — content-aware healing on release'));
-  else if (t === 'remove') ob.append(num('Size', 'size', 1, 800, 1, 1, 'px'), chk('Sample all layers', 'healSample'), tip('Brush over an object to remove it'));
+  else if (t === 'remove') ob.append(sel('Mode', 'removeMode', [['object', 'Objects (content-aware)'], ['wires', 'Wires & cables'], ['spots', 'Dust & spots']]), num('Size', 'size', 1, 800, 1, 1, 'px'), O.removeMode === 'object' ? chk('Sample all layers', 'healSample') : '', tip(O.removeMode === 'object' ? 'Brush over an object to remove it' : O.removeMode === 'wires' ? 'Brush along the wires — thin lines under the brush are detected and removed' : 'Brush over the area — small spots under the brush are detected and removed'), O.removeMode !== 'object' ? btn('Whole image / selection…', () => removeDistractions(O.removeMode)) : '');
+  else if (t === 'brighten') ob.append(sel('Mode', 'brightMode', [['teeth', 'Teeth whitening'], ['eyes', 'Eye brighten']]), num('Size', 'size', 1, 500), num('Strength', 'strength', 1, 100, 1, 100, '%'), tip('Paint over teeth or the irises'));
+  else if (t === 'frame') {
+    const F = activeFrame(); const live = (p, label) => F && updateFrame(p, label);
+    ob.append(sel('Shape', 'frameShape', [['rect', 'Rectangle'], ['ellipse', 'Ellipse']], () => live({ shape: O.frameShape }, 'Frame shape')), O.frameShape === 'rect' ? num('Corner radius', 'frameRadius', 0, 2000, 1, 1, '', () => live({ radius: O.frameRadius }, 'Frame corners')) : '', num('Stroke', 'frameStroke', 0, 200, 1, 1, 'px', () => live({ stroke: O.frameStroke }, 'Frame stroke')));
+    const sc = h('input', { type: 'color', value: O.frameStrokeC }); sc.oninput = () => { O.frameStrokeC = sc.value; live({ strokeC: sc.value }, 'Frame stroke'); }; ob.append(grp('', sc));
+    if (F) { const fnum = (label, key, min, max, k = 1) => { const i = h('input', { type: 'number', min, max, value: Math.round((F.frame[key] || 0) * k), style: { width: '62px' } }); i.oninput = () => updateFrame({ [key]: clamp(+i.value, min, max) / k }, 'Frame content'); return grp(label, i); };
+      ob.append(vsep(), btn(F.frame.img ? 'Replace image…' : 'Place image…', () => placeIntoFrame(F), true), btn('Fill', () => updateFrame({ fit: 'fill', scale: 1, ox: 0, oy: 0 })), btn('Fit', () => updateFrame({ fit: 'fit', scale: 1, ox: 0, oy: 0 })), fnum('Content %', 'scale', 5, 1000, 100), fnum('X', 'ox', -20000, 20000), fnum('Y', 'oy', -20000, 20000)); }
+    else ob.append(tip('Drag to draw a frame · click a frame to fill it with an image'));
+  }
   else if (t === 'patch') ob.append(tip(D?.sel ? 'Drag inside the selection to the area you want to copy from' : 'Draw around the area to repair, then drag it to a clean area'), D?.sel ? btn('Deselect', deselect) : '');
   else if (t === 'redeye') ob.append(num('Pupil size', 'size', 4, 400, 1, 1, 'px'), num('Darken', 'strength', 1, 100, 1, 100, '%'), tip('Click on a red eye'));
   else if (t === 'blur') { ob.append(sel('Mode', 'blurMode', [['blur', 'Blur'], ['sharpen', 'Sharpen'], ['smudge', 'Smudge']]), num('Size', 'size', 1, 500), num('Strength', 'strength', 1, 100, 1, 100, '%')); }
@@ -400,6 +431,7 @@ function render() {
     const wc = ctxOf(workC); wc.setTransform(1, 0, 0, 1, 0, 0); wc.clearRect(0, 0, cw, ch); wc.setTransform(s, 0, 0, s, 0, 0); compositeTo(wc, { live: true, scale: s }); c.drawImage(workC, 0, 0);
   } else { c.setTransform(s, 0, 0, s, 0, 0); compositeTo(c, { live: true, scale: s }); }
   $('#stSize').textContent = `${D.w} × ${D.h} px` + (proxy ? ' · preview' : '');
+  updateTaskBar();
 }
 function maskAlpha(L) {
   if (!L.mask) return null;
@@ -575,7 +607,7 @@ setInterval(() => { if (D?.selPath) { antsPhase = (antsPhase + 1) % 8; drawOverl
 let cursorPos = null;
 function drawOverlay() {
   const c = overlay.getContext('2d'); const dpr = devicePixelRatio; c.setTransform(1, 0, 0, 1, 0, 0); c.clearRect(0, 0, overlay.width, overlay.height);
-  if (!D) return;
+  if (!D) { updateTaskBar(); return; }
   c.setTransform(dpr, 0, 0, dpr, 0, 0);
   const z = D.zoom, vw = overlay.width / dpr, vh = overlay.height / dpr;
   const docT = () => c.setTransform(dpr * z, 0, 0, dpr * z, dpr * D.px, dpr * D.py);
@@ -589,7 +621,7 @@ function drawOverlay() {
   if (marqRect) { c.setLineDash([4 / z, 4 / z]); c.strokeStyle = '#fff'; c.beginPath(); if (O.marq === 'ellipse') c.ellipse(marqRect.x + marqRect.w / 2, marqRect.y + marqRect.h / 2, Math.abs(marqRect.w / 2), Math.abs(marqRect.h / 2), 0, 0, Math.PI * 2); else c.rect(marqRect.x, marqRect.y, marqRect.w, marqRect.h); c.stroke(); c.setLineDash([]); }
   if (lassoPts) { c.strokeStyle = '#fff'; c.setLineDash([4 / z, 4 / z]); c.beginPath(); lassoPts.forEach((p, i) => i ? c.lineTo(...p) : c.moveTo(...p)); c.stroke(); c.setLineDash([]); }
   if (gradPreview) { c.strokeStyle = '#fff'; c.lineWidth = 2 / z; c.beginPath(); c.moveTo(gradPreview.x1, gradPreview.y1); c.lineTo(gradPreview.x2, gradPreview.y2); c.stroke(); [[gradPreview.x1, gradPreview.y1], [gradPreview.x2, gradPreview.y2]].forEach(([x, y]) => { c.beginPath(); c.arc(x, y, 4 / z, 0, 7); c.fillStyle = '#fff'; c.fill(); c.stroke(); }); }
-  if (shapePreview) { c.save(); drawShape(c, shapePreview, true); c.restore(); }
+  if (shapePreview) { c.save(); if (shapePreview.frame) { c.setLineDash([6 / z, 4 / z]); c.strokeStyle = '#31a8ff'; c.lineWidth = 1.5 / z; shapePath(c, shapePreview); c.stroke(); c.setLineDash([]); } else drawShape(c, shapePreview, true); c.restore(); }
   if (cropState) {
     const cr = cropState; c.fillStyle = 'rgba(0,0,0,.55)'; c.beginPath(); c.rect(-1e5, -1e5, 2e5, 2e5); c.rect(cr.x, cr.y + cr.h, cr.w, -cr.h); c.fill('evenodd');
     c.strokeStyle = '#fff'; c.lineWidth = 1.5 / z; c.strokeRect(cr.x, cr.y, cr.w, cr.h);
@@ -621,6 +653,7 @@ function drawOverlay() {
     if (O.tool === 'clone' && cloneSrc) { const [qx, qy] = toScreen(...(cloneOffset && stroke ? [cursorPos[0] - cloneOffset[0], cursorPos[1] - cloneOffset[1]] : cloneSrc)); c.beginPath(); c.moveTo(qx - 6, qy); c.lineTo(qx + 6, qy); c.moveTo(qx, qy - 6); c.lineTo(qx, qy + 6); c.stroke(); }
   }
   if (O.showRulers && cursorPos) drawRulers();
+  updateTaskBar();
 }
 const lerpP = (a, b, t) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
 function updateCursor() {
@@ -641,7 +674,7 @@ function selectionFromCanvas(m, mode = O.selMode, label = 'Selection') {
 }
 function setSel(m) {
   if (m && isEmptyMask(m)) m = null;
-  if (D.sel) D.prevSel = D.sel; D.sel = m; D.selPath = m ? buildAnts(m) : null; drawOverlay();
+  if (D.sel) D.prevSel = D.sel; D.sel = m; D.selPath = m ? buildAnts(m) : null; D.selBounds = m ? maskBounds(m) : null; drawOverlay();
   if (['marquee', 'lasso', 'wand', 'patch'].includes(O.tool)) renderOptions();
 }
 function isEmptyMask(m) { const d = ctxOf(m).getImageData(0, 0, m.width, m.height).data; for (let i = 3; i < d.length; i += 4) if (d[i] > 127) return false; return true; }
@@ -707,16 +740,17 @@ function withSelection(L, drawFn) {
 }
 function replaceCanvas(L, c) { const x = L.canvas.getContext('2d'); x.clearRect(0, 0, L.canvas.width, L.canvas.height); x.drawImage(c, 0, 0); }
 function ensureCovers(L) {
-  if (L.kind === 'adjust') return;
+  if (L.kind === 'adjust' || L.kind === 'frame') return;
   const x0 = Math.min(L.x, 0), y0 = Math.min(L.y, 0), x1 = Math.max(L.x + L.canvas.width, D.w), y1 = Math.max(L.y + L.canvas.height, D.h);
   if (x0 === L.x && y0 === L.y && x1 - x0 === L.canvas.width && y1 - y0 === L.canvas.height) return;
   const n = mk(x1 - x0, y1 - y0); n.getContext('2d').drawImage(L.canvas, L.x - x0, L.y - y0); L.canvas = n;
+  if (L.smart) { const pad = c => { const q = mk(n.width, n.height); q.getContext('2d').drawImage(c, L.x - x0, L.y - y0); return q; }; L.smart.orig = pad(L.smart.orig); L.smart.filters.forEach(f => { if (f.mask) f.mask = pad(f.mask); }); }
   if (L.mask) { const m = mk(n.width, n.height), mc = m.getContext('2d'); mc.fillStyle = '#fff'; mc.fillRect(0, 0, m.width, m.height); mc.clearRect(L.x - x0, L.y - y0, L.mask.width, L.mask.height); mc.drawImage(L.mask, L.x - x0, L.y - y0); L.mask = m; L.maskVer = Math.random(); }
   L.x = x0; L.y = y0;
 }
 
 // =====================================================================  history
-function cloneLayer(L) { return { ...L, canvas: cloneCanvas(L.canvas), mask: L.mask ? cloneCanvas(L.mask) : null, fx: JSON.parse(JSON.stringify(L.fx || {})), adj: L.adj ? JSON.parse(JSON.stringify(L.adj)) : undefined, text: L.text ? { ...L.text } : undefined, _maskA: null, _fxc: null, _mb: null }; }
+function cloneLayer(L) { return { ...L, canvas: cloneCanvas(L.canvas), mask: L.mask ? cloneCanvas(L.mask) : null, fx: JSON.parse(JSON.stringify(L.fx || {})), adj: L.adj ? JSON.parse(JSON.stringify(L.adj)) : undefined, text: L.text ? { ...L.text } : undefined, frame: L.frame ? { ...L.frame } : undefined, smart: L.smart ? { orig: L.smart.orig, filters: L.smart.filters.map(f => ({ ...f, vals: JSON.parse(JSON.stringify(f.vals)) })) } : undefined, _maskA: null, _fxc: null, _mb: null }; }
 function snapState(label) { return { label, w: D.w, h: D.h, active: D.active, layers: D.layers.map(cloneLayer), sel: D.sel ? cloneCanvas(D.sel) : null }; }
 function pushHist(label) {
   if (!D) return; contentSerial++;
@@ -726,7 +760,7 @@ function pushHist(label) {
   if (D.hist.length > 1) { D.dirty = true; UI.setDocTitle(D.name + ' •', 'BTS Photo'); renderTabs(); }
   renderRight();
 }
-function applyState(s) { D.w = s.w; D.h = s.h; D.active = clamp(s.active, 0, s.layers.length - 1); D.layers = s.layers.map(cloneLayer); D.layers.forEach(l => l.maskVer = Math.random()); D.sel = s.sel ? cloneCanvas(s.sel) : null; D.selPath = D.sel ? buildAnts(D.sel) : null; contentSerial++; }
+function applyState(s) { D.w = s.w; D.h = s.h; D.active = clamp(s.active, 0, s.layers.length - 1); D.layers = s.layers.map(cloneLayer); D.layers.forEach(l => l.maskVer = Math.random()); D.sel = s.sel ? cloneCanvas(s.sel) : null; D.selPath = D.sel ? buildAnts(D.sel) : null; D.selBounds = D.sel ? maskBounds(D.sel) : null; contentSerial++; }
 function restoreHist(i) {
   const s = D.hist[i]; if (!s) return; const sizeChanged = s.w !== D.w || s.h !== D.h; D.hi = i; applyState(s);
   T = null; renderAll(); if (sizeChanged) fitView();
@@ -761,6 +795,8 @@ vpEl.addEventListener('pointerdown', e => {
     if (L.kind === 'adjust' && t !== 'move' && !['brush', 'pencil', 'eraser', 'gradient', 'bucket'].includes(t)) return toast('This is an adjustment layer — select a pixel layer, or paint on its mask with the brush', 'err');
     if (L.kind === 'adjust' && t !== 'move' && !L.mask) addMask('all', true);
     if (L.kind === 'text' && t !== 'move') { if (!(L.editMask && L.mask)) return toast('Rasterize the text layer first (Layer › Rasterize)', 'err'); }
+    if (L.kind === 'frame' && t !== 'move' && !(L.editMask && L.mask)) return toast('Frames hold an image — use Layer › Frame › Place image, or Layer › Rasterize layer to paint on it', 'err');
+    if (L.smart && t !== 'move' && !(L.editMask && L.mask)) return smartBlock(L);
     if (!L.visible && t !== 'move') return toast('Layer is hidden', 'err');
   }
   switch (t) {
@@ -771,6 +807,7 @@ vpEl.addEventListener('pointerdown', e => {
     case 'text': { textClick(x, y); return; }
     case 'note': { noteClick(x, y); return; }
     case 'redeye': { redEyeAt(x, y); return; }
+    case 'frame': { [x, y] = snapPt(x, y); shapePreview = { type: O.frameShape === 'ellipse' ? 'ellipse' : 'rect', x1: x, y1: y, x2: x, y2: y, frame: true }; drag = {}; return; }
     case 'ruler': { [x, y] = snapPt(x, y); D.ruler = { x1: x, y1: y, x2: x, y2: y }; drag = { kind: 'ruler' }; return; }
     case 'pcrop': { const tol = 12 / D.zoom; const i = pcropState.findIndex(p => Math.hypot(p[0] - x, p[1] - y) < tol); if (i >= 0) drag = { kind: 'pc', i }; else drag = { kind: 'pcnew', sx: x, sy: y }; return; }
     case 'patch': { if (D.sel && pointInSel(x, y)) { patchDrag = { sx: x, sy: y, dx: 0, dy: 0 }; drag = { kind: 'patch' }; return; } drag = { mode: 'new' }; lassoPts = [[x, y]]; return; }
@@ -807,7 +844,7 @@ vpEl.addEventListener('pointermove', e => {
   else if (t === 'ruler') { [x, y] = snapPt(x, y); if (e.shiftKey) { const r = D.ruler, a = Math.round(Math.atan2(y - r.y1, x - r.x1) / (Math.PI / 4)) * Math.PI / 4, l = Math.hypot(x - r.x1, y - r.y1); x = r.x1 + Math.cos(a) * l; y = r.y1 + Math.sin(a) * l; } D.ruler.x2 = x; D.ruler.y2 = y; drawOverlay(); const ri = $('#rulerInfo'); if (ri) ri.textContent = `X ${Math.round(D.ruler.x1)}  Y ${Math.round(D.ruler.y1)}   W ${Math.round(x - D.ruler.x1)}  H ${Math.round(y - D.ruler.y1)}   A ${rulerAngle().toFixed(1)}°   L ${Math.hypot(x - D.ruler.x1, y - D.ruler.y1).toFixed(1)} px`; }
   else if (t === 'pcrop') { if (drag.kind === 'pc') pcropState[drag.i] = [x, y]; else { const x0 = Math.min(drag.sx, x), y0 = Math.min(drag.sy, y), x1 = Math.max(drag.sx, x), y1 = Math.max(drag.sy, y); if (x1 - x0 > 4 && y1 - y0 > 4) pcropState = [[x0, y0], [x1, y0], [x1, y1], [x0, y1]]; } drawOverlay(); }
   else if (t === 'gradient') { [x, y] = snapPt(x, y); gradPreview.x2 = x; gradPreview.y2 = y; if (e.shiftKey) { const a = Math.round(Math.atan2(y - gradPreview.y1, x - gradPreview.x1) / (Math.PI / 4)) * Math.PI / 4, l = Math.hypot(x - gradPreview.x1, y - gradPreview.y1); gradPreview.x2 = gradPreview.x1 + Math.cos(a) * l; gradPreview.y2 = gradPreview.y1 + Math.sin(a) * l; } drawOverlay(); }
-  else if (t === 'shape') { [x, y] = snapPt(x, y); let x2 = x, y2 = y; if (e.shiftKey) { const s = Math.max(Math.abs(x - shapePreview.x1), Math.abs(y - shapePreview.y1)); if (shapePreview.type === 'line' || shapePreview.type === 'arrow') { const a = Math.round(Math.atan2(y - shapePreview.y1, x - shapePreview.x1) / (Math.PI / 4)) * Math.PI / 4, l = Math.hypot(x - shapePreview.x1, y - shapePreview.y1); x2 = shapePreview.x1 + Math.cos(a) * l; y2 = shapePreview.y1 + Math.sin(a) * l; } else { x2 = shapePreview.x1 + Math.sign(x - shapePreview.x1 || 1) * s; y2 = shapePreview.y1 + Math.sign(y - shapePreview.y1 || 1) * s; } } shapePreview.x2 = x2; shapePreview.y2 = y2; drawOverlay(); }
+  else if (t === 'shape' || t === 'frame') { [x, y] = snapPt(x, y); let x2 = x, y2 = y; if (e.shiftKey) { const s = Math.max(Math.abs(x - shapePreview.x1), Math.abs(y - shapePreview.y1)); if (shapePreview.type === 'line' || shapePreview.type === 'arrow') { const a = Math.round(Math.atan2(y - shapePreview.y1, x - shapePreview.x1) / (Math.PI / 4)) * Math.PI / 4, l = Math.hypot(x - shapePreview.x1, y - shapePreview.y1); x2 = shapePreview.x1 + Math.cos(a) * l; y2 = shapePreview.y1 + Math.sin(a) * l; } else { x2 = shapePreview.x1 + Math.sign(x - shapePreview.x1 || 1) * s; y2 = shapePreview.y1 + Math.sign(y - shapePreview.y1 || 1) * s; } } shapePreview.x2 = x2; shapePreview.y2 = y2; drawOverlay(); }
   else if (t === 'crop') { cropDragMove(drag, x, y, e); drawOverlay(); }
   else if (t === 'move') {
     if (drag.kind === 'layer') { let dx = x - drag.sx, dy = y - drag.sy; if (e.shiftKey) Math.abs(dx) > Math.abs(dy) ? dy = 0 : dx = 0; if (drag.b && !e.ctrlKey) [dx, dy] = snapBox(drag.b, dx, dy, drag.L); drag.L.x = Math.round(drag.lx + dx); drag.L.y = Math.round(drag.ly + dy); requestRender(); drawOverlay(); }
@@ -826,6 +863,7 @@ vpEl.addEventListener('pointerup', e => {
   else if (t === 'ruler') { renderOptions(); drawOverlay(); }
   else if (t === 'pcrop') drawOverlay();
   else if (t === 'gradient') { const g = gradPreview; gradPreview = null; if (Math.hypot(g.x2 - g.x1, g.y2 - g.y1) > 2) applyGradient(g); drawOverlay(); }
+  else if (t === 'frame') { const s = shapePreview; shapePreview = null; drawOverlay(); const r = normRect({ x: s.x1, y: s.y1, w: s.x2 - s.x1, h: s.y2 - s.y1 }); if (r.w > 4 && r.h > 4) createFrame(r); else { const f = frameAt(s.x1, s.y1); if (f) { D.active = D.layers.indexOf(f); renderLayers(); renderOptions(); if (!f.frame.img) placeIntoFrame(f); } } }
   else if (t === 'shape') { const s = shapePreview; shapePreview = null; drawOverlay(); if (Math.abs(s.x2 - s.x1) > 2 || Math.abs(s.y2 - s.y1) > 2) commitShape(s); }
   else if (t === 'move') { liveLayer = null; smartLines = []; if (d.kind === 'layer') { if (d.L.kind === 'text' && (d.L.x || d.L.y)) { d.L.text.x += d.L.x; d.L.text.y += d.L.y; d.L.x = 0; d.L.y = 0; renderTextLayer(d.L); } if (d.L.x !== d.lx || d.L.y !== d.ly || d.alt) pushHist('Move'); requestRender(); } drawOverlay(); }
 });
@@ -851,7 +889,7 @@ function beginStroke(e, x, y) {
   ensureCovers(L); ensureAdjMask(L);
   const onMask = !!(L.mask && L.editMask) || L.kind === 'adjust';
   if (onMask && L.kind !== 'adjust' && L.mask.width !== L.canvas.width) { const nm = mk(L.canvas.width, L.canvas.height), nc = nm.getContext('2d'); nc.fillStyle = '#fff'; nc.fillRect(0, 0, nm.width, nm.height); nc.drawImage(L.mask, 0, 0); L.mask = nm; }
-  const direct = ['blur', 'dodge', 'colorrep'].includes(t);
+  const direct = ['blur', 'dodge', 'colorrep', 'brighten'].includes(t);
   const maskOnly = ['heal', 'remove'].includes(t);
   let color = O.fg; if (onMask) { const [r, g, b] = hexToRgb(O.fg); const lum = Math.round(0.299 * r + 0.587 * g + 0.114 * b); color = rgbToHex(lum, lum, lum); }
   stroke = { layer: L, buf: mk(D.w, D.h), last: [x, y], acc: 0, erase: t === 'eraser' && !onMask, opacity: maskOnly ? 1 : O.opacity, direct, onMask: onMask && !maskOnly, maskOnly, tool: t, color,
@@ -932,18 +970,19 @@ function directDab(x, y) {
       else { const g = (d[j] + d[j + 1] + d[j + 2]) / 3; const m = O.dodgeMode === 'sponge' ? a * 2 : -a * 2; for (let ch = 0; ch < 3; ch++) d[j + ch] = clamp(d[j + ch] + (g - d[j + ch]) * m, 0, 255); }
     }
   }
+  if (t === 'brighten') brightenDab(d, W, H, weight);
   cx.putImageData(img, x0, y0);
 }
 async function endStroke() {
   const s = stroke; stroke = null; const L = s.layer;
-  if (s.maskOnly) { drawOverlay(); await inpaintLayer(L, s.buf, { tool: s.tool }); return; }
+  if (s.maskOnly) { drawOverlay(); if (s.tool === 'remove' && O.removeMode !== 'object') { await removeDistractions(O.removeMode, s.buf, true); return; } await inpaintLayer(L, s.buf, { tool: s.tool }); return; }
   if (!s.direct) {
     let buf = s.buf;
     if (D.sel) { const b = cloneCanvas(buf), bc = b.getContext('2d'); bc.globalCompositeOperation = 'destination-in'; bc.drawImage(D.sel, 0, 0); buf = b; }
     if (s.onMask) { const mc = L.mask.getContext('2d'); mc.save(); mc.globalAlpha = s.opacity; mc.drawImage(buf, -L.x, -L.y); mc.restore(); L.maskVer = Math.random(); }
     else { const c = L.canvas.getContext('2d'); c.save(); c.globalAlpha = s.opacity; c.globalCompositeOperation = s.erase ? 'destination-out' : 'source-over'; c.drawImage(buf, -L.x, -L.y); c.restore(); }
   }
-  requestRender(); pushHist({ brush: 'Brush', pencil: 'Pencil', eraser: 'Eraser', clone: 'Clone stamp', blur: 'Blur tool', dodge: 'Dodge tool', pstamp: 'Pattern stamp', mixer: 'Mixer brush', colorrep: 'Color replacement' }[s.tool] || 'Paint');
+  requestRender(); pushHist({ brush: 'Brush', pencil: 'Pencil', eraser: 'Eraser', clone: 'Clone stamp', blur: 'Blur tool', dodge: 'Dodge tool', pstamp: 'Pattern stamp', mixer: 'Mixer brush', colorrep: 'Color replacement', brighten: 'Teeth & eye brighten' }[s.tool] || 'Paint');
 }
 
 // =====================================================================  content-aware healing / fill / remove / patch
@@ -983,7 +1022,7 @@ async function inpaintLayer(L, maskC, { tool = 'fill', sampleAll = O.healSample,
 }
 async function contentAwareFillDialog() {
   if (!D) return; if (!D.sel) return toast('Select the area to fill first (lasso around the object)');
-  const L = AL(); if (!L || L.kind !== 'raster') return toast('Select a pixel layer', 'err');
+  const L = AL(); if (!L || L.kind !== 'raster') return toast('Select a pixel layer', 'err'); if (smartBlock(L)) return;
   const v = await form({ title: 'Content-Aware Fill', fields: [{ key: 'sample', label: 'Sample from', type: 'select', value: 'layer', options: [{ value: 'layer', label: 'Current layer' }, { value: 'all', label: 'All layers' }] }, { key: 'out', label: 'Output to', type: 'select', value: 'layer', options: [{ value: 'layer', label: 'Current layer' }, { value: 'new', label: 'New layer' }] }, { key: 'expand', label: 'Expand selection by (px)', type: 'number', value: 3 }], ok: 'Fill' });
   if (!v) return; let m = D.sel; if (+v.expand > 0) m = maskFromAlpha(X.shiftEdge(selAlpha(), D.w, D.h, +v.expand));
   await inpaintLayer(L, m, { tool: 'fill', sampleAll: v.sample === 'all', output: v.out });
@@ -1130,12 +1169,12 @@ function renderTextLayer(L) {
   lines.forEach((ln, i) => c.fillText(ln, ax, t.y + i * t.size * 1.2));
   t.bounds = { x: t.x, y: t.y, w, h: lines.length * t.size * 1.2 };
 }
-function rasterizeLayer() { const L = AL(); if (L?.kind !== 'text') return; L.kind = 'raster'; delete L.text; pushHist('Rasterize type'); renderLayers(); }
+function rasterizeLayer() { const L = AL(); if (!L || !(L.kind === 'text' || L.kind === 'frame' || L.smart)) return; const what = L.kind === 'text' ? 'type' : L.kind === 'frame' ? 'frame' : 'smart filters'; toRaster(L); pushHist('Rasterize ' + what); renderLayers(); renderOptions(); }
 
 // =====================================================================  free transform
 function startTransform() {
   const L = AL(); if (!L || !D) return; if (L.locked) return toast('Layer is locked', 'err'); if (L.kind === 'adjust') return toast('Adjustment layers cannot be transformed', 'err');
-  if (L.kind === 'text') { rasterizeLayer(); }
+  if (L.kind === 'text' || L.kind === 'frame' || L.smart) { rasterizeLayer(); }
   if (T) return;
   ensureCovers(L);
   let src, bx, by;
@@ -1213,7 +1252,7 @@ function applyPerspectiveCrop() {
   if (!pcropState || !D) return; const q = pcropState; const dist = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1]);
   const ow = Math.round((dist(q[0], q[1]) + dist(q[3], q[2])) / 2), oh = Math.round((dist(q[0], q[3]) + dist(q[1], q[2])) / 2); if (ow < 2 || oh < 2) return;
   D.layers.forEach(L => {
-    if (L.kind === 'adjust') { L.mask = null; L.editMask = false; return; } if (L.kind === 'text') { L.kind = 'raster'; delete L.text; }
+    if (L.kind === 'adjust') { L.mask = null; L.editMask = false; return; } toRaster(L);
     if (L.mask) { const mm = mk(D.w, D.h), mc = mm.getContext('2d'); mc.fillStyle = '#fff'; mc.fillRect(0, 0, D.w, D.h); mc.clearRect(L.x, L.y, L.mask.width, L.mask.height); mc.drawImage(L.mask, L.x, L.y); const mo = X.warpPerspective(ctxOf(mm).getImageData(0, 0, D.w, D.h), q, ow, oh), m2 = mk(ow, oh); ctxOf(m2).putImageData(mo, 0, 0); L.mask = m2; L.maskVer = Math.random(); }
     const full = layerDocCanvas(L), out = X.warpPerspective(ctxOf(full).getImageData(0, 0, D.w, D.h), q, ow, oh); const n = mk(ow, oh); ctxOf(n).putImageData(out, 0, 0); L.canvas = n; L.x = 0; L.y = 0;
   });
@@ -1234,7 +1273,7 @@ async function copy(merged = false) {
   toast(merged ? (ok ? 'Merged image copied to the clipboard' : 'Merged image copied') : 'Copied');
 }
 async function cut() { if (!D) return; await copy(); clearSel(); }
-function clearSel() { const L = AL(); if (!D || !L || L.locked || L.kind === 'adjust') return; ensureCovers(L); const c = L.canvas.getContext('2d'); c.save(); c.globalCompositeOperation = 'destination-out'; c.drawImage(selOrAll(), -L.x, -L.y); c.restore(); requestRender(); pushHist('Clear'); }
+function clearSel() { const L = AL(); if (!D || !L || L.locked || L.kind === 'adjust' || smartBlock(L)) return; ensureCovers(L); const c = L.canvas.getContext('2d'); c.save(); c.globalCompositeOperation = 'destination-out'; c.drawImage(selOrAll(), -L.x, -L.y); c.restore(); requestRender(); pushHist('Clear'); }
 async function paste() {
   let src = null;
   try { const items = await navigator.clipboard.read(); for (const it of items) { const type = it.types.find(t => t.startsWith('image/')); if (type) { const bmp = await createImageBitmap(await it.getType(type)); const c = mk(bmp.width, bmp.height); c.getContext('2d').drawImage(bmp, 0, 0); src = { canvas: c, x: null, y: null }; break; } } } catch {}
@@ -1249,7 +1288,7 @@ UI.shortcut('ctrl+c', () => copy()); UI.shortcut('ctrl+shift+c', () => copy(true
 UI.shortcut('delete', clearSel); UI.shortcut('backspace', clearSel);
 UI.shortcut('alt+backspace', () => quickFill(O.fg)); UI.shortcut('ctrl+backspace', () => quickFill(O.bg));
 UI.shortcut('ctrl+a', selectAll); UI.shortcut('ctrl+d', deselect); UI.shortcut('ctrl+shift+d', reselect); UI.shortcut('ctrl+shift+i', invertSel);
-function quickFill(color, opacity = 1) { const L = AL(); if (!D || !L || L.locked || L.kind === 'adjust') return; withSelection(L, (c) => { c.save(); c.globalAlpha = opacity; c.fillStyle = color; c.fillRect(0, 0, c.canvas.width, c.canvas.height); c.restore(); }); requestRender(); pushHist('Fill'); }
+function quickFill(color, opacity = 1) { const L = AL(); if (!D || !L || L.locked || L.kind === 'adjust' || smartBlock(L)) return; if (L.kind === 'text' || L.kind === 'frame') return toast('Rasterize the layer first', 'err'); withSelection(L, (c) => { c.save(); c.globalAlpha = opacity; c.fillStyle = color; c.fillRect(0, 0, c.canvas.width, c.canvas.height); c.restore(); }); requestRender(); pushHist('Fill'); }
 async function fillDialog() {
   if (!D) return; const v = await form({ title: 'Fill', fields: [{ key: 'what', label: 'Contents', type: 'select', value: 'fg', options: [{ value: 'fg', label: 'Foreground color' }, { value: 'bg', label: 'Background color' }, { value: 'color', label: 'Custom color' }, { value: 'gray', label: '50% gray' }, { value: 'white', label: 'White' }, { value: 'black', label: 'Black' }, { value: 'pattern', label: 'Pattern' }, { value: 'content', label: 'Content-aware' }] }, { key: 'color', label: 'Custom color', type: 'color', value: '#ff0000' }, { key: 'pat', label: 'Pattern', type: 'select', value: O.pattern, options: PATTERNS.map((p, i) => ({ value: i, label: p.name })) }, { key: 'op', label: 'Opacity %', type: 'range', min: 1, max: 100, value: 100 }] });
   if (!v) return;
@@ -1266,8 +1305,8 @@ async function strokeDialog() {
   const rc = maskFromAlpha(ring), x = rc.getContext('2d'); x.globalCompositeOperation = 'source-in'; x.fillStyle = v.color; x.fillRect(0, 0, D.w, D.h);
   L.canvas.getContext('2d').drawImage(rc, -L.x, -L.y); requestRender(); pushHist('Stroke');
 }
-function flipLayer(horiz) { const L = AL(); if (!L || L.kind === 'adjust') return; if (L.kind === 'text') rasterizeLayer(); ensureCovers(L); const c = cloneCanvas(L.canvas), x = L.canvas.getContext('2d'); x.clearRect(0, 0, c.width, c.height); x.save(); horiz ? (x.translate(c.width, 0), x.scale(-1, 1)) : (x.translate(0, c.height), x.scale(1, -1)); x.drawImage(c, 0, 0); x.restore(); requestRender(); pushHist(horiz ? 'Flip horizontal' : 'Flip vertical'); }
-function rotateLayer(deg) { const L = AL(); if (!L || L.kind === 'adjust') return; if (L.kind === 'text') rasterizeLayer(); const b = alphaBounds(L.canvas); if (!b) return; const src = mk(b.w, b.h); src.getContext('2d').drawImage(L.canvas, -b.x, -b.y); L.canvas.getContext('2d').clearRect(b.x, b.y, b.w, b.h); const t = { layer: L, src, w: b.w, h: b.h, tx: L.x + b.x + b.w / 2, ty: L.y + b.y + b.h / 2, sx: 1, sy: 1, rot: deg * Math.PI / 180 }; T = t; commitTransform(); }
+function flipLayer(horiz) { const L = AL(); if (!L || L.kind === 'adjust') return; if (L.kind === 'text' || L.kind === 'frame' || L.smart) rasterizeLayer(); ensureCovers(L); const c = cloneCanvas(L.canvas), x = L.canvas.getContext('2d'); x.clearRect(0, 0, c.width, c.height); x.save(); horiz ? (x.translate(c.width, 0), x.scale(-1, 1)) : (x.translate(0, c.height), x.scale(1, -1)); x.drawImage(c, 0, 0); x.restore(); requestRender(); pushHist(horiz ? 'Flip horizontal' : 'Flip vertical'); }
+function rotateLayer(deg) { const L = AL(); if (!L || L.kind === 'adjust') return; if (L.kind === 'text' || L.kind === 'frame' || L.smart) rasterizeLayer(); const b = alphaBounds(L.canvas); if (!b) return; const src = mk(b.w, b.h); src.getContext('2d').drawImage(L.canvas, -b.x, -b.y); L.canvas.getContext('2d').clearRect(b.x, b.y, b.w, b.h); const t = { layer: L, src, w: b.w, h: b.h, tx: L.x + b.x + b.w / 2, ty: L.y + b.y + b.h / 2, sx: 1, sy: 1, rot: deg * Math.PI / 180 }; T = t; commitTransform(); }
 function alignLayer(kind) { const L = AL(); if (!L || L.kind === 'adjust') return; const b = alphaBounds(L.canvas); if (!b) return; const ax = L.x + b.x, ay = L.y + b.y; const ox = L.x, oy = L.y; if (kind === 'alignL') L.x -= ax; if (kind === 'alignC') L.x += Math.round((D.w - b.w) / 2 - ax); if (kind === 'alignR') L.x += D.w - b.w - ax; if (kind === 'alignT') L.y -= ay; if (kind === 'alignM') L.y += Math.round((D.h - b.h) / 2 - ay); if (kind === 'alignB') L.y += D.h - b.h - ay; if (L.kind === 'text') { L.text.x += L.x - ox; L.text.y += L.y - oy; renderTextLayer(L); } requestRender(); pushHist('Align'); }
 
 // =====================================================================  image operations
@@ -1288,7 +1327,9 @@ async function imageSizeDialog() {
 }
 function resizeImage(nw, nh, q = 'high') {
   const kx = nw / D.w, ky = nh / D.h;
-  D.layers.forEach(L => { if (L.kind !== 'adjust') { L.canvas = resampleCanvas(L.canvas, Math.max(1, Math.round(L.canvas.width * kx)), Math.max(1, Math.round(L.canvas.height * ky)), q); } L.x = Math.round(L.x * kx); L.y = Math.round(L.y * ky); if (L.mask) { const m = mk(Math.max(1, L.mask.width * kx), Math.max(1, L.mask.height * ky)); m.getContext('2d').drawImage(L.mask, 0, 0, m.width, m.height); L.mask = m; L.maskVer = Math.random(); } if (L.kind === 'text') { L.text.x *= kx; L.text.y *= ky; L.text.size = Math.round(L.text.size * ky); } });
+  D.layers.forEach(L => { if (L.kind !== 'adjust') { L.canvas = resampleCanvas(L.canvas, Math.max(1, Math.round(L.canvas.width * kx)), Math.max(1, Math.round(L.canvas.height * ky)), q); } L.x = Math.round(L.x * kx); L.y = Math.round(L.y * ky); if (L.mask) { const m = mk(Math.max(1, L.mask.width * kx), Math.max(1, L.mask.height * ky)); m.getContext('2d').drawImage(L.mask, 0, 0, m.width, m.height); L.mask = m; L.maskVer = Math.random(); } if (L.kind === 'text') { L.text.x *= kx; L.text.y *= ky; L.text.size = Math.round(L.text.size * ky); }
+    if (L.kind === 'frame') { L.frame.w *= kx; L.frame.h *= ky; L.frame.ox *= kx; L.frame.oy *= ky; renderFrameLayer(L); }
+    if (L.smart) { L.smart.orig = resampleCanvas(L.smart.orig, L.canvas.width, L.canvas.height, q); L.smart.filters.forEach(f => { if (f.mask) f.mask = resampleCanvas(f.mask, L.canvas.width, L.canvas.height, 'high'); }); L.canvas = smartRecompute(L); } });
   D.w = nw; D.h = nh; setSel(null); D.layers.filter(l => l.kind === 'text').forEach(renderTextLayer); fitView(); requestRender(); pushHist('Image size');
 }
 function anchorPicker(val = 'c', onchange) {
@@ -1351,7 +1392,7 @@ async function expandDialog() {
 }
 function rotateCanvas(deg) {
   if (!D) return; const W = D.w, H = D.h, swap = Math.abs(deg) === 90;
-  D.layers.forEach(L => { if (L.kind === 'adjust') { if (L.mask) { const m = mk(swap ? H : W, swap ? W : H), mc = m.getContext('2d'); mc.translate(m.width / 2, m.height / 2); mc.rotate(deg * Math.PI / 180); mc.drawImage(L.mask, -W / 2, -H / 2); L.mask = m; L.maskVer = Math.random(); } return; } if (L.kind === 'text') { L.kind = 'raster'; delete L.text; } ensureCovers(L); const full = mk(W, H); full.getContext('2d').drawImage(L.canvas, L.x, L.y); const n = mk(swap ? H : W, swap ? W : H), c = n.getContext('2d'); c.translate(n.width / 2, n.height / 2); c.rotate(deg * Math.PI / 180); c.drawImage(full, -W / 2, -H / 2); if (L.mask) { const mm = mk(W, H), mmc = mm.getContext('2d'); mmc.fillStyle = '#fff'; mmc.fillRect(0, 0, W, H); mmc.clearRect(L.x, L.y, L.mask.width, L.mask.height); mmc.drawImage(L.mask, L.x, L.y); const m = mk(n.width, n.height), mc = m.getContext('2d'); mc.translate(n.width / 2, n.height / 2); mc.rotate(deg * Math.PI / 180); mc.drawImage(mm, -W / 2, -H / 2); L.mask = m; L.maskVer = Math.random(); } L.canvas = n; L.x = 0; L.y = 0; });
+  D.layers.forEach(L => { if (L.kind === 'adjust') { if (L.mask) { const m = mk(swap ? H : W, swap ? W : H), mc = m.getContext('2d'); mc.translate(m.width / 2, m.height / 2); mc.rotate(deg * Math.PI / 180); mc.drawImage(L.mask, -W / 2, -H / 2); L.mask = m; L.maskVer = Math.random(); } return; } toRaster(L); ensureCovers(L); const full = mk(W, H); full.getContext('2d').drawImage(L.canvas, L.x, L.y); const n = mk(swap ? H : W, swap ? W : H), c = n.getContext('2d'); c.translate(n.width / 2, n.height / 2); c.rotate(deg * Math.PI / 180); c.drawImage(full, -W / 2, -H / 2); if (L.mask) { const mm = mk(W, H), mmc = mm.getContext('2d'); mmc.fillStyle = '#fff'; mmc.fillRect(0, 0, W, H); mmc.clearRect(L.x, L.y, L.mask.width, L.mask.height); mmc.drawImage(L.mask, L.x, L.y); const m = mk(n.width, n.height), mc = m.getContext('2d'); mc.translate(n.width / 2, n.height / 2); mc.rotate(deg * Math.PI / 180); mc.drawImage(mm, -W / 2, -H / 2); L.mask = m; L.maskVer = Math.random(); } L.canvas = n; L.x = 0; L.y = 0; });
   if (swap) { D.w = H; D.h = W; } setSel(null); fitView(); requestRender(); pushHist('Rotate canvas');
 }
 // arbitrary rotation: mode 'crop' (largest same-aspect rectangle), 'expand' (grow canvas), 'fill' (keep size, content-aware fill corners)
@@ -1360,7 +1401,7 @@ async function rotateArbitrary(deg, mode = 'crop') {
   let nw = W, nh = H; if (mode === 'expand') { nw = Math.ceil(W * ca + H * sa); nh = Math.ceil(W * sa + H * ca); }
   else if (mode === 'crop') { const k = Math.min(W / (W * ca + H * sa), H / (W * sa + H * ca)); nw = Math.floor(W * k); nh = Math.floor(H * k); }
   const rot = (src, fillWhite) => { const n = mk(nw, nh), c = n.getContext('2d'); if (fillWhite) { c.fillStyle = '#fff'; c.fillRect(0, 0, nw, nh); } c.translate(nw / 2, nh / 2); c.rotate(a); c.imageSmoothingQuality = 'high'; c.drawImage(src, -W / 2, -H / 2); return n; };
-  D.layers.forEach(L => { if (L.kind === 'adjust') { if (L.mask) { L.mask = rot(L.mask, true); L.maskVer = Math.random(); } return; } if (L.kind === 'text') { L.kind = 'raster'; delete L.text; } L.canvas = rot(layerDocCanvas(L)); if (L.mask) { const mm = mk(W, H), mmc = mm.getContext('2d'); mmc.fillStyle = '#fff'; mmc.fillRect(0, 0, W, H); mmc.clearRect(L.x, L.y, L.mask.width, L.mask.height); mmc.drawImage(L.mask, L.x, L.y); L.mask = rot(mm, true); L.maskVer = Math.random(); } L.x = 0; L.y = 0; });
+  D.layers.forEach(L => { if (L.kind === 'adjust') { if (L.mask) { L.mask = rot(L.mask, true); L.maskVer = Math.random(); } return; } toRaster(L); L.canvas = rot(layerDocCanvas(L)); if (L.mask) { const mm = mk(W, H), mmc = mm.getContext('2d'); mmc.fillStyle = '#fff'; mmc.fillRect(0, 0, W, H); mmc.clearRect(L.x, L.y, L.mask.width, L.mask.height); mmc.drawImage(L.mask, L.x, L.y); L.mask = rot(mm, true); L.maskVer = Math.random(); } L.x = 0; L.y = 0; });
   D.w = nw; D.h = nh; setSel(null); fitView(); requestRender(); pushHist('Rotate ' + (Math.round(deg * 10) / 10) + '°');
   if (mode === 'fill') await expandFill('Content-aware edges');
 }
@@ -1380,7 +1421,7 @@ async function autoStraighten() {
   if (Math.abs(tilt) < 0.15) return toast('The image already looks straight');
   await rotateArbitrary(-tilt, 'crop'); toast(`Straightened by ${(-tilt).toFixed(1)}°`, 'ok');
 }
-function flipCanvas(horiz) { if (!D) return; D.layers.forEach(L => { if (L.kind === 'adjust') { if (L.mask) { const c = cloneCanvas(L.mask), x = L.mask.getContext('2d'); x.clearRect(0, 0, c.width, c.height); x.save(); horiz ? (x.translate(c.width, 0), x.scale(-1, 1)) : (x.translate(0, c.height), x.scale(1, -1)); x.drawImage(c, 0, 0); x.restore(); L.maskVer = Math.random(); } return; } if (L.kind === 'text') { L.kind = 'raster'; delete L.text; } ensureCovers(L); const c = cloneCanvas(L.canvas), x = L.canvas.getContext('2d'); x.clearRect(0, 0, c.width, c.height); x.save(); horiz ? (x.translate(c.width, 0), x.scale(-1, 1)) : (x.translate(0, c.height), x.scale(1, -1)); x.drawImage(c, 0, 0); x.restore(); if (L.mask) { const m = cloneCanvas(L.mask), mx = L.mask.getContext('2d'); mx.clearRect(0, 0, m.width, m.height); mx.save(); horiz ? (mx.translate(m.width, 0), mx.scale(-1, 1)) : (mx.translate(0, m.height), mx.scale(1, -1)); mx.drawImage(m, 0, 0); mx.restore(); L.maskVer = Math.random(); } if (horiz) L.x = D.w - L.x - c.width; else L.y = D.h - L.y - c.height; }); requestRender(); pushHist('Flip canvas'); }
+function flipCanvas(horiz) { if (!D) return; D.layers.forEach(L => { if (L.kind === 'adjust') { if (L.mask) { const c = cloneCanvas(L.mask), x = L.mask.getContext('2d'); x.clearRect(0, 0, c.width, c.height); x.save(); horiz ? (x.translate(c.width, 0), x.scale(-1, 1)) : (x.translate(0, c.height), x.scale(1, -1)); x.drawImage(c, 0, 0); x.restore(); L.maskVer = Math.random(); } return; } toRaster(L); ensureCovers(L); const c = cloneCanvas(L.canvas), x = L.canvas.getContext('2d'); x.clearRect(0, 0, c.width, c.height); x.save(); horiz ? (x.translate(c.width, 0), x.scale(-1, 1)) : (x.translate(0, c.height), x.scale(1, -1)); x.drawImage(c, 0, 0); x.restore(); if (L.mask) { const m = cloneCanvas(L.mask), mx = L.mask.getContext('2d'); mx.clearRect(0, 0, m.width, m.height); mx.save(); horiz ? (mx.translate(m.width, 0), mx.scale(-1, 1)) : (mx.translate(0, m.height), mx.scale(1, -1)); mx.drawImage(m, 0, 0); mx.restore(); L.maskVer = Math.random(); } if (horiz) L.x = D.w - L.x - c.width; else L.y = D.h - L.y - c.height; }); requestRender(); pushHist('Flip canvas'); }
 function cropToSelection() { if (!D?.sel) return; const b = maskBounds(D.sel); if (!b) return; cropState = b; applyCrop(); cropState = null; drawOverlay(); }
 function trimCanvas(based = 'transparent') {
   if (!D) return; const flat = flattenCanvas(); let b;
@@ -1536,16 +1577,17 @@ function renderLayers() {
     const thumbs = [h('div', { class: 'lt' + (!l.editMask || !l.mask || l.kind === 'adjust' ? ' sel' : ''), 'data-tip': l.kind === 'adjust' ? 'Double-click to edit the adjustment' : '', onclick: e => { e.stopPropagation(); D.active = i; l.editMask = false; renderLayers(); }, ondblclick: e => { e.stopPropagation(); if (l.kind === 'adjust') { D.active = i; editActiveLayer(); } } }, layerThumb(l))];
     if (l.mask) { const mc = h('canvas', { width: 88, height: 68 }); const mx = mc.getContext('2d'); mx.drawImage(l.mask, 0, 0, 88, 68); thumbs.push(h('div', { class: 'lt' + (l.editMask && l.kind !== 'adjust' ? ' sel' : ''), 'data-tip': 'Layer mask', onclick: e => { e.stopPropagation(); D.active = i; l.editMask = true; renderLayers(); } }, mc)); }
     const hasFx = Object.keys(l.fx || {}).some(k => l.fx[k]);
-    const nm = h('div', { class: 'nm' }, l.name, l.kind === 'text' ? h('span', { class: 'badge' }, '  T') : '', l.locked ? h('span', { class: 'badge' }, '  🔒') : '');
+    const nm = h('div', { class: 'nm' }, l.name, l.kind === 'text' ? h('span', { class: 'badge' }, '  T') : '', l.kind === 'frame' ? h('span', { class: 'badge' }, '  ▢ frame') : '', l.smart ? h('span', { class: 'badge' }, '  ◆ smart') : '', l.locked ? h('span', { class: 'badge' }, '  🔒') : '');
     const fxB = hasFx ? h('span', { class: 'fx-badge', 'data-tip': 'Layer style — double-click to edit', ondblclick: e => { e.stopPropagation(); D.active = i; layerStyleDialog(); }, onclick: e => { e.stopPropagation(); D.active = i; layerStyleDialog(); } }, 'fx') : '';
     const row = h('div', { class: 'layer' + (i === D.active ? ' active' : '') + (l.kind === 'adjust' ? ' adj' : ''), draggable: 'true' },
       h('div', { class: 'vis', html: icon(l.visible ? 'eye' : 'eyeOff'), onclick: e => { e.stopPropagation(); l.visible = !l.visible; requestRender(); renderLayers(); } }), ...thumbs, nm, fxB);
     row.onclick = () => { D.active = i; renderLayers(); if (rtab === 'looks') renderLooks(); };
     row.ondblclick = e => { if (e.target.closest('.vis,.lt,.fx-badge')) return; const inp = h('input', { type: 'text', value: l.name }); nm.innerHTML = ''; nm.append(inp); inp.focus(); inp.select(); const done = () => { l.name = inp.value || l.name; renderLayers(); }; inp.onblur = done; inp.onkeydown = ev => { ev.stopPropagation(); if (ev.key === 'Enter') inp.blur(); }; };
-    row.oncontextmenu = e => { D.active = i; renderLayers(); contextMenu(e, [{ label: 'Duplicate layer', action: duplicateLayer }, { label: 'Delete layer', action: deleteLayer }, { label: 'Rename…', action: renameLayer }, ...(l.kind === 'adjust' ? [{ label: 'Edit adjustment…', action: editActiveLayer }] : []), '-', { label: 'Add mask', action: () => addMask('all') }, { label: 'Layer style…', action: () => layerStyleDialog(), disabled: l.kind === 'adjust' }, { label: 'Copy layer style', action: copyFx }, { label: 'Paste layer style', action: pasteFx, disabled: !fxClipboard }, { label: 'Clear layer style', action: clearFx }, { label: 'Rasterize', action: rasterizeLayer, disabled: l.kind !== 'text' }, '-', { label: 'Merge down', action: mergeDown }, { label: 'Flatten image', action: flatten }]); };
+    row.oncontextmenu = e => { D.active = i; renderLayers(); contextMenu(e, [{ label: 'Duplicate layer', action: duplicateLayer }, { label: 'Delete layer', action: deleteLayer }, { label: 'Rename…', action: renameLayer }, ...(l.kind === 'adjust' ? [{ label: 'Edit adjustment…', action: editActiveLayer }] : []), '-', { label: 'Add mask', action: () => addMask('all') }, { label: 'Layer style…', action: () => layerStyleDialog(), disabled: l.kind === 'adjust' }, { label: 'Copy layer style', action: copyFx }, { label: 'Paste layer style', action: pasteFx, disabled: !fxClipboard }, { label: 'Clear layer style', action: clearFx }, { label: 'Rasterize', action: rasterizeLayer, disabled: !(l.kind === 'text' || l.kind === 'frame' || l.smart) }, { label: 'Convert for smart filters', action: () => convertToSmart(l), disabled: l.kind !== 'raster' || !!l.smart }, ...(l.kind === 'frame' ? [{ label: 'Place image into frame…', action: () => placeIntoFrame(l) }] : []), { label: 'Harmonize…', action: harmonizeDialog, disabled: i === 0 || l.kind === 'adjust' }, '-', { label: 'Merge down', action: mergeDown }, { label: 'Flatten image', action: flatten }]); };
     row.ondragstart = () => dragLayer = i; row.ondragover = e => { e.preventDefault(); row.classList.add('drag-over'); }; row.ondragleave = () => row.classList.remove('drag-over');
     row.ondrop = e => { e.preventDefault(); if (dragLayer == null || dragLayer === i) return; const [m] = D.layers.splice(dragLayer, 1); D.layers.splice(i, 0, m); D.active = i; dragLayer = null; requestRender(); pushHist('Reorder layers'); };
     b.append(row);
+    if (l.smart) b.append(smartRows(l, i));
   });
   b.scrollTop = st;
 }
@@ -1625,6 +1667,7 @@ const ADJ = [
   { id: 'selcolor', name: 'Selective Color', icon: 'adjust', custom: 'selcolor', defaults: () => ({ rel: true, adj: Object.fromEntries(X.SC_COLORS.map(c => [c, [0, 0, 0, 0]])) }), fn: A.selectiveColor },
   { id: 'shhl', name: 'Shadows/Highlights', icon: 'adjust', params: [rng('s', 'Shadows amount', 0, 100, 35), rng('hl', 'Highlights amount', 0, 100, 0), rng('r', 'Radius (px)', 1, 200, 30), rng('c', 'Color correction', -100, 100, 0)], fn: A.shadowsHighlights },
   { id: 'temp', name: 'Temperature/Tint', icon: 'adjust', params: [rng('t', 'Temperature (cool ↔ warm)', -100, 100, 0), rng('n', 'Tint (green ↔ magenta)', -100, 100, 0)], fn: (img, p) => A.tempTint(img, { t: p.t, n: -p.n }) },
+  { id: 'colorvib', name: 'Color & Vibrance', icon: 'adjust', params: [rng('t', 'Temperature (cool ↔ warm)', -100, 100, 0), rng('n', 'Tint (green ↔ magenta)', -100, 100, 0), rng('v', 'Vibrance', -100, 100, 0), rng('s', 'Saturation', -100, 100, 0)], fn: (img, p) => { if (p.t || p.n) A.tempTint(img, { t: p.t, n: -p.n }); if (p.v || p.s) A.vibrance(img, { v: p.v, s: p.s }); } },
   { id: 'clarity', name: 'Clarity', icon: 'adjust', params: [rng('a', 'Clarity', -100, 100, 30)], fn: A.clarity },
   { id: 'dehaze', name: 'Dehaze', icon: 'adjust', params: [rng('a', 'Amount', -100, 100, 40)], fn: A.dehaze },
   { id: 'invert', name: 'Invert', icon: 'swap', kbd: 'Ctrl+I', fn: img => applyLut(img.data, lut(i => 255 - i)) },
@@ -1636,10 +1679,11 @@ const ADJ = [
   { id: 'posterize', name: 'Posterize', icon: 'grid', params: [rng('n', 'Levels', 2, 32, 4)], fn: A.posterize },
   { id: 'threshold', name: 'Threshold', icon: 'adjust', params: [rng('t', 'Threshold level', 1, 255, 128)], fn: A.threshold },
   { id: 'match', name: 'Match Color', icon: 'adjust', custom: 'match', layer: false, fn: A.matchColor },
+  { id: 'fglight', name: 'Foreground lighting', icon: 'sky', layer: false, params: [rng('amt', 'Amount %', 0, 150, 55)], fn: (img, p) => { const k = (p.amt ?? 55) / 100, gr = 1 + ((p.gr ?? 1) - 1) * k, gg = 1 + ((p.gg ?? 1) - 1) * k, gb = 1 + ((p.gb ?? 1) - 1) * k, d = img.data; for (let i = 0; i < d.length; i += 4) { d[i] *= gr; d[i + 1] *= gg; d[i + 2] *= gb; } } },
   { id: 'look', name: 'Look', icon: 'looks', layer: false, hidden: true, fn: (img, p, ctx) => { const lk = X.LOOKS.find(l => l.id === p.look); if (!lk) return; const o = new Uint8ClampedArray(img.data); lk.fn(img, ctx); const k = clamp((p.amt ?? 100) / 100, 0, 1); if (k < 1) { const d = img.data; for (let i = 0; i < d.length; i += 4) { d[i] = o[i] + (d[i] - o[i]) * k; d[i + 1] = o[i + 1] + (d[i + 1] - o[i + 1]) * k; d[i + 2] = o[i + 2] + (d[i + 2] - o[i + 2]) * k; } } } },
 ];
 const ADJ_BY_ID = Object.fromEntries(ADJ.map(a => [a.id, a]));
-ADJ.splice(ADJ.findIndex(a => a.id === 'look'), 1); // looks are reached from the Looks panel
+['look', 'fglight'].forEach(id => ADJ.splice(ADJ.findIndex(a => a.id === id), 1)); // looks: Looks panel; foreground lighting: sky replacement
 const defaultsOf = a => a.defaults ? a.defaults() : Object.fromEntries((a.params || []).filter(p => p.type !== 'note').map(p => [p.key, p.value]));
 ADJ.forEach(a => { if (a.kbd) UI.shortcut(a.kbd.toLowerCase(), () => runAdjust(a)); });
 UI.shortcut('ctrl+shift+l', () => quickAdj(A.autoTone, 'Auto tone')); UI.shortcut('ctrl+shift+b', () => quickAdj(A.autoColor, 'Auto color')); UI.shortcut('ctrl+alt+shift+l', () => quickAdj(A.autoContrast, 'Auto contrast'));
@@ -1652,7 +1696,7 @@ function layerImageOp(L, fn, params) {
   if (D.sel) { const sa = ctxOf(D.sel).getImageData(0, 0, D.w, D.h).data, d = img.data, W = L.canvas.width; for (let y = 0; y < L.canvas.height; y++) { const dy = y + L.y; for (let x = 0; x < W; x++) { const dx = x + L.x, j = (y * W + x) * 4; const a = dx < 0 || dy < 0 || dx >= D.w || dy >= D.h ? 0 : sa[(dy * D.w + dx) * 4 + 3] / 255; if (a >= 1) continue; for (let k = 0; k < 4; k++) d[j + k] = orig[j + k] + (d[j + k] - orig[j + k]) * a; } } }
   c.putImageData(img, 0, 0);
 }
-function quickAdj(fn, name) { const L = AL(); if (!D || !L || L.kind !== 'raster') return toast('Select a pixel layer', 'err'); layerImageOp(L, fn, {}); requestRender(); pushHist(name); }
+function quickAdj(fn, name) { const L = AL(); if (!D || !L || L.kind !== 'raster') return toast('Select a pixel layer', 'err'); if (smartBlock(L)) return; layerImageOp(L, fn, {}); requestRender(); pushHist(name); }
 function editActiveLayer() { const L = AL(); if (L?.kind !== 'adjust') return; if (L.adj.type === 'look') return showTab('looks'); const a = ADJ_BY_ID[L.adj.type]; if (a) adjustLayerDialog(a, L, false); }
 async function runAdjust(a, { asLayer = false } = {}) {
   if (!D) return toast('Open an image first');
@@ -1664,7 +1708,7 @@ async function runAdjust(a, { asLayer = false } = {}) {
     if (!a.params && !a.custom) { pushHist('New ' + a.name + ' layer'); return; }
     return adjustLayerDialog(a, L, true);
   }
-  const L = AL(); if (!L) return; if (L.kind === 'adjust') return toast('Select a pixel layer (or use Layer › New adjustment layer)', 'err'); if (L.kind === 'text') return toast('Rasterize the text layer first', 'err'); if (L.locked) return toast('Layer is locked', 'err');
+  const L = AL(); if (!L) return; if (L.kind === 'adjust') return toast('Select a pixel layer (or use Layer › New adjustment layer)', 'err'); if (L.kind === 'text' || L.kind === 'frame') return toast('Rasterize the layer first', 'err'); if (L.locked) return toast('Layer is locked', 'err'); if (smartBlock(L)) return;
   if (a.custom === 'match') return matchColorDialog();
   if (!a.params && !a.custom) { layerImageOp(L, a.fn, {}); requestRender(); pushHist(a.name); return; }
   ensureCovers(L); const orig = cloneCanvas(L.canvas); let timer = null, vals = defaultsOf(a);
@@ -1685,6 +1729,7 @@ async function adjustLayerDialog(a, L, isNew) {
 }
 function adjustBody(a, vals, onChange) {
   const el = h('div', { class: 'ph-fields' });
+  if (a.params || a.custom) el.append(presetRow(a, vals, () => { const nb = adjustBody(a, vals, onChange); el.replaceWith(nb); onChange(); }).el);
   if (a.custom === 'curves') el.append(curvesWidget(vals, onChange));
   else if (a.custom === 'selcolor') el.append(selColorWidget(vals, onChange));
   else buildFields(el, a.params, vals, () => onChange());
@@ -1736,7 +1781,7 @@ async function matchColorDialog() {
 
 // =====================================================================  filters
 const F = X.flt;
-const FILTER_CATS = ['Blur', 'Sharpen', 'Noise', 'Pixelate', 'Stylize', 'Distort', 'Render'];
+const FILTER_CATS = ['Blur', 'Sharpen', 'Noise', 'Pixelate', 'Stylize', 'Distort', 'Render', 'Portrait'];
 const pt = (dx = 50, dy = 50) => [rng('x', 'Center X %', 0, 100, dx), rng('y', 'Center Y %', 0, 100, dy)];
 const FILTERS = [
   { id: 'gauss', cat: 'Blur', name: 'Gaussian Blur', icon: 'blur', params: [rng('r', 'Radius (px)', 0.1, 250, 4, 0.1)], fn: (img, p, ctx) => X.gaussian(img, p.r * (ctx?.scale || 1)) },
@@ -1769,6 +1814,7 @@ const FILTERS = [
   { id: 'vignette', cat: 'Render', name: 'Vignette', icon: 'ellipse', params: [rng('a', 'Amount % (− = white)', -100, 100, 55), rng('s', 'Midpoint %', 0, 100, 45), rng('f', 'Feather %', 2, 100, 55), rng('round', 'Roundness %', 0, 100, 0), { key: 'c', label: 'Color', type: 'color', value: '#000000' }], fn: F.vignette },
   { id: 'flare', cat: 'Render', name: 'Lens Flare', icon: 'fx', params: [rng('x', 'Position X %', 0, 100, 25), rng('y', 'Position Y %', 0, 100, 25), rng('b', 'Brightness %', 10, 300, 100), { key: 'type', label: 'Lens type', type: 'select', value: 'prime', options: [{ value: 'prime', label: '50mm prime' }, { value: 'zoom', label: '105mm zoom' }, { value: 'anamorphic', label: 'Anamorphic (blue streak)' }] }], fn: F.lensFlare, point: true },
   { id: 'clouds', cat: 'Render', name: 'Clouds', icon: 'blur', params: [rng('sc', 'Scale (px)', 8, 2000, 220), rng('oct', 'Detail', 1, 9, 6), rng('rough', 'Roughness %', 20, 80, 50), rng('con', 'Contrast', 0, 100, 20), rng('seed', 'Seed', 1, 999, 5), { key: 'diff', label: 'Difference clouds', type: 'checkbox', value: false }], fn: F.clouds, note: 'Uses the foreground and background colors' },
+  { id: 'skin', cat: 'Portrait', name: 'Skin Smoothing', icon: 'blur', params: [rng('amt', 'Smoothness %', 0, 100, 60), rng('r', 'Radius (px)', 1, 40, 8), rng('detail', 'Keep skin texture %', 0, 100, 25), { key: 'onlySkin', label: 'Only skin tones', type: 'checkbox', value: true }], fn: F.skinSmooth },
 ];
 UI.shortcut('ctrl+f', () => repeatFilter()); UI.shortcut('ctrl+shift+x', () => liquifyDialog());
 function filterRegion(L) {
@@ -1778,13 +1824,14 @@ function filterRegion(L) {
   return x1 > x0 && y1 > y0 ? { x: x0, y: y0, w: x1 - x0, h: y1 - y0 } : null;
 }
 function applyFilterToLayer(L, Fd, vals) {
+  if (L.smart || (O.smartFilters && L.kind === 'raster')) return applySmartFilter(L, Fd, vals);
   ensureCovers(L); const r = filterRegion(L); if (!r) return false;
   const c = ctxOf(L.canvas), img = c.getImageData(r.x - L.x, r.y - L.y, r.w, r.h), orig = D.sel ? new Uint8ClampedArray(img.data) : null;
   Fd.fn(img, vals, { scale: 1, fg: O.fg, bg: O.bg, ox: r.x, oy: r.y });
   if (D.sel) { const sa = ctxOf(D.sel).getImageData(r.x, r.y, r.w, r.h).data, d = img.data; for (let i = 0; i < d.length; i += 4) { const a = sa[i + 3] / 255; if (a >= 1) continue; for (let k = 0; k < 4; k++) d[i + k] = orig[i + k] + (d[i + k] - orig[i + k]) * a; } }
   c.putImageData(img, r.x - L.x, r.y - L.y); return true;
 }
-function checkPixelLayer() { const L = AL(); if (!D || !L) { toast('Open an image first'); return null; } if (L.kind === 'adjust') { toast('Select a pixel layer — filters do not apply to adjustment layers', 'err'); return null; } if (L.kind === 'text') { toast('Rasterize the text layer first', 'err'); return null; } if (L.locked) { toast('Layer is locked', 'err'); return null; } return L; }
+function checkPixelLayer() { const L = AL(); if (!D || !L) { toast('Open an image first'); return null; } if (L.kind === 'adjust') { toast('Select a pixel layer — filters do not apply to adjustment layers', 'err'); return null; } if (L.kind === 'text' || L.kind === 'frame') { toast('Rasterize the ' + (L.kind === 'text' ? 'text' : 'frame') + ' layer first (Layer › Rasterize layer)', 'err'); return null; } if (L.locked) { toast('Layer is locked', 'err'); return null; } return L; }
 async function runFilter(Fd, vals) {
   const L = checkPixelLayer(); if (!L) return;
   if (Fd.params && !vals) return filterDialog(Fd);
@@ -1792,12 +1839,13 @@ async function runFilter(Fd, vals) {
   await withBusy(Fd.name + '…', async () => { if (applyFilterToLayer(L, Fd, vals)) { lastFilter = { F: Fd, vals: { ...vals } }; requestRender(); pushHist(Fd.name); } else toast('Nothing to filter in this area'); });
 }
 function repeatFilter() { if (!lastFilter) return toast('No filter applied yet'); runFilter(lastFilter.F, lastFilter.vals); }
-async function filterDialog(Fd, { gallery = false } = {}) {
-  const L = checkPixelLayer(); if (!L) return; ensureCovers(L); const r = filterRegion(L); if (!r) return toast('Nothing to filter in this area');
+async function filterDialog(Fd, { gallery = false, smartEdit = null } = {}) {
+  const L = smartEdit ? smartEdit.L : checkPixelLayer(); if (!L) return; ensureCovers(L); const r = smartEdit ? { x: L.x, y: L.y, w: L.canvas.width, h: L.canvas.height } : filterRegion(L); if (!r) return toast('Nothing to filter in this area');
+  const se = smartEdit ? L.smart.filters[smartEdit.i] : null;
   const PW = gallery ? 560 : 620, PH = gallery ? 420 : 440, k = Math.min(1, PW / r.w, PH / r.h), pw = Math.max(1, Math.round(r.w * k)), ph = Math.max(1, Math.round(r.h * k));
-  const src = mk(pw, ph), sx = ctxOf(src); sx.imageSmoothingQuality = 'high'; sx.drawImage(L.canvas, r.x - L.x, r.y - L.y, r.w, r.h, 0, 0, pw, ph); const base = sx.getImageData(0, 0, pw, ph);
-  let selA = null; if (D.sel) { const sc = mk(pw, ph), scx = ctxOf(sc); scx.drawImage(D.sel, r.x, r.y, r.w, r.h, 0, 0, pw, ph); selA = scx.getImageData(0, 0, pw, ph).data; }
-  const pv = h('canvas', { width: pw, height: ph, class: 'ph-preview-cv checker' }), info = h('div', { class: 'muted pv-info' }, ''); let cur = Fd, vals = defaultsOf(Fd), timer = null, showOrig = false;
+  const src = mk(pw, ph), sx = ctxOf(src); sx.imageSmoothingQuality = 'high'; sx.drawImage(se ? smartPartial(L, smartEdit.i) : L.canvas, r.x - L.x, r.y - L.y, r.w, r.h, 0, 0, pw, ph); const base = sx.getImageData(0, 0, pw, ph);
+  let selA = null; if (se ? se.mask : D.sel) { const sc = mk(pw, ph), scx = ctxOf(sc); scx.drawImage(se ? se.mask : D.sel, se ? 0 : r.x, se ? 0 : r.y, r.w, r.h, 0, 0, pw, ph); selA = scx.getImageData(0, 0, pw, ph).data; }
+  const pv = h('canvas', { width: pw, height: ph, class: 'ph-preview-cv checker' }), info = h('div', { class: 'muted pv-info' }, ''); let cur = Fd, vals = se ? JSON.parse(JSON.stringify(se.vals)) : defaultsOf(Fd), timer = null, showOrig = false;
   const renderPv = () => { const img = new ImageData(new Uint8ClampedArray(base.data), pw, ph); if (!showOrig) { const t0 = performance.now(); try { cur.fn(img, vals, { scale: k, fg: O.fg, bg: O.bg, ox: r.x * k, oy: r.y * k }); } catch (e) { console.error(e); } if (selA) { const d = img.data, b = base.data; for (let i = 0; i < d.length; i += 4) { const a = selA[i + 3] / 255; for (let q = 0; q < 4; q++) d[i + q] = b[i + q] + (d[i + q] - b[i + q]) * a; } } info.textContent = `Preview ${Math.round(k * 100)}% · ${Math.round(performance.now() - t0)} ms`; } else info.textContent = 'Original'; ctxOf(pv).putImageData(img, 0, 0); };
   const sched = () => { clearTimeout(timer); timer = setTimeout(renderPv, cur.slow ? 120 : 30); };
   pv.onpointerdown = e => { if (cur.point && !e.altKey) { const b = pv.getBoundingClientRect(); vals.x = Math.round((e.clientX - b.left) / b.width * 100); vals.y = Math.round((e.clientY - b.top) / b.height * 100); drawFields(); sched(); return; } showOrig = true; renderPv(); };
@@ -1811,14 +1859,15 @@ async function filterDialog(Fd, { gallery = false } = {}) {
   }
   drawFields(); renderPv();
   const body = h('div', { class: 'ph-dlg' + (gallery ? ' gallery' : '') }, h('div', { class: 'ph-preview' }, pv, info), ...(gallery ? [galleryEl] : []), h('div', { class: 'ph-side' }, title, fields));
-  const res = await modal({ title: gallery ? 'Filter Gallery' : cur.name, width: gallery ? 1180 : 960, body, buttons: [{ label: 'Cancel', value: null }, { label: 'Apply', primary: true, value: 'ok' }] });
+  const res = await modal({ title: (se ? 'Smart filter — ' : '') + (gallery ? 'Filter Gallery' : cur.name), width: gallery ? 1180 : 960, body, buttons: [{ label: 'Cancel', value: null }, { label: 'Apply', primary: true, value: 'ok' }] });
   clearTimeout(timer); if (res !== 'ok') return;
+  if (se) { se.vals = vals; L.canvas = smartRecompute(L); requestRender(); pushHist('Edit smart filter: ' + cur.name); renderLayers(); return; }
   await withBusy(cur.name + '…', async () => { if (applyFilterToLayer(L, cur, vals)) { lastFilter = { F: cur, vals: { ...vals } }; requestRender(); pushHist(cur.name); } });
 }
 
 // =====================================================================  Liquify
 async function liquifyDialog() {
-  const L = checkPixelLayer(); if (!L) return; ensureCovers(L);
+  const L = checkPixelLayer(); if (!L || smartBlock(L)) return; ensureCovers(L);
   const r = D.sel ? filterRegion(L) : { x: Math.max(0, L.x), y: Math.max(0, L.y), w: Math.min(D.w, L.x + L.canvas.width) - Math.max(0, L.x), h: Math.min(D.h, L.y + L.canvas.height) - Math.max(0, L.y) };
   if (!r || r.w < 2 || r.h < 2) return;
   const fullC = mk(r.w, r.h); ctxOf(fullC).drawImage(L.canvas, r.x - L.x, r.y - L.y, r.w, r.h, 0, 0, r.w, r.h);
@@ -2056,9 +2105,7 @@ const b64ToU8 = s => Uint8Array.from(atob(s.split(',')[1]), c => c.charCodeAt(0)
 async function openFile(f) {
   const u8 = new Uint8Array(f.data);
   try {
-    if (/\.btsp$/i.test(f.name)) { const j = JSON.parse(new TextDecoder().decode(u8)); const d = createDoc({ w: j.w, h: j.h, name: f.name, bg: null }); d.layers = [];
-      for (const l of j.layers) { const kind = l.kind || 'raster'; let L; if (kind === 'adjust') L = newLayer(l.name, 1, 1, { kind, adj: l.adj, visible: l.visible, opacity: l.opacity, blend: l.blend, locked: l.locked }); else { const im = await decodeImage(b64ToU8(l.png), 'x.png'); L = newLayer(l.name, im.width, im.height, { x: l.x, y: l.y, visible: l.visible, opacity: l.opacity, blend: l.blend, locked: l.locked, fx: l.fx || {}, kind, text: l.text }); L.canvas.getContext('2d').drawImage(im, 0, 0); } if (l.mask) { const mi = await decodeImage(b64ToU8(l.mask), 'm.png'); L.mask = mk(mi.width, mi.height); L.mask.getContext('2d').drawImage(mi, 0, 0); L.maskVer = 1; L.x = l.x || 0; L.y = l.y || 0; } d.layers.push(L); }
-      d.guides = j.guides || []; d.notes = j.notes || []; d.path = f.path; d.fmt = 'btsp'; addDoc(d); }
+    if (/\.btsp$/i.test(f.name)) { const j = JSON.parse(new TextDecoder().decode(u8)); const d = await docFromProject(j, f.name); d.path = f.path; d.fmt = 'btsp'; addDoc(d); }
     else if (/\.psd$/i.test(f.name)) {
       const psd = agPsd.readPsd(u8.buffer.slice(u8.byteOffset, u8.byteOffset + u8.byteLength), { skipThumbnail: true });
       const d = createDoc({ w: psd.width, h: psd.height, name: f.name, bg: null }); d.layers = [];
@@ -2084,13 +2131,13 @@ async function placeImage() {
 UI.shortcut('ctrl+shift+p', placeImage);
 const canvasToBlob = (c, type = 'image/png', q) => new Promise(r => c.toBlob(r, type, q));
 const canvasToU8 = async (c, type = 'image/png', q) => UI.blobToU8(await canvasToBlob(c, type, q));
-function projectJSON() { return { app: 'BTS Photo', v: 2, w: D.w, h: D.h, guides: D.guides, notes: D.notes, layers: D.layers.map(L => ({ name: L.name, x: L.x, y: L.y, visible: L.visible, opacity: L.opacity, blend: L.blend, locked: L.locked, fx: L.fx, kind: L.kind, text: L.text, adj: L.adj, png: L.kind === 'adjust' ? null : L.canvas.toDataURL('image/png'), mask: L.mask ? L.mask.toDataURL('image/png') : null })) }; }
+const projectJSON = () => serializeDoc(D, c => c.toDataURL('image/png'));
 async function saveProject(as) {
   if (!D) return; if (T) commitTransform();
-  const data = new TextEncoder().encode(JSON.stringify(projectJSON()));
+  const data = new TextEncoder().encode(JSON.stringify(await serializeDoc(D, c => c.toDataURL('image/png'))));
   let p = D.fmt === 'btsp' && !as ? D.path : null;
   if (p) await bts.fs.write({ path: p, data }); else { p = await bts.fs.saveAs({ data, defaultPath: D.name.replace(/\.\w+$/, '') + '.btsp', filters: [{ name: 'BTS Photo project', extensions: ['btsp'] }] }); if (!p) return; }
-  D.path = p; D.fmt = 'btsp'; D.name = p.split(/[\\/]/).pop(); D.dirty = false; UI.setDocTitle(D.name, 'BTS Photo'); renderTabs(); toast('Saved ' + D.name, 'ok');
+  D.path = p; D.fmt = 'btsp'; D.name = p.split(/[\\/]/).pop(); D.dirty = false; UI.setDocTitle(D.name, 'BTS Photo'); renderTabs(); dropRecovery(D); toast('Saved ' + D.name, 'ok');
 }
 UI.shortcut('ctrl+s', () => saveProject(false)); UI.shortcut('ctrl+shift+s', () => saveProject(true));
 function psdObject() {
@@ -2153,19 +2200,429 @@ async function exportLayersDialog() {
 async function closeDoc() {
   if (!D) return;
   if (D.dirty) { const r = await modal({ title: 'Save changes?', body: `Save changes to “${D.name}” before closing?`, buttons: [{ label: 'Cancel', value: null }, { label: "Don't save", value: 'no' }, { label: 'Save', primary: true, value: 'yes' }] }); if (r === null) return; if (r === 'yes') { await saveProject(false); if (D.dirty) return; } }
-  docs = docs.filter(d => d !== D); D = docs[docs.length - 1] || null; if (D) switchDoc(D); else { renderAll(); renderTabs(); UI.setDocTitle('', 'BTS Photo'); const c = overlay.getContext('2d'); c.setTransform(1, 0, 0, 1, 0, 0); c.clearRect(0, 0, overlay.width, overlay.height); display.width = 1; display.height = 1; }
+  dropRecovery(D); docs = docs.filter(d => d !== D); D = docs[docs.length - 1] || null; if (D) switchDoc(D); else { renderAll(); renderTabs(); UI.setDocTitle('', 'BTS Photo'); const c = overlay.getContext('2d'); c.setTransform(1, 0, 0, 1, 0, 0); c.clearRect(0, 0, overlay.width, overlay.height); display.width = 1; display.height = 1; }
 }
 UI.shortcut('ctrl+w', closeDoc);
 async function closeWindow() { while (docs.some(d => d.dirty)) { D = docs.find(d => d.dirty); switchDoc(D); const before = docs.length; await closeDoc(); if (docs.length === before) return; } bts.win.close(); }
 
+// =====================================================================  2026 additions: shared helpers
+const LS = { get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } }, set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch { } } };
+function smartBlock(L) { if (L?.smart) { toast('This layer has smart filters — use Layer › Smart filters › Rasterize before editing its pixels', 'err'); return true; } return false; }
+function toRaster(L) { if (L.kind === 'text') delete L.text; if (L.kind === 'frame') delete L.frame; if (L.kind === 'text' || L.kind === 'frame') L.kind = 'raster'; if (L.smart) L.smart = null; }
+function busyText(t) { const el = document.querySelector('.ph-busy'); if (el && el.lastChild) el.lastChild.textContent = t; }
+const docArea = () => D.w * D.h;
+
+// =====================================================================  Harmonize (match colour, light and tone of a layer to what is below it)
+function shadowCanvas(L, v) {
+  const b = layerBounds(L); if (!b) return mk(D.w, D.h); const yb = b.y + b.h, W = D.w, H = D.h;
+  const sil = mk(W, H), sx = sil.getContext('2d'); sx.drawImage(layerDocCanvas(L), 0, 0); sx.globalCompositeOperation = 'source-in'; sx.fillStyle = '#000'; sx.fillRect(0, 0, W, H);
+  const c = mk(W, H), x = c.getContext('2d'), ky = clamp(v.len / 100, 0.02, 1) * 0.65, kx = ky * Math.tan(clamp(v.angle, -75, 75) * Math.PI / 180);
+  // cast shadow: the silhouette laid down on the ground plane behind the object
+  x.filter = `blur(${Math.max(0.5, v.soft)}px)`; x.globalAlpha = 0.7; x.setTransform(1, 0, -kx, ky, kx * yb, yb * (1 - ky)); x.drawImage(sil, 0, 0);
+  // contact (ambient occlusion): the bottom slice, flattened and tight
+  const sh = Math.max(2, Math.round(b.h * 0.12)); x.setTransform(1, 0, 0, 1, 0, 0); x.filter = `blur(${Math.max(0.6, v.soft / 4)}px)`; x.globalAlpha = 0.95; x.drawImage(sil, b.x, yb - sh, b.w, sh, b.x - b.w * 0.02, yb - sh * 0.18, b.w * 1.04, sh * 0.32);
+  x.filter = 'none'; return c;
+}
+async function harmonizeDialog() {
+  const L = AL(); if (!D || !L) return toast('Open an image first');
+  if (L.kind === 'adjust') return toast('Select a pixel layer to harmonize', 'err');
+  if (D.active === 0) return toast('Harmonize matches a layer to the layers below it — select an upper layer (for example a placed or pasted object)', 'err');
+  if (smartBlock(L) || L.locked) return;
+  if (L.kind !== 'raster') { toRaster(L); renderLayers(); }
+  ensureCovers(L); const lb = layerBounds(L); if (!lb) return toast('The layer is empty');
+  const below = compositeBelow(D.active), mx = Math.round(lb.w * 0.6), my = Math.round(lb.h * 0.6);
+  const rx = clamp(lb.x - mx, 0, D.w), ry = clamp(lb.y - my, 0, D.h), rx2 = clamp(lb.x + lb.w + mx, 0, D.w), ry2 = clamp(lb.y + lb.h + my, 0, D.h);
+  if (rx2 - rx < 4 || ry2 - ry < 4) return toast('The layer is outside the canvas', 'err');
+  const bd = ctxOf(below).getImageData(rx, ry, rx2 - rx, ry2 - ry), step = Math.max(1, Math.round(Math.sqrt(bd.width * bd.height / 250000)));
+  const src = X.labStatsW(bd.data, null, step); if (src.n < 20) return toast('There is nothing below this layer to match', 'err');
+  const light = X.lightPlane(bd.data, bd.width, bd.height, rx, ry, Math.max(2, step * 2));
+  const orig = cloneCanvas(L.canvas), od = ctxOf(orig).getImageData(0, 0, orig.width, orig.height), dst = X.labStatsW(od.data, null, Math.max(1, Math.round(Math.sqrt(orig.width * orig.height / 250000))));
+  const vals = { amount: 75, color: 70, lum: 60, contrast: true, lighting: 50, shadow: false, sop: 55, soft: 12, angle: 25, len: 35 };
+  let shL = null, timer = null; const big = orig.width * orig.height > 4e6;
+  const params = () => ({ src, dst, amount: vals.amount / 100, color: vals.color / 100, lum: vals.lum / 100, contrast: vals.contrast, light, lighting: vals.lighting / 100 });
+  const restore = () => { const c = L.canvas.getContext('2d'); c.clearRect(0, 0, orig.width, orig.height); c.drawImage(orig, 0, 0); };
+  const syncShadow = () => {
+    if (vals.shadow && !shL) { shL = newLayer('Contact shadow', D.w, D.h, { blend: 'multiply' }); D.layers.splice(D.layers.indexOf(L), 0, shL); D.active = D.layers.indexOf(L); }
+    if (!vals.shadow && shL) { D.layers.splice(D.layers.indexOf(shL), 1); D.active = D.layers.indexOf(L); shL = null; }
+    if (shL) { shL.canvas = shadowCanvas(L, vals); shL.opacity = vals.sop / 100; }
+  };
+  const preview = () => { clearTimeout(timer); timer = setTimeout(() => { restore(); layerImageOp(L, X.harmonize, params()); syncShadow(); contentSerial++; requestRender(false); renderLayers(); }, big ? 140 : 25); };
+  const el = h('div', { class: 'ph-fields' });
+  buildFields(el, [rng('amount', 'Strength %', 0, 100, 75), rng('color', 'Colour match %', 0, 150, 70), rng('lum', 'Brightness match %', 0, 150, 60), { key: 'contrast', label: 'Match contrast and saturation range', type: 'checkbox' }, rng('lighting', 'Directional lighting %', 0, 150, 50),
+    { key: 'n0', type: 'note', label: 'Shadow' }, { key: 'shadow', label: 'Add contact shadow under the layer', type: 'checkbox' }, rng('sop', 'Shadow opacity %', 0, 100, 55), rng('soft', 'Softness (px)', 0, 80, 12), rng('angle', 'Shadow angle °', -70, 70, 25), rng('len', 'Shadow length %', 2, 100, 35),
+    { key: 'n1', type: 'note', label: 'Statistics transfer in Lab colour space from the area around the layer. The lighting term follows the brightness gradient of the background.' }], vals, preview);
+  preview();
+  const ok = await floatPanel({ title: 'Harmonize — ' + L.name, width: 330, body: el, ok: 'Apply' });
+  clearTimeout(timer); restore();
+  if (!ok) { if (shL) { D.layers.splice(D.layers.indexOf(shL), 1); D.active = D.layers.indexOf(L); } requestRender(); renderLayers(); return; }
+  layerImageOp(L, X.harmonize, params()); syncShadow(); requestRender(); pushHist('Harmonize'); renderLayers();
+}
+
+// =====================================================================  Upscale (super resolution: Lanczos3 + edge-directed smoothing + detail-preserving sharpening)
+const UPSCALE_MAX_SIDE = 16384, UPSCALE_MAX_AREA = 120e6;
+const upscaleAllowed = f => D && D.w * f <= UPSCALE_MAX_SIDE && D.h * f <= UPSCALE_MAX_SIDE && D.w * D.h * f * f <= UPSCALE_MAX_AREA;
+async function upscaleImageData(img, f, v, onProgress) {
+  if (v.noise > 0) { img = X.copyImg(img); X.flt.surfaceBlur(img, { r: 2, t: 4 + v.noise * 0.55 }, { scale: 1 }); }
+  return X.upscale(img, f, { edge: v.edge / 100, sharpen: v.sharpen / 100 * 1.2, onProgress });
+}
+async function upscaleDialog() {
+  if (!D) return toast('Open an image first'); if (T) commitTransform();
+  const vals = { f: upscaleAllowed(2) ? 2 : 0, edge: 60, sharpen: 50, noise: 0 };
+  if (!vals.f) return toast(`The image is too large to upscale (limit ${UPSCALE_MAX_SIDE}px per side)`, 'err');
+  const flat = flattenCanvas(), ok = k => upscaleAllowed(k);
+  const ovK = Math.min(1, 220 / Math.max(D.w, D.h)), ov = h('canvas', { width: Math.round(D.w * ovK), height: Math.round(D.h * ovK), class: 'up-ov' }); let cx = D.w / 2, cy = D.h / 2;
+  const before = h('canvas', { class: 'up-pv' }), after = h('canvas', { class: 'up-pv' }), info = h('div', { class: 'muted pv-info' });
+  let seq = 0;
+  const drawOv = () => { const c = ctxOf(ov); c.drawImage(flat, 0, 0, ov.width, ov.height); const cw = 300 / vals.f, chh = 225 / vals.f; c.strokeStyle = '#ffd400'; c.lineWidth = 2; c.strokeRect((cx - cw / 2) * ovK, (cy - chh / 2) * ovK, cw * ovK, chh * ovK); };
+  const update = async () => { const my = ++seq; drawOv(); const f = vals.f, cw = Math.round(300 / f), chh = Math.round(225 / f), x0 = clamp(Math.round(cx - cw / 2), 0, Math.max(0, D.w - cw)), y0 = clamp(Math.round(cy - chh / 2), 0, Math.max(0, D.h - chh));
+    const crop = ctxOf(flat).getImageData(x0, y0, Math.min(cw, D.w), Math.min(chh, D.h)); const t0 = performance.now();
+    const up = await upscaleImageData(crop, f, vals); if (my !== seq) return;
+    [before, after].forEach(c => { c.width = up.width; c.height = up.height; });
+    const bc = ctxOf(before); bc.imageSmoothingQuality = 'medium'; const tmp = mk(crop.width, crop.height); ctxOf(tmp).putImageData(crop, 0, 0); bc.drawImage(tmp, 0, 0, up.width, up.height);
+    ctxOf(after).drawImage(up, 0, 0); info.textContent = `${D.w} × ${D.h} → ${D.w * f} × ${D.h * f} px · preview at 100% · ${Math.round(performance.now() - t0)} ms`; };
+  ov.onpointerdown = e => { const r = ov.getBoundingClientRect(); cx = (e.clientX - r.left) / r.width * D.w; cy = (e.clientY - r.top) / r.height * D.h; update(); };
+  const fl = h('div', { class: 'ph-fields' }); let t = null; const sched = () => { clearTimeout(t); t = setTimeout(update, 60); };
+  const scaleRow = h('div', { class: 'seg' }); const drawScale = () => { scaleRow.innerHTML = ''; [2, 4].forEach(k => scaleRow.append(h('button', { class: 'btn sm' + (vals.f === k ? ' primary' : ''), disabled: !ok(k), title: ok(k) ? '' : 'Result would be too large', onclick: () => { vals.f = k; drawScale(); sched(); } }, k + '×'))); };
+  drawScale(); fl.append(h('div', { class: 'field' }, h('span', {}, 'Scale'), scaleRow));
+  buildFields(fl, [rng('edge', 'Edge smoothing (anti-jaggies) %', 0, 100, 60), rng('sharpen', 'Detail / sharpening %', 0, 100, 50), rng('noise', 'Noise reduction %', 0, 100, 0),
+    { key: 'n', type: 'note', label: 'Lanczos3 resampling, edge-directed smoothing along contours and halo-free detail sharpening. Click the overview to choose the preview area.' }], vals, sched);
+  const body = h('div', { class: 'ph-dlg up-dlg' }, h('div', { class: 'ph-preview' }, h('div', { class: 'up-pair' }, h('div', {}, h('div', { class: 'muted up-l' }, 'Standard resize'), before), h('div', {}, h('div', { class: 'muted up-l' }, 'Super resolution'), after)), info), h('div', { class: 'ph-side' }, ov, fl));
+  update();
+  const r = await modal({ title: 'Upscale (super resolution)', width: 1040, body, buttons: [{ label: 'Cancel', value: null }, { label: 'Upscale', primary: true, value: 'ok' }] });
+  seq++; if (r !== 'ok') return; await upscaleImage(vals.f, vals);
+}
+async function upscaleImage(f, v = { edge: 60, sharpen: 50, noise: 0 }) {
+  if (!upscaleAllowed(f)) return toast('The result would be too large', 'err');
+  await withBusy('Upscaling…', async () => {
+    const rasters = D.layers.filter(L => L.kind === 'raster' || L.kind === 'text' || L.kind === 'frame'); let done = 0;
+    for (const L of D.layers) {
+      if (L.kind === 'raster') {
+        const prog = p => busyText(`Upscaling ${L.name} — ${Math.round((done + p) / rasters.length * 100)}%`);
+        L.canvas = await upscaleImageData(ctxOf(L.canvas).getImageData(0, 0, L.canvas.width, L.canvas.height), f, v, prog);
+        if (L.smart) { L.smart.orig = await upscaleImageData(ctxOf(L.smart.orig).getImageData(0, 0, L.smart.orig.width, L.smart.orig.height), f, v); L.smart.filters.forEach(fl => { if (fl.mask) fl.mask = resampleCanvas(fl.mask, fl.mask.width * f, fl.mask.height * f, 'high'); }); }
+        done++;
+      }
+      L.x *= f; L.y *= f;
+      if (L.mask) { L.mask = resampleCanvas(L.mask, L.mask.width * f, L.mask.height * f, 'high'); L.maskVer = Math.random(); }
+      if (L.kind === 'text') { L.text.x *= f; L.text.y *= f; L.text.size = Math.round(L.text.size * f); }
+      if (L.kind === 'frame') { L.frame.w *= f; L.frame.h *= f; L.frame.ox *= f; L.frame.oy *= f; L.frame.radius *= f; L.frame.stroke *= f; }
+    }
+    D.w *= f; D.h *= f; (D.guides || []).forEach(g => g.p *= f); setSel(null);
+    D.layers.forEach(l => { if (l.kind === 'text') renderTextLayer(l); else if (l.kind === 'frame') renderFrameLayer(l); else if (l.smart) l.canvas = smartRecompute(l); });
+    fitView(); requestRender(); pushHist(`Upscale ${f}×`);
+  });
+}
+
+// =====================================================================  Distraction removal (wires & cables, dust & spots) — detection + tiled inpainting
+async function inpaintTiled(L, hole, label) {
+  const W = D.w, H = D.h; let any = 0; for (let i = 0; i < hole.length; i++) if (hole[i]) { any = 1; break; } if (!any) return false;
+  await withBusy(label + '…', async () => {
+    ensureCovers(L); const lc = ctxOf(L.canvas), TS = 200, M = 44; const tiles = [];
+    for (let ty = 0; ty < H; ty += TS) for (let tx = 0; tx < W; tx += TS) { let has = 0; for (let y = ty; y < Math.min(H, ty + TS) && !has; y++) for (let x = tx, o = y * W; x < Math.min(W, tx + TS); x++) if (hole[o + x]) { has = 1; break; } if (has) tiles.push([tx, ty]); }
+    for (let k = 0; k < tiles.length; k++) {
+      const [tx, ty] = tiles[k], x0 = Math.max(0, tx - M), y0 = Math.max(0, ty - M), x1 = Math.min(W, tx + TS + M), y1 = Math.min(H, ty + TS + M), w = x1 - x0, hh = y1 - y0;
+      const id = lc.getImageData(x0 - L.x, y0 - L.y, w, hh), hm = new Uint8Array(w * hh); for (let y = 0; y < hh; y++) for (let x = 0; x < w; x++) hm[y * w + x] = hole[(y + y0) * W + x + x0];
+      X.inpaint(id.data, w, hh, hm, { patch: 2 });
+      lc.putImageData(id, x0 - L.x, y0 - L.y, tx - x0, ty - y0, Math.min(TS, W - tx), Math.min(TS, H - ty));
+      if (k % 4 === 3) { busyText(`${label}… ${Math.round((k + 1) / tiles.length * 100)}%`); await sleep(0); }
+    }
+    requestRender(); pushHist(label);
+  });
+  return true;
+}
+function regionBits(rc) { if (!rc) return null; const a = ctxOf(rc).getImageData(0, 0, D.w, D.h).data, r = new Uint8Array(D.w * D.h); for (let i = 0; i < r.length; i++) r[i] = a[i * 4 + 3] > 20 ? 1 : 0; return r; }
+const DISTRACT = {
+  wires: { name: 'Remove wires & cables', fields: [rng('sens', 'Sensitivity', 1, 100, 60), rng('width', 'Maximum wire width (px)', 1, 30, 6), { key: 'bright', label: 'Also detect light lines', type: 'checkbox', value: false }, { key: 'smoothOnly', label: 'Only over smooth backgrounds (sky, walls)', type: 'checkbox', value: true }], scaleKeys: ['width'], detect: (img, reg, p) => X.detectWires(img, reg, p) },
+  spots: { name: 'Remove dust & spots', fields: [rng('sens', 'Sensitivity', 1, 100, 60), rng('size', 'Maximum spot size (px)', 2, 60, 10), { key: 'bright', label: 'Also detect light spots', type: 'checkbox', value: false }], scaleKeys: ['size'], detect: (img, reg, p) => X.detectSpots(img, reg, p) },
+};
+async function removeDistractions(kind, regionCanvas = null, direct = false) {
+  const L = AL(), K = DISTRACT[kind]; if (!D || !L || L.kind !== 'raster') return toast('Select a pixel layer', 'err'); if (smartBlock(L) || L.locked) return;
+  const W = D.w, H = D.h, region = regionBits(regionCanvas || D.sel), full = ctxOf(layerDocCanvas(L)).getImageData(0, 0, W, H);
+  const vals = Object.fromEntries(K.fields.map(f => [f.key, f.value]));
+  if (!direct) {
+    const k = Math.min(1, 760 / Math.max(W, H)), pw = Math.max(1, Math.round(W * k)), ph = Math.max(1, Math.round(H * k)), sc = mk(pw, ph), scx = ctxOf(sc); const tmp = mk(W, H); ctxOf(tmp).putImageData(full, 0, 0); scx.imageSmoothingQuality = 'high'; scx.drawImage(tmp, 0, 0, pw, ph); const small = scx.getImageData(0, 0, pw, ph);
+    let sreg = null; if (region) { const rc = mk(pw, ph); rc.getContext('2d').drawImage(regionCanvas || D.sel, 0, 0, pw, ph); const a = ctxOf(rc).getImageData(0, 0, pw, ph).data; sreg = new Uint8Array(pw * ph); for (let i = 0; i < sreg.length; i++) sreg[i] = a[i * 4 + 3] > 20 ? 1 : 0; }
+    const pv = h('canvas', { width: pw, height: ph, class: 'ph-preview-cv' }), info = h('div', { class: 'muted pv-info' });
+    const draw = () => { const p = { ...vals }; K.scaleKeys.forEach(q => p[q] = Math.max(1, vals[q] * k)); p.grow = 1; const m = K.detect(small, sreg, p), id = new ImageData(new Uint8ClampedArray(small.data), pw, ph), d = id.data; let n = 0; for (let i = 0; i < m.length; i++) if (m[i]) { n++; d[i * 4] = 255; d[i * 4 + 1] = d[i * 4 + 1] * 0.2; d[i * 4 + 2] = d[i * 4 + 2] * 0.3; } ctxOf(pv).putImageData(id, 0, 0); info.textContent = n ? `Detected ${Math.round(n / k / k).toLocaleString()} px (red) — they will be removed with content-aware fill` : 'Nothing detected — raise the sensitivity'; };
+    let t; const fl = h('div', { class: 'ph-fields' }); buildFields(fl, [...K.fields, { key: 'n', type: 'note', label: region ? 'Working inside the selected / brushed area.' : 'Working on the whole layer. Select or brush an area first to limit the search.' }], vals, () => { clearTimeout(t); t = setTimeout(draw, 80); }); draw();
+    const r = await modal({ title: K.name, width: 1040, body: h('div', { class: 'ph-dlg' }, h('div', { class: 'ph-preview' }, pv, info), h('div', { class: 'ph-side' }, fl)), buttons: [{ label: 'Cancel', value: null }, { label: 'Remove', primary: true, value: 'ok' }] });
+    if (r !== 'ok') return;
+  }
+  let hole; await withBusy('Detecting…', async () => { hole = K.detect(full, region, vals); });
+  if (!hole || !(await inpaintTiled(L, hole, K.name))) toast('Nothing was detected' + (direct ? ' under the brush' : ''));
+}
+
+// =====================================================================  Sky replacement
+function skyAlphaFrom(img) {
+  const W = img.width, H = img.height, d = img.data, n = W * H;
+  const skyLike = i => { const j = i * 4, r = d[j], g = d[j + 1], b = d[j + 2], l = (r + g + b) / 3, mx = Math.max(r, g, b), mn = Math.min(r, g, b); const blue = b >= r + 8 && b >= g - 20 && l > 70; const cloud = l > 165 && mx - mn < 45; const dusk = r > 150 && l > 120 && b > 60 && mx - mn < 120 && (i / W) < H * 0.5; return blue || cloud || dusk; };
+  const L = X.lumaOf(img); const sky = new Uint8Array(n), st = [];
+  for (let x = 0; x < W; x++) for (let y = 0; y < Math.max(1, H * 0.02); y++) { const i = (y | 0) * W + x; if (skyLike(i)) { sky[i] = 1; st.push(i); } }
+  while (st.length) { const i = st.pop(), x = i % W, y = (i - x) / W; for (const j of [x > 0 ? i - 1 : -1, x < W - 1 ? i + 1 : -1, y > 0 ? i - W : -1, y < H - 1 ? i + W : -1]) { if (j < 0 || sky[j]) continue; if (Math.abs(L[j] - L[i]) > 0.09 || !skyLike(j)) continue; sky[j] = 1; st.push(j); } }
+  let on = 0, blue = 0, sr = 0, sb = 0, top = 0; for (let i = 0; i < n; i++) if (sky[i]) { on++; const j = i * 4; sr += d[j]; sb += d[j + 2]; if (d[j + 2] > d[j] + 12) blue++; } for (let x = 0; x < W; x++) top += sky[x];
+  const bright = on ? (sr + sb) / 2 / on : 0;
+  if (on < n * 0.01 || (blue < on * 0.12 && !(bright > 175 && top > W * 0.6 && sb >= sr * 0.97))) return null;
+  let a = softFromBits(sky, W, H, 0, 3); a = X.shiftEdge(a, W, H, -2); const f = Float32Array.from(a); X.gaussChan(f, W, H, 1.2); return Uint8ClampedArray.from(f);
+}
+const skyThumbCache = {};
+async function skyReplaceDialog() {
+  if (!D) return toast('Open an image first'); if (T) commitTransform();
+  const W = D.w, H = D.h; let alpha = null, img = null;
+  await withBusy('Finding the sky…', async () => { img = ctxOf(flattenCanvas()).getImageData(0, 0, W, H); alpha = D.sel ? selAlpha() : skyAlphaFrom(img); });
+  if (!alpha) return toast('No sky found — select the sky first (Select › Sky, Color range or the lasso)', 'err');
+  // horizon: lowest row that is still mostly sky somewhere
+  const rows = new Float32Array(H); for (let y = 0; y < H; y++) { let s = 0; for (let x = 0, o = y * W; x < W; x += 2) s += alpha[o + x]; rows[y] = s / (W / 2) / 255; }
+  let horizon = 0; for (let y = 0; y < H; y++) if (rows[y] > 0.04) horizon = y; horizon = Math.max(horizon, Math.round(H * 0.15));
+  const oldSky = X.labStatsW(img.data, i => alpha[i] / 255, Math.max(1, Math.round(Math.sqrt(W * H / 200000))));
+  const vals = { preset: 'sunset', shift: 0, fade: Math.max(2, Math.round(Math.max(W, H) / 400)), bright: 0, temp: 0, scale: 100, pos: 0, flip: false, fg: 55 };
+  let custom = null, baseKey = null, base = null, maskKey = null;
+  const skyL = newLayer('Sky', W, H), fgL = newLayer('Foreground lighting', 1, 1, { kind: 'adjust', adj: { type: 'fglight', params: { gr: 1, gg: 1, gb: 1, amt: vals.fg } } });
+  const insertAt = D.layers.length; D.layers.splice(insertAt, 0, fgL, skyL); D.active = D.layers.indexOf(skyL);
+  const baseSky = () => { const key = (custom ? 'custom' : vals.preset) + ':' + vals.bright + ':' + vals.temp; if (key === baseKey) return base; baseKey = key;
+    const bw = Math.min(1400, W), bh = Math.max(8, Math.round(bw * (horizon * 1.12) / W)); const c = custom ? (() => { const o = mk(bw, bh), ox = ctxOf(o), s = Math.max(bw / custom.width, bh / custom.height); ox.drawImage(custom, (bw - custom.width * s) / 2, (bh - custom.height * s) / 2, custom.width * s, custom.height * s); return o; })() : X.renderSky(vals.preset, bw, bh, 11);
+    if (vals.bright || vals.temp) { const id = ctxOf(c).getImageData(0, 0, c.width, c.height); if (vals.temp) X.adj.tempTint(id, { t: vals.temp, n: 0 }); if (vals.bright) { const k = 1 + vals.bright / 100; for (let i = 0; i < id.data.length; i += 4) { id.data[i] *= k; id.data[i + 1] *= k; id.data[i + 2] *= k; } } ctxOf(c).putImageData(id, 0, 0); }
+    base = c; return c; };
+  const drawSky = () => { const b = baseSky(), c = skyL.canvas.getContext('2d'), s = vals.scale / 100, dw = W * s, dh = horizon * 1.12 * s, dx = (W - dw) / 2, dy = horizon * 1.12 - dh + vals.pos / 100 * H;
+    c.save(); c.clearRect(0, 0, W, H); if (vals.flip) { c.translate(W, 0); c.scale(-1, 1); } c.imageSmoothingQuality = 'high'; c.drawImage(b, dx, dy, dw, dh); c.drawImage(b, 0, b.height - 1, b.width, 1, dx, dy + dh - 1, dw, H - dy - dh + 2); if (dy > 0) c.drawImage(b, 0, 0, b.width, 1, dx, 0, dw, dy + 1); c.restore();
+    // foreground colour/brightness cast from the new sky
+    const sd = ctxOf(b).getImageData(0, 0, b.width, b.height).data, ns = X.labStatsW(sd, () => 1, 7), dl = (ns.mean[0] - oldSky.mean[0]) * 0.35, da = (ns.mean[1] - oldSky.mean[1]) * 0.45, db = (ns.mean[2] - oldSky.mean[2]) * 0.45;
+    const ref = X.lab2rgb(55, 0, 0, [0, 0, 0]), tgt = X.lab2rgb(clamp(55 + dl, 5, 95), da, db, [0, 0, 0]); Object.assign(fgL.adj.params, { gr: tgt[0] / ref[0], gg: tgt[1] / ref[1], gb: tgt[2] / ref[2], amt: vals.fg }); fgL.visible = vals.fg > 0; };
+  const drawMask = () => { const key = vals.shift + ':' + vals.fade; if (key === maskKey) return; maskKey = key; let a = alpha; if (vals.shift) a = X.shiftEdge(a, W, H, vals.shift); if (vals.fade > 0) { const f = Float32Array.from(a); X.gaussChan(f, W, H, vals.fade / 2); a = Uint8ClampedArray.from(f); } skyL.mask = maskFromAlphaGray(a); skyL.maskVer = Math.random(); const inv = new Uint8ClampedArray(a.length); for (let i = 0; i < a.length; i++) inv[i] = 255 - a[i]; fgL.mask = maskFromAlphaGray(inv); fgL.maskVer = Math.random(); fgL.x = fgL.y = 0; };
+  let timer = null; const update = () => { clearTimeout(timer); timer = setTimeout(() => { drawMask(); drawSky(); requestRender(); renderLayers(); }, docArea() > 4e6 ? 120 : 30); };
+  const grid = h('div', { class: 'sky-grid' });
+  const drawGrid = () => { grid.innerHTML = ''; X.SKIES.forEach(s => { let th = skyThumbCache[s.id]; if (!th) th = skyThumbCache[s.id] = X.renderSky(s.id, 96, 56, 11); const cv = h('canvas', { width: 96, height: 56 }); cv.getContext('2d').drawImage(th, 0, 0); grid.append(h('div', { class: 'sky-cell' + (!custom && vals.preset === s.id ? ' on' : ''), title: s.name, onclick: () => { custom = null; vals.preset = s.id; drawGrid(); update(); } }, cv, h('span', {}, s.name))); });
+    grid.append(h('div', { class: 'sky-cell load' + (custom ? ' on' : ''), onclick: async () => { const fs = await bts.fs.open({ filters: [{ name: 'Images', extensions: ['png', 'jpg', 'jpeg', 'webp', 'bmp'] }] }); if (!fs) return; const im = await decodeImage(new Uint8Array(fs[0].data), fs[0].name); custom = mk(im.width, im.height); custom.getContext('2d').drawImage(im, 0, 0); drawGrid(); update(); } }, h('div', { class: 'sky-load', html: icon('image') }), h('span', {}, 'Image file…'))); };
+  drawGrid();
+  const fl = h('div', { class: 'ph-fields' }); buildFields(fl, [rng('shift', 'Shift edge (px)', -40, 40, 0), rng('fade', 'Fade edge (px)', 0, 100, vals.fade), rng('bright', 'Sky brightness', -60, 60, 0), rng('temp', 'Sky temperature', -100, 100, 0), rng('scale', 'Sky scale %', 50, 300, 100), rng('pos', 'Sky position %', -50, 50, 0), { key: 'flip', label: 'Flip sky horizontally', type: 'checkbox' }, rng('fg', 'Foreground colour & light match %', 0, 100, 55)], vals, update);
+  drawMask(); drawSky(); requestRender(); renderLayers();
+  const ok = await floatPanel({ title: 'Sky replacement', width: 360, body: h('div', { class: 'ph-fields' }, grid, fl), ok: 'Apply' });
+  clearTimeout(timer);
+  if (!ok) { D.layers = D.layers.filter(l => l !== skyL && l !== fgL); D.active = clamp(D.active, 0, D.layers.length - 1); requestRender(); renderLayers(); return; }
+  drawMask(); drawSky(); setSel(null); requestRender(); pushHist('Sky replacement'); renderLayers();
+}
+
+// =====================================================================  Portrait: background blur, teeth & eye brighten (tool), skin smoothing (filter)
+async function backgroundBlurDialog() {
+  const L = checkPixelLayer(); if (!L || smartBlock(L)) return; ensureCovers(L);
+  const W = D.w, H = D.h, src = layerDocCanvas(L); let alpha = null;
+  await withBusy('Finding the subject…', async () => { alpha = await subjectAlpha('ai', src); }); if (!alpha) return;
+  const vals = { r: 22, bright: 35, feather: 3, shift: 1 };
+  const k = Math.min(1, 640 / Math.max(W, H)), pw = Math.max(1, Math.round(W * k)), ph = Math.max(1, Math.round(H * k)), sc = mk(pw, ph), scx = ctxOf(sc); scx.imageSmoothingQuality = 'high'; scx.drawImage(src, 0, 0, pw, ph);
+  const sImg = scx.getImageData(0, 0, pw, ph), sA = (() => { const c = maskFromAlpha(alpha), s = mk(pw, ph); s.getContext('2d').drawImage(c, 0, 0, pw, ph); const d = ctxOf(s).getImageData(0, 0, pw, ph).data, a = new Uint8ClampedArray(pw * ph); for (let i = 0; i < a.length; i++) a[i] = d[i * 4 + 3]; return a; })();
+  const compute = (img, a, w, hh, scale) => {
+    let sub = a; if (vals.shift) sub = X.shiftEdge(a, w, hh, Math.max(1, Math.round(vals.shift * scale)));
+    const known = new Float32Array(w * hh); for (let i = 0; i < known.length; i++) known[i] = sub[i] > 40 ? 0 : 1;
+    const bg = X.copyImg(img); X.pullPushFill(bg.data, w, hh, known); X.flt.lensBlur(bg, { r: vals.r, b: vals.bright, t: 200, shape: 'circle', noise: 0 }, { scale });
+    const fa = Float32Array.from(a); if (vals.feather > 0) X.gaussChan(fa, w, hh, Math.max(0.3, vals.feather * scale / 2));
+    const out = X.copyImg(img), o = out.data, b = bg.data; for (let i = 0; i < fa.length; i++) { const t = fa[i] / 255, j = i * 4; for (let c = 0; c < 3; c++) o[j + c] = o[j + c] * t + b[j + c] * (1 - t); } return out; };
+  const pv = h('canvas', { width: pw, height: ph, class: 'ph-preview-cv' }); let t; const draw = () => ctxOf(pv).putImageData(compute(sImg, sA, pw, ph, k), 0, 0);
+  const fl = h('div', { class: 'ph-fields' }); buildFields(fl, [rng('r', 'Blur amount (px)', 1, 120, 22), rng('bright', 'Bokeh brightness', 0, 100, 35), rng('feather', 'Edge feather (px)', 0, 30, 3), rng('shift', 'Protect subject edge (px)', 0, 20, 1), { key: 'n', type: 'note', label: 'Keeps the subject (Select subject) sharp and applies a lens blur to everything else. The background behind the subject is reconstructed first so the subject does not bleed into the blur.' }], vals, () => { clearTimeout(t); t = setTimeout(draw, 60); }); draw();
+  const r = await modal({ title: 'Background blur', width: 980, body: h('div', { class: 'ph-dlg' }, h('div', { class: 'ph-preview' }, pv), h('div', { class: 'ph-side' }, fl)), buttons: [{ label: 'Cancel', value: null }, { label: 'Apply', primary: true, value: 'ok' }] });
+  if (r !== 'ok') return;
+  await withBusy('Blurring the background…', async () => { const full = ctxOf(src).getImageData(0, 0, W, H), out = compute(full, alpha, W, H, 1); const c = mk(W, H); ctxOf(c).putImageData(out, 0, 0); const lc = L.canvas.getContext('2d'); lc.clearRect(-L.x, -L.y, W, H); lc.drawImage(c, -L.x, -L.y); requestRender(); pushHist('Background blur'); });
+}
+function brightenDab(d, W, H, weight) {
+  const k = O.strength, mode = O.brightMode;
+  for (let py = 0; py < H; py++) for (let px = 0; px < W; px++) {
+    const w0 = weight(px, py) * k * 0.22; if (!w0) continue; const j = (py * W + px) * 4; let [hh, s, l] = X.rgb2hsl(d[j], d[j + 1], d[j + 2]);
+    if (mode === 'teeth') { const deg = hh * 360, yel = deg > 15 && deg < 75 ? 1 - Math.abs(deg - 45) / 30 : 0; s *= 1 - w0 * (0.6 + yel * 1.4); l += (1 - l) * w0 * 0.55 * (l > 0.25 ? 1 : 0.3); }
+    else { l += (1 - l) * w0 * 0.35 * (l > 0.08 ? 1 : 0.2); s = Math.min(1, s * (1 + w0 * 0.6)); }
+    const o = X.hsl2rgb(hh, clamp(s, 0, 1), clamp(l, 0, 1)); d[j] = o[0]; d[j + 1] = o[1]; d[j + 2] = o[2];
+  }
+}
+
+// =====================================================================  Frames (place an image into a shape that clips it)
+let frameCount = 0;
+function frameAt(x, y) { for (let i = D.layers.length - 1; i >= 0; i--) { const l = D.layers[i]; if (l.kind !== 'frame' || !l.visible) continue; if (x >= l.x && y >= l.y && x <= l.x + l.frame.w && y <= l.y + l.frame.h) return l; } return null; }
+function renderFrameLayer(L) {
+  const f = L.frame, w = Math.max(1, Math.round(f.w)), hh = Math.max(1, Math.round(f.h)), c = mk(w, hh), x = c.getContext('2d');
+  const path = () => { x.beginPath(); if (f.shape === 'ellipse') x.ellipse(w / 2, hh / 2, w / 2, hh / 2, 0, 0, Math.PI * 2); else if (f.radius > 0) x.roundRect(0, 0, w, hh, Math.min(f.radius, w / 2, hh / 2)); else x.rect(0, 0, w, hh); };
+  x.save(); path(); x.clip();
+  if (f.img) { const iw = f.img.width, ih = f.img.height, s = (f.fit === 'fit' ? Math.min(w / iw, hh / ih) : Math.max(w / iw, hh / ih)) * (f.scale || 1); x.imageSmoothingQuality = 'high'; x.drawImage(f.img, (w - iw * s) / 2 + (f.ox || 0), (hh - ih * s) / 2 + (f.oy || 0), iw * s, ih * s); }
+  else { x.fillStyle = 'rgba(150,156,166,.45)'; x.fillRect(0, 0, w, hh); x.strokeStyle = 'rgba(255,255,255,.7)'; x.lineWidth = Math.max(1, Math.min(w, hh) / 150); x.beginPath(); x.moveTo(0, 0); x.lineTo(w, hh); x.moveTo(w, 0); x.lineTo(0, hh); x.stroke(); }
+  x.restore();
+  if (f.stroke > 0) { x.save(); path(); x.clip(); path(); x.lineWidth = f.stroke * 2; x.strokeStyle = f.strokeC; x.stroke(); x.restore(); }
+  L.canvas = c;
+}
+function createFrame(r, shape = O.frameShape) {
+  if (!D) return; const w = Math.max(4, Math.round(r.w)), hh = Math.max(4, Math.round(r.h));
+  const L = newLayer('Frame ' + (++frameCount), w, hh, { kind: 'frame', x: Math.round(r.x), y: Math.round(r.y), frame: { shape, w, h: hh, radius: shape === 'rect' ? O.frameRadius : 0, img: null, fit: 'fill', scale: 1, ox: 0, oy: 0, stroke: O.frameStroke, strokeC: O.frameStrokeC } });
+  renderFrameLayer(L); D.layers.splice(D.active + 1, 0, L); D.active++; requestRender(); pushHist('New frame'); renderLayers(); renderOptions(); return L;
+}
+function newFrameCentered(shape) { if (!D) return; const s = Math.min(D.w, D.h) * 0.6; createFrame({ x: (D.w - s) / 2, y: (D.h - s) / 2, w: s, h: s }, shape); }
+const activeFrame = () => AL()?.kind === 'frame' ? AL() : null;
+async function placeIntoFrame(L = activeFrame(), file) {
+  if (!L) return toast('Select a frame layer first (draw one with the Frame tool, K)', 'err');
+  const f = file || (await bts.fs.open({ filters: [{ name: 'Images', extensions: ['png', 'jpg', 'jpeg', 'webp', 'bmp', 'gif', 'svg'] }] }))?.[0]; if (!f) return;
+  const im = await decodeImage(new Uint8Array(f.data), f.name); const c = mk(im.width, im.height); c.getContext('2d').drawImage(im, 0, 0);
+  setFrameImage(L, c);
+}
+function setFrameImage(L, canvas) { Object.assign(L.frame, { img: canvas, scale: 1, ox: 0, oy: 0 }); renderFrameLayer(L); requestRender(); pushHist('Place into frame'); renderLayers(); renderOptions(); }
+let frameHistT = null;
+function updateFrame(p, label = 'Frame') { const L = activeFrame(); if (!L) return; Object.assign(L.frame, p); renderFrameLayer(L); requestRender(); clearTimeout(frameHistT); frameHistT = setTimeout(() => { pushHist(label); renderLayers(); }, 350); }
+function frameFromSelectionOrLayer() { const L = AL(); if (!D || !L) return; const r = extractSel(L, false); if (!r) return; const fl = createFrame({ x: r.x, y: r.y, w: r.canvas.width, h: r.canvas.height }, 'rect'); if (fl) setFrameImage(fl, r.canvas); }
+
+// =====================================================================  Adjustment presets (user presets saved per adjustment type)
+const PRESET_KEY = 'bts.photo.adjPresets';
+const presetsAll = () => LS.get(PRESET_KEY, {}), presetsOf = id => presetsAll()[id] || [];
+function savePresetData(id, name, params) { const all = presetsAll(); const list = all[id] || []; const i = list.findIndex(p => p.name === name); const p = { name, params: JSON.parse(JSON.stringify(params)) }; if (i >= 0) list[i] = p; else list.push(p); all[id] = list; LS.set(PRESET_KEY, all); }
+function deletePresetData(id, name) { const all = presetsAll(); all[id] = (all[id] || []).filter(p => p.name !== name); if (!all[id].length) delete all[id]; LS.set(PRESET_KEY, all); }
+function presetRow(a, vals, rebuild) {
+  const sel = h('select', { class: 'preset-sel' }); const fill = () => { sel.innerHTML = ''; sel.append(h('option', { value: '' }, presetsOf(a.id).length ? 'Presets…' : 'No saved presets')); presetsOf(a.id).forEach(p => sel.append(h('option', { value: p.name }, p.name))); }; fill();
+  sel.onchange = () => { const p = presetsOf(a.id).find(q => q.name === sel.value); if (!p) return; Object.keys(vals).forEach(k => delete vals[k]); Object.assign(vals, JSON.parse(JSON.stringify(p.params))); rebuild(p.name); };
+  const save = h('button', { class: 'btn sm', 'data-tip': 'Save these settings as a preset', onclick: async () => { const n = await prompt('Save ' + a.name + ' preset', 'Preset name', sel.value || a.name + ' ' + (presetsOf(a.id).length + 1)); if (!n) return; savePresetData(a.id, n, vals); fill(); sel.value = n; toast('Preset saved', 'ok'); } }, 'Save…');
+  const del = h('button', { class: 'btn sm', 'data-tip': 'Delete the selected preset', onclick: () => { if (!sel.value) return toast('Choose a preset to delete'); deletePresetData(a.id, sel.value); fill(); toast('Preset deleted'); } }, 'Delete');
+  return { el: h('div', { class: 'preset-row' }, sel, save, del), sel };
+}
+async function saveActivePreset() { const L = AL(); if (L?.kind !== 'adjust' || !ADJ_BY_ID[L.adj.type]?.params && !ADJ_BY_ID[L.adj.type]?.custom) return toast('Select an adjustment layer with settings', 'err'); const a = ADJ_BY_ID[L.adj.type]; const n = await prompt('Save ' + a.name + ' preset', 'Preset name', L.name); if (!n) return; savePresetData(a.id, n, L.adj.params); toast('Preset saved', 'ok'); }
+function presetThumb(a, params, base) { const img = new ImageData(new Uint8ClampedArray(base.data), base.width, base.height); try { a.fn(img, JSON.parse(JSON.stringify(params)), { scale: base.width / D.w }); } catch (e) { console.error(e); } const c = mk(base.width, base.height); ctxOf(c).putImageData(img, 0, 0); return c; }
+async function applyPresetDialog() {
+  if (!D) return toast('Open an image first'); const all = presetsAll(), ids = Object.keys(all).filter(id => ADJ_BY_ID[id]);
+  if (!ids.length) return toast('No presets yet — save one from an adjustment panel (Save…)');
+  const s = smallComposite(D.layers.length, 120), b2 = mk(s.width, s.height), bx = ctxOf(b2); bx.fillStyle = '#fff'; bx.fillRect(0, 0, s.width, s.height); bx.drawImage(s, 0, 0); const base = bx.getImageData(0, 0, s.width, s.height);
+  let chosen = null; const grid = h('div', { class: 'preset-grid' });
+  ids.forEach(id => { const a = ADJ_BY_ID[id]; grid.append(h('div', { class: 'adj-cat' }, a.name)); all[id].forEach(p => { const th = presetThumb(a, p.params, base), cv = h('canvas', { width: 108, height: 80 }); const x = cv.getContext('2d'), kk = Math.max(108 / th.width, 80 / th.height); x.drawImage(th, (108 - th.width * kk) / 2, (80 - th.height * kk) / 2, th.width * kk, th.height * kk);
+    const cell = h('div', { class: 'look', onclick: () => { grid.querySelectorAll('.look').forEach(e => e.classList.remove('on')); cell.classList.add('on'); chosen = { id, p }; }, ondblclick: () => document.querySelector('.modal .m-f .primary')?.click() }, cv, h('span', {}, p.name)); grid.append(cell); }); });
+  const r = await modal({ title: 'Apply adjustment preset', width: 620, body: grid, buttons: [{ label: 'Cancel', value: null }, { label: 'Add adjustment layer', primary: true, value: 'ok' }] });
+  if (r !== 'ok' || !chosen) return; const a = ADJ_BY_ID[chosen.id];
+  const L = newLayer(a.name + ': ' + chosen.p.name, 1, 1, { kind: 'adjust', adj: { type: a.id, params: JSON.parse(JSON.stringify(chosen.p.params)) } }); D.layers.splice(D.active + 1, 0, L); D.active++; requestRender(); pushHist('Preset: ' + chosen.p.name); renderLayers();
+}
+async function managePresetsDialog() {
+  const body = h('div', { class: 'preset-list' }); const draw = () => { body.innerHTML = ''; const all = presetsAll(); const ids = Object.keys(all); if (!ids.length) body.append(h('div', { class: 'muted' }, 'No saved presets.')); ids.forEach(id => { body.append(h('div', { class: 'adj-cat' }, ADJ_BY_ID[id]?.name || id)); all[id].forEach(p => body.append(h('div', { class: 'preset-item' }, h('span', {}, p.name), h('button', { class: 'btn sm', onclick: () => { deletePresetData(id, p.name); draw(); } }, 'Delete')))); }); }; draw();
+  await modal({ title: 'Adjustment presets', width: 420, body, buttons: [{ label: 'Done', primary: true }] });
+}
+
+// =====================================================================  Smart filters (non-destructive, editable filter stack per layer)
+function smartPartial(L, upto = Infinity) {
+  const s = L.smart, c = mk(s.orig.width, s.orig.height), x = ctxOf(c); x.drawImage(s.orig, 0, 0);
+  s.filters.forEach((f, i) => { if (i >= upto || !f.on) return; const Fd = FILTERS.find(q => q.id === f.id); if (!Fd) return; const img = x.getImageData(0, 0, c.width, c.height), orig = f.mask ? new Uint8ClampedArray(img.data) : null;
+    try { Fd.fn(img, f.vals, { scale: 1, fg: f.fg, bg: f.bg, ox: L.x, oy: L.y }); } catch (e) { console.error(e); }
+    if (f.mask) { const m = ctxOf(f.mask).getImageData(0, 0, c.width, c.height).data, d = img.data; for (let j = 0; j < d.length; j += 4) { const a = m[j + 3] / 255; if (a >= 1) continue; for (let q = 0; q < 4; q++) d[j + q] = orig[j + q] + (d[j + q] - orig[j + q]) * a; } }
+    x.putImageData(img, 0, 0); });
+  return c;
+}
+const smartRecompute = L => smartPartial(L);
+function convertToSmart(L = AL(), silent) { if (!D || !L) return; if (L.kind !== 'raster') return toast(L.kind === 'adjust' ? 'Adjustment layers cannot hold filters' : 'Rasterize the layer first', 'err'); if (L.smart) return silent ? null : toast('This layer already uses smart filters'); ensureCovers(L); L.smart = { orig: cloneCanvas(L.canvas), filters: [] }; if (!silent) { pushHist('Convert for smart filters'); renderLayers(); toast('Filters on this layer are now editable — see the Layers panel', 'ok'); } }
+function applySmartFilter(L, Fd, vals) {
+  convertToSmart(L, true); let mask = null; if (D.sel) { mask = mk(L.canvas.width, L.canvas.height); mask.getContext('2d').drawImage(D.sel, -L.x, -L.y); }
+  L.smart.filters.push({ id: Fd.id, vals: JSON.parse(JSON.stringify(vals)), on: true, fg: O.fg, bg: O.bg, mask }); L.canvas = smartRecompute(L); renderLayers(); return true;
+}
+function smartToggle(L, i) { const f = L.smart.filters[i]; f.on = !f.on; L.canvas = smartRecompute(L); requestRender(); pushHist((f.on ? 'Show ' : 'Hide ') + 'smart filter'); renderLayers(); }
+function smartDelete(L, i) { L.smart.filters.splice(i, 1); L.canvas = smartRecompute(L); requestRender(); pushHist('Delete smart filter'); renderLayers(); }
+function smartEdit(L, i) { const f = L.smart.filters[i], Fd = FILTERS.find(q => q.id === f.id); if (!Fd) return; if (!Fd.params) return toast('This filter has no settings'); filterDialog(Fd, { smartEdit: { L, i } }); }
+function rasterizeSmart(L = AL()) { if (!L?.smart) return toast('The active layer has no smart filters'); L.smart = null; pushHist('Rasterize smart filters'); renderLayers(); }
+
+// =====================================================================  Autosave & crash recovery (IndexedDB)
+const AS = LS.get('bts.photo.autosave', { on: true, sec: 60 }), SESSION = (crypto.randomUUID ? crypto.randomUUID() : String(Math.random()).slice(2));
+let idbP = null;
+function idb() { if (!idbP) { idbP = new Promise((res, rej) => { const r = indexedDB.open('bts-photo-recovery', 1); r.onupgradeneeded = () => { const db = r.result; if (!db.objectStoreNames.contains('docs')) db.createObjectStore('docs', { keyPath: 'rid' }); if (!db.objectStoreNames.contains('alive')) db.createObjectStore('alive', { keyPath: 'session' }); }; r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); }); idbP.catch(() => { idbP = null; }); } return idbP; }
+async function idbDo(store, mode, fn) { const db = await idb(); return new Promise((res, rej) => { const tx = db.transaction(store, mode), st = tx.objectStore(store); let out; const r = fn(st); if (r) r.onsuccess = () => { out = r.result; }; tx.oncomplete = () => res(out); tx.onerror = () => rej(tx.error); tx.onabort = () => rej(tx.error); }); }
+function layerMeta(L) { return { name: L.name, x: L.x, y: L.y, visible: L.visible, opacity: L.opacity, blend: L.blend, locked: L.locked, fx: L.fx, kind: L.kind, text: L.text, adj: L.adj, editMask: L.editMask, frame: L.frame ? { ...L.frame, img: undefined } : undefined, smart: L.smart ? { filters: L.smart.filters.map(f => ({ id: f.id, vals: f.vals, on: f.on, fg: f.fg, bg: f.bg })) } : undefined }; }
+// enc(canvas) -> string (data URL) or Promise<Blob>
+async function serializeDoc(d, enc) {
+  const layers = [];
+  for (const L of d.layers) { const m = layerMeta(L); m.png = L.kind === 'adjust' ? null : await enc(L.canvas); m.mask = L.mask ? await enc(L.mask) : null; if (L.frame?.img) m.frameImg = await enc(L.frame.img); if (L.smart) { m.smartOrig = await enc(L.smart.orig); m.smartMasks = []; for (const f of L.smart.filters) m.smartMasks.push(f.mask ? await enc(f.mask) : null); } layers.push(m); }
+  return { app: 'BTS Photo', v: 3, w: d.w, h: d.h, guides: d.guides, notes: d.notes, layers };
+}
+async function partToCanvas(v) { if (!v) return null; const im = typeof v === 'string' ? await decodeImage(b64ToU8(v), 'x.png') : await createImageBitmap(v); const c = mk(im.width, im.height); c.getContext('2d').drawImage(im, 0, 0); return c; }
+async function docFromProject(j, name) {
+  const d = createDoc({ w: j.w, h: j.h, name, bg: null }); d.layers = [];
+  for (const l of j.layers) {
+    const kind = l.kind || 'raster', base = { visible: l.visible, opacity: l.opacity, blend: l.blend, locked: l.locked, fx: l.fx || {}, kind, editMask: !!l.editMask };
+    let L; if (kind === 'adjust') L = newLayer(l.name, 1, 1, { ...base, adj: l.adj });
+    else { const c = await partToCanvas(l.png); L = newLayer(l.name, c.width, c.height, { ...base, x: l.x, y: l.y, text: l.text }); L.canvas = c; }
+    if (l.mask) { L.mask = await partToCanvas(l.mask); L.maskVer = 1; L.x = l.x || 0; L.y = l.y || 0; }
+    if (kind === 'frame' && l.frame) { L.frame = { ...l.frame, img: await partToCanvas(l.frameImg) }; }
+    if (l.smart && l.smartOrig) { L.smart = { orig: await partToCanvas(l.smartOrig), filters: [] }; for (let i = 0; i < l.smart.filters.length; i++) L.smart.filters.push({ ...l.smart.filters[i], mask: await partToCanvas(l.smartMasks?.[i]) }); }
+    d.layers.push(L);
+  }
+  d.guides = j.guides || []; d.notes = j.notes || []; d.active = d.layers.length - 1; return d;
+}
+let asBusy = false, asLast = 0;
+async function autosaveDoc(d) {
+  d.rid = d.rid || (crypto.randomUUID ? crypto.randomUUID() : 'r' + Math.random()); const j = await serializeDoc(d, c => canvasToBlob(c, 'image/png'));
+  const tk = Math.min(1, 160 / Math.max(d.w, d.h)), tc = mk(Math.max(1, d.w * tk), Math.max(1, d.h * tk)); { const cur = D; D = d; try { tc.getContext('2d').drawImage(flattenCanvas(), 0, 0, tc.width, tc.height); } finally { D = cur; } }
+  const thumb = await canvasToBlob(tc, 'image/png');
+  await idbDo('docs', 'readwrite', st => st.put({ rid: d.rid, session: SESSION, name: d.name, path: d.path, w: d.w, h: d.h, at: Date.now(), thumb, j }));
+  d.asKey = d.hi + ':' + d.hist.length + ':' + d.w + 'x' + d.h;
+}
+async function autosaveNow(force = false) {
+  if (asBusy) return 0; asBusy = true; let n = 0;
+  try { await idbDo('alive', 'readwrite', st => st.put({ session: SESSION, at: Date.now() }));
+    for (const d of docs) { const key = d.hi + ':' + d.hist.length + ':' + d.w + 'x' + d.h; if (!d.dirty && !force) continue; if (d.asKey === key && !force) continue; if (T && d === D) continue; await autosaveDoc(d); n++; } }
+  catch (e) { console.warn('Autosave failed', e); } finally { asBusy = false; asLast = Date.now(); }
+  return n;
+}
+async function dropRecovery(d) { if (!d?.rid) return; try { await idbDo('docs', 'readwrite', st => st.delete(d.rid)); } catch { } d.asKey = null; }
+setInterval(() => { if (AS.on && docs.length && Date.now() - asLast >= AS.sec * 1000) autosaveNow(); else if (Date.now() - asLast >= 30000) { asLast = Date.now(); idbDo('alive', 'readwrite', st => st.put({ session: SESSION, at: Date.now() })).catch(() => { }); } }, 5000);
+async function checkRecovery({ manual = false, includeOwn = false } = {}) {
+  let entries = [], alive = [];
+  try { entries = await idbDo('docs', 'readonly', st => st.getAll()) || []; alive = await idbDo('alive', 'readonly', st => st.getAll()) || []; } catch (e) { if (manual) toast('Recovery storage is unavailable', 'err'); return 0; }
+  const live = new Set(alive.filter(a => a.session !== SESSION && Date.now() - a.at < 90000).map(a => a.session));
+  const cand = entries.filter(e => (includeOwn || e.session !== SESSION) && !live.has(e.session) && !docs.some(d => d.rid === e.rid));
+  if (!cand.length) { if (manual) toast('No autosaved documents to recover'); return 0; }
+  const picks = new Set(cand.map(e => e.rid)), list = h('div', { class: 'rec-list' });
+  for (const e of cand) { const url = e.thumb ? URL.createObjectURL(e.thumb) : ''; const cb = h('input', { type: 'checkbox', checked: true }); cb.onchange = () => cb.checked ? picks.add(e.rid) : picks.delete(e.rid); list.append(h('label', { class: 'rec-item' }, cb, url ? h('img', { src: url }) : h('div', { class: 'rec-ph' }), h('div', {}, h('div', { class: 'rec-n' }, e.name), h('div', { class: 'muted rec-d' }, `${e.w} × ${e.h} px · autosaved ${new Date(e.at).toLocaleString()}`)))); }
+  const r = await modal({ title: 'Recover unsaved work', width: 520, body: h('div', {}, h('div', { class: 'muted', style: { marginBottom: '8px' } }, 'BTS Photo closed unexpectedly. These documents were autosaved and can be restored.'), list), buttons: [{ label: 'Discard', value: 'discard' }, { label: 'Later', value: null }, { label: 'Recover', primary: true, value: 'ok' }] });
+  if (r === 'discard') { for (const e of cand) await idbDo('docs', 'readwrite', st => st.delete(e.rid)); toast('Autosaved documents discarded'); return 0; }
+  if (r !== 'ok') return 0; let n = 0;
+  for (const e of cand) { if (!picks.has(e.rid)) continue; try { const d = await docFromProject(e.j, e.name.replace(/( \(recovered\))?$/, ' (recovered)')); d.path = null; d.fmt = null; addDoc(d); d.dirty = true; d.rid = e.rid; await idbDo('docs', 'readwrite', st => st.put({ ...e, session: SESSION })); renderTabs(); n++; } catch (err) { console.error(err); toast('Could not recover ' + e.name, 'err'); } }
+  if (n) toast(`Recovered ${n} document${n === 1 ? '' : 's'} — save them to keep the changes`, 'ok'); return n;
+}
+async function autosaveSettings() {
+  const v = await form({ title: 'Autosave & recovery', fields: [{ key: 'on', label: 'Autosave unsaved documents for crash recovery', type: 'checkbox', value: AS.on }, { key: 'sec', label: 'Every (seconds)', type: 'number', value: AS.sec, min: 15, max: 3600 }] }); if (!v) return;
+  AS.on = !!v.on; AS.sec = clamp(Math.round(+v.sec || 60), 15, 3600); LS.set('bts.photo.autosave', AS); toast(AS.on ? `Autosave every ${AS.sec} s` : 'Autosave is off', 'ok');
+}
+
+// =====================================================================  Contextual task bar
+O.taskBar = LS.get('bts.photo.taskbar', true);
+const tbar = h('div', { class: 'ctx-bar' }); vpEl.append(tbar); let tbarKey = '';
+['pointerdown', 'pointerup', 'pointermove', 'dblclick', 'wheel', 'contextmenu'].forEach(ev => tbar.addEventListener(ev, e => e.stopPropagation()));
+function toggleTaskBar() { O.taskBar = !O.taskBar; LS.set('bts.photo.taskbar', O.taskBar); updateTaskBar(); }
+function taskBarItems() {
+  if (T) return [['check', 'Commit', commitTransform, true], ['close', 'Cancel', cancelTransform]];
+  if (O.tool === 'crop' && cropState) return [['check', 'Apply crop', applyCrop, true], ['undo', 'Reset', () => { cropState = { x: 0, y: 0, w: D.w, h: D.h }; drawOverlay(); }], ['rotate', 'Straighten…', () => straightenDialog(0)]];
+  if (D.sel) return [['bucket', 'Fill…', fillDialog], ['heal', 'Content-aware fill', contentAwareFillDialog], ['swap', 'Inverse', invertSel], ['mask', 'Mask', () => addMask('sel')], ['wand', 'Refine edge', refineEdgeDialog], ['close', 'Deselect', deselect]];
+  const L = AL(), out = [['subject', 'Select subject', () => selectSubject('ai')], ['eraser', 'Remove background', () => removeBackground('ai')]];
+  if (L?.kind === 'frame') out.unshift(['image', 'Place image', () => placeIntoFrame(L)]);
+  if (D.active > 0 && L && L.kind !== 'adjust') out.push(['harmonize', 'Harmonize', harmonizeDialog]);
+  out.push(['sky', 'Replace sky', skyReplaceDialog], ['upscale', 'Upscale', upscaleDialog]); return out;
+}
+function updateTaskBar() {
+  if (!O.taskBar || !D || stroke || drag || textEd || busy || pan) { tbar.style.display = 'none'; return; }
+  const items = taskBarItems(), key = items.map(i => i[1]).join('|');
+  if (key !== tbarKey) { tbarKey = key; tbar.innerHTML = ''; items.forEach(([ic, label, fn, primary]) => tbar.append(h('button', { class: 'cb' + (primary ? ' primary' : ''), onclick: () => fn(), html: icon(ic, 15) + `<span>${label}</span>` }))); tbar.append(h('button', { class: 'cb x', 'data-tip': 'Hide the contextual task bar (View menu to show it again)', onclick: toggleTaskBar, html: icon('close', 13) })); }
+  tbar.style.display = 'flex';
+  const vr = vpEl.getBoundingClientRect(), bw = tbar.offsetWidth || 300, bh = tbar.offsetHeight || 34; let ax, ay;
+  if (T) { const pts = transformCorners(T).map(p => toScreen(...p)); ax = pts.reduce((s, p) => s + p[0], 0) / 4; ay = Math.max(...pts.map(p => p[1])) + 14; }
+  else if (D.sel && D.selBounds) { const b = D.selBounds; [ax, ay] = toScreen(b.x + b.w / 2, b.y + b.h); ay += 14; if (ay + bh > vr.height - 8) ay = toScreen(0, b.y)[1] - bh - 14; }
+  else { [ax, ay] = toScreen(D.w / 2, D.h); ay += 16; }
+  tbar.style.left = clamp(ax - bw / 2, 8, Math.max(8, vr.width - bw - 8)) + 'px'; tbar.style.top = clamp(ay, 30, Math.max(30, vr.height - bh - 8)) + 'px';
+}
+function smartRows(l, i) {
+  const wrap = h('div', { class: 'sf-wrap' + (i === D.active ? ' active' : '') });
+  wrap.append(h('div', { class: 'sf-h' }, h('span', { class: 'sf-ic', html: icon('fx', 12) }), 'Smart filters'));
+  l.smart.filters.forEach((f, k) => { const Fd = FILTERS.find(q => q.id === f.id);
+    wrap.append(h('div', { class: 'sf' + (f.on ? '' : ' off'), ondblclick: e => { e.stopPropagation(); D.active = i; smartEdit(l, k); } },
+      h('div', { class: 'vis', 'data-tip': 'Show / hide this filter', html: icon(f.on ? 'eye' : 'eyeOff'), onclick: e => { e.stopPropagation(); smartToggle(l, k); } }),
+      h('span', { class: 'sf-n' }, Fd ? Fd.name : f.id), f.mask ? h('span', { class: 'badge' }, 'masked') : '',
+      h('button', { class: 'icon-btn sf-b', 'data-tip': 'Edit filter settings', html: icon('sliders', 13), onclick: e => { e.stopPropagation(); D.active = i; smartEdit(l, k); } }),
+      h('button', { class: 'icon-btn sf-b', 'data-tip': 'Delete smart filter', html: icon('trash', 13), onclick: e => { e.stopPropagation(); smartDelete(l, k); } }))); });
+  if (!l.smart.filters.length) wrap.append(h('div', { class: 'sf muted' }, 'Apply a filter to add it here'));
+  return wrap;
+}
+const SMART_MENU = () => [{ label: 'Convert for smart filters', action: () => convertToSmart(), disabled: AL()?.kind !== 'raster' || !!AL()?.smart }, { label: 'Apply new filters as smart filters', checked: () => O.smartFilters, action: () => { O.smartFilters = !O.smartFilters; toast(O.smartFilters ? 'New filters are added as editable smart filters' : 'Filters are applied directly to pixels'); } }, { label: 'Rasterize smart filters', action: () => rasterizeSmart(), disabled: !AL()?.smart }];
+
 // =====================================================================  boot
 vpEl.append(h('div', { class: 'welcome' }, h('div', { class: 'card' }, h('div', { class: 'big-ico' }, 'Ph'), h('h2', {}, 'BTS Photo'), h('p', {}, 'Create a new image or open a photo, PSD or project. You can also drop files here or paste an image.'),
   h('div', { class: 'row' }, h('button', { class: 'btn primary', html: icon('plus') + 'New', onclick: newDialog }), h('button', { class: 'btn', html: icon('open') + 'Open', onclick: openDialog })))));
-UI.fileDrop(async files => { for (const f of files) await openFile({ name: f.name, path: bts.fs.pathOf(f), data: new Uint8Array(await f.arrayBuffer()) }); }, 'Drop images to open');
+UI.fileDrop(async files => { if (D && activeFrame() && files.length === 1 && /\.(png|jpe?g|webp|gif|bmp|svg)$/i.test(files[0].name)) return placeIntoFrame(activeFrame(), { name: files[0].name, data: new Uint8Array(await files[0].arrayBuffer()) }); for (const f of files) await openFile({ name: f.name, path: bts.fs.pathOf(f), data: new Uint8Array(await f.arrayBuffer()) }); }, 'Drop images to open');
 renderColor(); renderToolbar(); setTool('brush'); renderAll(); renderTabs(); UI.setDocTitle('', 'BTS Photo');
 const qf = UI.queryFile(); if (qf) bts.fs.read(qf).then(f => openFile({ ...f, data: new Uint8Array(f.data) }));
+setTimeout(() => checkRecovery().catch(e => console.warn('Recovery check failed', e)), 1500);
 window.__bts = { get D() { return D; }, O, X, addDoc, createDoc, setTool, pushHist, requestRender, render, flattenCanvas, runAdjust, ADJ, ADJ_BY_ID, FILTERS, runFilter, filterDialog, applyFilterToLayer, layerImageOp, startTransform, commitTransform, selectAll, deselect, invertSel, addLayer, applyGradient, commitShape, savePsd, psdObject, projectJSON, openFile, renderLayers, layerStyleDialog, textClick, finishText, get T() { return T; },
   inpaintLayer, contentAwareFillDialog, applyPatch, redEyeAt, selectSubject, selectSky, focusAreaDialog, colorRangeDialog, growSel, similarSel, refineEdgeDialog, removeBackground, personMask, plainBgMask, liquifyDialog, applyLook, showTab, renderLooks,
   exportDialog, exportLayersDialog, quickExportPng, newDialog, TEMPLATES, takeSnapshot, restoreSnapshot, expandDialog, expandFill, rotateArbitrary, straightenDialog, autoStraighten, revealAll, trimCanvas, resizeCanvas, resizeImage, applyCrop, applyPerspectiveCrop, cropRatioValue, fitCropToRatio,
-  get cropState() { return cropState; }, set cropState(v) { cropState = v; }, get pcropState() { return pcropState; }, set pcropState(v) { pcropState = v; }, repeatFilter, get lastFilter() { return lastFilter; }, gradientEditor, definePattern, PATTERNS, copyFx, pasteFx, clearFx, toggleRulers, snapValue, newGuideDialog, setSel, maskFromAlpha, selAlpha, editActiveLayer, mergeDown, flatten, stampAdjust, beginStrokeAt: (x, y) => beginStroke({}, x, y), continueStrokeAt: (x, y) => continueStroke(x, y, {}), endStroke, noteClick, rulerAngle, straightenFromRuler, get busy() { return busy; } };
+  get cropState() { return cropState; }, set cropState(v) { cropState = v; }, get pcropState() { return pcropState; }, set pcropState(v) { pcropState = v; }, repeatFilter, get lastFilter() { return lastFilter; }, gradientEditor, definePattern, PATTERNS, copyFx, pasteFx, clearFx, toggleRulers, snapValue, newGuideDialog, setSel, maskFromAlpha, selAlpha, editActiveLayer, mergeDown, flatten, stampAdjust, beginStrokeAt: (x, y) => beginStroke({}, x, y), continueStrokeAt: (x, y) => continueStroke(x, y, {}), endStroke, noteClick, rulerAngle, straightenFromRuler, get busy() { return busy; },
+  harmonizeDialog, shadowCanvas, upscaleDialog, upscaleImage, removeDistractions, inpaintTiled, skyReplaceDialog, skyAlphaFrom, backgroundBlurDialog, createFrame, newFrameCentered, setFrameImage, placeIntoFrame, updateFrame, renderFrameLayer, frameFromSelectionOrLayer, savePresetData, deletePresetData, presetsAll, applyPresetDialog, managePresetsDialog, saveActivePreset, convertToSmart, applySmartFilter, smartToggle, smartDelete, smartEdit, rasterizeSmart, smartRecompute, autosaveNow, checkRecovery, dropRecovery, docFromProject, serializeDoc, autosaveSettings, toggleTaskBar, updateTaskBar, AS, rasterizeLayer, adjustLayerDialog, get docs() { return docs; }, switchDoc };
 })();

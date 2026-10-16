@@ -292,7 +292,7 @@ function dehaze(img, p) {
   for (let y = 0; y < h; y++) { const yy = Math.min(sh - 1, (y * k) | 0) * sw; for (let x = 0; x < w; x++) { const j = (y * w + x) * 4, m = Math.min(d[j], d[j + 1], d[j + 2]), q = yy + Math.min(sw - 1, (x * k) | 0); if (m < dc[q]) dc[q] = m; } }
   const r = Math.max(2, Math.round(Math.min(sw, sh) / 80));
   const inv = new Uint8Array(sw * sh); for (let i = 0; i < inv.length; i++) inv[i] = 255 - dc[i];
-  const mf = maxFilterU8(inv, sw, sh, r), dark = new Float32Array(sw * sh); for (let i = 0; i < dark.length; i++) dark[i] = (255 - mf[i]) / 255;
+  const mf = (window.PFX.maxGray || maxFilterU8)(inv, sw, sh, r), dark = new Float32Array(sw * sh); for (let i = 0; i < dark.length; i++) dark[i] = (255 - mf[i]) / 255;
   boxChan(dark, sw, sh, r * 2);
   const order = Array.from(dark.keys()).sort((x, y) => dark[y] - dark[x]).slice(0, Math.max(1, Math.floor(dark.length * 0.002)));
   let Ar = 0, Ag = 0, Ab = 0; order.forEach(i => { const x = Math.min(w - 1, Math.round((i % sw) / k)), y = Math.min(h - 1, Math.round(Math.floor(i / sw) / k)), j = (y * w + x) * 4; Ar += d[j]; Ag += d[j + 1]; Ab += d[j + 2]; }); Ar /= order.length; Ag /= order.length; Ab /= order.length; const Am = Math.max(Ar, Ag, Ab, 1) / 255;
