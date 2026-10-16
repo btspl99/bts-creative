@@ -47,7 +47,7 @@ function detectBeats(pcm, sr) {
   let ph = { s: -1, o: 0 }; for (let o = 0; o < period; o += 0.5) { let s = 0; for (let t = o; t < frames; t += period) { const i = Math.round(t); let a = 0, b = 0; for (let j = Math.max(0, i - 2); j <= Math.min(frames - 1, i + 2); j++) { a = Math.max(a, on[j]); b = Math.max(b, low[j]); } s += a + b * lw; } if (s > ph.s) ph = { s, o }; }
   const beats = []; const tol = Math.round(period * 0.12);
   let tStart = ph.o; while (tStart - period > -3) tStart -= period;
-  for (let t = Math.max(0, tStart); t < frames; t += period) { const c = Math.round(t); let bi = c, bv = -1; for (let i = Math.max(0, c - tol); i <= Math.min(frames - 1, c + tol); i++) if (on[i] > bv) { bv = on[i]; bi = i; } beats.push((bv > 0 ? bi * 0.6 + c * 0.4 : c) / rate + N / 2 / sr); }
+  for (let t = Math.max(0, tStart); t < frames; t += period) { const c = Math.round(t); let bi = c, bv = -1; for (let i = Math.max(0, c - tol); i <= Math.min(frames - 1, c + tol); i++) if (on[i] > bv) { bv = on[i]; bi = i; } beats.push((bv > 0 ? bi * 0.6 + c * 0.4 : c) / rate + N / 2 / sr + 0.017); } // +17 ms: flux peaks slightly before the attack
   const onsets = []; for (let i = 1; i < frames - 1; i++) if (on[i] > on[i - 1] && on[i] >= on[i + 1] && on[i] > 0.5 * (m[i] || 1)) onsets.push(i / rate);
   return { bpm: Math.round(60 * rate / period * 10) / 10, beats, onsets };
 }

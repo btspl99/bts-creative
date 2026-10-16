@@ -198,7 +198,7 @@ function buildAudio(t0, t1, inputOffset) {
   const cond = bl.map(([a, b]) => `between(t,${a.toFixed(3)},${b.toFixed(3)})`).join('+');
   const k = inputs.length / 2 + inputOffset; inputs.push('-f', 'lavfi', '-i', `sine=frequency=1000:sample_rate=48000:duration=${(t1 - t0 + 1).toFixed(3)}`);
   filt.push(`${labels.join('')}amix=inputs=${labels.length}:normalize=0:dropout_transition=0,volume='if(${cond},0,1)':eval=frame[prog]`);
-  filt.push(`[${k}:a]aformat=sample_rates=48000:channel_layouts=stereo,volume='if(${cond},0.3,0)':eval=frame[beep]`);
+  filt.push(`[${k}:a]aformat=sample_rates=48000:channel_layouts=stereo,volume='if(${cond},2.4,0)':eval=frame[beep]`);
   filt.push(`[prog][beep]amix=inputs=2:normalize=0:duration=first,alimiter=limit=0.98:level=disabled,apad[aout]`);
   return { inputs, graph: filt.join(';\n'), n: labels.length, bleeps: bl.length };
 }

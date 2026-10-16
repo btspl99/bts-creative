@@ -163,13 +163,20 @@ async function trackSelected(dir = 1, opts = {}) {
 // =====================================================================  Smart Reframe (follows the subject when changing aspect ratio)
 // picks the most "interesting" box (motion + detail, centre-weighted) in a clip's first second
 async function autoSubject(c, fw, fh) {
-  const id = await openGray(c, c.start + Math.min(0.2, tlDur(c) / 4), fw, fh, 5); const f0 = await bts.ffmpeg.framesNext(id); const f1 = (await bts.ffmpeg.framesNext(id)) || f0; bts.ffmpeg.framesClose(id);
+  const id = await openGray(c, c.start, fw, fh, 10); const f0 = await bts.ffmpeg.framesNext(id); const f1 = (await bts.ffmpeg.framesNext(id)) || f0; bts.ffmpeg.framesClose(id);
   if (!f0) return null; const sal = new Float32Array(fw * fh);
-  for (let y = 1; y < fh - 1; y++) for (let x = 1; x < fw - 1; x++) { const i = y * fw + x; const gx = f0[i + 1] - f0[i - 1], gy = f0[i + fw] - f0[i - fw]; sal[i] = Math.abs(f1[i] - f0[i]) * 2 + Math.sqrt(gx * gx + gy * gy) * 0.35; }
+  for (let y = 1; y < fh - 1; y++) for (let x = 1; x < fw - 1; x++) { const i = y * fw + x; const gx = f0[i + 1] - f0[i - 1], gy = f0[i + fw] - f0[i - fw]; sal[i] = Math.abs(f1[i] - f0[i]) + Math.sqrt(gx * gx + gy * gy) * 0.5; } // f0 is the frame the tracker starts from
   const bw = Math.round(fw * 0.22), bh = Math.round(fh * 0.4); let best = null;
   for (let y = 0; y + bh <= fh; y += 4) for (let x = 0; x + bw <= fw; x += 4) { let s = 0; for (let j = 0; j < bh; j += 2) for (let i = 0; i < bw; i += 2) s += sal[(y + j) * fw + x + i];
     const cx = (x + bw / 2) / fw - 0.5, cy = (y + bh / 2) / fh - 0.45; s *= 1 - Math.min(0.6, (cx * cx + cy * cy) * 1.6); if (!best || s > best.s) best = { s, x, y }; }
-  return best ? { px: best.x + bw / 2, py: best.y + bh / 2, bw, bh } : null;
+  if (!best) return null;
+  // pull the box onto the subject: centroid of the above-background saliency inside the box
+  const smp = []; for (let i = 0; i < sal.length; i += 37) smp.push(sal[i]); smp.sort((p, q) => p - q); const bgS = smp[Math.floor(smp.length * 0.6)] || 0;
+  let cx = best.x + bw / 2, cy = best.y + bh / 2;
+  for (let it = 0; it < 3; it++) { let sw = 0, sx = 0, sy = 0; const x0 = Math.max(0, Math.round(cx - bw / 2)), y0 = Math.max(0, Math.round(cy - bh / 2));
+    for (let y = y0; y < Math.min(fh, y0 + bh); y++) for (let x = x0; x < Math.min(fw, x0 + bw); x++) { const v = Math.max(0, sal[y * fw + x] - bgS * 1.3); const w2 = v * v; sw += w2; sx += x * w2; sy += y * w2; }
+    if (sw > 0) { cx = clamp(sx / sw, bw / 2, fw - bw / 2); cy = clamp(sy / sw, bh / 2, fh - bh / 2); } }
+  return { px: cx, py: cy, bw, bh };
 }
 async function smartReframe({ aspect = '9:16', follow = true, smooth = 0.6 } = {}) {
   const A = ASPECTS.find(a => a[0] === aspect) || ASPECTS[1]; const long = Math.max(PJ.seq.w, PJ.seq.h) >= 1900 ? 1 : 2 / 3;

@@ -78,7 +78,7 @@ function clipEl(c, t) {
   if (P.fadeIn) el.append(h('div', { class: 'fade-in', style: { width: P.fadeIn * ST.pps + 'px' } }));
   if (P.fadeOut) el.append(h('div', { class: 'fade-out', style: { width: P.fadeOut * ST.pps + 'px' } }));
   el.append(h('div', { class: 'fh l', 'data-tip': 'Drag to fade in', style: { left: (P.fadeIn || 0) * ST.pps + 'px' } }), h('div', { class: 'fh r', 'data-tip': 'Drag to fade out', style: { right: (P.fadeOut || 0) * ST.pps + 'px' } }));
-  kfTimes(c).forEach(kt => { const d = h('div', { class: 'kfd', 'data-t': kt, style: { left: kt * ST.pps + 'px' }, title: 'Keyframe ' + kt.toFixed(2) + 's' }); el.append(d); });
+  let lastKx = -1e9; kfTimes(c).forEach(kt => { const px = kt * ST.pps; if (px - lastKx < 6) return; lastKx = px; const d = h('div', { class: 'kfd', 'data-t': kt, style: { left: px + 'px' }, title: 'Keyframe ' + kt.toFixed(2) + 's' }); el.append(d); }); // dense (tracked) keyframes are thinned for display
   el.append(h('div', { class: 'edge l' }), h('div', { class: 'edge r' }));
   el.addEventListener('pointerdown', e => clipPointerDown(e, c, el));
   el.addEventListener('dblclick', e => { if (e.target.classList.contains('kfd')) return; if (c.type === 'nest') return openNest(c); select([c.id]); if (c.type === 'title') setTimeout(() => document.querySelector('#fx textarea')?.focus(), 30); });
