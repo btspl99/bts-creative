@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' data: blob:; img-src 'self' data: blob:">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' data: blob:; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' blob: data:; worker-src 'self' blob:; img-src 'self' data: blob:">
 <title>BTS Photo</title>
 <link rel="stylesheet" href="../shared/theme.css">
 <link rel="stylesheet" href="photo.css">
@@ -35,6 +35,7 @@
 </div>
 <script src="../shared/ui.js"></script>
 <script src="../vendor/ag-psd.js"></script>
+<script src="fx.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

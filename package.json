@@ -1,7 +1,7 @@
 {
   "name": "bts-creative",
   "productName": "BTS Creative",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "BTS Creative — free and open-source creative suite for students: PDF Pro, Photo, Vector and Video.",
   "main": "main.js",
   "author": {

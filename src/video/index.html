@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' data: blob:; img-src 'self' data: blob: file:; media-src 'self' data: blob: file:; connect-src 'self' data: blob: file:">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' data: blob:; img-src 'self' data: blob: file:; media-src 'self' data: blob: file: mediastream:; connect-src 'self' data: blob: file:">
 <title>BTS Video</title>
 <link rel="stylesheet" href="../shared/theme.css">
 <link rel="stylesheet" href="video.css">
@@ -12,20 +12,26 @@
   <div class="options-bar" id="optbar"></div>
   <div class="upper">
     <div class="pane">
-      <div class="tabs" id="ltabs"><div class="tab active" data-t="media">Project</div><div class="tab" data-t="effects">Effects</div><div class="tab" data-t="titles">Titles</div></div>
+      <div class="tabs" id="ltabs"></div>
       <div class="pane-b" id="lbody"></div>
     </div>
     <div class="pane monitor">
-      <div class="mon-h"><span>Program</span><span class="muted" id="seqInfo"></span></div>
-      <div class="mon-view" id="monView"><canvas id="program"></canvas><div class="safe hidden" id="safe"></div></div>
+      <div class="mon-h"><span>Program <span id="recInd" class="rec-ind"></span></span><span class="muted" id="seqInfo"></span></div>
+      <div class="mon-body">
+        <div class="mon-view" id="monView"><div class="mon-stage"><canvas id="program"></canvas><canvas id="ovl"></canvas></div><div class="safe hidden" id="safe"></div></div>
+        <canvas id="meters" data-tip="Audio meters (L / R)"></canvas>
+      </div>
       <div class="transport">
         <span class="tc" id="tcCur">00:00:00:00</span>
         <div class="tbtns">
+          <button class="icon-btn txt" id="bIn" data-tip="Mark In (I)">{</button>
+          <button class="icon-btn txt" id="bOut" data-tip="Mark Out (O)">}</button>
           <button class="icon-btn" id="bStart" data-tip="Go to start (Home)"></button>
           <button class="icon-btn" id="bPrev" data-tip="Step back (←)"></button>
-          <button class="icon-btn play" id="bPlay" data-tip="Play / pause (Space)"></button>
+          <button class="icon-btn play" id="bPlay" data-tip="Play / pause (Space) · J K L shuttle"></button>
           <button class="icon-btn" id="bNext" data-tip="Step forward (→)"></button>
           <button class="icon-btn" id="bEnd" data-tip="Go to end (End)"></button>
+          <button class="icon-btn txt" id="bMark" data-tip="Add marker (M)">◆</button>
         </div>
         <span class="tc dim" id="tcDur">00:00:00:00</span>
       </div>
@@ -52,6 +58,13 @@
   <div class="statusbar"><span id="stInfo">Ready</span><div class="right"><span id="stSel"></span></div></div>
 </div>
 <script src="../shared/ui.js"></script>
+<script src="fx.js"></script>
+<script src="captions.js"></script>
+<script src="core.js"></script>
+<script src="render.js"></script>
+<script src="timeline.js"></script>
+<script src="panels.js"></script>
+<script src="export.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

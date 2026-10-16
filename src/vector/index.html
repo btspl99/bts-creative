@@ -7,36 +7,98 @@
 <link rel="stylesheet" href="../shared/theme.css">
 <style>
   .workspace { grid-template-rows: 42px 1fr 26px; }
-  .mid { display: grid; grid-template-columns: 48px 1fr 300px; min-height: 0; }
-  .viewport { position: relative; overflow: hidden; background: #2a2b31; }
+  .mid { display: grid; grid-template-columns: 66px 1fr 300px; min-height: 0; }
+  .toolbar { width: 66px; }
+  .tool-grid { display: grid; grid-template-columns: repeat(2, 28px); gap: 2px; }
+  .tool-grid .icon-btn { width: 28px; height: 28px; }
+  .tool-grid .icon-btn svg { width: 16px; height: 16px; }
+  .icon-btn.mini { width: 20px; height: 20px; font-size: 10px; }
+  .viewport { position: relative; overflow: hidden; background: var(--stage); }
   #cv { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-  .fs { position: relative; width: 38px; height: 40px; margin-top: 8px; flex-shrink: 0; }
+  .ruler { position: absolute; z-index: 5; pointer-events: auto; cursor: crosshair; }
+  .ruler.h { left: 18px; top: 0; height: 18px; }
+  .ruler.v { left: 0; top: 18px; width: 18px; }
+  .ruler-c { position: absolute; left: 0; top: 0; width: 18px; height: 18px; z-index: 6; background: var(--bg-2); border-right: 1px solid var(--line-2); border-bottom: 1px solid var(--line-2); }
+  .no-rulers .ruler, .no-rulers .ruler-c { display: none; }
+  .fs { position: relative; width: 38px; height: 40px; margin-top: 10px; flex-shrink: 0; }
   .fs .sw { position: absolute; width: 24px; height: 24px; border-radius: 4px; cursor: pointer; }
-  .fs .fill { left: 1px; top: 1px; z-index: 2; border: 1px solid #000; box-shadow: 0 0 0 2px #ddd; }
-  .fs .stroke { right: 1px; bottom: 1px; background: transparent; border: 6px solid #000; box-shadow: 0 0 0 1px #ddd; }
+  .fs .fill { left: 1px; top: 1px; z-index: 2; border: 1px solid var(--line-2); box-shadow: 0 0 0 2px var(--bg-0); }
+  .fs .stroke { right: 1px; bottom: 1px; background: transparent; border: 6px solid #000; box-shadow: 0 0 0 1px var(--line-2); }
   .fs .sw.front { z-index: 3; }
   .fs .none { background: linear-gradient(to top right, #fff calc(50% - 1.5px), #e00 50%, #fff calc(50% + 1.5px)) !important; }
+  #rtabs .tab { padding: 7px 2px; font-size: 11.5px; }
   .sec { border-bottom: 1px solid var(--line); padding: 10px 12px 12px; }
   .sec h4 { margin: 0 0 9px; font-size: 11px; font-weight: 600; letter-spacing: .6px; text-transform: uppercase; color: var(--tx-2); }
   .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 8px; }
   .grid2 label { display: flex; align-items: center; gap: 6px; color: var(--tx-2); font-size: 11.5px; }
-  .grid2 input { width: 100%; height: 26px; font-size: 12px; }
+  .grid2 input, .grid2 select { width: 100%; height: 26px; font-size: 12px; }
   .colrow { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; color: var(--tx-2); font-size: 12px; }
-  .colrow .lbl { width: 46px; }
-  .colrow select { height: 26px; font-size: 12px; }
+  .colrow .lbl { width: 46px; flex-shrink: 0; }
+  .colrow select { height: 26px; font-size: 12px; min-width: 0; }
   .icons { display: flex; flex-wrap: wrap; gap: 2px; }
   .icons .icon-btn { width: 30px; height: 30px; }
   .icons .icon-btn svg { width: 16px; height: 16px; }
-  .layers-list .li { display: flex; align-items: center; gap: 6px; padding: 4px 8px; cursor: pointer; border-radius: 5px; font-size: 12px; color: var(--tx-1); }
+  .layers-list .li { display: flex; align-items: center; gap: 5px; padding: 3px 8px; cursor: pointer; border-radius: 5px; font-size: 12px; color: var(--tx-1); border: 1px solid transparent; }
   .layers-list .li:hover { background: var(--bg-3); }
   .layers-list .li.sel { background: var(--accent-soft); color: var(--tx-0); }
   .layers-list .li.layer { font-weight: 600; color: var(--tx-0); }
   .layers-list .li .t { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .layers-list .li .ib { width: 20px; height: 20px; display: grid; place-items: center; color: var(--tx-3); }
+  .layers-list .li .ib { width: 20px; height: 20px; display: grid; place-items: center; color: var(--tx-3); flex-shrink: 0; }
   .layers-list .li .ib svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.8; }
-  .layers-list .li .chip { width: 8px; height: 8px; border-radius: 2px; }
+  .layers-list .li .chip { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+  .layers-list .li .tw { width: 12px; color: var(--tx-3); text-align: center; flex-shrink: 0; font-size: 10px; }
+  .layers-list .li .selind { width: 7px; height: 7px; border-radius: 1px; flex-shrink: 0; border: 1px solid transparent; }
+  .layers-list .li .selind.on { background: var(--accent); }
+  .layers-list .li[data-drop="above"] { box-shadow: inset 0 2px 0 var(--accent); }
+  .layers-list .li[data-drop="below"] { box-shadow: inset 0 -2px 0 var(--accent); }
+  .layers-list .li[data-drop="into"] { border-color: var(--accent); background: var(--accent-soft); }
   .rp-scroll { flex: 1; overflow: auto; min-height: 0; }
   .text-in { position: absolute; z-index: 10; background: rgba(255,255,255,.95); color: #000; border: 1px dashed var(--accent); outline: none; padding: 0 2px; line-height: 1.2; white-space: pre; resize: none; overflow: hidden; }
+  .modal-back.vx-preview { background: rgba(0,0,0,.14); place-items: center end; padding-right: 316px; }
+  .preset-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .preset { border: 1px solid var(--line-2); border-radius: 8px; padding: 8px 6px; cursor: pointer; text-align: center; font-size: 11px; color: var(--tx-1); }
+  .preset:hover { background: var(--bg-3); }
+  .preset.on { border-color: var(--accent); background: var(--accent-soft); color: var(--tx-0); }
+  .preset .thumb { height: 52px; display: grid; place-items: center; }
+  .preset .thumb div { background: var(--bg-0); border: 1px solid var(--line-2); border-radius: 2px; }
+  .iso-bar { display: flex; gap: 8px; align-items: center; color: var(--accent); font-size: 12px; }
+  .swgrid { display: grid; grid-template-columns: repeat(9, 1fr); gap: 5px; }
+  .swgrid .s { aspect-ratio: 1; border-radius: 4px; cursor: pointer; box-shadow: inset 0 0 0 1px rgba(128,128,128,.35); position: relative; }
+  .swgrid .s.global::after { content: ''; position: absolute; right: 0; bottom: 0; border: 4px solid transparent; border-right-color: var(--bg-2); border-bottom-color: var(--bg-2); }
+  .swgrid .s:hover { transform: scale(1.12); }
+  .palrow { display: flex; align-items: center; gap: 6px; padding: 4px 0; }
+  .palrow .chips { display: flex; flex: 1; height: 20px; border-radius: 4px; overflow: hidden; cursor: pointer; box-shadow: inset 0 0 0 1px rgba(128,128,128,.3); }
+  .palrow .chips div { flex: 1; }
+  .palrow .nm { width: 96px; font-size: 11.5px; color: var(--tx-1); }
+  .cp { display: flex; flex-direction: column; gap: 8px; }
+  .cp .sv { position: relative; height: 150px; border-radius: 6px; cursor: crosshair; overflow: hidden; }
+  .cp .sv canvas, .cp .hue canvas { width: 100%; height: 100%; display: block; }
+  .cp .hue { position: relative; height: 14px; border-radius: 7px; cursor: pointer; overflow: hidden; }
+  .cp .knob { position: absolute; width: 12px; height: 12px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 0 1px rgba(0,0,0,.6); transform: translate(-50%,-50%); pointer-events: none; }
+  .cp .hue .knob { top: 50%; }
+  .cp .vals { display: grid; grid-template-columns: 44px 1fr 1fr 1fr 1fr; gap: 4px; align-items: center; font-size: 11px; color: var(--tx-2); }
+  .cp .vals input { height: 24px; font-size: 11.5px; padding: 0 4px; width: 100%; }
+  .cp .prev { display: flex; gap: 8px; align-items: center; }
+  .cp .prev .chip { width: 40px; height: 26px; border-radius: 5px; box-shadow: inset 0 0 0 1px rgba(128,128,128,.4); }
+  .gstops { position: relative; height: 22px; border-radius: 4px; margin: 6px 0 14px; box-shadow: inset 0 0 0 1px rgba(128,128,128,.4); cursor: copy; }
+  .gstops .st { position: absolute; top: 100%; width: 12px; height: 12px; transform: translate(-50%, 2px) rotate(45deg); border: 2px solid var(--tx-0); border-radius: 2px; cursor: grab; }
+  .gstops .st.on { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-soft); }
+  .symgrid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; }
+  .symgrid .sym { aspect-ratio: 1; border-radius: 6px; display: grid; place-items: center; cursor: grab; color: var(--tx-1); background: var(--bg-1); border: 1px solid var(--line); }
+  .symgrid .sym:hover { border-color: var(--accent); color: var(--tx-0); }
+  .symgrid .sym svg { width: 26px; height: 26px; fill: currentColor; }
+  .rc-row { display: grid; grid-template-columns: 30px 18px 30px 1fr; gap: 6px; align-items: center; margin-bottom: 4px; }
+  .rc-row .c { width: 30px; height: 22px; border-radius: 4px; box-shadow: inset 0 0 0 1px rgba(128,128,128,.4); }
+  .trace-prev { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .trace-prev > div { background: repeating-conic-gradient(var(--bg-3) 0 25%, var(--bg-1) 0 50%) 0 0/16px 16px; border-radius: 6px; height: 220px; display: grid; place-items: center; overflow: hidden; border: 1px solid var(--line); }
+  .trace-prev img { max-width: 100%; max-height: 100%; }
+  .fontlist { max-height: 180px; overflow: auto; border: 1px solid var(--line-2); border-radius: 5px; background: var(--bg-0); }
+  .fontlist div { padding: 3px 8px; cursor: pointer; font-size: 13px; color: var(--tx-1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .fontlist div:hover { background: var(--bg-3); } .fontlist div.on { background: var(--accent-soft); color: var(--tx-0); }
+  .seg { display: inline-flex; border: 1px solid var(--line-2); border-radius: 5px; overflow: hidden; }
+  .seg button { border: 0; background: var(--bg-3); color: var(--tx-1); height: 26px; min-width: 28px; cursor: pointer; font-size: 12px; }
+  .seg button.on { background: var(--accent); color: #fff; }
+  .seg button + button { border-left: 1px solid var(--line-2); }
 </style>
 </head>
 <body class="app-vector">
@@ -46,7 +108,7 @@
     <div class="toolbar" id="toolbar"></div>
     <div class="viewport" id="viewport"><canvas id="cv" resize></canvas></div>
     <div class="panels">
-      <div class="tabs" id="rtabs"><div class="tab active" data-t="props">Properties</div><div class="tab" data-t="layers">Layers</div><div class="tab" data-t="swatches">Swatches</div></div>
+      <div class="tabs" id="rtabs"></div>
       <div class="rp-scroll" id="rp"></div>
     </div>
   </div>
@@ -56,6 +118,15 @@
 <script src="../vendor/paper-core.min.js"></script>
 <script src="../vendor/jspdf.umd.min.js"></script>
 <script src="../vendor/svg2pdf.umd.min.js"></script>
+<script src="../vendor/vector-imagetracer/imagetracer.js"></script>
+<script src="../vendor/vector-opentype/opentype.min.js"></script>
 <script src="app.js"></script>
+<script src="vx-geom.js"></script>
+<script src="vx-tools.js"></script>
+<script src="vx-color.js"></script>
+<script src="vx-type.js"></script>
+<script src="vx-trace.js"></script>
+<script src="vx-symbols.js"></script>
+<script src="boot.js"></script>
 </body>
 </html>

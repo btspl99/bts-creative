@@ -1,0 +1,3 @@
+eng/hin/mar.traineddata.gz — Tesseract LSTM "best_int" models from tessdata (Apache License 2.0,
+https://github.com/tesseract-ocr/tessdata_best), repackaged on npm as @tesseract.js-data/{eng,hin,mar} 1.0.0 (MIT).
+See ../LICENSE-tesseract.js-core.txt for the Apache-2.0 licence text.
