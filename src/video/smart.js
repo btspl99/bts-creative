@@ -44,9 +44,10 @@ function detectBeats(pcm, sr) {
   const a0 = ac(best.lag - 1), a1 = ac(best.lag), a2 = ac(best.lag + 1); const d = a0 - 2 * a1 + a2; const period = best.lag + (Math.abs(d) > 1e-9 ? clamp(0.5 * (a0 - a2) / d, -0.5, 0.5) : 0);
   // phase: the offset whose beat grid collects the most onset energy — bass (kick) onsets count most, so cuts land on the downbeat
   let lmax = 0, omax = 0; for (let i = 0; i < frames; i++) { lmax = Math.max(lmax, low[i]); omax = Math.max(omax, on[i]); } const lw = lmax > 0 ? omax / lmax * 1.5 : 0;
-  let ph = { s: -1, o: 0 }; for (let o = 0; o < period; o += 0.5) { let s = 0; for (let t = o; t < frames; t += period) { const i = Math.round(t); s += (on[i] || 0) + (low[i] || 0) * lw; } if (s > ph.s) ph = { s, o }; }
+  let ph = { s: -1, o: 0 }; for (let o = 0; o < period; o += 0.5) { let s = 0; for (let t = o; t < frames; t += period) { const i = Math.round(t); let a = 0, b = 0; for (let j = Math.max(0, i - 2); j <= Math.min(frames - 1, i + 2); j++) { a = Math.max(a, on[j]); b = Math.max(b, low[j]); } s += a + b * lw; } if (s > ph.s) ph = { s, o }; }
   const beats = []; const tol = Math.round(period * 0.12);
-  for (let t = ph.o; t < frames; t += period) { const c = Math.round(t); let bi = c, bv = -1; for (let i = Math.max(0, c - tol); i <= Math.min(frames - 1, c + tol); i++) if (on[i] > bv) { bv = on[i]; bi = i; } beats.push((bv > 0 ? bi * 0.6 + c * 0.4 : c) / rate + N / 2 / sr); }
+  let tStart = ph.o; while (tStart - period > -3) tStart -= period;
+  for (let t = Math.max(0, tStart); t < frames; t += period) { const c = Math.round(t); let bi = c, bv = -1; for (let i = Math.max(0, c - tol); i <= Math.min(frames - 1, c + tol); i++) if (on[i] > bv) { bv = on[i]; bi = i; } beats.push((bv > 0 ? bi * 0.6 + c * 0.4 : c) / rate + N / 2 / sr); }
   const onsets = []; for (let i = 1; i < frames - 1; i++) if (on[i] > on[i - 1] && on[i] >= on[i + 1] && on[i] > 0.5 * (m[i] || 1)) onsets.push(i / rate);
   return { bpm: Math.round(60 * rate / period * 10) / 10, beats, onsets };
 }
@@ -110,8 +111,8 @@ async function timelineSpeech(t0, t1) {
   let r = await bts.ffmpeg.run([...A.inputs, ...ga, '-map', '[aout]', '-t', (t1 - t0).toFixed(3), '-ac', '1', '-ar', '16000', '-c:a', 'pcm_f32le', '-f', 'wav', wav]); if (!r.ok) throw new Error('Could not render the audio');
   const { sr, data } = parseWavF32(await (await fetch(fileUrl(wav))).arrayBuffer()); const dur = data.length / sr;
   const rate = 100, hop = Math.round(sr / rate); const env = new Float32Array(Math.ceil(data.length / hop)); for (let i = 0; i < env.length; i++) { let s = 0; const a = i * hop, b = Math.min(data.length, a + hop); for (let j = a; j < b; j++) s += data[j] * data[j]; env[i] = Math.sqrt(s / Math.max(1, b - a)); }
-  // silence threshold adapts to the recording: noise floor (10th percentile of the energy) + 9 dB
-  const db = Array.from(env, v => 20 * Math.log10(v + 1e-7)).sort((a, b) => a - b); const floor = db[Math.floor(db.length * 0.1)] ?? -60; const thr = clamp(Math.round(floor + 9), -55, -18);
+  // silence threshold adapts to the recording: 40% of the way from the noise floor (10th percentile) to the speech level (80th)
+  const db = Array.from(env, v => 20 * Math.log10(v + 1e-7)).sort((a, b) => a - b); const floor = db[Math.floor(db.length * 0.1)] ?? -60, loud = db[Math.floor(db.length * 0.8)] ?? -20; const thr = clamp(Math.round(floor + Math.max(6, (loud - floor) * 0.4)), -55, -16);
   r = await bts.ffmpeg.run(['-hide_banner', '-i', wav, '-af', `silencedetect=n=${thr}dB:d=0.18,ametadata=mode=print:file=${ffEsc(sil)}`, '-f', 'null', '-']);
   const txt = await readText(sil); const silences = []; let s0 = null; txt.split('\n').forEach(l => { let mm = l.match(/silence_start=(-?[\d.]+)/); if (mm) s0 = Math.max(0, +mm[1]); mm = l.match(/silence_end=([\d.]+)/); if (mm) { silences.push([s0 ?? 0, +mm[1]]); s0 = null; } }); if (s0 != null) silences.push([s0, dur]);
   const speech = []; let pos = 0; silences.forEach(([a, b]) => { if (a - pos > 0.05) speech.push([t0 + pos, t0 + a]); pos = b; }); if (dur - pos > 0.05) speech.push([t0 + pos, t0 + dur]);
