@@ -150,7 +150,7 @@ async function importPath(path, name, existingId) {
   setStatus(`Importing ${name}…`);
   try {
     if ((m.kind === 'image' || m.anim) && ST.ffmpeg && /\.(gif|a?png|webp)$/i.test(name)) await transcodeAnimated(m);
-    if (m.kind === 'image') { const im = new Image(); im.src = m.url; await im.decode(); m.w = im.naturalWidth; m.h = im.naturalHeight; m.dur = PREFS.imgDur; m.el = im; m.thumb = thumbOf(im, im.naturalWidth || 160, im.naturalHeight || 90); }
+    if (m.kind === 'image') { const im = new Image(); await loadImageEl(im, m.url); m.w = im.naturalWidth; m.h = im.naturalHeight; m.dur = PREFS.imgDur; m.el = im; m.thumb = thumbOf(im, im.naturalWidth || 160, im.naturalHeight || 90); }
     else {
       if (ST.ffmpeg) { const info = await bts.ffmpeg.probe(m.anim ? m.proxy : path); if (info) { const d = info.match(/Duration: (\d+):(\d+):([\d.]+)/); if (d) m.dur = +d[1] * 3600 + +d[2] * 60 + +d[3]; m.hasAudio = /Stream #.*Audio:/.test(info); const v = info.match(/Stream #.*Video:.*?(\d{2,5})x(\d{2,5})/); if (v && !/Video: (png|mjpeg).*attached pic/.test(info)) { m.w = +v[1]; m.h = +v[2]; } } }
       const el = document.createElement(m.kind === 'audio' ? 'audio' : 'video'); el.preload = 'auto'; el.src = m.url; el.muted = true;
@@ -169,6 +169,8 @@ async function importPath(path, name, existingId) {
   } catch (e) { console.error(e); m.missing = true; toast(`Could not import ${name}: ${e.message}`, 'err', 6000); }
   setStatus('Ready'); renderBin(); renderTimeline(); markDirty(); return m;
 }
+// waits for an <img> to load (img.decode() can stay pending forever on some GPU / software-render setups)
+function loadImageEl(im, url) { return new Promise((res, rej) => { const to = setTimeout(() => (im.naturalWidth ? res() : rej(new Error('The image could not be read'))), 20000); im.onload = () => { clearTimeout(to); res(); }; im.onerror = () => { clearTimeout(to); rej(new Error('The image could not be read')); }; im.src = url; }); }
 // Animated GIF / APNG / WebP → a temporary VP9 WebM that keeps the alpha channel, so it plays (and exports) as a moving clip.
 async function transcodeAnimated(m) {
   const r = await bts.ffmpeg.run(['-hide_banner', '-i', m.path, '-map', '0:v:0', '-f', 'null', '-']);

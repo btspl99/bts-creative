@@ -44,7 +44,7 @@ async function sendContactSheetToPdf() {
 // ---------------------------------------------------------------------  receiving
 async function rasteriseSvg(bytes, W, H) {
   const url = URL.createObjectURL(new Blob([bytes], { type: 'image/svg+xml' }));
-  try { const im = new Image(); im.src = url; await im.decode(); const c = document.createElement('canvas'); c.width = W; c.height = H; const x = c.getContext('2d');
+  try { const im = new Image(); await new Promise((res, rej) => { const to = setTimeout(() => rej(new Error('The drawing could not be read')), 15000); im.onload = () => { clearTimeout(to); res(); }; im.onerror = () => { clearTimeout(to); rej(new Error('The drawing could not be read')); }; im.src = url; }); const c = document.createElement('canvas'); c.width = W; c.height = H; const x = c.getContext('2d');
     const iw = im.naturalWidth || W, ih = im.naturalHeight || H; const k = Math.min(W / iw, H / ih); x.drawImage(im, (W - iw * k) / 2, (H - ih * k) / 2, iw * k, ih * k); return c; }
   finally { URL.revokeObjectURL(url); }
 }
