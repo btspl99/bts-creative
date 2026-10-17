@@ -9,3 +9,4 @@ website/updates/*.exe
 vendor/vosk/win/
 vendor/vosk/linux/
 vendor/vosk/model-en-us/
+vendor/vosk/model-*/
