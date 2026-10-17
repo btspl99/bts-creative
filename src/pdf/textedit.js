@@ -285,7 +285,7 @@ export function options(ob, grp, vsep, swatchRow) {
   const col = h('input', { type: 'color', value: ST.color || '#111111', 'data-tip': 'Colour for edited text', style: { width: '26px', height: '22px', opacity: ST.color ? 1 : 0.45 } }); col.oninput = () => { ST.color = col.value; };
   col.onchange = () => X.renderOptions();
   const orig = h('input', { type: 'checkbox', checked: !ST.color }); orig.onchange = () => { ST.color = orig.checked ? null : col.value; X.renderOptions(); };
-  ob.append(grp('Edit', seg), vsep(), grp('Font', f), b, it,
+  ob.append(grp('Edit', seg), vsep(), grp('Font', f), ...(ST.font.mode === 'std' ? [b, it] : []),
     h('button', { class: 'btn sm', onclick: () => pickSystemFont() }, 'System font…'), h('button', { class: 'btn sm', onclick: () => pickFontFile() }, 'Font file…'), vsep(),
     h('label', { class: 'grp', 'data-tip': 'When the original font lacks a letter, use the same font installed on this computer' }, ml, 'Match installed fonts'), vsep(),
     grp('Colour', col), h('label', { class: 'grp' }, orig, 'Original'), vsep(),

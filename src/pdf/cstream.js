@@ -799,8 +799,9 @@ export class TextEditor {
   runText(run, edits) {
     const f = run.f, scale = -1000 / ((run.fs * run.Th) || 1);
     const segs = []; let items = [];
-    const kern = n => { if (Math.abs(n) >= 0.0005) items.push(fmt(n)); };
-    const flush = () => { if (items.length) segs.push(`[${items.join(' ')}] TJ`); items = []; };
+    // consecutive kerns are merged, so the widths of removed letters cannot be read back from the file
+    const kern = n => { const l = items[items.length - 1]; if (typeof l === 'number') items[items.length - 1] = l + n; else items.push(n); };
+    const flush = () => { const it = items.filter(x => typeof x !== 'number' || Math.abs(x) >= 0.0005).map(x => typeof x === 'number' ? fmt(x) : x); if (it.length) segs.push(`[${it.join(' ')}] TJ`); items = []; };
     let gi = 0;
     for (const p of run.parts) {
       if (p.n != null) { kern(p.n); continue; }

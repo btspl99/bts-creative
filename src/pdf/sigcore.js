@@ -33,8 +33,9 @@ export async function createIdentity({ name, email = '', org = '', years = 3, un
   cert.publicKey = publicKey;
   const sn = forge.util.bytesToHex(forge.random.getBytesSync(15)); cert.serialNumber = (parseInt(sn[0], 16) & 7).toString(16) + sn.slice(1); // positive
   const now = new Date(); cert.validity.notBefore = new Date(now.getTime() - 5 * 60000); cert.validity.notAfter = new Date(now.getTime()); cert.validity.notAfter.setFullYear(now.getFullYear() + Math.max(1, Math.min(30, +years || 3)));
-  const attrs = [{ name: 'commonName', value: name }];
-  if (org) attrs.push({ name: 'organizationName', value: org }); if (unit) attrs.push({ shortName: 'OU', value: unit }); if (email) attrs.push({ name: 'emailAddress', value: email });
+  const U = forge.asn1.Type.UTF8; // UTF8String so names in any language (e.g. Devanagari) are encoded correctly
+  const attrs = [{ name: 'commonName', value: name, valueTagClass: U }];
+  if (org) attrs.push({ name: 'organizationName', value: org, valueTagClass: U }); if (unit) attrs.push({ shortName: 'OU', value: unit, valueTagClass: U }); if (email) attrs.push({ name: 'emailAddress', value: email });
   cert.setSubject(attrs); cert.setIssuer(attrs);
   const ext = [{ name: 'basicConstraints', cA: false }, { name: 'keyUsage', digitalSignature: true, nonRepudiation: true }, { name: 'extKeyUsage', emailProtection: true }, { name: 'subjectKeyIdentifier' }];
   if (email) ext.push({ name: 'subjectAltName', altNames: [{ type: 1, value: email }] });
@@ -44,7 +45,8 @@ export async function createIdentity({ name, email = '', org = '', years = 3, un
 }
 export function toP12(id, password, friendlyName) {
   const forge = F();
-  const asn = forge.pkcs12.toPkcs12Asn1(id.key, id.chain?.length ? id.chain : [id.cert], password, { algorithm: '3des', friendlyName: friendlyName || certInfo(id.cert).cn, generateLocalKeyId: true });
+  const fn = friendlyName || certInfo(id.cert).cn; // BMPString in forge: keep it to Latin-1 to be safe
+  const asn = forge.pkcs12.toPkcs12Asn1(id.key, id.chain?.length ? id.chain : [id.cert], password, { algorithm: '3des', friendlyName: /^[\x20-\x7e]+$/.test(fn) ? fn : 'BTS signing certificate', generateLocalKeyId: true });
   return u8(forge.asn1.toDer(asn).getBytes());
 }
 export function fromP12(bytes, password) {
@@ -53,12 +55,19 @@ export function fromP12(bytes, password) {
   catch (e) { const err = new Error(/mac|password|Invalid/i.test(e.message) ? 'BAD_PASSWORD' : e.message); err.code = /mac|password|Invalid/i.test(e.message) ? 'BAD_PASSWORD' : 'BAD_FILE'; throw err; }
   const keys = [...(p12.getBags({ bagType: forge.pki.oids.pkcs8ShroudedKeyBag })[forge.pki.oids.pkcs8ShroudedKeyBag] || []), ...(p12.getBags({ bagType: forge.pki.oids.keyBag })[forge.pki.oids.keyBag] || [])];
   const certs = (p12.getBags({ bagType: forge.pki.oids.certBag })[forge.pki.oids.certBag] || []).map(b => b.cert).filter(Boolean);
+  // forge keeps parsed UTF8String values as raw UTF-8 bytes but re-encodes them when it writes the signer's issuer: decode once
+  for (const c of certs) for (const rdn of [c.subject, c.issuer]) for (const a of rdn.attributes) if (a.valueTagClass === forge.asn1.Type.UTF8) { try { a.value = forge.util.decodeUtf8(a.value); } catch { } }
   const key = keys.find(k => k.key)?.key; if (!key) { const e = new Error('NO_KEY'); e.code = 'NO_KEY'; throw e; }
   if (!key.n) { const e = new Error('Only RSA keys are supported'); e.code = 'UNSUPPORTED_KEY'; throw e; }
   const cert = certs.find(c => c.publicKey?.n && c.publicKey.n.equals(key.n)) || certs[0]; if (!cert) { const e = new Error('NO_CERT'); e.code = 'NO_CERT'; throw e; }
   return { key, cert, chain: [cert, ...certs.filter(c => c !== cert)] };
 }
-const attr = (rdn, n) => rdn.getField(n)?.value || '';
+const attr = (rdn, n) => {
+  const f = rdn.getField(n); if (!f) return ''; let v = f.value || '';
+  if (/[^\x00-\xff]/.test(v)) return v; // already text
+  try { if (f.valueTagClass === 12) return F().util.decodeUtf8(v); if (f.valueTagClass === 30) { let o = ''; for (let i = 0; i + 1 < v.length; i += 2) o += String.fromCharCode(v.charCodeAt(i) * 256 + v.charCodeAt(i + 1)); return o; } } catch { }
+  return v;
+};
 export function certInfo(cert) {
   const forge = F();
   const selfSigned = (() => { try { return cert.isIssuer(cert) && cert.verify(cert); } catch { return false; } })();
@@ -115,7 +124,11 @@ export async function signPdf(bytes, id, opts = {}) {
       const iw = img.width * sc, ih = img.height * sc, ix = 2 + (areaW - 4 - iw) / 2, iy = (hh - ih) / 2;
       content += `q ${iw.toFixed(3)} 0 0 ${ih.toFixed(3)} ${ix.toFixed(3)} ${iy.toFixed(3)} cm /Img Do Q\n`; textX = areaW + 2;
     }
-    if (opts.showText !== false) {
+    if (opts.showText !== false && opts.textImage) { // text drawn by the app (letters the standard PDF fonts cannot write)
+      const ti = await doc.embedPng(opts.textImage); res.XObject = { ...(res.XObject || {}), Txt: ti.ref };
+      const aw = w - textX - 3, sc = Math.min(aw / ti.width, (hh - 4) / ti.height); const tw = ti.width * sc, th = ti.height * sc;
+      content += `q ${tw.toFixed(3)} 0 0 ${th.toFixed(3)} ${textX.toFixed(3)} ${((hh - th) / 2).toFixed(3)} cm /Txt Do Q\n`;
+    } else if (opts.showText !== false) {
       const font = await doc.embedFont(L.StandardFonts.Helvetica), bold = await doc.embedFont(L.StandardFonts.HelveticaBold);
       res.Font = { F1: font.ref, F2: bold.ref };
       const safe = (f, s) => [...String(s)].map(ch => { try { f.encodeText(ch); return ch; } catch { return '?'; } }).join('');

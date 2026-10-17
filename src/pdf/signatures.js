@@ -116,10 +116,12 @@ export async function signDialog({ certify = false, preset = null } = {}) {
   if (v.look === 'visible') { place = v.page != null ? { pg: S.pages[v.page], rect: v.rect } : await pickRect('Drag a box where the signature should appear (Esc to cancel)'); if (!place) return null; }
   const img = v.img && v.img !== 'none' && saved[+v.img] ? await X.dataUrlBytes(saved[+v.img]) : null;
   UI.toast(certify ? 'Certifying…' : 'Signing…');
+  const labels = { labelSigned: 'Digitally signed by', labelDate: 'Date', labelReason: 'Reason', labelLocation: 'Location' };
+  const textImage = v.look === 'visible' ? await textPng([labels.labelSigned, v.name, `${labels.labelDate}: ${new Date().toLocaleString()}`, v.reason ? `${labels.labelReason}: ${v.reason}` : '', v.location ? `${labels.labelLocation}: ${v.location}` : ''].filter(Boolean)) : null;
   let signed;
   try {
     signed = await SC.signPdf(base, id, { page: place ? S.pages.indexOf(place.pg) : 0, rect: place?.rect || null, image: img && isPng(img) ? img : img ? await X.toPngBytes(img) : null, name: v.name, reason: v.reason, location: v.location, certify: certify ? +v.level || 2 : 0,
-      labelSigned: 'Digitally signed by', labelDate: 'Date', labelReason: 'Reason', labelLocation: 'Location' });
+      ...labels, textImage });
   } catch (e) { console.error(e); UI.toast('Signing failed: ' + (e.code === 'ENCRYPTED' ? 'the document is encrypted' : e.message), 'err', 6000); return null; }
   const def = (S.fileName || 'document.pdf').replace(/(-signed)?\.pdf$/i, '') + '-signed.pdf';
   const path = v.savePath ? (await X.IO.write({ path: v.savePath, data: signed }), v.savePath) : await X.IO.saveAs({ data: signed, defaultPath: def, filters: [{ name: 'PDF', extensions: ['pdf'] }] });
@@ -130,6 +132,15 @@ export async function signDialog({ certify = false, preset = null } = {}) {
   return { path, bytes: signed };
 }
 const isPng = b => b[0] === 0x89 && b[1] === 0x50;
+// the appearance text as an image, only when the standard PDF font cannot write it (e.g. Devanagari names or labels)
+async function textPng(lines) {
+  try { const e = window.PDFLib.StandardFontEmbedder.for('Helvetica'); lines.forEach(l => e.encodeText(l)); return null; } catch { }
+  const c = document.createElement('canvas'), x = c.getContext('2d'), fs = 40; x.font = `${fs}px "Noto Sans", "Nirmala UI", "Mangal", sans-serif`;
+  c.width = Math.ceil(Math.max(...lines.map(l => x.measureText(l).width))) + 8; c.height = Math.ceil(lines.length * fs * 1.25) + 8;
+  x.font = `${fs}px "Noto Sans", "Nirmala UI", "Mangal", sans-serif`; x.fillStyle = '#000'; x.textBaseline = 'top';
+  lines.forEach((l, i) => { x.font = `${i === 1 ? 'bold ' : ''}${fs}px "Noto Sans", "Nirmala UI", "Mangal", sans-serif`; x.fillText(l, 4, 4 + i * fs * 1.25); });
+  return UI.blobToU8(await new Promise(r => c.toBlob(r, 'image/png')));
+}
 
 // warn before a normal save rewrites a signed document
 export async function guardSave() {
