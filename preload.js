@@ -22,6 +22,8 @@ contextBridge.exposeInMainWorld('bts', {
     saveAs: o => ipcRenderer.invoke('fs:saveAs', o),
     write: o => ipcRenderer.invoke('fs:write', o),
     pickSavePath: o => ipcRenderer.invoke('fs:pickSavePath', o),
+    pickFolder: () => ipcRenderer.invoke('fs:pickFolder'),
+    listDir: d => ipcRenderer.invoke('fs:listDir', d),
     pathOf: file => { try { return webUtils.getPathForFile(file); } catch { return file.path || null; } },
   },
   recent: { get: () => ipcRenderer.invoke('recent:get'), add: p => ipcRenderer.invoke('recent:add', p) },
@@ -43,6 +45,7 @@ contextBridge.exposeInMainWorld('bts', {
   },
   stt: {
     available: () => ipcRenderer.invoke('stt:available'),
+    models: () => ipcRenderer.invoke('stt:models'), // [{id,label}] installed languages; pass {model:id} to transcribe
     transcribe: opts => ipcRenderer.invoke('stt:transcribe', opts),
     onProgress: cb => { const f = (_e, p) => cb(p); ipcRenderer.on('stt:progress', f); return () => ipcRenderer.removeListener('stt:progress', f); },
     cancel: () => ipcRenderer.invoke('stt:cancel'),

@@ -1,0 +1,15 @@
+BTS Photo — camera raw decoder (loaded on demand as separate files)
+
+index.js, worker.js, libraw.wasm
+  from the npm package libraw-wasm-nothread 1.6.0-nothread.1
+  (single-threaded fork of libraw-wasm by ybouane; fork by Oscar Gallego Ruiz)
+  https://github.com/garbarok/libraw-wasm-nothread — ISC licence (LICENSE-libraw-wasm-nothread.txt)
+  Source maps removed; otherwise unmodified.
+
+libraw.wasm statically links:
+  * LibRaw 0.22.1 — https://www.libraw.org/ — dual-licensed LGPL 2.1 / CDDL 1.0
+    (LibRaw-COPYRIGHT.txt, LibRaw-LICENSE.LGPL.txt, LibRaw-LICENSE.CDDL.txt).
+    LibRaw source is unmodified apart from Emscripten build flags; see
+    https://github.com/garbarok/libraw-wasm-nothread (compileLibraw.sh) and https://github.com/LibRaw/LibRaw.
+    It is shipped as a separate, replaceable file (libraw.wasm) that the app loads at run time.
+  * Little CMS 2 — MIT licence (LittleCMS-COPYING.txt).

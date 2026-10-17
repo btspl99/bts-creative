@@ -1,7 +1,13 @@
 // BTS Photo — layer-based raster image editor
 (() => {
-const { $, h, toast, modal, form, prompt, confirm, contextMenu, clamp } = UI;
+const { $, h, modal, form, prompt, confirm, contextMenu, clamp } = UI;
 const X = window.PFX;
+// ---- 1.2: action recording hooks. Core operations call REC(op, params); automate.js stores them as replayable steps.
+// While an action plays (or a batch runs) errors must surface, so error toasts are captured and withBusy rethrows.
+let recMute = 0, strictErrors = 0, lastErr = null, headless = 0;
+const toast = (msg, kind = '', ms) => { if (strictErrors && kind === 'err') lastErr = msg; if (!headless || kind === 'err') UI.toast(msg, kind, ms); };
+const REC = (op, params = {}) => { if (!recMute && !headless && window.PhotoActions) { try { window.PhotoActions.record(op, JSON.parse(JSON.stringify(params))); } catch (e) { console.warn('record failed', e); } } };
+async function muted(fn) { recMute++; try { return await fn(); } finally { recMute--; } }
 // extra icons for tools the shared kit does not have
 const XP = {
   remove: 'M15 4l5 5-9 9H6v-5zM3 21h18M13 6l5 5',
@@ -28,6 +34,10 @@ const XP = {
   close: 'M6 6l12 12M18 6L6 18',
   wires: 'M2 6c6 4 14 4 20 0M2 11c6 4 14 4 20 0M5 3v18M19 3v18',
   dust: 'M5 5h.01M9 8h.01M16 6h.01M7 15h.01M14 13h.01M18 17h.01M11 19h.01M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z',
+  record: 'M12 6a6 6 0 1 0 0 12 6 6 0 0 0 0-12z',
+  stop: 'M7 7h10v10H7z',
+  more: 'M5 12h.01M12 12h.01M19 12h.01',
+  camraw: 'M3 7h4l2-3h6l2 3h4v13H3zM8 17l3-4 2 2 3-4',
 };
 const icon = (n, s) => XP[n] ? `<svg viewBox="0 0 24 24"${s ? ` style="width:${s}px;height:${s}px"` : ''}><path d="${XP[n]}"/></svg>` : UI.icon(n, s);
 
@@ -100,6 +110,8 @@ UI.titlebar({ logo: 'Ph', menus: [
     { label: 'Quick export PNG', kbd: 'Ctrl+Alt+Shift+S', action: quickExportPng, disabled: !D },
     { label: 'Export layers to files…', action: exportLayersDialog, disabled: !D },
     { label: 'Copy merged to clipboard', action: () => copy(true), disabled: !D },
+    '-', { label: 'Automate', sub: window.PhotoActions ? window.PhotoActions.menuItems() : [] },
+    { label: 'Send to', sub: [{ label: 'Send to Vector', action: () => sendTo('vector'), disabled: !D }, { label: 'Send to Video', action: () => sendTo('video'), disabled: !D }, { label: 'Send to PDF Pro', action: () => sendTo('pdf'), disabled: !D }] },
     '-', { label: 'Autosave & recovery…', action: autosaveSettings }, { label: 'Recover autosaved documents…', action: () => checkRecovery({ manual: true }) },
     '-', { label: 'Close document', kbd: 'Ctrl+W', action: closeDoc, disabled: !D }, { label: 'BTS Creative home', action: () => bts.openApp('home') }, { label: 'Exit', action: closeWindow } ] },
   { label: 'Edit', items: () => [
@@ -156,7 +168,8 @@ UI.titlebar({ logo: 'Ph', menus: [
   { label: 'Filter', items: () => [
     { label: 'Repeat last filter' + (lastFilter ? ': ' + lastFilter.F.name : ''), kbd: 'Ctrl+F', action: repeatFilter, disabled: !lastFilter },
     { label: 'Filter Gallery…', action: () => filterDialog(FILTERS.find(f => f.id === 'gauss'), { gallery: true }), disabled: noDoc() },
-    { label: 'Liquify…', kbd: 'Ctrl+Shift+X', action: liquifyDialog, disabled: noDoc() }, '-',
+    { label: 'Liquify…', kbd: 'Ctrl+Shift+X', action: liquifyDialog, disabled: noDoc() },
+    { label: 'Camera Raw filter…', kbd: 'Ctrl+Shift+A', action: () => window.PhotoRaw && window.PhotoRaw.filterDialog(), disabled: noDoc() }, '-',
     ...FILTER_CATS.filter(c => c !== 'Portrait').map(cat => ({ label: cat, sub: FILTERS.filter(f => f.cat === cat).map(f => ({ label: f.name + (f.params ? '…' : ''), action: () => runFilter(f) })) })),
     { label: 'Portrait', sub: [{ label: 'Skin smoothing…', action: () => runFilter(FILTERS.find(f => f.id === 'skin')) }, { label: 'Background blur…', action: backgroundBlurDialog, disabled: noDoc() }, { label: 'Teeth & eye brighten tool', action: () => setTool('brighten') }] },
     '-', { label: 'Smart filters', sub: SMART_MENU() },
@@ -175,7 +188,7 @@ UI.titlebar({ logo: 'Ph', menus: [
     { label: 'New guide…', action: newGuideDialog, disabled: noDoc() }, { label: 'Lock guides', checked: () => O.lockGuides, action: () => { O.lockGuides = !O.lockGuides; } },
     { label: 'Clear guides', action: () => { if (D) { D.guides = []; drawOverlay(); } } }, { label: 'Grid settings…', action: gridDialog },
     '-', { label: 'Pixel preview at high zoom', checked: () => O.pixel, action: () => { O.pixel = !O.pixel; requestRender(); } },
-    { label: 'Panels', sub: [['layers', 'Layers'], ['looks', 'Looks'], ['adjust', 'Adjustments & filters'], ['history', 'History & snapshots']].map(([t, n]) => ({ label: n, checked: () => rtab === t, action: () => showTab(t) })) },
+    { label: 'Panels', sub: [['layers', 'Layers'], ['looks', 'Looks'], ['adjust', 'Adjustments & filters'], ['history', 'History & snapshots'], ['actions', 'Actions']].map(([t, n]) => ({ label: n, checked: () => rtab === t, action: () => showTab(t) })) },
     '-', { label: 'Appearance…', action: UI.appearanceDialog }, { label: 'Skin', sub: SKIN_ITEMS() },
   ] },
   { label: 'Help', items: [{ label: 'Keyboard shortcuts', kbd: 'Ctrl+/', action: UI.shortcutSheet }, { label: 'Check for updates', action: () => bts.update.check().then(r => toast(r.state === 'store' ? 'Updates are delivered by the Microsoft Store.' : r.state === 'dev' ? 'Updates run in the installed version.' : 'Checking for updates…')) }, { label: 'About BTS Photo', action: () => modal({ title: 'BTS Photo', body: 'Part of BTS Creative — free and open source for students.<br>Person segmentation by MediaPipe (Apache-2.0).<br>Not affiliated with Adobe Inc.' }) }] },
@@ -415,7 +428,7 @@ function layerBounds(L) { if (L.kind === 'adjust') return null; const k = cid(L.
 // =====================================================================  compositing
 let renderQueued = false, stroke = null, T = null, cropState = null, pcropState = null, shapePreview = null, gradPreview = null, lassoPts = null, marqRect = null, liveLayer = null, patchDrag = null;
 let contentSerial = 1, pcache = null, workC = null, liveTmp = null;
-function requestRender(bump = true) { if (bump && !(stroke || T || liveLayer)) contentSerial++; if (renderQueued) return; renderQueued = true; requestAnimationFrame(() => { renderQueued = false; render(); }); }
+function requestRender(bump = true) { if (bump && !(stroke || T || liveLayer)) contentSerial++; if (renderQueued || headless) return; renderQueued = true; requestAnimationFrame(() => { renderQueued = false; render(); }); }
 let proxyUntil = 0, proxyTimer = null;
 // while sliders are dragged on big images, render a reduced-resolution proxy and refine when idle
 function proxyRender() { if (!D || D.w * D.h <= 3e6) return requestRender(); proxyUntil = performance.now() + 350; requestRender(); clearTimeout(proxyTimer); proxyTimer = setTimeout(() => { proxyUntil = 0; requestRender(false); }, 380); }
@@ -686,10 +699,10 @@ function buildAnts(m) {
   return p;
 }
 function maskFromPath(fn) { const m = mk(D.w, D.h); const c = m.getContext('2d'); c.fillStyle = '#fff'; c.beginPath(); fn(c); c.fill(); return m; }
-function selectAll() { if (!D) return; const m = mk(D.w, D.h); const c = m.getContext('2d'); c.fillStyle = '#fff'; c.fillRect(0, 0, D.w, D.h); setSel(m); pushHist('Select all'); }
-function deselect() { if (!D || !D.sel) return; setSel(null); pushHist('Deselect'); }
+function selectAll() { if (!D) return; REC('select', { kind: 'all' }); const m = mk(D.w, D.h); const c = m.getContext('2d'); c.fillStyle = '#fff'; c.fillRect(0, 0, D.w, D.h); setSel(m); pushHist('Select all'); }
+function deselect() { if (!D || !D.sel) return; REC('select', { kind: 'none' }); setSel(null); pushHist('Deselect'); }
 function reselect() { if (D?.prevSel) { setSel(D.prevSel); pushHist('Reselect'); } }
-function invertSel() { if (!D) return; const m = mk(D.w, D.h); const c = m.getContext('2d'); c.fillStyle = '#fff'; c.fillRect(0, 0, D.w, D.h); if (D.sel) { c.globalCompositeOperation = 'destination-out'; c.drawImage(D.sel, 0, 0); } setSel(m); pushHist('Inverse'); }
+function invertSel() { if (!D) return; REC('select', { kind: 'invert' }); const m = mk(D.w, D.h); const c = m.getContext('2d'); c.fillStyle = '#fff'; c.fillRect(0, 0, D.w, D.h); if (D.sel) { c.globalCompositeOperation = 'destination-out'; c.drawImage(D.sel, 0, 0); } setSel(m); pushHist('Inverse'); }
 function selectLayerAlpha() { const L = AL(); if (!L) return; const m = mk(D.w, D.h); m.getContext('2d').drawImage(L.canvas, L.x, L.y); hardenMask(m, 1); selectionFromCanvas(m, 'new', 'Load transparency'); }
 function hardenMask(m, th = 128) { const c = ctxOf(m), id = c.getImageData(0, 0, m.width, m.height), d = id.data; for (let i = 0; i < d.length; i += 4) { const a = d[i + 3] >= th ? 255 : d[i + 3] > 0 && th === 1 ? d[i + 3] : 0; d[i] = d[i + 1] = d[i + 2] = 255; d[i + 3] = a; } c.putImageData(id, 0, 0); }
 function blurCanvas(src, r) { const o = mk(src.width, src.height), c = o.getContext('2d'); c.filter = `blur(${r}px)`; c.drawImage(src, 0, 0); return o; }
@@ -754,6 +767,7 @@ function cloneLayer(L) { return { ...L, canvas: cloneCanvas(L.canvas), mask: L.m
 function snapState(label) { return { label, w: D.w, h: D.h, active: D.active, layers: D.layers.map(cloneLayer), sel: D.sel ? cloneCanvas(D.sel) : null }; }
 function pushHist(label) {
   if (!D) return; contentSerial++;
+  if (headless) { D.dirty = true; return; } // hidden batch documents keep no undo history
   D.hist = D.hist.slice(0, D.hi + 1);
   D.hist.push(snapState(label));
   if (D.hist.length > 40) D.hist.shift(); D.hi = D.hist.length - 1;
@@ -987,9 +1001,11 @@ async function endStroke() {
 
 // =====================================================================  content-aware healing / fill / remove / patch
 let busy = false;
+// like withBusy, but always runs and rethrows errors (for loaders whose result the caller needs)
+async function withBusyResult(label, fn) { const el = h('div', { class: 'ph-busy' }, h('div', { class: 'spinner' }), label); document.body.append(el); await sleep(30); try { return await fn(); } finally { el.remove(); } }
 async function withBusy(label, fn) {
   if (busy) return; busy = true; const el = h('div', { class: 'ph-busy' }, h('div', { class: 'spinner' }), label); document.body.append(el);
-  await sleep(30); try { return await fn(); } catch (e) { console.error(e); toast(label.replace('…', '') + ' failed: ' + e.message, 'err', 6000); } finally { el.remove(); busy = false; }
+  await sleep(30); try { return await fn(); } catch (e) { console.error(e); if (strictErrors) throw e; toast(label.replace('…', '') + ' failed: ' + e.message, 'err', 6000); } finally { el.remove(); busy = false; }
 }
 // maskC: doc-space canvas whose alpha marks the area to fill
 async function inpaintLayer(L, maskC, { tool = 'fill', sampleAll = O.healSample, output = 'layer', label } = {}) {
@@ -1154,6 +1170,7 @@ function finishText(commit) {
   if (commit) L.text.str = el.value;
   if (!L.text.str.trim()) { if (isNew) { D.layers = D.layers.filter(l => l !== L); D.active = clamp(D.active - 1, 0, D.layers.length - 1); } renderAll(); return; }
   L.name = L.text.str.split('\n')[0].slice(0, 30) || 'Text'; renderTextLayer(L); requestRender(); pushHist(isNew ? 'Type layer' : 'Edit type');
+  if (isNew) { const t = L.text; REC('text', { str: t.str, pos: 'xy', fx: t.x / D.w, fy: t.y / D.h, sizeRel: t.size / D.h, font: t.font, bold: t.bold, italic: t.italic, color: t.color, align: t.align, opacity: L.opacity }); }
 }
 function applyTextOpts() {
   const L = textEd?.layer || (AL()?.kind === 'text' ? AL() : null); if (!L) return;
@@ -1243,6 +1260,7 @@ function cropDragMove(d, x, y) {
 async function applyCrop() {
   if (!cropState || !D) return; const c = { x: Math.round(cropState.x), y: Math.round(cropState.y), w: Math.round(cropState.w), h: Math.round(cropState.h) };
   if (c.w < 1 || c.h < 1) return;
+  { const r = cropRatioValue(), mw = r ? Math.min(D.w, D.h * r) : D.w; REC('crop', { ratio: O.cropRatio, r, scale: r ? c.w / mw : 1, fx: c.x / D.w, fy: c.y / D.h, fw: c.w / D.w, fh: c.h / D.h, cx: (c.x + c.w / 2) / D.w, cy: (c.y + c.h / 2) / D.h, fill: !!O.cropFill }); }
   const outside = c.x < 0 || c.y < 0 || c.x + c.w > D.w || c.y + c.h > D.h;
   D.layers.forEach(L => { L.x -= c.x; L.y -= c.y; if (L.kind === 'text') { L.text.x -= c.x; L.text.y -= c.y; } if (L.kind === 'adjust' && L.mask) { L.x = 0; L.y = 0; const m = mk(c.w, c.h), mc = m.getContext('2d'); mc.fillStyle = '#fff'; mc.fillRect(0, 0, c.w, c.h); mc.clearRect(-c.x, -c.y, L.mask.width, L.mask.height); mc.drawImage(L.mask, -c.x, -c.y); L.mask = m; L.maskVer = Math.random(); } });
   D.w = c.w; D.h = c.h; setSel(null); cropState = O.tool === 'crop' ? { x: 0, y: 0, w: D.w, h: D.h } : null; D.layers.filter(l => l.kind === 'text').forEach(renderTextLayer); fitView(); requestRender(); pushHist('Crop');
@@ -1288,7 +1306,7 @@ UI.shortcut('ctrl+c', () => copy()); UI.shortcut('ctrl+shift+c', () => copy(true
 UI.shortcut('delete', clearSel); UI.shortcut('backspace', clearSel);
 UI.shortcut('alt+backspace', () => quickFill(O.fg)); UI.shortcut('ctrl+backspace', () => quickFill(O.bg));
 UI.shortcut('ctrl+a', selectAll); UI.shortcut('ctrl+d', deselect); UI.shortcut('ctrl+shift+d', reselect); UI.shortcut('ctrl+shift+i', invertSel);
-function quickFill(color, opacity = 1) { const L = AL(); if (!D || !L || L.locked || L.kind === 'adjust' || smartBlock(L)) return; if (L.kind === 'text' || L.kind === 'frame') return toast('Rasterize the layer first', 'err'); withSelection(L, (c) => { c.save(); c.globalAlpha = opacity; c.fillStyle = color; c.fillRect(0, 0, c.canvas.width, c.canvas.height); c.restore(); }); requestRender(); pushHist('Fill'); }
+function quickFill(color, opacity = 1) { const L = AL(); if (!D || !L || L.locked || L.kind === 'adjust' || smartBlock(L)) return; REC('fill', { color, opacity }); if (L.kind === 'text' || L.kind === 'frame') return toast('Rasterize the layer first', 'err'); withSelection(L, (c) => { c.save(); c.globalAlpha = opacity; c.fillStyle = color; c.fillRect(0, 0, c.canvas.width, c.canvas.height); c.restore(); }); requestRender(); pushHist('Fill'); }
 async function fillDialog() {
   if (!D) return; const v = await form({ title: 'Fill', fields: [{ key: 'what', label: 'Contents', type: 'select', value: 'fg', options: [{ value: 'fg', label: 'Foreground color' }, { value: 'bg', label: 'Background color' }, { value: 'color', label: 'Custom color' }, { value: 'gray', label: '50% gray' }, { value: 'white', label: 'White' }, { value: 'black', label: 'Black' }, { value: 'pattern', label: 'Pattern' }, { value: 'content', label: 'Content-aware' }] }, { key: 'color', label: 'Custom color', type: 'color', value: '#ff0000' }, { key: 'pat', label: 'Pattern', type: 'select', value: O.pattern, options: PATTERNS.map((p, i) => ({ value: i, label: p.name })) }, { key: 'op', label: 'Opacity %', type: 'range', min: 1, max: 100, value: 100 }] });
   if (!v) return;
@@ -1326,6 +1344,7 @@ async function imageSizeDialog() {
   if (!v) return; resizeImage(Math.max(1, Math.round(v.w)), Math.max(1, Math.round(v.h)), v.q);
 }
 function resizeImage(nw, nh, q = 'high') {
+  REC('imageSize', { w: nw, h: nh, q, lock: Math.abs(nw / nh - D.w / D.h) < 0.01 });
   const kx = nw / D.w, ky = nh / D.h;
   D.layers.forEach(L => { if (L.kind !== 'adjust') { L.canvas = resampleCanvas(L.canvas, Math.max(1, Math.round(L.canvas.width * kx)), Math.max(1, Math.round(L.canvas.height * ky)), q); } L.x = Math.round(L.x * kx); L.y = Math.round(L.y * ky); if (L.mask) { const m = mk(Math.max(1, L.mask.width * kx), Math.max(1, L.mask.height * ky)); m.getContext('2d').drawImage(L.mask, 0, 0, m.width, m.height); L.mask = m; L.maskVer = Math.random(); } if (L.kind === 'text') { L.text.x *= kx; L.text.y *= ky; L.text.size = Math.round(L.text.size * ky); }
     if (L.kind === 'frame') { L.frame.w *= kx; L.frame.h *= ky; L.frame.ox *= kx; L.frame.oy *= ky; renderFrameLayer(L); }
@@ -1343,6 +1362,7 @@ async function canvasSizeDialog() {
   const body = h('div', { class: 'form-grid' }, h('label', { class: 'field' }, 'Width (px)', wI), h('label', { class: 'field' }, 'Height (px)', hI), h('label', { class: 'row', style: { color: 'var(--tx-1)' } }, rel, 'Relative'), h('div', { class: 'field' }, h('span', {}, 'Anchor'), anchorPicker('c', k => anchor = k)), h('label', { class: 'field' }, 'Extension fill', fillSel), h('label', { class: 'field' }, 'Extension color', col));
   const r = await modal({ title: 'Canvas size', body, width: 420, buttons: [{ label: 'Cancel', value: null }, { label: 'OK', primary: true, value: 'ok' }] }); if (r !== 'ok') return;
   const nw = Math.max(1, rel.checked ? D.w + +wI.value : +wI.value), nh = Math.max(1, rel.checked ? D.h + +hI.value : +hI.value);
+  REC('canvasSize', { w: +wI.value, h: +hI.value, rel: rel.checked, anchor, fill: fillSel.value, color: col.value });
   await resizeCanvas(nw, nh, anchor, fillSel.value, col.value);
 }
 async function resizeCanvas(nw, nh, a, fill = 'color', color = O.bg) {
@@ -1391,13 +1411,13 @@ async function expandDialog() {
   await expandFill();
 }
 function rotateCanvas(deg) {
-  if (!D) return; const W = D.w, H = D.h, swap = Math.abs(deg) === 90;
+  if (!D) return; REC('rotate', { deg }); const W = D.w, H = D.h, swap = Math.abs(deg) === 90;
   D.layers.forEach(L => { if (L.kind === 'adjust') { if (L.mask) { const m = mk(swap ? H : W, swap ? W : H), mc = m.getContext('2d'); mc.translate(m.width / 2, m.height / 2); mc.rotate(deg * Math.PI / 180); mc.drawImage(L.mask, -W / 2, -H / 2); L.mask = m; L.maskVer = Math.random(); } return; } toRaster(L); ensureCovers(L); const full = mk(W, H); full.getContext('2d').drawImage(L.canvas, L.x, L.y); const n = mk(swap ? H : W, swap ? W : H), c = n.getContext('2d'); c.translate(n.width / 2, n.height / 2); c.rotate(deg * Math.PI / 180); c.drawImage(full, -W / 2, -H / 2); if (L.mask) { const mm = mk(W, H), mmc = mm.getContext('2d'); mmc.fillStyle = '#fff'; mmc.fillRect(0, 0, W, H); mmc.clearRect(L.x, L.y, L.mask.width, L.mask.height); mmc.drawImage(L.mask, L.x, L.y); const m = mk(n.width, n.height), mc = m.getContext('2d'); mc.translate(n.width / 2, n.height / 2); mc.rotate(deg * Math.PI / 180); mc.drawImage(mm, -W / 2, -H / 2); L.mask = m; L.maskVer = Math.random(); } L.canvas = n; L.x = 0; L.y = 0; });
   if (swap) { D.w = H; D.h = W; } setSel(null); fitView(); requestRender(); pushHist('Rotate canvas');
 }
 // arbitrary rotation: mode 'crop' (largest same-aspect rectangle), 'expand' (grow canvas), 'fill' (keep size, content-aware fill corners)
 async function rotateArbitrary(deg, mode = 'crop') {
-  if (!D || !deg) return; const W = D.w, H = D.h, a = deg * Math.PI / 180, ca = Math.abs(Math.cos(a)), sa = Math.abs(Math.sin(a));
+  if (!D || !deg) return; REC('rotateArb', { deg, mode }); const W = D.w, H = D.h, a = deg * Math.PI / 180, ca = Math.abs(Math.cos(a)), sa = Math.abs(Math.sin(a));
   let nw = W, nh = H; if (mode === 'expand') { nw = Math.ceil(W * ca + H * sa); nh = Math.ceil(W * sa + H * ca); }
   else if (mode === 'crop') { const k = Math.min(W / (W * ca + H * sa), H / (W * sa + H * ca)); nw = Math.floor(W * k); nh = Math.floor(H * k); }
   const rot = (src, fillWhite) => { const n = mk(nw, nh), c = n.getContext('2d'); if (fillWhite) { c.fillStyle = '#fff'; c.fillRect(0, 0, nw, nh); } c.translate(nw / 2, nh / 2); c.rotate(a); c.imageSmoothingQuality = 'high'; c.drawImage(src, -W / 2, -H / 2); return n; };
@@ -1418,20 +1438,23 @@ async function straightenDialog(initial = 0) {
 async function autoStraighten() {
   if (!D) return; const flat = flattenCanvas(), k = Math.min(1, 800 / Math.max(D.w, D.h)), s = mk(Math.round(D.w * k), Math.round(D.h * k)); ctxOf(s).drawImage(flat, 0, 0, s.width, s.height);
   const tilt = X.estimateTilt(ctxOf(s).getImageData(0, 0, s.width, s.height));
+  REC('autoStraighten');
   if (Math.abs(tilt) < 0.15) return toast('The image already looks straight');
-  await rotateArbitrary(-tilt, 'crop'); toast(`Straightened by ${(-tilt).toFixed(1)}°`, 'ok');
+  await muted(() => rotateArbitrary(-tilt, 'crop')); toast(`Straightened by ${(-tilt).toFixed(1)}°`, 'ok');
 }
-function flipCanvas(horiz) { if (!D) return; D.layers.forEach(L => { if (L.kind === 'adjust') { if (L.mask) { const c = cloneCanvas(L.mask), x = L.mask.getContext('2d'); x.clearRect(0, 0, c.width, c.height); x.save(); horiz ? (x.translate(c.width, 0), x.scale(-1, 1)) : (x.translate(0, c.height), x.scale(1, -1)); x.drawImage(c, 0, 0); x.restore(); L.maskVer = Math.random(); } return; } toRaster(L); ensureCovers(L); const c = cloneCanvas(L.canvas), x = L.canvas.getContext('2d'); x.clearRect(0, 0, c.width, c.height); x.save(); horiz ? (x.translate(c.width, 0), x.scale(-1, 1)) : (x.translate(0, c.height), x.scale(1, -1)); x.drawImage(c, 0, 0); x.restore(); if (L.mask) { const m = cloneCanvas(L.mask), mx = L.mask.getContext('2d'); mx.clearRect(0, 0, m.width, m.height); mx.save(); horiz ? (mx.translate(m.width, 0), mx.scale(-1, 1)) : (mx.translate(0, m.height), mx.scale(1, -1)); mx.drawImage(m, 0, 0); mx.restore(); L.maskVer = Math.random(); } if (horiz) L.x = D.w - L.x - c.width; else L.y = D.h - L.y - c.height; }); requestRender(); pushHist('Flip canvas'); }
-function cropToSelection() { if (!D?.sel) return; const b = maskBounds(D.sel); if (!b) return; cropState = b; applyCrop(); cropState = null; drawOverlay(); }
+function flipCanvas(horiz) { if (!D) return; REC('flip', { horiz }); D.layers.forEach(L => { if (L.kind === 'adjust') { if (L.mask) { const c = cloneCanvas(L.mask), x = L.mask.getContext('2d'); x.clearRect(0, 0, c.width, c.height); x.save(); horiz ? (x.translate(c.width, 0), x.scale(-1, 1)) : (x.translate(0, c.height), x.scale(1, -1)); x.drawImage(c, 0, 0); x.restore(); L.maskVer = Math.random(); } return; } toRaster(L); ensureCovers(L); const c = cloneCanvas(L.canvas), x = L.canvas.getContext('2d'); x.clearRect(0, 0, c.width, c.height); x.save(); horiz ? (x.translate(c.width, 0), x.scale(-1, 1)) : (x.translate(0, c.height), x.scale(1, -1)); x.drawImage(c, 0, 0); x.restore(); if (L.mask) { const m = cloneCanvas(L.mask), mx = L.mask.getContext('2d'); mx.clearRect(0, 0, m.width, m.height); mx.save(); horiz ? (mx.translate(m.width, 0), mx.scale(-1, 1)) : (mx.translate(0, m.height), mx.scale(1, -1)); mx.drawImage(m, 0, 0); mx.restore(); L.maskVer = Math.random(); } if (horiz) L.x = D.w - L.x - c.width; else L.y = D.h - L.y - c.height; }); requestRender(); pushHist('Flip canvas'); }
+function cropToSelection() { if (!D?.sel) return; const b = maskBounds(D.sel); if (!b) return; REC('cropSel'); cropState = b; recMute++; applyCrop(); recMute--; cropState = null; drawOverlay(); }
 function trimCanvas(based = 'transparent') {
   if (!D) return; const flat = flattenCanvas(); let b;
   if (based === 'transparent') b = alphaBounds(flat);
   else { const d = ctxOf(flat).getImageData(0, 0, D.w, D.h).data, j0 = based === 'tl' ? 0 : (D.w * D.h - 1) * 4, r0 = d[j0], g0 = d[j0 + 1], b0 = d[j0 + 2]; let x0 = D.w, y0 = D.h, x1 = -1, y1 = -1; for (let y = 0; y < D.h; y++) for (let x = 0; x < D.w; x++) { const j = (y * D.w + x) * 4; if (Math.abs(d[j] - r0) + Math.abs(d[j + 1] - g0) + Math.abs(d[j + 2] - b0) > 24) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; } } b = x1 < 0 ? null : { x: x0, y: y0, w: x1 - x0 + 1, h: y1 - y0 + 1 }; }
-  if (!b) return toast('Nothing to trim'); cropState = b; applyCrop(); cropState = null; drawOverlay();
+  REC('trim', { based });
+  if (!b) return toast('Nothing to trim'); cropState = b; recMute++; applyCrop(); recMute--; cropState = null; drawOverlay();
 }
 async function trimDialog() { const v = await form({ title: 'Trim', fields: [{ key: 'b', label: 'Based on', type: 'select', value: 'transparent', options: [{ value: 'transparent', label: 'Transparent pixels' }, { value: 'tl', label: 'Top-left pixel color' }, { value: 'br', label: 'Bottom-right pixel color' }] }], ok: 'Trim' }); if (v) trimCanvas(v.b); }
 function revealAll() {
   if (!D) return; let x0 = 0, y0 = 0, x1 = D.w, y1 = D.h; D.layers.forEach(L => { if (L.kind === 'adjust') return; const b = layerBounds(L); if (!b) return; x0 = Math.min(x0, b.x); y0 = Math.min(y0, b.y); x1 = Math.max(x1, b.x + b.w); y1 = Math.max(y1, b.y + b.h); });
+  REC('revealAll');
   if (x0 === 0 && y0 === 0 && x1 === D.w && y1 === D.h) return toast('All layer content is already visible');
   const dx = -x0, dy = -y0; D.layers.forEach(L => { if (L.kind === 'adjust') { if (L.mask) { const m = mk(x1 - x0, y1 - y0), mc = m.getContext('2d'); mc.fillStyle = '#fff'; mc.fillRect(0, 0, m.width, m.height); mc.clearRect(dx, dy, L.mask.width, L.mask.height); mc.drawImage(L.mask, dx, dy); L.mask = m; L.maskVer = Math.random(); } return; } L.x += dx; L.y += dy; if (L.kind === 'text') { L.text.x += dx; L.text.y += dy; } });
   D.w = x1 - x0; D.h = y1 - y0; setSel(null); D.layers.filter(l => l.kind === 'text').forEach(renderTextLayer); fitView(); requestRender(); pushHist('Reveal all');
@@ -1457,9 +1480,9 @@ function mergeDown() {
   if (top.visible) { if (top.kind === 'adjust') { const tmp = mk(D.w, D.h), tx = ctxOf(tmp); tx.drawImage(base, 0, 0); applyAdjustLayer(tx, top, false); bc.clearRect(0, 0, D.w, D.h); bc.drawImage(tmp, 0, 0); } else { bc.save(); bc.globalAlpha = top.opacity; bc.globalCompositeOperation = top.blend; bc.drawImage(bakeLayer(top), 0, 0); bc.restore(); } }
   Object.assign(bot, { canvas: base, x: 0, y: 0, mask: null, fx: {}, kind: 'raster', text: undefined }); D.layers.splice(D.active, 1); D.active--; requestRender(); pushHist('Merge down');
 }
-function mergeVisible() { if (!D) return; const c = flattenCanvas(); const vis = D.layers.filter(l => l.visible); if (vis.length < 2) return; const L = newLayer('Merged', D.w, D.h); L.canvas = c; D.layers = D.layers.filter(l => !l.visible || l === vis[vis.length - 1]); D.layers[D.layers.indexOf(vis[vis.length - 1])] = L; D.active = D.layers.indexOf(L); requestRender(); pushHist('Merge visible'); }
+function mergeVisible() { if (!D) return; REC('mergeVisible'); const c = flattenCanvas(); const vis = D.layers.filter(l => l.visible); if (vis.length < 2) return; const L = newLayer('Merged', D.w, D.h); L.canvas = c; D.layers = D.layers.filter(l => !l.visible || l === vis[vis.length - 1]); D.layers[D.layers.indexOf(vis[vis.length - 1])] = L; D.active = D.layers.indexOf(L); requestRender(); pushHist('Merge visible'); }
 UI.shortcut('ctrl+e', mergeDown); UI.shortcut('ctrl+shift+e', mergeVisible);
-function flatten() { if (!D) return; const c = mk(D.w, D.h), x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, D.w, D.h); x.drawImage(flattenCanvas(), 0, 0); const L = newLayer('Background', D.w, D.h); L.canvas = c; D.layers = [L]; D.active = 0; requestRender(); pushHist('Flatten image'); }
+function flatten() { if (!D) return; REC('flatten'); const c = mk(D.w, D.h), x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, D.w, D.h); x.drawImage(flattenCanvas(), 0, 0); const L = newLayer('Background', D.w, D.h); L.canvas = c; D.layers = [L]; D.active = 0; requestRender(); pushHist('Flatten image'); }
 function addMask(kind, silent) {
   const L = AL(); if (!L) return; ensureCovers(L); const w = L.kind === 'adjust' ? D.w : L.canvas.width, hh = L.kind === 'adjust' ? D.h : L.canvas.height; if (L.kind === 'adjust') { L.x = 0; L.y = 0; }
   const m = mk(w, hh), c = m.getContext('2d'); c.fillStyle = kind === 'none' ? '#000' : '#fff'; c.fillRect(0, 0, w, hh);
@@ -1552,11 +1575,11 @@ function floatPanel({ title, body, width = 340, ok = 'OK', onOpen }) {
 // =====================================================================  right panel: layers / looks / adjust / history
 let rtab = 'layers', dragLayer = null;
 $('#rtabs').innerHTML = '';
-[['layers', 'Layers'], ['looks', 'Looks'], ['adjust', 'Adjust'], ['history', 'History']].forEach(([t, n]) => $('#rtabs').append(h('div', { class: 'tab' + (t === rtab ? ' active' : ''), 'data-t': t }, n)));
+[['layers', 'Layers'], ['looks', 'Looks'], ['adjust', 'Adjust'], ['history', 'History'], ['actions', 'Actions']].forEach(([t, n]) => $('#rtabs').append(h('div', { class: 'tab' + (t === rtab ? ' active' : ''), 'data-t': t }, n)));
 $('#rtabs').addEventListener('click', e => { const t = e.target.closest('.tab'); if (!t) return; showTab(t.dataset.t); });
 function showTab(t) { rtab = t; document.querySelectorAll('#rtabs .tab').forEach(x => x.classList.toggle('active', x.dataset.t === t)); renderRight(); }
 let looksTimer = null;
-function renderRight() { if (rtab === 'layers') renderLayers(); else if (rtab === 'history') renderHistory(); else if (rtab === 'looks') { if (!$('#rtBody .looks-grid')) renderLooks(); else { clearTimeout(looksTimer); looksTimer = setTimeout(() => rtab === 'looks' && renderLooks(), 250); } } else renderAdjustPanel(); renderLayerActions(); }
+function renderRight() { if (rtab === 'layers') renderLayers(); else if (rtab === 'history') renderHistory(); else if (rtab === 'looks') { if (!$('#rtBody .looks-grid')) renderLooks(); else { clearTimeout(looksTimer); looksTimer = setTimeout(() => rtab === 'looks' && renderLooks(), 250); } } else if (rtab === 'actions') { if (window.PhotoActions) window.PhotoActions.renderPanel($('#rtBody')); } else renderAdjustPanel(); renderLayerActions(); }
 function layerThumb(l) {
   const th = h('canvas'); const tw = 44, thh = 34; th.width = tw * 2; th.height = thh * 2; const tc = th.getContext('2d');
   if (l.kind === 'adjust') { tc.fillStyle = cssVar('--bg-4') || '#444'; tc.fillRect(0, 0, th.width, th.height); tc.fillStyle = cssVar('--tx-0') || '#fff'; tc.beginPath(); tc.arc(th.width / 2, th.height / 2, 22, Math.PI / 2, Math.PI * 1.5); tc.fill(); tc.strokeStyle = tc.fillStyle; tc.lineWidth = 3; tc.beginPath(); tc.arc(th.width / 2, th.height / 2, 22, 0, 7); tc.stroke(); return th; }
@@ -1592,7 +1615,7 @@ function renderLayers() {
   b.scrollTop = st;
 }
 function renderLayerActions() {
-  const a = $('#layerActions'); a.innerHTML = '';
+  const a = $('#layerActions'); a.innerHTML = ''; a.style.display = rtab === 'actions' ? 'none' : '';
   const btn = (ic, tip, fn) => h('button', { class: 'icon-btn', 'data-tip': tip, html: icon(ic), onclick: fn });
   if (rtab === 'history') { a.append(btn('camera', 'New snapshot', takeSnapshot), btn('copy', 'New document from current state', duplicateDoc)); return; }
   a.append(btn('fx', 'Layer style', e => contextMenu(e, [{ label: 'All styles…', action: () => layerStyleDialog() }, '-', ...FX_LIST.map(([k, n]) => ({ label: n + '…', action: () => layerStyleDialog(k) })), '-', { label: 'Copy style', action: copyFx }, { label: 'Paste style', action: pasteFx, disabled: !fxClipboard }, { label: 'Clear', action: clearFx }])),
@@ -1638,7 +1661,7 @@ function renderLooks() {
   if (lookL) b.append(h('div', { class: 'row', style: { padding: '8px 10px', gap: '6px' } }, h('button', { class: 'btn sm', onclick: () => { D.layers.splice(D.layers.indexOf(lookL), 1); D.active = clamp(D.active - 1, 0, D.layers.length - 1); requestRender(); pushHist('Remove look'); renderLooks(); } }, 'Remove look'), h('button', { class: 'btn sm', onclick: () => { mergeDown(); renderLooks(); } }, 'Merge into layer below')));
 }
 function applyLook(id, amt = 100) {
-  if (!D) return; const L = AL(); const lk = X.LOOKS.find(l => l.id === id);
+  if (!D) return; const L = AL(); const lk = X.LOOKS.find(l => l.id === id); if (!lk) return; REC('look', { id, amt });
   if (L?.kind === 'adjust' && L.adj?.type === 'look') { L.adj.params.look = id; L.name = 'Look: ' + lk.name; }
   else { const n = newLayer('Look: ' + lk.name, 1, 1, { kind: 'adjust', adj: { type: 'look', params: { look: id, amt } } }); D.layers.splice(D.active + 1, 0, n); D.active++; }
   requestRender(); pushHist('Look: ' + lk.name); if (rtab === 'looks') renderLooks();
@@ -1696,28 +1719,29 @@ function layerImageOp(L, fn, params) {
   if (D.sel) { const sa = ctxOf(D.sel).getImageData(0, 0, D.w, D.h).data, d = img.data, W = L.canvas.width; for (let y = 0; y < L.canvas.height; y++) { const dy = y + L.y; for (let x = 0; x < W; x++) { const dx = x + L.x, j = (y * W + x) * 4; const a = dx < 0 || dy < 0 || dx >= D.w || dy >= D.h ? 0 : sa[(dy * D.w + dx) * 4 + 3] / 255; if (a >= 1) continue; for (let k = 0; k < 4; k++) d[j + k] = orig[j + k] + (d[j + k] - orig[j + k]) * a; } } }
   c.putImageData(img, 0, 0);
 }
-function quickAdj(fn, name) { const L = AL(); if (!D || !L || L.kind !== 'raster') return toast('Select a pixel layer', 'err'); if (smartBlock(L)) return; layerImageOp(L, fn, {}); requestRender(); pushHist(name); }
+function quickAdj(fn, name) { const L = AL(); if (!D || !L || L.kind !== 'raster') return toast('Select a pixel layer', 'err'); if (smartBlock(L)) return; REC('auto', { id: { 'Auto tone': 'autotone', 'Auto contrast': 'autocontrast', 'Auto color': 'autocolor' }[name] || 'autotone' }); layerImageOp(L, fn, {}); requestRender(); pushHist(name); }
 function editActiveLayer() { const L = AL(); if (L?.kind !== 'adjust') return; if (L.adj.type === 'look') return showTab('looks'); const a = ADJ_BY_ID[L.adj.type]; if (a) adjustLayerDialog(a, L, false); }
-async function runAdjust(a, { asLayer = false } = {}) {
+async function runAdjust(a, { asLayer = false, initVals = null } = {}) {
   if (!D) return toast('Open an image first');
   if (asLayer) {
     if (a.layer === false) return runAdjust(a);
-    const L = newLayer(a.name, 1, 1, { kind: 'adjust', adj: { type: a.id, params: defaultsOf(a) } });
+    const L = newLayer(a.name, 1, 1, { kind: 'adjust', adj: { type: a.id, params: initVals ? { ...defaultsOf(a), ...JSON.parse(JSON.stringify(initVals)) } : defaultsOf(a) } });
     if (D.sel) { L.mask = maskFromAlphaGray(selAlpha()); L.maskVer = 1; setSel(null); }
     D.layers.splice(D.active + 1, 0, L); D.active++; requestRender(); renderLayers();
-    if (!a.params && !a.custom) { pushHist('New ' + a.name + ' layer'); return; }
+    if (!a.params && !a.custom) { REC('adjustLayer', { id: a.id, vals: {} }); pushHist('New ' + a.name + ' layer'); return; }
     return adjustLayerDialog(a, L, true);
   }
   const L = AL(); if (!L) return; if (L.kind === 'adjust') return toast('Select a pixel layer (or use Layer › New adjustment layer)', 'err'); if (L.kind === 'text' || L.kind === 'frame') return toast('Rasterize the layer first', 'err'); if (L.locked) return toast('Layer is locked', 'err'); if (smartBlock(L)) return;
   if (a.custom === 'match') return matchColorDialog();
-  if (!a.params && !a.custom) { layerImageOp(L, a.fn, {}); requestRender(); pushHist(a.name); return; }
-  ensureCovers(L); const orig = cloneCanvas(L.canvas); let timer = null, vals = defaultsOf(a);
+  if (!a.params && !a.custom) { REC('adjust', { id: a.id, vals: {} }); layerImageOp(L, a.fn, {}); requestRender(); pushHist(a.name); return; }
+  ensureCovers(L); const orig = cloneCanvas(L.canvas); let timer = null, vals = initVals ? { ...defaultsOf(a), ...JSON.parse(JSON.stringify(initVals)) } : defaultsOf(a);
   const big = orig.width * orig.height > 4e6;
   const preview = () => { clearTimeout(timer); timer = setTimeout(() => { const c = L.canvas.getContext('2d'); c.clearRect(0, 0, orig.width, orig.height); c.drawImage(orig, 0, 0); layerImageOp(L, a.fn, vals); contentSerial++; requestRender(false); }, big ? 120 : 16); };
   preview();
   const ok = await floatPanel({ title: a.name, width: a.custom === 'curves' ? 330 : 320, body: adjustBody(a, vals, preview) });
   clearTimeout(timer); const c = L.canvas.getContext('2d'); c.clearRect(0, 0, orig.width, orig.height); c.drawImage(orig, 0, 0);
-  if (ok) { layerImageOp(L, a.fn, vals); pushHist(a.name); } requestRender();
+  if (ok) { REC('adjust', { id: a.id, vals }); layerImageOp(L, a.fn, vals); pushHist(a.name); } requestRender();
+  return !!ok;
 }
 function maskFromAlphaGray(a) { const m = mk(D.w, D.h), c = ctxOf(m), id = c.createImageData(D.w, D.h); for (let i = 0; i < a.length; i++) { const j = i * 4; id.data[j] = id.data[j + 1] = id.data[j + 2] = a[i]; id.data[j + 3] = 255; } c.putImageData(id, 0, 0); return m; }
 async function adjustLayerDialog(a, L, isNew) {
@@ -1725,7 +1749,7 @@ async function adjustLayerDialog(a, L, isNew) {
   const upd = () => proxyRender();
   const ok = await floatPanel({ title: (isNew ? 'New ' : '') + a.name + ' layer', width: a.custom === 'curves' ? 330 : 320, body: adjustBody(a, vals, upd) });
   if (!ok) { if (isNew) { D.layers.splice(D.layers.indexOf(L), 1); D.active = clamp(D.active - 1, 0, D.layers.length - 1); } else L.adj.params = before; requestRender(); renderLayers(); return; }
-  requestRender(); pushHist(isNew ? 'New ' + a.name + ' layer' : 'Edit ' + a.name);
+  if (isNew) REC('adjustLayer', { id: a.id, vals }); requestRender(); pushHist(isNew ? 'New ' + a.name + ' layer' : 'Edit ' + a.name);
 }
 function adjustBody(a, vals, onChange) {
   const el = h('div', { class: 'ph-fields' });
@@ -1816,6 +1840,7 @@ const FILTERS = [
   { id: 'clouds', cat: 'Render', name: 'Clouds', icon: 'blur', params: [rng('sc', 'Scale (px)', 8, 2000, 220), rng('oct', 'Detail', 1, 9, 6), rng('rough', 'Roughness %', 20, 80, 50), rng('con', 'Contrast', 0, 100, 20), rng('seed', 'Seed', 1, 999, 5), { key: 'diff', label: 'Difference clouds', type: 'checkbox', value: false }], fn: F.clouds, note: 'Uses the foreground and background colors' },
   { id: 'skin', cat: 'Portrait', name: 'Skin Smoothing', icon: 'blur', params: [rng('amt', 'Smoothness %', 0, 100, 60), rng('r', 'Radius (px)', 1, 40, 8), rng('detail', 'Keep skin texture %', 0, 100, 25), { key: 'onlySkin', label: 'Only skin tones', type: 'checkbox', value: true }], fn: F.skinSmooth },
 ];
+UI.shortcut('ctrl+shift+a', () => { if (D && window.PhotoRaw) window.PhotoRaw.filterDialog(); });
 UI.shortcut('ctrl+f', () => repeatFilter()); UI.shortcut('ctrl+shift+x', () => liquifyDialog());
 function filterRegion(L) {
   // doc-space rectangle the filter works on: selection bounds (or the canvas) ∩ layer
@@ -1836,16 +1861,16 @@ async function runFilter(Fd, vals) {
   const L = checkPixelLayer(); if (!L) return;
   if (Fd.params && !vals) return filterDialog(Fd);
   vals = vals || {};
-  await withBusy(Fd.name + '…', async () => { if (applyFilterToLayer(L, Fd, vals)) { lastFilter = { F: Fd, vals: { ...vals } }; requestRender(); pushHist(Fd.name); } else toast('Nothing to filter in this area'); });
+  await withBusy(Fd.name + '…', async () => { if (applyFilterToLayer(L, Fd, vals)) { REC('filter', { id: Fd.id, vals }); lastFilter = { F: Fd, vals: { ...vals } }; requestRender(); pushHist(Fd.name); } else toast('Nothing to filter in this area'); });
 }
 function repeatFilter() { if (!lastFilter) return toast('No filter applied yet'); runFilter(lastFilter.F, lastFilter.vals); }
-async function filterDialog(Fd, { gallery = false, smartEdit = null } = {}) {
+async function filterDialog(Fd, { gallery = false, smartEdit = null, initVals = null } = {}) {
   const L = smartEdit ? smartEdit.L : checkPixelLayer(); if (!L) return; ensureCovers(L); const r = smartEdit ? { x: L.x, y: L.y, w: L.canvas.width, h: L.canvas.height } : filterRegion(L); if (!r) return toast('Nothing to filter in this area');
   const se = smartEdit ? L.smart.filters[smartEdit.i] : null;
   const PW = gallery ? 560 : 620, PH = gallery ? 420 : 440, k = Math.min(1, PW / r.w, PH / r.h), pw = Math.max(1, Math.round(r.w * k)), ph = Math.max(1, Math.round(r.h * k));
   const src = mk(pw, ph), sx = ctxOf(src); sx.imageSmoothingQuality = 'high'; sx.drawImage(se ? smartPartial(L, smartEdit.i) : L.canvas, r.x - L.x, r.y - L.y, r.w, r.h, 0, 0, pw, ph); const base = sx.getImageData(0, 0, pw, ph);
   let selA = null; if (se ? se.mask : D.sel) { const sc = mk(pw, ph), scx = ctxOf(sc); scx.drawImage(se ? se.mask : D.sel, se ? 0 : r.x, se ? 0 : r.y, r.w, r.h, 0, 0, pw, ph); selA = scx.getImageData(0, 0, pw, ph).data; }
-  const pv = h('canvas', { width: pw, height: ph, class: 'ph-preview-cv checker' }), info = h('div', { class: 'muted pv-info' }, ''); let cur = Fd, vals = se ? JSON.parse(JSON.stringify(se.vals)) : defaultsOf(Fd), timer = null, showOrig = false;
+  const pv = h('canvas', { width: pw, height: ph, class: 'ph-preview-cv checker' }), info = h('div', { class: 'muted pv-info' }, ''); let cur = Fd, vals = se ? JSON.parse(JSON.stringify(se.vals)) : initVals ? { ...defaultsOf(Fd), ...JSON.parse(JSON.stringify(initVals)) } : defaultsOf(Fd), timer = null, showOrig = false;
   const renderPv = () => { const img = new ImageData(new Uint8ClampedArray(base.data), pw, ph); if (!showOrig) { const t0 = performance.now(); try { cur.fn(img, vals, { scale: k, fg: O.fg, bg: O.bg, ox: r.x * k, oy: r.y * k }); } catch (e) { console.error(e); } if (selA) { const d = img.data, b = base.data; for (let i = 0; i < d.length; i += 4) { const a = selA[i + 3] / 255; for (let q = 0; q < 4; q++) d[i + q] = b[i + q] + (d[i + q] - b[i + q]) * a; } } info.textContent = `Preview ${Math.round(k * 100)}% · ${Math.round(performance.now() - t0)} ms`; } else info.textContent = 'Original'; ctxOf(pv).putImageData(img, 0, 0); };
   const sched = () => { clearTimeout(timer); timer = setTimeout(renderPv, cur.slow ? 120 : 30); };
   pv.onpointerdown = e => { if (cur.point && !e.altKey) { const b = pv.getBoundingClientRect(); vals.x = Math.round((e.clientX - b.left) / b.width * 100); vals.y = Math.round((e.clientY - b.top) / b.height * 100); drawFields(); sched(); return; } showOrig = true; renderPv(); };
@@ -1862,7 +1887,7 @@ async function filterDialog(Fd, { gallery = false, smartEdit = null } = {}) {
   const res = await modal({ title: (se ? 'Smart filter — ' : '') + (gallery ? 'Filter Gallery' : cur.name), width: gallery ? 1180 : 960, body, buttons: [{ label: 'Cancel', value: null }, { label: 'Apply', primary: true, value: 'ok' }] });
   clearTimeout(timer); if (res !== 'ok') return;
   if (se) { se.vals = vals; L.canvas = smartRecompute(L); requestRender(); pushHist('Edit smart filter: ' + cur.name); renderLayers(); return; }
-  await withBusy(cur.name + '…', async () => { if (applyFilterToLayer(L, cur, vals)) { lastFilter = { F: cur, vals: { ...vals } }; requestRender(); pushHist(cur.name); } });
+  await withBusy(cur.name + '…', async () => { if (applyFilterToLayer(L, cur, vals)) { REC('filter', { id: cur.id, vals }); lastFilter = { F: cur, vals: { ...vals } }; requestRender(); pushHist(cur.name); } });
 }
 
 // =====================================================================  Liquify
@@ -1974,9 +1999,10 @@ async function subjectAlpha(mode, src) {
   // remove tiny islands of foreground noise via open (contract+expand)
   return softFromBits(bg, src.width, src.height, 1.5, 0);
 }
-async function selectSubject(mode = 'ai') { if (!D) return; await withBusy('Selecting subject…', async () => { const a = await subjectAlpha(mode, flattenCanvas()); setSel(maskFromAlpha(a)); pushHist('Select subject'); }); }
-async function removeBackground(mode) {
+async function selectSubject(mode = 'ai') { if (!D) return; REC('select', { kind: 'subject', mode }); await withBusy('Selecting subject…', async () => { const a = await subjectAlpha(mode, flattenCanvas()); setSel(maskFromAlpha(a)); pushHist('Select subject'); }); }
+async function removeBackground(mode, preset = null) {
   const L = AL(); if (!L || L.kind === 'adjust') return toast('Select a pixel layer', 'err');
+  if (mode === 'plain' && preset) { const img = ctxOf(layerDocCanvas(L)).getImageData(0, 0, D.w, D.h), v = { tol: 30, feather: 2, shift: 0, holes: false, ...preset }; REC('removeBg', { mode, ...v }); const bg = plainBgMask(img, v.tol, !v.holes); const fg = new Uint8Array(bg.length); for (let i = 0; i < bg.length; i++) fg[i] = bg[i] ? 0 : 1; maskFromDocAlpha(L, softFromBits(fg, D.w, D.h, v.feather, -v.shift)); requestRender(); pushHist('Remove background'); renderLayers(); return; }
   if (mode === 'plain') {
     const src = layerDocCanvas(L), img = ctxOf(src).getImageData(0, 0, D.w, D.h); let timer = null;
     const vals = { tol: 30, feather: 2, shift: 0, holes: false };
@@ -1985,12 +2011,13 @@ async function removeBackground(mode) {
     const el = h('div', { class: 'ph-fields' }); buildFields(el, [rng('tol', 'Tolerance', 1, 120, 30), rng('feather', 'Feather (px)', 0, 40, 2), rng('shift', 'Shift edge inward (px)', -10, 20, 0), { key: 'holes', label: 'Also remove enclosed background areas', type: 'checkbox' }, { key: 'n', type: 'note', label: 'Works best for products and portraits on a plain, evenly coloured background. The result is a layer mask, so you can paint it to fix details.' }], vals, prev);
     prev(); const ok = await floatPanel({ title: 'Remove background', body: el, ok: 'Remove' }); clearTimeout(timer);
     if (!ok) { L.mask = before.mask; L.maskVer = before.mv; L.editMask = before.em; requestRender(); return; }
-    const bg = plainBgMask(img, vals.tol, !vals.holes); const fg = new Uint8Array(bg.length); for (let i = 0; i < bg.length; i++) fg[i] = bg[i] ? 0 : 1; maskFromDocAlpha(L, softFromBits(fg, D.w, D.h, vals.feather, -vals.shift)); requestRender(); pushHist('Remove background'); renderLayers(); return;
+    REC('removeBg', { mode, ...vals }); const bg = plainBgMask(img, vals.tol, !vals.holes); const fg = new Uint8Array(bg.length); for (let i = 0; i < bg.length; i++) fg[i] = bg[i] ? 0 : 1; maskFromDocAlpha(L, softFromBits(fg, D.w, D.h, vals.feather, -vals.shift)); requestRender(); pushHist('Remove background'); renderLayers(); return;
   }
+  REC('removeBg', { mode: 'ai' });
   await withBusy('Removing background…', async () => { const a = await subjectAlpha('ai', layerDocCanvas(L)); maskFromDocAlpha(L, a); requestRender(); pushHist('Remove background'); renderLayers(); toast('Background hidden with a layer mask — paint the mask to refine', 'ok'); });
 }
 async function selectSky() {
-  if (!D) return;
+  if (!D) return; REC('select', { kind: 'sky' });
   await withBusy('Selecting sky…', async () => {
     const W = D.w, H = D.h, img = ctxOf(flattenCanvas()).getImageData(0, 0, W, H), d = img.data, n = W * H;
     const skyLike = i => { const j = i * 4, r = d[j], g = d[j + 1], b = d[j + 2], l = (r + g + b) / 3, mx = Math.max(r, g, b), mn = Math.min(r, g, b); const blue = b >= r + 8 && b >= g - 20 && l > 70; const cloud = l > 165 && mx - mn < 45; const dusk = r > 150 && l > 120 && b > 60 && mx - mn < 120 && (i / W) < H * 0.5; return blue || cloud || dusk; };
@@ -2098,14 +2125,32 @@ async function newDialog() {
   addDoc(createDoc({ w, h: hh, name: name.value || 'Untitled', bg: { white: '#ffffff', black: '#000000', bgc: O.bg, transparent: null }[bg] }));
 }
 UI.shortcut('ctrl+n', newDialog);
-async function openDialog() { const fs = await bts.fs.open({ multi: true, filters: [{ name: 'Images & projects', extensions: ['png', 'jpg', 'jpeg', 'webp', 'avif', 'bmp', 'gif', 'psd', 'btsp', 'svg', 'ico'] }] }); if (fs) for (const f of fs) await openFile(f); }
+const RAW_EXT = ['dng', 'cr2', 'cr3', 'crw', 'nef', 'nrw', 'arw', 'srf', 'sr2', 'orf', 'raf', 'rw2', 'rwl', 'pef', 'srw', 'raw', '3fr', 'iiq', 'erf', 'mef', 'mos', 'kdc', 'dcr', 'x3f'];
+const HEIF_EXT = ['heic', 'heif', 'hif'];
+const extOf = n => (String(n || '').split('.').pop() || '').toLowerCase();
+const isRawName = n => RAW_EXT.includes(extOf(n)), isHeifName = n => HEIF_EXT.includes(extOf(n));
+const IMAGE_EXT = ['png', 'jpg', 'jpeg', 'jfif', 'webp', 'avif', 'bmp', 'gif', 'svg', 'ico', ...HEIF_EXT, ...RAW_EXT];
+const OPEN_FILTERS = [{ name: 'Images, camera raw & projects', extensions: [...IMAGE_EXT, 'psd', 'btsp'] }, { name: 'Camera raw', extensions: RAW_EXT }, { name: 'HEIC / HEIF (iPhone)', extensions: HEIF_EXT }, { name: 'All files', extensions: ['*'] }];
+async function openDialog() { const fs = await bts.fs.open({ multi: true, filters: OPEN_FILTERS }); if (fs) for (const f of fs) await openFile(f); }
 UI.shortcut('ctrl+o', openDialog);
 async function decodeImage(u8, name) { const type = /\.svg$/i.test(name) ? 'image/svg+xml' : ''; const blob = new Blob([u8], type ? { type } : {}); try { return await createImageBitmap(blob); } catch { const url = URL.createObjectURL(blob); const im = new Image(); im.src = url; await im.decode(); return im; } }
 const b64ToU8 = s => Uint8Array.from(atob(s.split(',')[1]), c => c.charCodeAt(0));
+// any supported image (incl. camera raw developed with default settings, HEIC/HEIF, AVIF) -> canvas
+async function decodeToCanvas(u8, name, { raw = null } = {}) {
+  if (isRawName(name)) { if (!window.PhotoRaw) throw new Error('Camera raw support is not loaded'); return (await window.PhotoRaw.develop(u8, name, raw)).canvas; }
+  if (isHeifName(name)) { if (!window.PhotoRaw) throw new Error('HEIF support is not loaded'); return window.PhotoRaw.decodeHeif(u8); }
+  let im; try { im = await decodeImage(u8, name); } catch (e) { if (window.PhotoRaw && (/\.avif$/i.test(name) || window.PhotoRaw.looksHeif(u8))) return window.PhotoRaw.decodeHeif(u8); throw e; }
+  const c = mk(im.width, im.height); ctxOf(c).drawImage(im, 0, 0); if (im.close) im.close(); return c;
+}
 async function openFile(f) {
   const u8 = new Uint8Array(f.data);
   try {
     if (/\.btsp$/i.test(f.name)) { const j = JSON.parse(new TextDecoder().decode(u8)); const d = await docFromProject(j, f.name); d.path = f.path; d.fmt = 'btsp'; addDoc(d); }
+    else if (isRawName(f.name) || isHeifName(f.name)) {
+      if (!window.PhotoRaw) throw new Error('Camera raw support is not loaded');
+      const c = isRawName(f.name) ? await window.PhotoRaw.openRawDialog(u8, f.name) : await withBusyResult('Decoding HEIF image…', () => window.PhotoRaw.decodeHeif(u8));
+      if (!c) return; const d = createDoc({ w: c.width, h: c.height, name: f.name, bg: null }); d.layers[0].name = 'Background'; d.layers[0].canvas = c; d.path = f.path; d.fmt = extOf(f.name); addDoc(d);
+    }
     else if (/\.psd$/i.test(f.name)) {
       const psd = agPsd.readPsd(u8.buffer.slice(u8.byteOffset, u8.byteOffset + u8.byteLength), { skipThumbnail: true });
       const d = createDoc({ w: psd.width, h: psd.height, name: f.name, bg: null }); d.layers = [];
@@ -2114,7 +2159,7 @@ async function openFile(f) {
       if (!d.layers.length && psd.canvas) { const L = newLayer('Background', psd.width, psd.height); L.canvas.getContext('2d').drawImage(psd.canvas, 0, 0); d.layers.push(L); }
       d.active = d.layers.length - 1; d.path = f.path; d.fmt = 'psd'; addDoc(d);
     } else {
-      const im = await decodeImage(u8, f.name); const d = createDoc({ w: im.width, h: im.height, name: f.name, bg: null }); d.layers[0].name = 'Background'; d.layers[0].canvas.getContext('2d').drawImage(im, 0, 0); d.path = f.path; d.fmt = (f.name.split('.').pop() || 'png').toLowerCase(); addDoc(d);
+      const im = await decodeToCanvas(u8, f.name); const d = createDoc({ w: im.width, h: im.height, name: f.name, bg: null }); d.layers[0].name = 'Background'; d.layers[0].canvas = im; d.path = f.path; d.fmt = (f.name.split('.').pop() || 'png').toLowerCase(); addDoc(d);
     }
     if (f.path) bts.recent.add(f.path);
   } catch (e) { console.error(e); toast('Could not open ' + f.name + ': ' + e.message, 'err', 6000); }
@@ -2122,9 +2167,9 @@ async function openFile(f) {
 const psdBlendIn = m => { if (!m || m === 'normal' || m === 'pass through') return 'source-over'; const v = m.replace(/ /g, '-'); return BLENDS.some(b => b[0] === v) ? v : 'source-over'; };
 const psdBlendOut = b => b === 'source-over' ? 'normal' : b.replace(/-/g, ' ');
 async function placeImage() {
-  const fs = await bts.fs.open({ filters: [{ name: 'Images', extensions: ['png', 'jpg', 'jpeg', 'webp', 'bmp', 'gif', 'svg'] }] }); if (!fs) return;
+  const fs = await bts.fs.open({ filters: [{ name: 'Images', extensions: IMAGE_EXT }] }); if (!fs) return;
   if (!D) return openFile(fs[0]);
-  const im = await decodeImage(new Uint8Array(fs[0].data), fs[0].name); const L = newLayer(fs[0].name.replace(/\.\w+$/, ''), im.width, im.height);
+  let im; try { im = await withBusyResult('Decoding image…', () => decodeToCanvas(new Uint8Array(fs[0].data), fs[0].name)); } catch (e) { return toast('Could not open ' + fs[0].name + ': ' + e.message, 'err', 6000); } const L = newLayer(fs[0].name.replace(/\.\w+$/, ''), im.width, im.height);
   L.canvas.getContext('2d').drawImage(im, 0, 0); L.x = Math.round((D.w - im.width) / 2); L.y = Math.round((D.h - im.height) / 2);
   D.layers.splice(D.active + 1, 0, L); D.active++; requestRender(); pushHist('Place'); if (im.width > D.w || im.height > D.h) { startTransform(); const k = Math.min(D.w / im.width, D.h / im.height); T.sx = T.sy = k; requestRender(); drawOverlay(); toast('Press Enter to commit the placed image'); }
 }
@@ -2176,12 +2221,13 @@ async function exportDialog() {
   const body = h('div', { class: 'ph-dlg exp' }, h('div', { class: 'ph-preview' }, pvC, info), h('div', { class: 'ph-side' }, h('div', { class: 'exp-sz-box' }, h('span', { class: 'muted' }, 'Estimated file size'), sizeEl), fl));
   const r = await modal({ title: 'Export As', width: 900, body, buttons: [{ label: 'Cancel', value: null }, { label: 'Export…', primary: true, value: 'ok' }] });
   if (r !== 'ok') return; await update(); if (!blob) return;
+  REC('export', { fmt: vals.fmt, q: vals.q, scale: vals.scale === 'custom' ? vals.custom / 100 : +vals.scale, matte: vals.matte });
   const ext = vals.fmt === 'jpeg' ? 'jpg' : vals.fmt; const data = await UI.blobToU8(blob);
   const p = await bts.fs.saveAs({ data, defaultPath: D.name.replace(/\.\w+$/, '') + (vals.scale !== 1 && vals.scale !== 'custom' ? '@' + vals.scale + 'x' : '') + '.' + ext, filters: [{ name: vals.fmt.toUpperCase(), extensions: [ext] }] });
   if (p) toast(`Exported ${(data.length / 1024).toFixed(0)} KB`, 'ok');
 }
 UI.shortcut('ctrl+alt+shift+w', exportDialog);
-async function quickExportPng() { if (!D) return; if (T) commitTransform(); const data = await canvasToU8(flattenCanvas(), 'image/png'); const p = await bts.fs.saveAs({ data, defaultPath: D.name.replace(/\.\w+$/, '') + '.png', filters: [{ name: 'PNG', extensions: ['png'] }] }); if (p) toast(`Exported ${(data.length / 1024).toFixed(0)} KB`, 'ok'); }
+async function quickExportPng() { if (!D) return; if (T) commitTransform(); REC('export', { fmt: 'png', q: 100, scale: 1, matte: 'none' }); const data = await canvasToU8(flattenCanvas(), 'image/png'); const p = await bts.fs.saveAs({ data, defaultPath: D.name.replace(/\.\w+$/, '') + '.png', filters: [{ name: 'PNG', extensions: ['png'] }] }); if (p) toast(`Exported ${(data.length / 1024).toFixed(0)} KB`, 'ok'); }
 UI.shortcut('ctrl+alt+shift+s', quickExportPng);
 async function exportLayersDialog() {
   if (!D) return; if (T) commitTransform();
@@ -2293,6 +2339,7 @@ async function upscaleDialog() {
 }
 async function upscaleImage(f, v = { edge: 60, sharpen: 50, noise: 0 }) {
   if (!upscaleAllowed(f)) return toast('The result would be too large', 'err');
+  REC('upscale', { f, edge: v.edge, sharpen: v.sharpen, noise: v.noise });
   await withBusy('Upscaling…', async () => {
     const rasters = D.layers.filter(L => L.kind === 'raster' || L.kind === 'text' || L.kind === 'frame'); let done = 0;
     for (const L of D.layers) {
@@ -2613,6 +2660,149 @@ function smartRows(l, i) {
 }
 const SMART_MENU = () => [{ label: 'Convert for smart filters', action: () => convertToSmart(), disabled: AL()?.kind !== 'raster' || !!AL()?.smart }, { label: 'Apply new filters as smart filters', checked: () => O.smartFilters, action: () => { O.smartFilters = !O.smartFilters; toast(O.smartFilters ? 'New filters are added as editable smart filters' : 'Filters are applied directly to pixels'); } }, { label: 'Rasterize smart filters', action: () => rasterizeSmart(), disabled: !AL()?.smart }];
 
+// =====================================================================  1.2: replayable operations (Actions panel & batch)
+// Every recorded step is { op, params }. OPS[op].run(params) replays it on the current document without dialogs;
+// OPS[op].dialog(params) shows the operation's own dialog pre-filled (the step's "show dialog" toggle).
+function needPixelLayer() { const L = checkPixelLayer(); if (!L) throw new Error(lastErr || 'Select a pixel layer'); if (L.smart) throw new Error('This layer has smart filters — rasterize it first'); return L; }
+const AUTO_NAMES = { autotone: 'Auto tone', autocontrast: 'Auto contrast', autocolor: 'Auto color' };
+const SELECT_NAMES = { all: 'Select all', none: 'Deselect', invert: 'Inverse selection', subject: 'Select subject', sky: 'Select sky' };
+const fmtLabel = f => ({ jpeg: 'JPEG', png: 'PNG', webp: 'WebP', avif: 'AVIF' }[f] || String(f || '').toUpperCase());
+function addTextLayer(p) {
+  if (!D) return; const size = Math.max(4, Math.round((p.sizeRel || 0.05) * D.h));
+  const t = { str: p.str || 'Text', x: 0, y: 0, font: p.font || 'Segoe UI', size, bold: !!p.bold, italic: !!p.italic, color: p.color || '#ffffff', align: p.align || 'left' };
+  const L = newLayer(t.str.split('\n')[0].slice(0, 30) || 'Text', D.w, D.h, { kind: 'text', text: t, opacity: clamp(p.opacity ?? 1, 0, 1) });
+  renderTextLayer(L); const b = t.bounds, m = Math.round((p.margin ?? 0.03) * Math.min(D.w, D.h)), pos = p.pos || 'br';
+  if (pos === 'xy') { t.x = (p.fx ?? 0.1) * D.w; t.y = (p.fy ?? 0.1) * D.h; }
+  else { t.x = pos.includes('l') ? m : pos.includes('r') ? D.w - m - b.w : (D.w - b.w) / 2; t.y = pos.includes('t') ? m : pos.includes('b') ? D.h - m - b.h : (D.h - b.h) / 2; }
+  renderTextLayer(L); D.layers.splice(D.active + 1, 0, L); D.active++; requestRender(); renderLayers(); pushHist('Type layer');
+}
+function cropRectFor(p) {
+  const r = +p.r || 0; let w, hh, x, y;
+  if (r > 0) { const mw = Math.min(D.w, D.h * r); w = mw * clamp(p.scale ?? 1, 0.01, 1); hh = w / r; x = (p.cx ?? 0.5) * D.w - w / 2; y = (p.cy ?? 0.5) * D.h - hh / 2; x = clamp(x, 0, D.w - w); y = clamp(y, 0, D.h - hh); }
+  else { x = (p.fx ?? 0) * D.w; y = (p.fy ?? 0) * D.h; w = (p.fw ?? 1) * D.w; hh = (p.fh ?? 1) * D.h; }
+  return { x, y, w, h: hh };
+}
+async function encodeExport(p) {
+  const fmt = p.fmt === 'jpg' ? 'jpeg' : (p.fmt || 'png'), sc = +p.scale > 0 ? +p.scale : 1;
+  const c = exportCanvas(fmt, sc, fmt === 'jpeg' ? (!p.matte || p.matte === 'none' ? '#ffffff' : p.matte) : p.matte);
+  const type = 'image/' + fmt, b = await canvasToBlob(c, type, clamp(p.q ?? 90, 1, 100) / 100);
+  if (!b || b.type !== type) throw new Error('This export format is not supported');
+  return { data: await UI.blobToU8(b), ext: fmt === 'jpeg' ? 'jpg' : fmt, w: c.width, h: c.height };
+}
+const lookOpts = () => X.LOOKS.map(l => ({ value: l.id, label: l.name }));
+const OPS = {
+  adjust: { name: 'Adjustment', detail: p => ADJ_BY_ID[p.id]?.name || p.id,
+    run: p => { const a = ADJ_BY_ID[p.id]; if (!a || a.custom === 'match') throw new Error('This adjustment cannot be replayed'); const L = needPixelLayer(); layerImageOp(L, a.fn, { ...defaultsOf(a), ...(p.vals || {}) }); requestRender(); pushHist(a.name); },
+    dialog: p => { const a = ADJ_BY_ID[p.id]; return a.params || a.custom ? runAdjust(a, { initVals: p.vals }) : OPS.adjust.run(p); } },
+  adjustLayer: { name: 'Adjustment layer', detail: p => ADJ_BY_ID[p.id]?.name || p.id,
+    run: p => { const a = ADJ_BY_ID[p.id]; if (!a || a.layer === false) throw new Error('This adjustment cannot be replayed'); const L = newLayer(a.name, 1, 1, { kind: 'adjust', adj: { type: a.id, params: { ...defaultsOf(a), ...JSON.parse(JSON.stringify(p.vals || {})) } } }); if (D.sel) { L.mask = maskFromAlphaGray(selAlpha()); L.maskVer = 1; setSel(null); } D.layers.splice(D.active + 1, 0, L); D.active++; requestRender(); renderLayers(); pushHist('New ' + a.name + ' layer'); },
+    dialog: p => runAdjust(ADJ_BY_ID[p.id], { asLayer: true, initVals: p.vals }) },
+  auto: { name: 'Auto adjustment', detail: p => AUTO_NAMES[p.id] || p.id, run: p => { const a = ADJ_BY_ID[p.id]; needPixelLayer(); quickAdj(a.fn, AUTO_NAMES[p.id]); } },
+  filter: { name: 'Filter', detail: p => FILTERS.find(f => f.id === p.id)?.name || p.id,
+    run: p => { const Fd = FILTERS.find(f => f.id === p.id); if (!Fd) throw new Error('Unknown filter'); const L = needPixelLayer(); if (!applyFilterToLayer(L, Fd, { ...defaultsOf(Fd), ...(p.vals || {}) })) throw new Error('Nothing to filter in this area'); requestRender(); pushHist(Fd.name); },
+    dialog: p => { const Fd = FILTERS.find(f => f.id === p.id); return Fd.params ? filterDialog(Fd, { initVals: p.vals }) : OPS.filter.run(p); } },
+  camraw: { name: 'Camera Raw filter', detail: () => '', run: p => window.PhotoRaw.applyToLayer(p.settings || {}), dialog: p => window.PhotoRaw.filterDialog(p.settings) },
+  imageSize: { name: 'Image size', detail: p => p.lock ? `${p.w} px ↔` : `${p.w} × ${p.h} px`,
+    fields: p => [{ key: 'w', label: 'Width (px)', type: 'number', value: p.w }, { key: 'h', label: 'Height (px)', type: 'number', value: p.h }, { key: 'lock', label: 'Constrain proportions (height follows the width)', type: 'checkbox', value: !!p.lock }],
+    run: p => { const w = Math.max(1, Math.round(+p.w)), hh = p.lock ? Math.max(1, Math.round(w * D.h / D.w)) : Math.max(1, Math.round(+p.h)); if (w !== D.w || hh !== D.h) resizeImage(w, hh, p.q || 'high'); } },
+  fit: { name: 'Fit image', detail: p => `${p.w} × ${p.h} px`,
+    fields: p => [{ key: 'w', label: 'Max width (px)', type: 'number', value: p.w }, { key: 'h', label: 'Max height (px)', type: 'number', value: p.h }, { key: 'enlarge', label: 'Enlarge smaller images', type: 'checkbox', value: !!p.enlarge }],
+    run: p => { let k = Math.min((+p.w || D.w) / D.w, (+p.h || D.h) / D.h); if (!p.enlarge) k = Math.min(1, k); const w = Math.max(1, Math.round(D.w * k)), hh = Math.max(1, Math.round(D.h * k)); if (w !== D.w || hh !== D.h) resizeImage(w, hh, k < 1 ? 'sharper' : 'enlarge'); } },
+  canvasSize: { name: 'Canvas size', detail: p => (p.rel ? '+' : '') + `${p.w} × ${p.h} px`,
+    fields: p => [{ key: 'w', label: 'Width (px)', type: 'number', value: p.w }, { key: 'h', label: 'Height (px)', type: 'number', value: p.h }, { key: 'rel', label: 'Relative', type: 'checkbox', value: !!p.rel }, { key: 'color', label: 'Extension color', type: 'color', value: p.color || '#ffffff' }],
+    run: p => resizeCanvas(Math.max(1, Math.round(p.rel ? D.w + +p.w : +p.w)), Math.max(1, Math.round(p.rel ? D.h + +p.h : +p.h)), p.anchor || 'c', p.fill || 'color', p.color || '#ffffff') },
+  crop: { name: 'Crop', detail: p => p.r ? (CROP_RATIOS.find(r => r[0] === String(p.ratio))?.[1] || (+p.r).toFixed(3)) : `${Math.round((p.fw ?? 1) * 100)}% × ${Math.round((p.fh ?? 1) * 100)}%`,
+    fields: p => p.r ? [{ key: 'scale', label: 'Size (% of the largest crop)', type: 'range', min: 5, max: 100, value: Math.round((p.scale ?? 1) * 100) }, { key: 'cx', label: 'Center X %', type: 'range', min: 0, max: 100, value: Math.round((p.cx ?? 0.5) * 100) }, { key: 'cy', label: 'Center Y %', type: 'range', min: 0, max: 100, value: Math.round((p.cy ?? 0.5) * 100) }] : null,
+    fromFields: (p, v) => ({ ...p, scale: v.scale / 100, cx: v.cx / 100, cy: v.cy / 100 }),
+    run: async p => { cropState = cropRectFor(p); const f = O.cropFill; O.cropFill = !!p.fill; try { await applyCrop(); } finally { O.cropFill = f; if (O.tool !== 'crop') cropState = null; drawOverlay(); } } },
+  cropSel: { name: 'Crop to selection', run: () => { if (!D.sel) throw new Error('Make a selection first'); cropToSelection(); } },
+  trim: { name: 'Trim', run: p => trimCanvas(p.based || 'transparent') },
+  revealAll: { name: 'Reveal all', run: () => revealAll() },
+  rotate: { name: 'Rotate canvas', detail: p => `${p.deg}°`, run: p => rotateCanvas(+p.deg) },
+  rotateArb: { name: 'Rotate canvas', detail: p => `${(+p.deg).toFixed(1)}°`, fields: p => [{ key: 'deg', label: 'Angle (°)', type: 'number', value: p.deg }], run: p => rotateArbitrary(+p.deg, p.mode || 'crop') },
+  autoStraighten: { name: 'Auto-straighten', run: () => autoStraighten() },
+  flip: { name: 'Flip canvas', detail: p => p.horiz ? 'Horizontal' : 'Vertical', run: p => flipCanvas(!!p.horiz) },
+  look: { name: 'Look', detail: p => X.LOOKS.find(l => l.id === p.id)?.name || p.id,
+    fields: p => [{ key: 'id', label: 'Look', type: 'select', value: p.id, options: lookOpts() }, { key: 'amt', label: 'Intensity %', type: 'range', min: 0, max: 100, value: p.amt ?? 100 }],
+    run: p => { if (!X.LOOKS.find(l => l.id === p.id)) throw new Error('Unknown look'); applyLook(p.id, p.amt ?? 100); } },
+  removeBg: { name: 'Remove background', detail: p => p.mode === 'plain' ? 'Plain background' : 'Person / portrait (AI)',
+    run: p => { needPixelLayer(); return p.mode === 'plain' ? removeBackground('plain', p) : removeBackground('ai'); }, dialog: p => removeBackground(p.mode || 'ai') },
+  upscale: { name: 'Upscale', detail: p => `${p.f}×`, run: p => upscaleImage(+p.f || 2, { edge: p.edge ?? 60, sharpen: p.sharpen ?? 50, noise: p.noise ?? 0 }), dialog: () => upscaleDialog() },
+  text: { name: 'Text layer', detail: p => String(p.str || '').split('\n')[0].slice(0, 24),
+    fields: p => [{ key: 'str', label: 'Text', type: 'textarea', value: p.str }, { key: 'sizePct', label: 'Size (% of image height)', type: 'number', value: Math.round((p.sizeRel || 0.05) * 1000) / 10 }, { key: 'color', label: 'Color', type: 'color', value: p.color || '#ffffff' }, { key: 'opacity', label: 'Opacity %', type: 'range', min: 0, max: 100, value: Math.round((p.opacity ?? 1) * 100) },
+      { key: 'pos', label: 'Position', type: 'select', value: p.pos || 'br', options: [{ value: 'br', label: 'Bottom right' }, { value: 'bl', label: 'Bottom left' }, { value: 'tr', label: 'Top right' }, { value: 'tl', label: 'Top left' }, { value: 'c', label: 'Center' }, { value: 'b', label: 'Bottom center' }, { value: 'xy', label: 'As recorded' }] }],
+    fromFields: (p, v) => ({ ...p, str: v.str, sizeRel: (+v.sizePct || 5) / 100, color: v.color, opacity: v.opacity / 100, pos: v.pos }),
+    run: p => addTextLayer(p) },
+  select: { name: 'Selection', detail: p => SELECT_NAMES[p.kind] || p.kind,
+    run: p => ({ all: selectAll, none: () => { if (D.sel) deselect(); }, invert: invertSel, subject: () => selectSubject(p.mode || 'ai'), sky: selectSky }[p.kind] || (() => { throw new Error('Unknown selection'); }))() },
+  fill: { name: 'Fill', detail: p => p.color, fields: p => [{ key: 'color', label: 'Color', type: 'color', value: p.color }, { key: 'opacity', label: 'Opacity %', type: 'range', min: 1, max: 100, value: Math.round((p.opacity ?? 1) * 100) }], fromFields: (p, v) => ({ color: v.color, opacity: v.opacity / 100 }), run: p => { needPixelLayer(); quickFill(p.color, p.opacity ?? 1); } },
+  flatten: { name: 'Flatten image', run: () => flatten() },
+  mergeVisible: { name: 'Merge visible', run: () => mergeVisible() },
+  export: { name: 'Export', detail: p => fmtLabel(p.fmt) + (p.fmt !== 'png' ? ` ${p.q ?? 90}%` : '') + ((+p.scale || 1) !== 1 ? ` · ${p.scale}×` : ''),
+    fields: p => [{ key: 'fmt', label: 'Format', type: 'select', value: p.fmt, options: [{ value: 'png', label: 'PNG' }, { value: 'jpeg', label: 'JPEG' }, { value: 'webp', label: 'WebP' }, { value: 'avif', label: 'AVIF' }] }, { key: 'q', label: 'Quality %', type: 'range', min: 1, max: 100, value: p.q ?? 90 }, { key: 'scale', label: 'Scale', type: 'number', step: 0.1, value: p.scale ?? 1 }],
+    run: async (p, ctx = {}) => { if (ctx.batch) return; if (T) commitTransform(); const r = await encodeExport(p); const path = await bts.fs.saveAs({ data: r.data, defaultPath: D.name.replace(/\.\w+$/, '') + '.' + r.ext, filters: [{ name: fmtLabel(p.fmt), extensions: [r.ext] }] }); if (path) toast(`Exported ${(r.data.length / 1024).toFixed(0)} KB`, 'ok'); } },
+};
+// run one step; throws on failure so playback and batch can stop / log
+async function runStep(st, { dialog = false, batch = false } = {}) {
+  const op = OPS[st.op]; if (!op) throw new Error('Unknown step: ' + st.op);
+  if (!D) throw new Error('Open an image first');
+  strictErrors++; lastErr = null;
+  try {
+    const p = JSON.parse(JSON.stringify(st.params || {}));
+    if (dialog && !batch && op.dialog) await op.dialog(p);
+    else if (dialog && !batch && op.fields && op.fields(p)) { const v = await form({ title: op.name, fields: op.fields(p), ok: 'Continue' }); if (v) await op.run(op.fromFields ? op.fromFields(p, v) : { ...p, ...v }, { batch }); }
+    else await op.run(p, { batch });
+    if (lastErr) throw new Error(lastErr);
+  } finally { strictErrors--; }
+}
+// run fn with a document that is not shown in the tabs (batch processing)
+async function withHiddenDoc(d, fn) {
+  const prev = D; if (T) commitTransform(); finishText(true); headless++; D = d;
+  try { return await fn(); } finally { headless--; D = prev; if (!headless) { renderAll(); renderTabs(); if (D) fitView(); } }
+}
+function docFromCanvas(c, name) { const d = createDoc({ w: c.width, h: c.height, name, bg: null }); d.layers[0].name = 'Background'; d.layers[0].canvas = c; return d; }
+
+// =====================================================================  1.2: send between apps
+let pdfLibP = null;
+function loadPdfLib() { if (window.PDFLib) return Promise.resolve(window.PDFLib); if (!pdfLibP) pdfLibP = new Promise((res, rej) => { const s = document.createElement('script'); s.src = '../vendor/pdf-lib.min.js'; s.onload = () => res(window.PDFLib); s.onerror = () => { pdfLibP = null; rej(new Error('pdf-lib is missing')); }; document.head.append(s); }); return pdfLibP; }
+function isOpaqueCanvas(c) { const d = ctxOf(c).getImageData(0, 0, c.width, c.height).data; for (let i = 3; i < d.length; i += 4) if (d[i] < 255) return false; return true; }
+async function imagePdfBytes(c) {
+  const P = await loadPdfLib(); const pdf = await P.PDFDocument.create(); pdf.setTitle(D?.name || 'Image'); pdf.setCreator('BTS Photo'); pdf.setProducer('BTS Creative');
+  const img = isOpaqueCanvas(c) ? await pdf.embedJpg(await canvasToU8(c, 'image/jpeg', 0.95)) : await pdf.embedPng(await canvasToU8(c, 'image/png'));
+  const page = pdf.addPage([c.width, c.height]); page.drawImage(img, { x: 0, y: 0, width: c.width, height: c.height }); return pdf.save();
+}
+async function sendTo(app) {
+  if (!D) return toast('Open an image first'); if (T) commitTransform(); finishText(true);
+  const base = D.name.replace(/\.[^.\\/]+$/, '') || 'image', flat = flattenCanvas();
+  try {
+    let payload;
+    if (app === 'pdf') payload = { kind: 'pdf', name: base + '.pdf', mime: 'application/pdf', data: await imagePdfBytes(flat), meta: { width: D.w, height: D.h, from: 'photo' } };
+    else payload = { kind: 'image', name: base + '.png', mime: 'image/png', data: await canvasToU8(flat, 'image/png'), meta: app === 'vector' ? { trace: false, width: D.w, height: D.h, from: 'photo' } : { width: D.w, height: D.h, from: 'photo' } };
+    await bts.handoff.send(app, payload);
+    toast({ vector: 'Sent to BTS Vector', video: 'Sent to BTS Video', pdf: 'Sent to BTS PDF Pro' }[app], 'ok');
+    return payload;
+  } catch (e) { console.error(e); toast('Could not send the image: ' + e.message, 'err', 6000); }
+}
+async function rasterizeSvg(u8, scale = 2) {
+  const txt = new TextDecoder().decode(u8); const url = URL.createObjectURL(new Blob([u8], { type: 'image/svg+xml' }));
+  try {
+    const im = new Image(); im.src = url; await im.decode();
+    const tag = (/<svg\b[^>]*>/i.exec(txt) || [''])[0], hasSize = /\swidth\s*=\s*["']?\s*[\d.]+(px)?\s*["'\s]/i.test(tag) && /\sheight\s*=\s*["']?\s*[\d.]+(px)?\s*["'\s]/i.test(tag);
+    let w = hasSize ? im.naturalWidth : 0, hh = hasSize ? im.naturalHeight : 0; if (!w || !hh) { const vb =/viewBox\s*=\s*["']\s*[-\d.]+[\s,]+[-\d.]+[\s,]+([\d.]+)[\s,]+([\d.]+)/i.exec(txt); w = vb ? +vb[1] : (im.naturalWidth || 1024); hh = vb ? +vb[2] : (im.naturalHeight || 1024); }
+    const c = mk(Math.min(16000, w * scale), Math.min(16000, hh * scale)); c.getContext('2d').drawImage(im, 0, 0, c.width, c.height); return c;
+  } finally { URL.revokeObjectURL(url); }
+}
+async function receiveHandoff(p) {
+  if (!p) return;
+  try {
+    const u8 = p.data instanceof Uint8Array ? p.data : new Uint8Array(p.data?.buffer || p.data || []);
+    if (p.kind === 'pdf') return toast('BTS Photo does not open PDF documents — use BTS PDF Pro for PDFs', 'err', 6000);
+    if (p.kind === 'svg' || /svg/i.test(p.mime || '')) { const c = await rasterizeSvg(u8, 2); addDoc(docFromCanvas(c, (p.name || 'drawing.svg').replace(/\.svg$/i, '') + '.png')); return; }
+    if (p.kind === 'image') { let name = p.name || 'image'; if (!/\.[a-z0-9]{2,5}$/i.test(name)) name += '.' + ((p.mime || 'image/png').split('/')[1] || 'png').replace('jpeg', 'jpg').replace('svg+xml', 'svg'); await openFile({ name, data: u8 }); return; }
+    toast('Received an item BTS Photo cannot open', 'err');
+  } catch (e) { console.error(e); toast('Could not open the received item: ' + e.message, 'err', 6000); }
+}
+
 // =====================================================================  boot
 vpEl.append(h('div', { class: 'welcome' }, h('div', { class: 'card' }, h('div', { class: 'big-ico' }, 'Ph'), h('h2', {}, 'BTS Photo'), h('p', {}, 'Create a new image or open a photo, PSD or project. You can also drop files here or paste an image.'),
   h('div', { class: 'row' }, h('button', { class: 'btn primary', html: icon('plus') + 'New', onclick: newDialog }), h('button', { class: 'btn', html: icon('open') + 'Open', onclick: openDialog })))));
@@ -2620,9 +2810,12 @@ UI.fileDrop(async files => { if (D && activeFrame() && files.length === 1 && /\.
 renderColor(); renderToolbar(); setTool('brush'); renderAll(); renderTabs(); UI.setDocTitle('', 'BTS Photo');
 const qf = UI.queryFile(); if (qf) bts.fs.read(qf).then(f => openFile({ ...f, data: new Uint8Array(f.data) }));
 setTimeout(() => checkRecovery().catch(e => console.warn('Recovery check failed', e)), 1500);
+if (bts.handoff?.take) bts.handoff.take().then(p => p && receiveHandoff(p)).catch(e => console.warn('Handoff failed', e));
+// internal API for camraw.js and automate.js (loaded after this file)
+window.__photo = { get D() { return D; }, get docs() { return docs; }, O, X, h, icon, mk, ctxOf, clamp, sleep, toast, modal, form, buildFields, floatPanel, withBusy, withBusyResult, REC, OPS, runStep, withHiddenDoc, docFromCanvas, createDoc, addDoc, switchDoc, flattenCanvas, exportCanvas, encodeExport, canvasToU8, canvasToBlob, layerImageOp, checkPixelLayer, needPixelLayer, pushHist, requestRender, renderLayers, renderRight, showTab, get rtab() { return rtab; }, decodeToCanvas, isRawName, isHeifName, extOf, IMAGE_EXT, RAW_EXT, HEIF_EXT, OPEN_FILTERS, fmtLabel, avifSupported, AL, get busy() { return busy; }, get headless() { return headless; }, set strict(v) { strictErrors += v ? 1 : -1; }, get lastErr() { return lastErr; } };
 window.__bts = { get D() { return D; }, O, X, addDoc, createDoc, setTool, pushHist, requestRender, render, flattenCanvas, runAdjust, ADJ, ADJ_BY_ID, FILTERS, runFilter, filterDialog, applyFilterToLayer, layerImageOp, startTransform, commitTransform, selectAll, deselect, invertSel, addLayer, applyGradient, commitShape, savePsd, psdObject, projectJSON, openFile, renderLayers, layerStyleDialog, textClick, finishText, get T() { return T; },
   inpaintLayer, contentAwareFillDialog, applyPatch, redEyeAt, selectSubject, selectSky, focusAreaDialog, colorRangeDialog, growSel, similarSel, refineEdgeDialog, removeBackground, personMask, plainBgMask, liquifyDialog, applyLook, showTab, renderLooks,
   exportDialog, exportLayersDialog, quickExportPng, newDialog, TEMPLATES, takeSnapshot, restoreSnapshot, expandDialog, expandFill, rotateArbitrary, straightenDialog, autoStraighten, revealAll, trimCanvas, resizeCanvas, resizeImage, applyCrop, applyPerspectiveCrop, cropRatioValue, fitCropToRatio,
   get cropState() { return cropState; }, set cropState(v) { cropState = v; }, get pcropState() { return pcropState; }, set pcropState(v) { pcropState = v; }, repeatFilter, get lastFilter() { return lastFilter; }, gradientEditor, definePattern, PATTERNS, copyFx, pasteFx, clearFx, toggleRulers, snapValue, newGuideDialog, setSel, maskFromAlpha, selAlpha, editActiveLayer, mergeDown, flatten, stampAdjust, beginStrokeAt: (x, y) => beginStroke({}, x, y), continueStrokeAt: (x, y) => continueStroke(x, y, {}), endStroke, noteClick, rulerAngle, straightenFromRuler, get busy() { return busy; },
-  harmonizeDialog, shadowCanvas, upscaleDialog, upscaleImage, removeDistractions, inpaintTiled, skyReplaceDialog, skyAlphaFrom, backgroundBlurDialog, createFrame, newFrameCentered, setFrameImage, placeIntoFrame, updateFrame, renderFrameLayer, frameFromSelectionOrLayer, savePresetData, deletePresetData, presetsAll, applyPresetDialog, managePresetsDialog, saveActivePreset, convertToSmart, applySmartFilter, smartToggle, smartDelete, smartEdit, rasterizeSmart, smartRecompute, autosaveNow, checkRecovery, dropRecovery, docFromProject, serializeDoc, autosaveSettings, toggleTaskBar, updateTaskBar, AS, rasterizeLayer, adjustLayerDialog, get docs() { return docs; }, switchDoc };
+  harmonizeDialog, shadowCanvas, upscaleDialog, upscaleImage, removeDistractions, inpaintTiled, skyReplaceDialog, skyAlphaFrom, backgroundBlurDialog, createFrame, newFrameCentered, setFrameImage, placeIntoFrame, updateFrame, renderFrameLayer, frameFromSelectionOrLayer, savePresetData, deletePresetData, presetsAll, applyPresetDialog, managePresetsDialog, saveActivePreset, convertToSmart, applySmartFilter, smartToggle, smartDelete, smartEdit, rasterizeSmart, smartRecompute, autosaveNow, checkRecovery, dropRecovery, docFromProject, serializeDoc, autosaveSettings, toggleTaskBar, updateTaskBar, AS, rasterizeLayer, adjustLayerDialog, get docs() { return docs; }, switchDoc, OPS, runStep, withHiddenDoc, sendTo, receiveHandoff, decodeToCanvas, addTextLayer, imagePdfBytes, rasterizeSvg, encodeExport, quickAdj, docFromCanvas };
 })();

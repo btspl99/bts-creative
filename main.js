@@ -120,7 +120,9 @@ ipcMain.handle('fs:saveAs', async (e, { data, defaultPath, filters }) => {
   addRecent(r.filePath);
   return r.filePath;
 });
-ipcMain.handle('fs:write', (_e, { path: p, data }) => { fs.writeFileSync(p, Buffer.from(data)); addRecent(p); return p; });
+ipcMain.handle('fs:write', (_e, { path: p, data, noRecent }) => { fs.writeFileSync(p, Buffer.from(data)); if (!noRecent) addRecent(p); return p; });
+ipcMain.handle('fs:pickFolder', async e => { const r = await dialog.showOpenDialog(BrowserWindow.fromWebContents(e.sender), { properties: ['openDirectory', 'createDirectory'] }); return r.canceled ? null : r.filePaths[0]; });
+ipcMain.handle('fs:listDir', (_e, dir) => fs.readdirSync(dir, { withFileTypes: true }).map(d => ({ name: d.name, path: path.join(dir, d.name), dir: d.isDirectory() })));
 ipcMain.handle('fs:pickSavePath', async (e, { defaultPath, filters }) => {
   const r = await dialog.showSaveDialog(BrowserWindow.fromWebContents(e.sender), { defaultPath, filters: filters || [] });
   return r.canceled ? null : r.filePath;
@@ -252,6 +254,14 @@ function sttCheck() {
   return { ok: true, ...p };
 }
 ipcMain.handle('stt:available', () => sttCheck().ok);
+// Optional extra speech models shipped next to model-en-us (resources/vosk/model-<id>). The renderer passes only the
+// language id (never a path); main resolves it to a model folder that exists.
+const STT_MODELS = [{ id: 'en', label: 'English', dir: 'model-en-us' }, { id: 'hi', label: 'हिन्दी (Hindi)', dir: 'model-hi' }];
+function sttModelDir(chk, id) {
+  const m = STT_MODELS.find(x => x.id === id); if (!m || !chk || !chk.modelDir) return chk && chk.modelDir;
+  const d = path.join(path.dirname(chk.modelDir), m.dir); return fs.existsSync(path.join(d, 'am', 'final.mdl')) ? d : null;
+}
+ipcMain.handle('stt:models', () => { const chk = sttCheck(); if (!chk.ok) return []; return STT_MODELS.filter(m => sttModelDir(chk, m.id)).map(({ id, label }) => ({ id, label })); });
 const sttJobs = new Map(); // webContents id -> { proc, cancelled }
 function sttKill(id) { const j = sttJobs.get(id); if (!j) return false; j.cancelled = true; try { j.proc.postMessage({ cmd: 'cancel' }); } catch {} setTimeout(() => { try { j.proc.kill(); } catch {} }, 400); return true; }
 ipcMain.handle('stt:cancel', e => sttKill(e.sender.id));
@@ -263,6 +273,8 @@ ipcMain.handle('stt:transcribe', (e, opts = {}) => new Promise(resolve => {
   const ffArgs = Array.isArray(opts.ffArgs) ? opts.ffArgs.map(String)
     : opts.file ? ['-ss', String(Math.max(0, +opts.start || 0)), ...(opts.duration ? ['-t', String(+opts.duration)] : []), '-i', String(opts.file)] : null;
   if (!ffArgs) return resolve({ ok: false, error: 'Nothing to transcribe' });
+  const modelDir = opts.model ? sttModelDir(chk, String(opts.model)) : chk.modelDir; // optional: { model: 'hi' }
+  if (!modelDir) return resolve({ ok: false, unavailable: true, error: 'That speech language is not installed with this copy of BTS Creative.' });
   const { utilityProcess } = require('electron');
   const env = { ...process.env };
   if (process.platform === 'win32') env.PATH = chk.libDir + path.delimiter + (env.PATH || '');
@@ -276,7 +288,7 @@ ipcMain.handle('stt:transcribe', (e, opts = {}) => new Promise(resolve => {
     else if (m.type === 'done') finish(job.cancelled ? { ok: false, cancelled: true } : m.result);
   });
   proc.on('exit', code => finish(job.cancelled ? { ok: false, cancelled: true } : { ok: false, error: `The speech engine stopped unexpectedly (code ${code})` }));
-  proc.on('spawn', () => proc.postMessage({ cmd: 'run', job: { libDir: chk.libDir, modelDir: chk.modelDir, ffmpeg: ffmpegPath(), ffArgs, duration: +opts.duration || 0 } }));
+  proc.on('spawn', () => proc.postMessage({ cmd: 'run', job: { libDir: chk.libDir, modelDir, ffmpeg: ffmpegPath(), ffArgs, duration: +opts.duration || 0 } }));
 }));
 
 // ---------- Auto update (from creative.btspl.tech) ----------

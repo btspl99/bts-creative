@@ -1,0 +1,8 @@
+BTS Photo — HEIC / HEIF decoder (loaded on demand as separate files)
+
+libheif.js, libheif.wasm
+  from the npm package libheif-js 1.23.5 (libheif-wasm build) by Kiril Vatev
+  https://github.com/catdad-experiments/libheif-js — LGPL-3.0 (LICENSE-libheif-js.txt)
+  libheif — https://github.com/strukturag/libheif — LGPL-3.0 (LICENSE-libheif.txt),
+  including the libde265 HEVC decoder (LGPL-3.0).
+  Unmodified. Shipped as separate, replaceable files that the app loads at run time.
