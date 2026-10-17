@@ -1,5 +1,5 @@
 // BTS Video — effects engine: keyframes & easing, WebGL effect pipeline (with CPU fallback),
-// stackable effects, Lumetri-style colour + creative looks, and transitions between layers.
+// stackable effects, basic colour + creative looks, and transitions between layers.
 // Everything here renders onto plain canvases so the preview and the MP4 export share one code path.
 (() => {
 'use strict';
@@ -339,7 +339,7 @@ function runPasses(canvas, passes, time) {
   if (cpu.length < passes.length && !warnedGL) { warnedGL = true; console.warn('WebGL is unavailable: some effects are skipped'); window.UI && UI.toast('WebGL is unavailable on this computer — some effects (sharpen, grain, glitch, VHS…) are skipped.', 'err', 7000); }
 }
 
-// =====================================================================  colour (Lumetri-style)
+// =====================================================================  colour (basic)
 const LU_DEFAULT = { expo: 0, contr: 0, hi: 0, sh: 0, wh: 0, bl: 0, temp: 0, tint: 0, sat: 100, vib: 0, look: '', lookAmt: 100 };
 const LOOKS = {
   'Cinematic': { contr: 15, sat: -10, hi: -15, fade: 0.15, shT: [0.38, 0.5, 0.6], hiT: [0.62, 0.53, 0.42], tintAmt: 0.5 },

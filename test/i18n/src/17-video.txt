@@ -170,7 +170,7 @@ Image sequence | इमेज सीक्वेंस | इमेज सीक�
 Search effects, looks, presets | इफ़ेक्ट, लुक, प्रीसेट खोजें | इफेक्ट, लुक, प्रीसेट शोधा
 Click to add to the selected clip, or drag onto a clip | चुनी गई क्लिप में जोड़ने के लिए क्लिक करें, या किसी क्लिप पर ड्रैग करें | निवडलेल्या क्लिपमध्ये जोडण्यासाठी क्लिक करा, किंवा क्लिपवर ड्रॅग करा
 Video effects · | वीडियो इफ़ेक्ट · | व्हिडिओ इफेक्ट ·
-Lumetri looks | Lumetri लुक | Lumetri लुक
+Colour looks | रंग लुक | रंग लुक
 Picture-in-picture & layouts | पिक्चर-इन-पिक्चर और लेआउट | पिक्चर-इन-पिक्चर आणि मांडणी
 Audio effects | ऑडियो इफ़ेक्ट | ऑडिओ इफेक्ट
 Select a video, image, title, shape or adjustment clip first | पहले कोई वीडियो, छवि, टाइटल, आकृति या एडजस्टमेंट क्लिप चुनें | आधी व्हिडिओ, प्रतिमा, टायटल, आकार किंवा ॲडजस्टमेंट क्लिप निवडा

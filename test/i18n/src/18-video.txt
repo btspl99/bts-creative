@@ -37,7 +37,7 @@ No effects. Drag effects here from the Effects panel or add one below. | को�
 Basic correction | मूल सुधार | मूलभूत सुधारणा
 Temperature | तापमान | तापमान
 Creative | रचनात्मक | सर्जनशील
-Reset Lumetri | Lumetri रीसेट करें | Lumetri रीसेट करा
+Reset colour correction | रंग सुधार रीसेट करें | रंग सुधारणा रीसेट करा
 Reset colour | रंग रीसेट करें | रंग रीसेट करा
 Blur px | ब्लर px | ब्लर px
 Hue° | ह्यू° | ह्यू°

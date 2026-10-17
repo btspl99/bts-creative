@@ -42,7 +42,7 @@ function renderEffects() {
   const cats = {}; Object.entries(VFX.EFFECTS).forEach(([k, d]) => { if (ok(d.name) || ok(d.cat)) (cats[d.cat] = cats[d.cat] || []).push(dragItem(DT.fx, JSON.stringify({ type: k }), d.name, swatch({ background: FX_SW[k] || 'var(--bg-4)' }, 'fx'), () => addEffect(k), 'Click to add to the selected clip, or drag onto a clip')); });
   Object.entries(cats).forEach(([cat, items]) => sec('Video effects · ' + cat, items));
   sec('Effect presets', VFX.FX_PRESETS.filter(p => ok(p[0])).map(([n, k, over]) => dragItem(DT.fx, JSON.stringify({ type: k, over }), n, swatch({ background: FX_SW[k] }, '★'), () => addEffect(k, over))));
-  sec('Lumetri looks', Object.keys(VFX.LOOKS).filter(ok).map(n => dragItem(DT.look, n, n, swatch({ background: 'linear-gradient(135deg,#f59e0b,#3b82f6)', filter: VFX.lookSwatchCss(n) }), () => applyLook(n))));
+  sec('Colour looks', Object.keys(VFX.LOOKS).filter(ok).map(n => dragItem(DT.look, n, n, swatch({ background: 'linear-gradient(135deg,#f59e0b,#3b82f6)', filter: VFX.lookSwatchCss(n) }), () => applyLook(n))));
   sec('Motion presets (keyframes)', KF_PRESETS.filter(p => ok(p[0])).map(([n]) => dragItem(DT.kfp, n, n, swatch({ background: 'var(--accent-soft)', color: 'var(--accent)' }, '◆'), () => applyKfPreset(n))));
   sec('Picture-in-picture & layouts', LAYOUTS.filter(p => ok(p[1])).map(([k, n]) => dragItem(DT.layout, k, n, swatch({ background: LAYOUT_SW(k) }), () => applyLayout(k))));
   sec('Audio effects', [['Normalize', () => toggleAudioFx('normalize')], ['Noise reduction', () => toggleAudioFx('denoise')], ['Voice enhance', () => toggleAudioFx('voice')], ['Fade in / out (0.5 s)', quickFades], ['Auto-duck music under voice…', autoDuckDialog], ['Mute clip', () => setProp('volume', 0)]].filter(([n]) => ok(n)).map(([n, fn]) => h('div', { class: 'fx-it', onclick: fn }, swatch({ background: 'linear-gradient(90deg,#2f8a63,#123,#2f8a63)' }), h('span', { class: 'lbl' }, n))));
@@ -238,12 +238,12 @@ function renderFx() {
     });
     const add = h('select', {}, h('option', { value: '' }, '+ Add effect…'), ...Object.entries(VFX.EFFECTS).map(([k, d]) => h('option', { value: k }, `${d.cat} › ${d.name}`))); add.onchange = () => { if (add.value) addEffect(add.value, {}, [c]); };
     w.append(grp('Effects', c.fx.length ? stack : h('div', { class: 'muted', style: { fontSize: '11.5px', marginBottom: '6px' } }, 'No effects. Drag effects here from the Effects panel or add one below.'), add));
-    // Lumetri
+    // colour correction
     const lu = p.lu; const luS = (label, k, min, max, step = 1) => plain(label, lu, k, min, max, step);
     const look = h('select', {}, h('option', { value: '' }, 'None'), ...Object.keys(VFX.LOOKS).map(n => h('option', { value: n, selected: lu.look === n }, n))); look.onchange = () => { lu.look = look.value; live(); commit('Look'); renderTimeline(); };
-    w.append(grp('Lumetri Color', h('div', { class: 'sub-h' }, 'Basic correction'), luS('Temperature', 'temp', -100, 100), luS('Tint', 'tint', -100, 100), luS('Exposure', 'expo', -4, 4, 0.05), luS('Contrast', 'contr', -100, 100), luS('Highlights', 'hi', -100, 100), luS('Shadows', 'sh', -100, 100), luS('Whites', 'wh', -100, 100), luS('Blacks', 'bl', -100, 100), luS('Saturation', 'sat', 0, 200), luS('Vibrance', 'vib', -100, 100),
+    w.append(grp('Colour correction', h('div', { class: 'sub-h' }, 'Basic correction'), luS('Temperature', 'temp', -100, 100), luS('Tint', 'tint', -100, 100), luS('Exposure', 'expo', -4, 4, 0.05), luS('Contrast', 'contr', -100, 100), luS('Highlights', 'hi', -100, 100), luS('Shadows', 'sh', -100, 100), luS('Whites', 'wh', -100, 100), luS('Blacks', 'bl', -100, 100), luS('Saturation', 'sat', 0, 200), luS('Vibrance', 'vib', -100, 100),
       h('div', { class: 'sub-h' }, 'Creative'), h('div', { class: 'p2' }, h('span', {}, 'Look'), look), luS('Intensity', 'lookAmt', 0, 100),
-      h('div', { class: 'row', style: { marginTop: '6px' } }, h('button', { class: 'btn sm', onclick: () => { p.lu = { ...VFX.LU_DEFAULT }; commit('Reset Lumetri'); renderFx(); drawFrame(); renderTimeline(); } }, 'Reset colour'))));
+      h('div', { class: 'row', style: { marginTop: '6px' } }, h('button', { class: 'btn sm', onclick: () => { p.lu = { ...VFX.LU_DEFAULT }; commit('Reset colour correction'); renderFx(); drawFrame(); renderTimeline(); } }, 'Reset colour'))));
     w.append(grp('Quick adjust', plain('Brightness', p, 'brightness', 0, 200), plain('Contrast', p, 'contrast', 0, 200), plain('Saturation', p, 'saturation', 0, 300), plain('Hue°', p, 'hue', -180, 180), plain('Blur px', p, 'blur', 0, 30, 0.1), plain('Grayscale', p, 'grayscale', 0, 100), plain('Sepia', p, 'sepia', 0, 100)));
     // transitions on this clip
     const trIn = PJ.transitions.find(t => t.b === c.id), trOut = PJ.transitions.find(t => t.a === c.id);

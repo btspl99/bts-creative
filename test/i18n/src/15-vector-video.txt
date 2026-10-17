@@ -245,15 +245,15 @@ Remove stabilisation | स्थिरीकरण हटाएँ | स्थ�
 Apply LUT | LUT लागू करें | LUT लागू करा
 Colour wheels | कलर व्हील | कलर व्हील
 Import LUT (.cube) | LUT इम्पोर्ट करें (.cube) | LUT इम्पोर्ट करा (.cube)
-Lumetri Color | = | =
+Colour correction | रंग सुधार | रंग सुधारणा
 RGB curves | RGB कर्व | RGB कर्व्ह
 Scopes panel | स्कोप पैनल | स्कोप पॅनेल
-Show Lumetri Color controls | Lumetri Color नियंत्रण दिखाएँ | Lumetri Color नियंत्रणे दाखवा
+Show colour correction controls | रंग सुधार नियंत्रण दिखाएँ | रंग सुधारणा नियंत्रणे दाखवा
 Check transition handles | ट्रांज़िशन हैंडल जाँचें | ट्रान्झिशन हँडल तपासा
 Link / unlink | लिंक / अनलिंक करें | लिंक / अनलिंक करा
 Unlink audio to an A track | ऑडियो को A ट्रैक पर अनलिंक करें | ऑडिओ A ट्रॅकवर अनलिंक करा
 Effect presets | इफ़ेक्ट प्रीसेट | इफेक्ट प्रीसेट
-Lumetri look | Lumetri लुक | Lumetri लुक
+Colour look | रंग लुक | रंग लुक
 Motion presets (keyframes) | मोशन प्रीसेट (कीफ़्रेम) | मोशन प्रीसेट (कीफ्रेम)
 Picture-in-picture & split screen | पिक्चर-इन-पिक्चर और स्प्लिट स्क्रीन | पिक्चर-इन-पिक्चर आणि स्प्लिट स्क्रीन
 Apply default (cross dissolve) | डिफ़ॉल्ट लागू करें (क्रॉस डिज़ॉल्व) | डीफॉल्ट लागू करा (क्रॉस डिझॉल्व्ह)
