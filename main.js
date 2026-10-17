@@ -81,6 +81,17 @@ app.on('activate', () => { if (BrowserWindow.getAllWindows().length === 0) creat
 
 // ---------- IPC: windows ----------
 ipcMain.handle('app:open', (_e, appId, file) => { createWindow(appId, file || null); return true; });
+// Send between apps: open a new window of another app and hand it a payload
+// ({ name, mime, data: Uint8Array, kind?, meta? }). The new window pulls it with handoff:take.
+const pendingHandoff = new Map();
+ipcMain.handle('handoff:send', (_e, appId, payload) => {
+  if (!APPS[appId] || !payload) return false;
+  const win = createWindow(appId); const id = win.webContents.id;
+  pendingHandoff.set(id, payload);
+  win.on('closed', () => pendingHandoff.delete(id));
+  return true;
+});
+ipcMain.handle('handoff:take', e => { const p = pendingHandoff.get(e.sender.id) || null; pendingHandoff.delete(e.sender.id); return p; });
 ipcMain.handle('app:openFileAuto', async () => {
   const r = await dialog.showOpenDialog({ properties: ['openFile'], filters: [
     { name: 'All supported', extensions: ['pdf', 'png', 'jpg', 'jpeg', 'webp', 'bmp', 'gif', 'svg', 'mp4', 'webm', 'mov', 'mkv', 'btsp', 'btsv', 'btsvid'] }] });

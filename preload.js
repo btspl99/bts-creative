@@ -3,6 +3,10 @@ const { contextBridge, ipcRenderer, webUtils, webFrame } = require('electron');
 contextBridge.exposeInMainWorld('bts', {
   openApp: (id, file) => ipcRenderer.invoke('app:open', id, file),
   openFileAuto: () => ipcRenderer.invoke('app:openFileAuto'),
+  handoff: {
+    send: (appId, payload) => ipcRenderer.invoke('handoff:send', appId, payload),
+    take: () => ipcRenderer.invoke('handoff:take'),
+  },
   version: () => ipcRenderer.invoke('app:version'),
   external: url => ipcRenderer.invoke('shell:external', url),
   zoom: f => webFrame.setZoomFactor(Math.max(0.5, Math.min(2, +f || 1))),
