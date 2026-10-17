@@ -56,7 +56,7 @@ VX.f.receiveHandoff = async p => {
       const im = new Image(); im.src = url; await im.decode();
       const fresh = VX.hist.length <= 1 && !VX.selectableItems().length;
       if (fresh) { DOC.boards[DOC.ab].w = im.naturalWidth; DOC.boards[DOC.ab].h = im.naturalHeight; DOC.name = name.replace(/\.\w+$/, '.btsv'); VX.drawArtboard(); VX.fitArt(); }
-      const ab = VX.abRect(); const r = await VX.placeRaster(url, ab.center); r.name = name;
+      const ab = VX.abRect(); const r = await VX.placeRaster(url, ab.center); r.name = VX.safeItemName(name);
       if (fresh) { r.scale(ab.width / r.bounds.width); r.position = ab.center; VX.resetHistory('Open'); UI.setDocTitle(DOC.name, 'BTS Vector'); }
       VX.setSel([r]);
       if (p.meta && p.meta.trace) { if (await confirm('Image Trace now?', 'Convert the received image to vector paths with Image Trace.', 'Trace')) { VX.setSel([r]); await VX.f.trace?.(); } }

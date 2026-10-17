@@ -71,6 +71,8 @@ function normRect(p) {
   if (!p.segments.every(s => on(s.point)) || b.width < eps || b.height < eps) return p;
   p.segments = [b.bottomLeft, b.topLeft, b.topRight, b.bottomRight]; return p;
 }
+// characters that are not allowed in XML (they would break SVG export / save)
+const cleanText = t => String(t || '').replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\uFFFE\uFFFF]/g, '').replace(/[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/g, '');
 // ================================================================ Painter: graphics state → paper items
 class Painter {
   constructor(root, base, opts = {}) {
@@ -186,7 +188,7 @@ class Painter {
   image(canvas, name, interpolate = false) {
     const w = canvas.width, hh = canvas.height; if (!w || !hh) return;
     const r = new P.Raster({ insert: false }); r.setImage(canvas);
-    r.matrix = mul(this.full, new P.Matrix(1 / w, 0, 0, -1 / hh, 0.5, 0.5)); if (name) r.name = name;
+    r.matrix = mul(this.full, new P.Matrix(1 / w, 0, 0, -1 / hh, 0.5, 0.5)); if (name) r.name = nm(name);
     if (!interpolate && Math.hypot(r.matrix.a, r.matrix.b) > 1.5 && Math.hypot(r.matrix.c, r.matrix.d) > 1.5) { r.smoothing = 'off'; r.data.pixelated = true; } // like pdf.js: no smoothing when enlarging
     if (this.st.fa < 1) r.opacity = this.st.fa;
     this.add(r); this.stats.images++;
@@ -207,7 +209,7 @@ class Painter {
     const fs = st.fs, fdir = st.fdir, fm = font.fontMatrix || [0.001, 0, 0, 0.001, 0, 0], was = fs * fm[0], hs = st.hs * fdir;
     let x = 0; const chunks = []; let ch = null;
     for (const g of glyphs) {
-      if (typeof g === 'number') { const dx = -g * fs / 1000; x += dx; if (Math.abs(dx) > 0.25 * fs) ch = null; continue; }
+      if (typeof g === 'number') { const dx = -g * fs / 1000; x += dx; if (dx > 0.8 * fs || dx < -0.5 * fs) ch = null; else if (ch && dx > 0.15 * fs && !/\s$/.test(ch.text)) { ch.text += ' '; ch.x1 = x; ch.glyphs.push({ g: null, x }); } else if (ch) ch.x1 = x; continue; }
       if (!g) continue;
       if (!ch) { ch = { x0: x, x1: x, text: '', glyphs: [] }; chunks.push(ch); }
       const spacing = (g.isSpace ? st.ws : 0) + st.cs;
@@ -218,19 +220,47 @@ class Painter {
     st.x += x * hs;
     const mode = st.mode & 3; if (mode === 3) return; // invisible text (e.g. OCR layer)
     const fillC = mode === 1 ? null : this.fillColorFor(), strokeC = mode === 1 || mode === 2 ? this.strokeColorFor() : null;
-    const ot = this.opts.text === 'outline' ? this.otFont(font) : null;
+    const ot = this.opts.text === 'outline' ? (this.hasPaths(font, chunks) ? 'paths' : this.otFont(font)) : null;
     for (const c of chunks) {
       if (!c.text.trim() && !ot) continue;
-      if (ot) { const it = this.glyphOutlines(c, ot, T, fs, fdir); if (it) { it.fillColor = fillC; if (strokeC) { it.strokeColor = strokeC; it.strokeWidth = st.lw * detScale(T); } it.name = c.text.trim().slice(0, 40) || 'Text'; it.data.pdfText = c.text; this.add(it); this.stats.outlinedTexts++; continue; } }
+      if (ot) { const it = this.glyphOutlines(c, ot, T, fs, fdir); if (it) { it.fillColor = fillC; if (strokeC) { it.strokeColor = strokeC; it.strokeWidth = st.lw * detScale(T); } it.name = nm(cleanText(c.text).trim().slice(0, 40)) || 'Text'; it.data.pdfText = cleanText(c.text); this.add(it); this.stats.outlinedTexts++; continue; } }
+      if (!cleanText(c.text).trim()) continue;
       const L = mul(T, new P.Matrix(1, 0, 0, -1, c.x0, 0));
       const t = this.pointText(c.text, mapFont(font.name, font), fs, L, fillC, strokeC);
       const Mt = t.matrix, sx = Math.hypot(Mt.a, Mt.b) || 1, adv = Math.hypot(L.a * (c.x1 - c.x0), L.b * (c.x1 - c.x0)) / sx;
       this.fitWidth(t, adv);
     }
   }
+  hasPaths(font, chunks) { const co = this.opts.commonObjs; if (!co || !font?.loadedName) return false; for (const c of chunks) for (const { g } of c.glyphs) if (g && g.fontChar) { try { return co.has(font.loadedName + '_path_' + g.fontChar); } catch { return false; } } return false; }
+  // exact glyph outlines from pdf.js' font renderer (FontPath objects: save, transform(fontMatrix), scale, path…, restore)
+  glyphPaths(c, font, T, fs) {
+    const co = this.opts.commonObjs, paths = [], missing = [];
+    const one = (fc, x, g) => {
+      let cmds = null; try { cmds = co.has(font.loadedName + '_path_' + fc) ? co.get(font.loadedName + '_path_' + fc) : null; } catch { cmds = null; } if (!Array.isArray(cmds) || !cmds.length) { if (g && (g.fontChar || g.unicode || '').trim()) missing.push({ g, x }); return; }
+      let M = mul(T, new P.Matrix(1, 0, 0, 1, x, 0)); const stack = []; let p = null, lx = 0, ly = 0; const pt = (X, Y) => M.transform(new P.Point(X, Y));
+      for (let i = 0; i < cmds.length;) {
+        const op = cmds[i++];
+        if (op === 1) { p = new P.Path({ insert: false }); paths.push(p); lx = cmds[i]; ly = cmds[i + 1]; p.moveTo(pt(lx, ly)); i += 2; }
+        else if (op === 2) { if (p) p.lineTo(pt(cmds[i], cmds[i + 1])); lx = cmds[i]; ly = cmds[i + 1]; i += 2; }
+        else if (op === 0) { if (p) p.cubicCurveTo(pt(cmds[i], cmds[i + 1]), pt(cmds[i + 2], cmds[i + 3]), pt(cmds[i + 4], cmds[i + 5])); lx = cmds[i + 4]; ly = cmds[i + 5]; i += 6; }
+        else if (op === 3) { const [qx, qy, ex, ey] = cmds.slice(i, i + 4); if (p) p.cubicCurveTo(pt(lx + 2 / 3 * (qx - lx), ly + 2 / 3 * (qy - ly)), pt(ex + 2 / 3 * (qx - ex), ey + 2 / 3 * (qy - ey)), pt(ex, ey)); lx = ex; ly = ey; i += 4; }
+        else if (op === 5) stack.push(M.clone()); else if (op === 4) { M = stack.pop() || M; }
+        else if (op === 6) M = mul(M, new P.Matrix(fs, 0, 0, fs, 0, 0));
+        else if (op === 7) { M = mul(M, new P.Matrix(cmds[i], cmds[i + 1], cmds[i + 2], cmds[i + 3], cmds[i + 4], cmds[i + 5])); i += 6; }
+        else if (op === 8) { M = mul(M, new P.Matrix(1, 0, 0, 1, cmds[i], cmds[i + 1])); i += 2; }
+        else break;
+      }
+    };
+    for (const { g, x } of c.glyphs) { if (!g) continue; one(g.fontChar, x, g); if (g.accent?.fontChar) one(g.accent.fontChar, x + (g.accent.offset?.x || 0) * fs / 1000); }
+    paths.forEach(p => { if (p.segments.length > 2 && !p.closed) p.closePath(); });
+    if (missing.length) { const ot = this.otFont(font); const extra = ot ? this.glyphOutlines({ glyphs: missing }, ot, T, fs, 1) : null; if (extra) paths.push(...extra.removeChildren()); }
+    const ok = paths.filter(p => p.segments.length > 1); if (!ok.length) return null;
+    const cp = new P.CompoundPath({ children: ok, insert: false }); cp.fillRule = 'nonzero'; return cp;
+  }
   glyphOutlines(c, ot, T, fs, fdir) {
+    if (ot === 'paths') return this.glyphPaths(c, this.st.font, T, fs);
     const upm = ot.unitsPerEm || 1000, f = fs / upm, paths = [];
-    for (const { g, x } of c.glyphs) {
+    for (const { g, x } of c.glyphs) { if (!g) continue;
       let gl = null; try { gl = ot.charToGlyph(g.fontChar || g.unicode || ''); if ((!gl || gl.index === 0) && g.unicode) gl = ot.charToGlyph(g.unicode); } catch { gl = null; }
       if (!gl || gl.index === 0) continue;
       const G = mul(T, new P.Matrix(f * fdir, 0, 0, -f, x, 0)); const cmds = gl.getPath(0, 0, upm).commands; let p = null, last = null;
@@ -249,6 +279,7 @@ class Painter {
   }
   // editable PointText from a matrix mapping y-down text space → document
   pointText(content, fnt, size, L, fillC, strokeC) {
+    content = cleanText(content);
     const t = new P.PointText({ insert: false, point: [0, 0], content, fontFamily: fnt.family, fontWeight: fnt.weight, fontSize: size, justification: 'left' });
     t.fillColor = fillC; if (strokeC) { t.strokeColor = strokeC; t.strokeWidth = Math.max(0.25, this.st.lw * detScale(L)); }
     const a = L.a, b = L.b, c = L.c, d = L.d;
@@ -268,6 +299,8 @@ class Painter {
   }
 }
 VX.PdfPainter = Painter;
+// paper.js refuses names made only of digits (they clash with child indices)
+const nm = s => { s = String(s ?? '').trim(); return /^\d+$/.test(s) ? '“' + s + '”' : s; }; VX.safeItemName = nm;
 VX.exportHooks = VX.exportHooks || [];
 VX.exportHooks.push((item, node) => { if (item.data?.pixelated && item instanceof P.Raster) node.setAttribute('style', ((node.getAttribute('style') || '') + ';image-rendering:pixelated').replace(/^;/, '')); });
 
@@ -435,7 +468,7 @@ VX.f.importVector = importVector;
 
 async function importPDF(u8, name, mode, opts, path) {
   const lib = await pdfjs(); let doc;
-  try { doc = await lib.getDocument({ data: u8.slice(), fontExtraProperties: true, isEvalSupported: false }).promise; }
+  try { doc = await lib.getDocument({ data: u8.slice(), fontExtraProperties: true, disableFontFace: true, isEvalSupported: false, verbosity: 0 }).promise; }
   catch (e) { if (/password/i.test(e.name + e.message)) throw new Error('This PDF is password-protected. Open it in PDF Pro and remove the password first.'); throw e; }
   const n = doc.numPages; let o = { pages: opts.pages ?? (mode === 'open' ? 'all' : 1), text: opts.text || 'editable' };
   if (opts.ask !== false) { const v = await askOptions(n, mode, name, opts); if (!v) { doc.destroy(); return null; } o = { pages: v.pages ?? (mode === 'open' ? 'all' : 1), text: v.text }; }
@@ -450,12 +483,12 @@ async function importPDF(u8, name, mode, opts, path) {
     VX.createDoc('custom', { name: docName, w: pages[0].w, h: pages[0].h });
     let x = 0; DOC.boards = pages.map((p, i) => { const b = { name: pages.length > 1 ? `Page ${p.k}` : 'Artboard 1', x, y: 0, w: p.w, h: p.h, bg: '#ffffff' }; x += p.w + 60; return b; }); DOC.ab = 0;
     VX.userLayers().forEach(L => L.remove());
-  } else { placed = new P.Group({ name: name.replace(/\.\w+$/, '') }); (VX.iso || VX.P.project.activeLayer).addChild(placed); }
+  } else { placed = new P.Group({ name: nm(name.replace(/\.\w+$/, '')) }); (VX.iso || VX.P.project.activeLayer).addChild(placed); }
   const ocLayers = new Map();
-  const ocLayer = (nm, vis) => {
-    if (ocLayers.has(nm)) return ocLayers.get(nm);
-    let L; if (mode === 'open') { L = VX.newUserLayer(nm); L.visible = vis; } else { L = new P.Group({ name: nm }); placed.addChild(L); L.visible = vis; }
-    L.data.ocLayer = true; ocLayers.set(nm, L); return L;
+  const ocLayer = (lname, vis) => {
+    if (ocLayers.has(lname)) return ocLayers.get(lname);
+    let L; if (mode === 'open') { L = VX.newUserLayer(nm(lname)); L.visible = vis; } else { L = new P.Group({ name: nm(lname) }); placed.addChild(L); L.visible = vis; }
+    L.data.ocLayer = true; ocLayers.set(lname, L); return L;
   };
   for (let i = 0; i < pages.length; i++) {
     const p = pages[i]; const b = mode === 'open' ? DOC.boards[i] : { x: 0, y: 0 };
@@ -463,7 +496,7 @@ async function importPDF(u8, name, mode, opts, path) {
     if (mode === 'open') { root = VX.newUserLayer(pages.length > 1 ? `Page ${p.k}` : 'Layer 1'); if (hasOC) { root.remove(); root = new P.Group({ insert: false }); } }
     else root = placed;
     const base = new P.Matrix(1, 0, 0, 1, b.x, b.y).append(M6(p.vp.transform));
-    const painter = new Painter(root, base, { text: o.text, pageRect: new P.Rectangle(b.x, b.y, p.w, p.h), ocConfig, ocLayer: hasOC ? ocLayer : null });
+    const painter = new Painter(root, base, { text: o.text, commonObjs: p.pg.commonObjs, pageRect: new P.Rectangle(b.x, b.y, p.w, p.h), ocConfig, ocLayer: hasOC ? ocLayer : null });
     const r = await drawPdfPage(lib, p.pg, painter);
     tidy(root, painter.pageRect);
     if (mode === 'open' && hasOC && root.children.length) { const L = VX.newUserLayer(pages.length > 1 ? `Page ${p.k}` : 'Unlayered'); L.addChildren(root.removeChildren()); L.insertAbove(VX.artLayer); }
@@ -616,7 +649,7 @@ const AIOPS = {
   XR() { this.fillRule = this.num() ? 'eo' : 'nz'; },
   cm() { const a = this.nums(6); this.p.transform(...a); },
   Lb() { const nums = this.os.filter(v => v.t === 'num').map(v => v.v); const vis = nums.length ? nums[0] !== 0 : true; this.p.save(); const L = this.p.opts.newLayer ? this.p.opts.newLayer(vis) : (() => { const g = new P.Group({ insert: false }); this.p.add(g); g.visible = vis; return g; })(); this.p.st.container = L; this.layers.push(L); },
-  Ln() { const s = this.os.find(v => v.t === 'str'); const L = this.layers[this.layers.length - 1]; if (s && L) L.name = s.v; },
+  Ln() { const s = this.os.find(v => v.t === 'str'); const L = this.layers[this.layers.length - 1]; if (s && L) L.name = nm(s.v) || 'Layer'; },
   LB() { this.layers.pop(); this.p.restore(); },
   // text (AI 3+): To … Tp … Tf … Tx … TO
   To() { this.text = { m: new P.Matrix(), x: 0, y: 0, lead: 0, lineX: 0 }; },
@@ -761,7 +794,7 @@ async function importPS(u8, name, mode, opts, path, bin) {
   const run = () => {
     let W = bb ? (bb[2] - bb[0]) * PX : 800, H = bb ? (bb[3] - bb[1]) * PX : 600;
     if (mode === 'open') { VX.createDoc('custom', { name: docName, w: +W.toFixed(3), h: +H.toFixed(3) }); VX.userLayers().forEach(L => L.remove()); board = DOC.boards[0]; }
-    else { placed = new P.Group({ name: name.replace(/\.\w+$/, '') }); (VX.iso || VX.P.project.activeLayer).addChild(placed); board = { x: 0, y: 0 }; }
+    else { placed = new P.Group({ name: nm(name.replace(/\.\w+$/, '')) }); (VX.iso || VX.P.project.activeLayer).addChild(placed); board = { x: 0, y: 0 }; }
     const root = mode === 'open' ? VX.newUserLayer('Layer 1') : placed;
     const base = new P.Matrix(PX, 0, 0, -PX, board.x - (bb ? bb[0] : 0) * PX, board.y + (bb ? bb[3] : H / PX) * PX);
     const painter = new Painter(root, base, { pageRect: new P.Rectangle(board.x, board.y, W, H), newLayer: mode === 'open' && isAI ? vis => { const L = VX.newUserLayer('Layer'); L.visible = vis; return L; } : null });
@@ -802,7 +835,7 @@ VX.f.psTokenize = tokenize; VX.f.decodeTIFF = decodeTIFF;
 VX.f.openVectorDialog = async () => { const fs = await bts.fs.open({ filters: [{ name: 'PDF, Illustrator & EPS', extensions: ['pdf', 'ai', 'eps', 'epsf', 'ps'] }] }); if (fs) return VX.openFile(fs[0]); };
 VX.f.placeVectorDialog = async () => { const fs = await bts.fs.open({ filters: [{ name: 'PDF, Illustrator & EPS', extensions: ['pdf', 'ai', 'eps', 'epsf', 'ps'] }] }); if (!fs) return; const f = fs[0]; try { return await importVector({ ...f, data: new Uint8Array(f.data) }, { mode: 'place' }); } catch (e) { console.error(e); toast('Could not place file: ' + e.message, 'err', 7000); } };
 VX.f.renderPdfPage = async (u8, pageNo = 1, scale = PX) => { // reference render (tests & previews)
-  const lib = await pdfjs(); const sn = sniff(u8); const doc = await lib.getDocument({ data: u8.subarray(sn.offset || 0).slice(), isEvalSupported: false }).promise; const pg = await doc.getPage(pageNo); const vp = pg.getViewport({ scale });
+  const lib = await pdfjs(); const sn = sniff(u8); const doc = await lib.getDocument({ data: u8.subarray(sn.offset || 0).slice(), isEvalSupported: false, verbosity: 0 }).promise; const pg = await doc.getPage(pageNo); const vp = pg.getViewport({ scale });
   const c = document.createElement('canvas'); c.width = Math.round(vp.width); c.height = Math.round(vp.height); const x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height);
   await pg.render({ canvasContext: x, viewport: vp, annotationMode: lib.AnnotationMode.DISABLE }).promise; doc.destroy(); return c;
 };

@@ -108,6 +108,7 @@ function buildEntities(opts) {
   const polys = [];
   for (const L of lv) {
     const layer = sanitizeLayer(L.layer);
+    if (L.kind === 'text' && opts.text === 'skip') continue;
     if (L.kind === 'text') {
       const t = L.item; const lines = String(t.content).split(/\r?\n/); const lead = t.leading || t.fontSize * 1.2;
       const M = C.clone().append(L.M || new P.Matrix()); const sc = Math.sqrt(Math.abs(M.a * M.d - M.b * M.c)); const dir = { x: M.a, y: M.b }; const rot = Math.abs(dir.y) < 1e-9 * Math.abs(dir.x) ? 0 : Math.atan2(dir.y, dir.x) * 180 / Math.PI;
@@ -173,7 +174,7 @@ function joinPolys(polys, eps) {
   }
   return done;
 }
-const sanitizeLayer = n => String(n || '0').replace(/[<>\/\\":;?*|=`,]/g, '_').trim().slice(0, 255) || '0';
+const sanitizeLayer = n => String(n || '0').replace(/^“(\d+)”$/, '$1').replace(/[<>\/\\":;?*|=`,]/g, '_').trim().slice(0, 255) || '0';
 const fmt = v => { if (!isFinite(v)) v = 0; const s = (Math.round(v * 1e6) / 1e6).toFixed(6).replace(/\.?0+$/, ''); return s === '-0' ? '0' : s; };
 
 function writeDXF(ents, opts, layerNames) {
@@ -414,11 +415,11 @@ async function importDXF(file, opts = {}) {
     const W = Math.max(1, Math.ceil(bounds.width)), H = Math.max(1, Math.ceil(bounds.height));
     VX.createDoc('custom', { name: docName, w: W, h: H }); VX.userLayers().forEach(L => L.remove());
     const off = bounds.topLeft.multiply(-1);
-    [...out.keys()].forEach(ln => { const L = VX.newUserLayer(ln === '0' ? 'Layer 0' : ln); out.get(ln).forEach(it => { it.translate(off); L.addChild(it); }); if (d.layers[ln] && d.layers[ln].color < 0) L.visible = false; });
+    [...out.keys()].forEach(ln => { const L = VX.newUserLayer(ln === '0' ? 'Layer 0' : VX.safeItemName(ln)); out.get(ln).forEach(it => { it.translate(off); L.addChild(it); }); if (d.layers[ln] && d.layers[ln].color < 0) L.visible = false; });
     VX.drawArtboard(); VX.resetHistory('Open'); DOC.name = docName; VX.fitArt(); UI.setDocTitle(DOC.name, 'BTS Vector');
   } else {
-    const g = new P.Group({ name: name.replace(/\.\w+$/, '') }); (VX.iso || P.project.activeLayer).addChild(g);
-    [...out.keys()].forEach(ln => { const sub = new P.Group({ name: ln }); out.get(ln).forEach(it => sub.addChild(it)); g.addChild(sub); });
+    const g = new P.Group({ name: VX.safeItemName(name.replace(/\.\w+$/, '')) }); (VX.iso || P.project.activeLayer).addChild(g);
+    [...out.keys()].forEach(ln => { const sub = new P.Group({ name: VX.safeItemName(ln) }); out.get(ln).forEach(it => sub.addChild(it)); g.addChild(sub); });
     g.position = VX.abRect().center; VX.setSel([g]); VX.commit('Place ' + name);
   }
   const n = Object.values(stats).reduce((a, b) => a + b, 0); const sk = Object.entries(skipped).map(([t, c]) => `${c} ${t}`).join(', ');
