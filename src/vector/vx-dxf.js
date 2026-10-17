@@ -1,4 +1,7 @@
 // BTS Vector — DXF export for laser cutters / CNC (R12 ASCII by default, optional R2000) and DXF import.
+// Non-ASCII text is written as AutoCAD \U+XXXX escapes so it survives any DXF code page.
+const dxfEsc = t => String(t).replace(/[^\x00-\x7f]/gu, ch => { const c = ch.codePointAt(0); return c > 0xffff ? '?' : '\\U+' + c.toString(16).toUpperCase().padStart(4, '0'); });
+const dxfUnesc = t => String(t).replace(/\\U\+([0-9A-Fa-f]{4})/g, (_m, h) => String.fromCharCode(parseInt(h, 16)));
 (() => {
 const { P, DOC } = VX; const { toast, form } = UI;
 const UNITS = { mm: { k: 25.4 / 96, ins: 4, label: 'Millimetres' }, in: { k: 1 / 96, ins: 1, label: 'Inches' }, px: { k: 1, ins: 0, label: 'Pixels (1 px = 1 unit)' } };
@@ -236,7 +239,7 @@ function writeDXF(ents, opts, layerNames) {
     }
     else if (e.type === 'SPLINE') { head('SPLINE', e, 'AcDbSpline'); G(210, 0); G(220, 0); G(230, 1); G(70, 8 | (e.closed ? 0 : 0)); G(71, 3); G(72, e.knots.length); G(73, e.ctrl.length); G(74, 0); G(42, 1e-10); G(43, 1e-10); e.knots.forEach(kn => G(40, kn)); e.ctrl.forEach(p => { G(10, p[0]); G(20, p[1]); G(30, 0); }); }
     else if (e.type === 'TEXT') {
-      head('TEXT', e, 'AcDbText'); G(10, e.x); G(20, e.y); G(30, 0); G(40, Math.max(1e-4, e.h)); G(1, e.text.replace(/[\r\n]/g, ' ')); if (e.rot) G(50, e.rot); G(7, r2000 ? 'Standard' : 'STANDARD');
+      head('TEXT', e, 'AcDbText'); G(10, e.x); G(20, e.y); G(30, 0); G(40, Math.max(1e-4, e.h)); G(1, dxfEsc(e.text.replace(/[\r\n]/g, ' '))); if (e.rot) G(50, e.rot); G(7, r2000 ? 'Standard' : 'STANDARD');
       const jx = e.just === 'center' ? 1 : e.just === 'right' ? 2 : 0; if (jx) { G(72, jx); G(11, e.x); G(21, e.y); G(31, 0); } if (r2000) G(100, 'AcDbText');
     }
   }
@@ -374,7 +377,7 @@ function buildFromDXF(d, k) {
         if (closed) it.closePath(); break;
       }
       case 'TEXT': case 'MTEXT': {
-        let s = getc(e, 1, '') + e.codes.filter(p => p[0] === 3).map(p => p[1]).join(''); if (e.type === 'MTEXT') s = (e.codes.filter(p => p[0] === 3).map(p => p[1]).join('') + getc(e, 1, '')).replace(/\\P/g, '\n').replace(/\\[A-Za-z][^;\\{}]*;/g, '').replace(/[{}]/g, '').replace(/\\~/g, ' ');
+        let s = getc(e, 1, '') + e.codes.filter(p => p[0] === 3).map(p => p[1]).join(''); s = dxfUnesc(s); if (e.type === 'MTEXT') s = dxfUnesc(e.codes.filter(p => p[0] === 3).map(p => p[1]).join('') + getc(e, 1, '')).replace(/\\P/g, '\n').replace(/\\[A-Za-z][^;\\{}]*;/g, '').replace(/[{}]/g, '').replace(/\\~/g, ' ');
         const hgt = num(e, 40, 1); const jx = parseInt(getc(e, 72, '0'), 10); const useAlign = e.type === 'TEXT' && jx && getc(e, 11) != null;
         const x = useAlign ? num(e, 11) : num(e, 10), y = useAlign ? num(e, 21) : num(e, 20); const rot = e.type === 'MTEXT' ? (getc(e, 50) != null ? num(e, 50) : Math.atan2(num(e, 21, 0), num(e, 11, 1)) * 180 / Math.PI) : num(e, 50, 0);
         const pos = T(x, y); const scale = Math.sqrt(Math.abs(M.a * M.d - M.b * M.c));
