@@ -1,6 +1,8 @@
 // Send between BTS Creative apps (File › Send to) and receiving a payload on start-up.
 import { X } from './ctx.js';
 
+// indirection so automated tests can stub the IPC (the preload bridge object is frozen)
+export const IOH = { send: (app, p) => bts.handoff.send(app, p), take: () => bts.handoff.take() };
 const base = () => (X.S.fileName || 'document.pdf').replace(/\.pdf$/i, '');
 async function pageBytes(pg) { return new Uint8Array(await X.buildPdf({ pages: [pg] })); }
 export async function renderPng(pdfBytes, dpi = 200) {
@@ -16,13 +18,13 @@ export async function sendToPhoto() {
   const n = X.S.pages.indexOf(pg) + 1; UI.toast('Sending the page to Photo…');
   const png = await renderPng(await pageBytes(pg), 200);
   const payload = { kind: 'image', name: `${base()}-page${n}.png`, mime: 'image/png', data: png.data, meta: { dpi: 200, width: png.width, height: png.height, from: 'pdf', page: n } };
-  await bts.handoff.send('photo', payload); return payload;
+  await IOH.send('photo', payload); return payload;
 }
 export async function sendToVector() {
   const pg = X.curPage(); if (!pg) return UI.toast('Open a PDF first');
   const n = X.S.pages.indexOf(pg) + 1; UI.toast('Sending the page to Vector…');
   const payload = { kind: 'pdf', name: `${base()}-page${n}.pdf`, mime: 'application/pdf', data: await pageBytes(pg), meta: { from: 'pdf', page: n } };
-  await bts.handoff.send('vector', payload); return payload;
+  await IOH.send('vector', payload); return payload;
 }
 // an SVG rasterised at 2x, on a page the size of the drawing
 async function svgToPdf(svgBytes) {
@@ -55,6 +57,6 @@ export async function receive(p) {
 }
 export async function takeOnStartup() {
   if (!window.bts?.handoff?.take) return false;
-  try { const p = await bts.handoff.take(); if (p) return receive(p); } catch (e) { console.warn('handoff', e); }
+  try { const p = await IOH.take(); if (p) return receive(p); } catch (e) { console.warn('handoff', e); }
   return false;
 }

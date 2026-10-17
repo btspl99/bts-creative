@@ -1,0 +1,4 @@
+@pdf-lib/fontkit 1.1.1 (https://github.com/Hopding/fontkit) — dist/fontkit.umd.min.js, MIT (LICENSE.txt)
+regenerator-runtime 0.13.11 (https://github.com/facebook/regenerator) — runtime.js, MIT (LICENSE-regenerator-runtime.txt);
+  needed by the fontkit build for text shaping.
+Used for: embedding installed fonts / font files (subset) into PDFs when editing text (src/pdf/textedit.js).

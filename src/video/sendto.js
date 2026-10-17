@@ -3,7 +3,8 @@
 // panel and placed on the timeline at the playhead).
 'use strict';
 async function frameCanvas(t, w = PJ.seq.w, hh = PJ.seq.h) {
-  ST.t = t; await prepareStill(t); // ST.t = t so no preview refresh re-seeks the media to the old playhead meanwhile const c = document.createElement('canvas'); c.width = PJ.seq.w; c.height = PJ.seq.h; renderAt(c.getContext('2d'), t, 1);
+  // ST.t = t so no preview refresh re-seeks the media to the old playhead meanwhile
+  ST.t = t; await prepareStill(t); const c = document.createElement('canvas'); c.width = PJ.seq.w; c.height = PJ.seq.h; renderAt(c.getContext('2d'), t, 1);
   if (w === PJ.seq.w && hh === PJ.seq.h) return c; const s = document.createElement('canvas'); s.width = w; s.height = hh; s.getContext('2d').drawImage(c, 0, 0, w, hh); return s;
 }
 const canvasBytes = async (c, type = 'image/png', q) => UI.blobToU8(await new Promise(r => c.toBlob(r, type, q)));

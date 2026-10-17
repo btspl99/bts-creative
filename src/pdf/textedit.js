@@ -13,7 +13,7 @@ const persist = () => { try { localStorage.setItem('bts.pdf.textedit', JSON.stri
 
 // ---------------------------------------------------------------- helpers
 let fkP = null;
-async function fontkit() { if (!fkP) fkP = loadScript('../vendor/pdf-fontkit/fontkit.umd.min.js').then(() => window.fontkit).catch(() => null); return fkP; }
+async function fontkit() { if (!fkP) fkP = loadScript('../vendor/pdf-fontkit/regenerator-runtime.js').then(() => loadScript('../vendor/pdf-fontkit/fontkit.umd.min.js')).then(() => window.fontkit).catch(() => null); return fkP; }
 let localList = null;
 async function localFonts() {
   if (localList) return localList;
@@ -67,7 +67,9 @@ export async function restoreVersions(sv) {
 }
 
 // run an edit on a fresh copy of the page's source document, then swap the edited bytes in
-async function applyEdit(pg, fn, label) {
+let busy = Promise.resolve();
+function applyEdit(pg, fn, label) { const p = busy.then(() => applyEdit0(pg, fn, label)); busy = p.catch(() => { }); return p; }
+async function applyEdit0(pg, fn, label) {
   const src = X.S.sources[pg.src];
   const doc = await fresh(src);
   const fk = await fontkit();
@@ -93,21 +95,23 @@ function tellFallback(res) {
 
 // ---------------------------------------------------------------- clicking text with the Edit tool
 export async function onStageClick(e) {
-  const S = X.S; if (S.tool !== 'edit' || e.button) return;
+  const S = X.S; const ov = PENDING; PENDING = null; if (S.tool !== 'edit' || e.button) return;
   if (e.target.closest('.te-box, .editor-box')) return;
   const pgEl = e.target.closest('.page'); if (!pgEl) return;
   const pg = X.pageById(pgEl.dataset.id); if (!pg) return;
   const span = e.target.closest('.textLayer span');
-  if (!span || !span.textContent.trim()) { const [px, py] = X.toPdf(pg, e); return newParagraph(pg, px, py); }
+  if (!span || !span.textContent.trim()) { const [px, py] = X.toPdf(pg, e); await new Promise(r => setTimeout(r, 0)); await busy; return newParagraph(pg, px, py); }
   const pr = pgEl.getBoundingClientRect(), sr = span.getBoundingClientRect();
   const a = pg._vp.convertToPdfPoint(sr.left - pr.left, sr.top - pr.top), b = pg._vp.convertToPdfPoint(sr.right - pr.left, sr.bottom - pr.top);
   const rect = { x0: Math.min(a[0], b[0]), y0: Math.min(a[1], b[1]), x1: Math.max(a[0], b[0]), y1: Math.max(a[1], b[1]) };
+  await new Promise(r => setTimeout(r, 0)); await busy; // let a pending edit (e.g. the editor that just lost focus) finish first
   let model = null; try { model = await modelFor(pg); } catch (err) { console.warn('content parse failed', err); }
   const hit = model && CS.hitTest(model, rect);
   const norm = s => s.replace(/\s+/g, '').toLowerCase();
   const usable = hit && !hit.run.f.type3 && !hit.run.f.vertical && hit.run.f.decodable && hit.run.Tr !== 3 && norm(hit.line.text).includes(norm(span.textContent).slice(0, 12));
-  if (!usable) return coverEdit(pg, span, hit && hit.run.f.type3 ? 'type3' : 'parse');
-  const block = ST.mode === 'line' || e.shiftKey ? lineBlock(hit.line) : hit.block;
+  if (!usable) return coverEdit(pg, span, hit && hit.run.f.type3 ? 'type3' : hit && hit.run.Tr === 3 ? 'ocr' : 'parse', rect);
+  const block = (ov?.mode || ST.mode) === 'line' || e.shiftKey ? lineBlock(hit.line) : hit.block;
+  if (ov?.del) return commitBlock(pg, model, block, '');
   openEditor(pg, model, block);
 }
 const lineBlock = line => ({ lines: [line], runs: line.runs, chars: blockChars(line), text: blockChars(line).map(c => c.ch).join(''), bbox: line.bbox, align: line.block?.lines.length === 1 ? line.block.align : 'left', ang: line.ang, sid: line.sid, x0: line.x0, x1: line.x1, availW: line.block?.lines.length === 1 ? line.block.availW : line.x1 - line.x0, isLine: true });
@@ -117,7 +121,7 @@ export function contextMenu(e) {
   if (X.S.tool !== 'edit') return false;
   const span = e.target.closest('.textLayer span'); if (!span) return false;
   e.preventDefault();
-  const fire = (mode, del) => { const old = ST.mode; ST.mode = mode; const ev = new MouseEvent('click', { clientX: e.clientX, clientY: e.clientY, bubbles: true }); TE_DELETE = del; span.dispatchEvent(ev); ST.mode = old; };
+  const fire = (mode, del) => { PENDING = { mode, del }; span.dispatchEvent(new MouseEvent('click', { clientX: e.clientX, clientY: e.clientY, bubbles: true })); };
   UI.contextMenu(e, [
     { label: 'Edit paragraph', action: () => fire('para', false) },
     { label: 'Edit this line only', action: () => fire('line', false) },
@@ -127,12 +131,11 @@ export function contextMenu(e) {
   ]);
   return true;
 }
-let TE_DELETE = false;
+let PENDING = null;
 
 function openEditor(pg, model, block) {
   document.querySelector('.te-box')?.remove();
   const vp = pg._vp, sc = vp.scale;
-  if (TE_DELETE) { TE_DELETE = false; return commitBlock(pg, model, block, ''); }
   const dom = block.runs.slice().sort((a, b) => b.glyphs.length - a.glyphs.length)[0];
   const ff = cssFamily(dom.f);
   const [x1, y1, x2, y2] = vp.convertToViewportRectangle([block.bbox.x0, block.bbox.y0, block.bbox.x1, block.bbox.y1]);
@@ -164,8 +167,13 @@ function sameBlock(model, block) {
 }
 export async function commitBlock(pg, model, block, txt) {
   try {
-    const res = await applyEdit(pg, async (ed, m) => { const b = sameBlock(m, block); if (!b) throw new Error('The text changed; click it again.'); return ed.writeBlock(m, b, txt, prefNow()); }, txt.trim() ? 'Edit text' : 'Delete text');
+    const res = await applyEdit(pg, async (ed, m) => { const b = sameBlock(m, block); if (!b) throw new Error('The text changed; click it again.'); return ed.writeBlock(m, b, txt, { ...prefNow(), keepLines: 'soft' }); }, txt.trim() ? 'Edit text' : 'Delete text');
     if (res?.deleted) UI.toast('Text deleted from the page content', 'ok'); else tellFallback(res);
+    if (res?.grew) { // warn when the longer text runs into what is below it
+      const low = block.bbox.y0 - res.grew * res.leadPage;
+      const hit = model.blocks.some(b => b !== block && b.ang === block.ang && b.bbox.y1 < block.bbox.y0 + 1 && b.bbox.y1 > low && b.bbox.x0 < block.bbox.x1 && b.bbox.x1 > block.bbox.x0);
+      if (hit) UI.toast('The text now needs more lines and overlaps the text below it. Shorten it, or undo with Ctrl+Z.', 'err', 7000);
+    }
     return res;
   } catch (e) { console.error(e); UI.toast('Could not edit this text: ' + e.message, 'err', 6000); return null; }
 }
@@ -195,16 +203,14 @@ export async function addParagraph(pg, o) {
 }
 
 // ---------------------------------------------------------------- fallback: cover and replace (old behaviour)
-function coverEdit(pg, span, why) {
-  const pgEl = pg._el; const pr = pgEl.getBoundingClientRect(), sr = span.getBoundingClientRect();
-  const p1 = pg._vp.convertToPdfPoint(sr.left - pr.left, sr.top - pr.top), p2 = pg._vp.convertToPdfPoint(sr.right - pr.left, sr.bottom - pr.top);
-  const x = Math.min(p1[0], p2[0]) - 1, y = Math.min(p1[1], p2[1]) - 1, w = Math.abs(p2[0] - p1[0]) + 2, hh = Math.abs(p2[1] - p1[1]) + 2;
+function coverEdit(pg, span, why, rect) {
+  const x = rect.x0 - 1, y = rect.y0 - 1, w = rect.x1 - rect.x0 + 2, hh = rect.y1 - rect.y0 + 2;
   const size = Math.max(4, Math.round(hh * 0.82 * 10) / 10);
   const ff = (getComputedStyle(span).fontFamily || '').toLowerCase();
   const font = /serif|times|roman/.test(ff) && !/sans/.test(ff) ? 'Times' : /mono|courier/.test(ff) ? 'Courier' : 'Helvetica';
   const a = { id: X.nid(), type: 'text', x, y, w, h: hh, text: span.textContent, size, color: X.S.style.textColor, font, bold: false, bg: '#ffffff', cover: true };
   pg.annots.push(a); X.drawAnnots(pg); X.editTextAnnot(pg, a, false);
-  UI.toast(why === 'type3' ? 'This text uses a Type 3 (drawn) font that cannot be edited directly. It will be covered with a white box and new text instead; the old text stays in the file underneath.'
+  UI.toast(why === 'ocr' ? 'This is recognised (OCR) text over a scanned image. It will be covered with a white box and new text instead.' : why === 'type3' ? 'This text uses a Type 3 (drawn) font that cannot be edited directly. It will be covered with a white box and new text instead; the old text stays in the file underneath.'
     : 'This text could not be matched in the page content, so it will be covered with a white box and new text instead. The old text stays in the file underneath.', '', 8000);
 }
 
@@ -283,6 +289,5 @@ export function options(ob, grp, vsep, swatchRow) {
     h('button', { class: 'btn sm', onclick: () => pickSystemFont() }, 'System font…'), h('button', { class: 'btn sm', onclick: () => pickFontFile() }, 'Font file…'), vsep(),
     h('label', { class: 'grp', 'data-tip': 'When the original font lacks a letter, use the same font installed on this computer' }, ml, 'Match installed fonts'), vsep(),
     grp('Colour', col), h('label', { class: 'grp' }, orig, 'Original'), vsep(),
-    h('button', { class: 'btn sm', onclick: () => replaceDialog() }, 'Replace everywhere…'),
-    h('span', { class: 'muted' }, 'Click text to edit · click empty space to add text'));
+    h('button', { class: 'btn sm', 'data-tip': 'Click text to edit it, or click empty space to add a paragraph', onclick: () => replaceDialog() }, 'Replace everywhere…'));
 }

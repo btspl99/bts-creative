@@ -1,0 +1,3 @@
+node-forge 1.4.0 (https://github.com/digitalbazaar/forge) — dist/forge.min.js
+Dual licensed BSD-3-Clause / GPL-2.0; BTS PDF Pro uses it under the BSD license (see LICENSE).
+Used for: X.509 certificates, PKCS#12 (.p12/.pfx) files and CMS/PKCS#7 signatures (src/pdf/sigcore.js).

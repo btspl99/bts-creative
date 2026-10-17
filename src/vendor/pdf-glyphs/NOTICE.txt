@@ -1,0 +1,4 @@
+glyphs.js — generated data for BTS PDF Pro text editing (src/pdf/cstream.js)
+- glyph name -> Unicode table taken from the Adobe Glyph List (AGL), BSD 3-Clause, Copyright Adobe (see LICENSE-AGL.txt)
+- the WinAnsi / MacRoman / Standard encodings are the PDF-specified simple-font encodings (facts, not copyrightable),
+  generated with Python codecs and fontTools.

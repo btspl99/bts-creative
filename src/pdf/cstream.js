@@ -4,7 +4,7 @@
 // really removes / replaces the show-text operators in the content stream (so old text is gone from the file)
 // and writes the new text at the same position, size and colour.
 // Pure module (no DOM): it is also run under Node by the automated tests.
-import { AGL, ENC } from './glyphs.js';
+import { AGL, ENC } from '../vendor/pdf-glyphs/glyphs.js';
 const PL = () => globalThis.PDFLib;
 
 // ------------------------------------------------------------------ bytes, matrices
@@ -206,6 +206,7 @@ export function loadFont(doc, dict) {
   const addRev = (code, u) => { if (u && [...u].length === 1 && !f.rev.has(u)) f.rev.set(u, code); };
   if (f.toUni) for (const [c, u] of f.toUni) addRev(c, u);
   if (f.encUni) for (const [c, u] of f.encUni) addRev(c, u);
+  if (!f.rev.has(' ')) { const c = f.rev.get('\t') ?? f.rev.get('\u00a0'); if (c != null) f.rev.set(' ', c); }
   f.decodable = !!(f.toUni || (f.encUni && f.encUni.size > 20));
   // widths in text space per unit font size
   f.width = code => {
@@ -213,7 +214,7 @@ export function loadFont(doc, dict) {
     if (f.type3) { const w = f.widths?.[code - f.first]; return (w || 0) * (f.fm[0] || 0.001); }
     const w = f.widths ? f.widths[code - f.first] : undefined;
     if (w != null && (w > 0 || !f.std)) return w / 1000;
-    if (f.std) { const u = f.encUni.get(code) || String.fromCharCode(code); try { return f.std.emb.widthOfTextAtSize(u, 1000) / 1000000; } catch { return 0.5; } }
+    if (f.std) { const u = f.encUni.get(code) || String.fromCharCode(code); try { return f.std.emb.widthOfTextAtSize(u, 1000) / 1000; } catch { return 0.5; } }
     return (f.missing || 500) / 1000;
   };
   f.hasWidth = code => {
@@ -306,7 +307,7 @@ function interpret(model, st, depth) {
       codes.forEach((code, ci) => {
         const w0 = f.width(code);
         const tx = (w0 * gs.fs + gs.Tc + (code === 32 && f.codeLen === 1 && f.subtype !== 'Type0' ? gs.Tw : 0)) * gs.Th;
-        const ch = f.uni(code); const gi = glyphs.length;
+        const ch = f.uni(code).replace(/[\t\u00a0]/g, ' '); const gi = glyphs.length;
         glyphs.push({ code, u, w: tx, ch, pi, ci }); f.used.add(code);
         for (const c of ch) chars.push({ ch: c, g: gi });
         u += tx;
@@ -551,11 +552,13 @@ export const fillToCss = fill => {
 const hexToFill = hx => { const n = parseInt((hx || '#000000').slice(1), 16); return { sp: 'rg', v: [((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255] }; };
 
 // Output font: { key, kind: 'same'|'std'|'custom', name, items(str) -> TJ items, width(str, fs, Tc, Th) }
+const COMPLEX = /[\u0590-\u08ff\u0900-\u0dff\u0e00-\u0eff\u0f00-\u0fff\u1000-\u109f\u1780-\u17ff]/;
+export const needsShaping = t => COMPLEX.test(t);
 function sameFont(f, fk, spaceEm = 0.3333) {
   const hasSpace = f.codeFor(' ') != null;
   return {
     kind: 'same', key: fk, name: famKey(f), f,
-    can: text => [...text].every(ch => ch === '\n' || (ch === ' ' || ch === '\u00a0' ? true : f.codeFor(ch) != null)),
+    can: text => !COMPLEX.test(text) && [...text].every(ch => ch === '\n' || (ch === ' ' || ch === '\u00a0' ? true : f.codeFor(ch) != null)),
     items: text => { const out = []; let cur = []; for (const ch of text) { if ((ch === ' ' || ch === '\u00a0') && !hasSpace) { if (cur.length) out.push(cur), cur = []; out.push(-spaceEm * 1000); } else { const c = f.codeFor(ch === '\u00a0' ? ' ' : ch); if (c != null) cur.push(c); } } if (cur.length) out.push(cur); return out.map(x => typeof x === 'number' ? x : strOf(x, f, false)); },
     width: (text, fs, Tc, Th) => { let w = 0; for (const ch of text) { if ((ch === ' ' || ch === '\u00a0') && !hasSpace) { w += spaceEm * fs * Th; continue; } const c = f.codeFor(ch === '\u00a0' ? ' ' : ch); if (c == null) continue; w += (f.width(c) * fs + Tc) * Th; } return w; },
   };
@@ -563,7 +566,7 @@ function sameFont(f, fk, spaceEm = 0.3333) {
 function libFont(pf, key, kind, name) {
   return {
     kind, key, name, pf,
-    can: text => { try { pf.encodeText(text.replace(/\n/g, '')); return true; } catch { return false; } },
+    can: text => { const t = text.replace(/\n/g, ''); const fk = pf.embedder?.font; if (fk?.hasGlyphForCodePoint) return [...t].every(ch => /\s/.test(ch) || fk.hasGlyphForCodePoint(ch.codePointAt(0))); try { pf.encodeText(t); return true; } catch { return false; } },
     items: text => [pf.encodeText(text).toString()],
     width: (text, fs, Tc, Th) => (pf.widthOfTextAtSize(text, fs) + Tc * [...text].length) * Th,
   };
@@ -593,28 +596,35 @@ export class TextEditor {
     for (const [k, v] of fd.entries()) if (v === ref || v?.toString() === ref.toString()) return k.asString().slice(1);
     let i = 1, nm; do nm = 'BTS' + hint + (i++); while (fd.get(L.PDFName.of(nm))); fd.set(L.PDFName.of(nm), ref); return nm;
   }
-  async outFont(model, sid, srcFont, srcKey, text, pref = {}) {
-    // pref: { mode: 'auto'|'std'|'custom', family, bold, italic, fallbackOnly }
-    const mode = pref.mode || 'auto';
-    if (mode === 'auto' && !pref.fallbackOnly && srcKey && srcFont && !srcFont.type3 && !srcFont.vertical && srcFont.decodable) { const sf = sameFont(srcFont, srcKey); if (sf.can(text)) return sf; }
+  // candidate fonts for new text, in order of preference: the original font, a font the user chose, the same
+  // family installed on this computer, the nearest standard font
+  async candidates(model, sid, srcFont, srcKey, pref = {}) {
+    const mode = pref.mode || 'auto'; const out = [];
+    if (mode === 'auto' && !pref.fallbackOnly && srcKey && srcFont && !srcFont.type3 && !srcFont.vertical && srcFont.decodable) out.push(sameFont(srcFont, srcKey));
     const embed = async (k, bytes) => { let pf = this.libFonts.get(k); if (pf === undefined) { try { this.doc.registerFontkit(this.fontkit); pf = await this.doc.embedFont(bytes, { subset: true }); } catch (e) { pf = null; this.notes.push('font:' + e.message); } this.libFonts.set(k, pf); } return pf; };
     if ((mode === 'custom' || mode === 'auto') && this.customFont && this.fontkit) {
       const pf = await embed('custom:' + this.customFont.name, this.customFont.bytes);
-      if (pf) { const lf = libFont(pf, this.fontName(this.resOf(model, sid), pf.ref, 'C'), 'custom', this.customFont.name); if (lf.can(text) || mode === 'custom') return lf; }
+      if (pf) out.push(libFont(pf, this.fontName(this.resOf(model, sid), pf.ref, 'C'), 'custom', this.customFont.name));
     }
-    // the same font family installed on this computer (e.g. the full version of a subset font)
     if (mode === 'auto' && srcFont && this.resolveFont && this.fontkit) {
       const fam = famKey(srcFont); const k = 'local:' + fam;
       let pf = this.libFonts.get(k);
       if (pf === undefined) { const bytes = await this.resolveFont(fam, srcFont).catch(() => null); pf = bytes ? await embed(k, bytes) : null; this.libFonts.set(k, pf); }
-      if (pf) { const lf = libFont(pf, this.fontName(this.resOf(model, sid), pf.ref, 'L'), 'local', fam); if (lf.can(text)) return lf; }
+      if (pf) out.push(libFont(pf, this.fontName(this.resOf(model, sid), pf.ref, 'L'), 'local', fam));
     }
     const st = pref.family ? { family: pref.family, bold: !!pref.bold, italic: !!pref.italic } : srcFont ? stdFallback(srcFont) : { family: 'Helvetica', bold: !!pref.bold, italic: !!pref.italic };
     const nm = stdFontName(st); let pf = this.libFonts.get(nm);
     if (!pf) { pf = await this.doc.embedFont(nm); this.libFonts.set(nm, pf); }
-    const lf = libFont(pf, this.fontName(this.resOf(model, sid), pf.ref, 'S'), 'std', nm);
-    if (!lf.can(text)) { const bad = [...new Set([...text].filter(ch => ch !== '\n' && !lf.can(ch)))].join(''); throw Object.assign(new Error('NEED_FONT'), { code: 'NEED_FONT', chars: bad }); }
-    return lf;
+    out.push(libFont(pf, this.fontName(this.resOf(model, sid), pf.ref, 'S'), 'std', nm));
+    return out;
+  }
+  async outFont(model, sid, srcFont, srcKey, text, pref = {}) {
+    const cands = await this.candidates(model, sid, srcFont, srcKey, pref);
+    const hit = cands.find(c => c.can(text)); if (hit) return hit;
+    // pick per character: report what nobody can write
+    const bad = [...new Set([...text].filter(ch => ch !== '\n' && !/\s/.test(ch) && !cands.some(c => c.can(ch))))].join('');
+    if (!bad) return cands[0];
+    throw Object.assign(new Error('NEED_FONT'), { code: 'NEED_FONT', chars: bad });
   }
   append(model, sid, text) { const k = this.streamKey(model, sid); if (!this.appends.has(k)) this.appends.set(k, { model, sid, parts: [] }); this.appends.get(k).parts.push(text); }
 
@@ -639,27 +649,33 @@ export class TextEditor {
     let q = 0; while (q < old.length - p && q < t.length - p && old[old.length - 1 - q] === t[t.length - 1 - q]) q++;
     const mid = p > 0 ? oc[p - 1].s : (oc[0]?.s ?? domS);
     const chars = []; for (let i = 0; i < t.length; i++) chars.push({ ch: t[i], s: i < p ? oc[i].s : i >= t.length - q ? oc[old.length - (t.length - i)].s : mid });
-    // per style: keep the original font where it has the glyphs; words it cannot draw use a fallback font
-    const fbOf = new Map();
+    // per word: the first candidate font that can draw it (original font, chosen font, installed font, standard font)
+    const variant = new Map(); const fonts = [];
     for (const si of new Set(chars.map(c => c.s))) {
-      const st = styles[si]; const okFont = pref.mode && pref.mode !== 'auto' ? null : (!st.f.type3 && !st.f.vertical && st.f.decodable ? sameFont(st.f, st.fk) : null);
-      st.font = okFont;
+      const st = styles[si]; const cands = await this.candidates(model, dom.sid, st.f, st.fk, pref);
+      const vIdx = ci => { const k = si + ':' + ci; if (!variant.has(k)) { variant.set(k, styles.length); styles.push({ ...st, font: cands[ci], text: '' }); } return variant.get(k); };
+      let lastV = null; const pendingSpaces = [];
       for (let i = 0; i < chars.length;) {
-        if (chars[i].s !== si || chars[i].ch === ' ' || chars[i].ch === '\n') { i++; continue; }
+        if (chars[i].s !== si) { i++; continue; }
+        if (chars[i].ch === ' ' || chars[i].ch === '\n') { if (lastV != null) chars[i].s = lastV; else pendingSpaces.push(i); i++; continue; }
         let j = i; while (j < chars.length && chars[j].s === si && chars[j].ch !== ' ' && chars[j].ch !== '\n') j++;
         const word = chars.slice(i, j).map(c => c.ch).join('');
-        if (!okFont || !okFont.can(word)) { if (!fbOf.has(si)) { fbOf.set(si, styles.length); styles.push({ ...st, font: null, fb: true, text: '' }); } for (let k = i; k < j; k++) chars[k].s = fbOf.get(si); }
+        let ci = cands.findIndex(c => c.can(word));
+        if (ci < 0) { const bad = [...new Set([...word].filter(ch => !cands.some(c => c.can(ch))))].join(''); if (bad) throw Object.assign(new Error('NEED_FONT'), { code: 'NEED_FONT', chars: bad }); ci = cands.length - 1; }
+        lastV = vIdx(ci); for (let k = i; k < j; k++) chars[k].s = lastV;
+        while (pendingSpaces.length) chars[pendingSpaces.pop()].s = lastV;
         i = j;
       }
+      if (pendingSpaces.length) { const v = vIdx(0); while (pendingSpaces.length) chars[pendingSpaces.pop()].s = v; }
     }
     for (const c of chars) if (c.ch !== '\n') styles[c.s].text += c.ch;
-    const used = new Set(chars.map(c => c.s)); const fonts = [];
-    for (const si of used) { const st = styles[si]; if (!st.font) st.font = await this.outFont(model, dom.sid, st.f, st.fk, st.text || ' ', st.fb ? { ...pref, fallbackOnly: true } : pref); if (st.font.kind !== 'same') fonts.push(st.font.name); }
+    const used = new Set(chars.map(c => c.s));
+    for (const si of used) if (styles[si].font.kind !== 'same') fonts.push(styles[si].font.name);
     const Wp = (block.x1 ?? block.bbox.x1) - (block.x0 ?? block.bbox.x0), Wwrap = block.availW && Wp > 0 ? Math.max(W, block.availW * W / Wp) : W;
     let lines = this.layoutStyled(chars, styles, block.align === 'justify' ? W : Wwrap, block.align, W), squeeze = 1;
     // optionally keep the original number of lines by condensing slightly (used by Replace everywhere)
-    if (pref.keepLines && lines.length > block.lines.length) {
-      for (const sq of [0.97, 0.94, 0.91, 0.88, 0.85]) { styles.forEach(st => st._Th = st._Th ?? st.Th); styles.forEach(st => st.Th = st._Th * sq); const l2 = this.layoutStyled(chars, styles, block.align === 'justify' ? W : Wwrap, block.align, W); if (l2.length <= block.lines.length) { lines = l2; squeeze = sq; break; } }
+    if (pref.keepLines && lines.length > block.lines.length && block.lines.length > 1) {
+      for (const sq of (pref.keepLines === 'soft' ? [0.98, 0.96, 0.94] : [0.97, 0.94, 0.91, 0.88, 0.85])) { styles.forEach(st => st._Th = st._Th ?? st.Th); styles.forEach(st => st.Th = st._Th * sq); const l2 = this.layoutStyled(chars, styles, block.align === 'justify' ? W : Wwrap, block.align, W); if (l2.length <= block.lines.length) { lines = l2; squeeze = sq; break; } }
       if (squeeze === 1) styles.forEach(st => { if (st._Th) st.Th = st._Th; });
     }
     let out = 'q BT 0 Tw\n'; let curS = -1;
@@ -676,7 +692,7 @@ export class TextEditor {
     out += 'ET Q';
     this.append(model, dom.sid, out);
     const kinds = new Set([...used].map(si => styles[si].font.kind));
-    return { lines: lines.length, fallback: kinds.has('std'), otherFont: fonts.length > 0, fontName: fonts[0] || famKey(dom.f), fonts: [...new Set(fonts)], kinds: [...kinds], squeeze };
+    return { lines: lines.length, grew: Math.max(0, lines.length - block.lines.length), leadPage: lead * Math.hypot(R[2], R[3]) * Math.hypot(model.streams[dom.sid].toPage[2], model.streams[dom.sid].toPage[3]), fallback: kinds.has('std'), otherFont: fonts.length > 0, fontName: fonts[0] || famKey(dom.f), fonts: [...new Set(fonts)], kinds: [...kinds], squeeze };
   }
   layoutStyled(chars, styles, W, align, Wj = W) {
     const segW = (s, txt) => { const st = styles[s]; return st.font.width(txt, st.fs, st.Tc, st.Th); };

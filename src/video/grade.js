@@ -250,7 +250,7 @@ function wheelsUI({ c, f, slider, live, commit, commitSoon }) {
   det.open = !!ST.cwNumOpen; det.ontoggle = () => { ST.cwNumOpen = det.open; };
   return h('div', {}, grid, lum, det, h('div', { class: 'btn-row' }, h('button', { class: 'btn sm', onclick: () => { WHEELS.forEach(([w]) => ['R', 'G', 'B', 'Y'].forEach(k => { delete c.kf[`fx:${f.id}:${w}${k}`]; f[w + k] = 0; })); commit('Reset colour wheels'); renderFx(); drawFrame(); } }, 'Reset wheels')));
 }
-const CURVE_TABS = [['cm', 'Master', '#d8d8d8'], ['cr', 'Red', '#ff5a5a'], ['cg', 'Green', '#4fd16a'], ['cb', 'Blue', '#4c8dff'], ['hs', 'Hue vs Sat', null], ['hh', 'Hue vs Hue', null]];
+const CURVE_TABS = [['cm', 'Master', null], ['cr', 'Red', '#ff5a5a'], ['cg', 'Green', '#4fd16a'], ['cb', 'Blue', '#4c8dff'], ['hs', 'Hue vs Sat', null], ['hh', 'Hue vs Hue', null]];
 function curvesUI({ c, f, slider, live, commit, commitSoon }) {
   let tab = ST.curveTab && CURVE_TABS.some(t => t[0] === ST.curveTab) ? ST.curveTab : 'cm';
   const tabs = h('div', { class: 'cv-tabs' }); const W = 290, H = 190; const dpr = devicePixelRatio || 1;
@@ -265,7 +265,7 @@ function curvesUI({ c, f, slider, live, commit, commitSoon }) {
     x.strokeStyle = cssVar('--line-2', 'rgba(128,128,128,.4)'); x.lineWidth = 1; x.beginPath();
     for (let i = 1; i < 4; i++) { const gx = 8 + i * (W - 16) / 4, gy = 8 + i * (H - 16) / 4; x.moveTo(gx, 8); x.lineTo(gx, H - 8); x.moveTo(8, gy); x.lineTo(W - 8, gy); } x.stroke();
     x.strokeRect(8.5, 8.5, W - 17, H - 17);
-    const col = (CURVE_TABS.find(t => t[0] === tab) || [])[2] || cssVar('--accent', '#9a7bff');
+    const col = (CURVE_TABS.find(t => t[0] === tab) || [])[2] || cssVar('--tx-0', '#e8e8e8');
     const smp = monoSample(hue() ? pts() : (pts().length ? pts() : DEF_CURVE), 256, hue());
     x.strokeStyle = hue() ? cssVar('--tx-0', '#fff') : col; x.lineWidth = 2; x.beginPath();
     for (let i = 0; i < 256; i++) { const vx = hue() ? i / 256 : i / 255; const [sx, sy] = toS([vx, clamp(smp[i], 0, 1)]); i ? x.lineTo(sx, sy) : x.moveTo(sx, sy); } x.stroke();
