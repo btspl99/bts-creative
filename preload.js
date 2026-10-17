@@ -37,6 +37,12 @@ contextBridge.exposeInMainWorld('bts', {
     framesClose: id => ipcRenderer.invoke('frames:close', id),
     framesOpenRaw: o => ipcRenderer.invoke('frames:openRaw', o),
   },
+  stt: {
+    available: () => ipcRenderer.invoke('stt:available'),
+    transcribe: opts => ipcRenderer.invoke('stt:transcribe', opts),
+    onProgress: cb => { const f = (_e, p) => cb(p); ipcRenderer.on('stt:progress', f); return () => ipcRenderer.removeListener('stt:progress', f); },
+    cancel: () => ipcRenderer.invoke('stt:cancel'),
+  },
   update: {
     check: () => ipcRenderer.invoke('update:check'),
     install: () => ipcRenderer.invoke('update:install'),

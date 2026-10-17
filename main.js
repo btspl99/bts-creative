@@ -218,6 +218,56 @@ ipcMain.handle('tmp:write', (_e, { name, data }) => {
   const p = path.join(dir, name); fs.writeFileSync(p, Buffer.from(data)); return p;
 });
 
+// ---------- IPC: offline speech-to-text (BTS Video › Captions › Auto-transcribe) ----------
+// Vosk (Apache-2.0) runs natively through koffi in an Electron utilityProcess (stt-worker.js), never in a renderer.
+function voskPaths() {
+  const sub = process.platform === 'win32' ? 'win' : process.platform === 'linux' ? 'linux' : null;
+  const lib = process.platform === 'win32' ? 'libvosk.dll' : 'libvosk.so';
+  const roots = [
+    app.isPackaged ? path.join(process.resourcesPath, 'vosk') : null,
+    path.join(__dirname, 'vendor', 'vosk'),
+    path.join(path.dirname(__dirname), 'vosk'), // resources/vosk next to resources/app.asar
+  ].filter(Boolean);
+  for (const r of roots) {
+    if (sub && fs.existsSync(path.join(r, sub, lib)) && fs.existsSync(path.join(r, 'model-en-us', 'am', 'final.mdl')))
+      return { libDir: path.join(r, sub), modelDir: path.join(r, 'model-en-us') };
+  }
+  return null;
+}
+function sttCheck() {
+  if (process.arch !== 'x64') return { ok: false, reason: 'Auto-transcribe needs a 64-bit (x64) system.' };
+  const p = voskPaths(); if (!p) return { ok: false, reason: 'The speech engine is not installed with this copy of BTS Creative.' };
+  try { require.resolve('koffi'); } catch { return { ok: false, reason: 'The speech engine bridge (koffi) is missing.' }; }
+  return { ok: true, ...p };
+}
+ipcMain.handle('stt:available', () => sttCheck().ok);
+const sttJobs = new Map(); // webContents id -> { proc, cancelled }
+function sttKill(id) { const j = sttJobs.get(id); if (!j) return false; j.cancelled = true; try { j.proc.postMessage({ cmd: 'cancel' }); } catch {} setTimeout(() => { try { j.proc.kill(); } catch {} }, 400); return true; }
+ipcMain.handle('stt:cancel', e => sttKill(e.sender.id));
+// opts: { ffArgs: [...FFmpeg input args, optional -filter_complex / -map / -t], duration: seconds of audio }
+//   or  { file, start, duration }  — main adds the 16 kHz mono s16le output and returns words in seconds from the audio start.
+ipcMain.handle('stt:transcribe', (e, opts = {}) => new Promise(resolve => {
+  const chk = sttCheck(); if (!chk.ok) return resolve({ ok: false, unavailable: true, error: chk.reason });
+  const id = e.sender.id; if (sttJobs.has(id)) sttKill(id);
+  const ffArgs = Array.isArray(opts.ffArgs) ? opts.ffArgs.map(String)
+    : opts.file ? ['-ss', String(Math.max(0, +opts.start || 0)), ...(opts.duration ? ['-t', String(+opts.duration)] : []), '-i', String(opts.file)] : null;
+  if (!ffArgs) return resolve({ ok: false, error: 'Nothing to transcribe' });
+  const { utilityProcess } = require('electron');
+  const env = { ...process.env };
+  if (process.platform === 'win32') env.PATH = chk.libDir + path.delimiter + (env.PATH || '');
+  const proc = utilityProcess.fork(path.join(__dirname, 'stt-worker.js'), [], { serviceName: 'BTS Speech-to-text', stdio: 'ignore', env });
+  const job = { proc, cancelled: false }; sttJobs.set(id, job);
+  const onGone = () => sttKill(id); e.sender.once('destroyed', onGone);
+  let done = false; const finish = r => { if (done) return; done = true; if (sttJobs.get(id) === job) sttJobs.delete(id); try { proc.kill(); } catch {} if (!e.sender.isDestroyed()) e.sender.removeListener('destroyed', onGone); resolve(r); };
+  proc.on('message', m => {
+    if (!m) return;
+    if (m.type === 'progress') { if (!e.sender.isDestroyed()) e.sender.send('stt:progress', m); }
+    else if (m.type === 'done') finish(job.cancelled ? { ok: false, cancelled: true } : m.result);
+  });
+  proc.on('exit', code => finish(job.cancelled ? { ok: false, cancelled: true } : { ok: false, error: `The speech engine stopped unexpectedly (code ${code})` }));
+  proc.on('spawn', () => proc.postMessage({ cmd: 'run', job: { libDir: chk.libDir, modelDir: chk.modelDir, ffmpeg: ffmpegPath(), ffArgs, duration: +opts.duration || 0 } }));
+}));
+
 // ---------- Auto update (from creative.btspl.tech) ----------
 function broadcast(ch, payload) { for (const w of windows) if (!w.isDestroyed()) w.webContents.send(ch, payload); }
 function setupUpdater() {

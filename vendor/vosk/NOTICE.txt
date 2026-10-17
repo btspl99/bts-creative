@@ -1,0 +1,31 @@
+BTS Creative — offline speech recognition (BTS Video › Captions › Auto-transcribe)
+==================================================================================
+
+This folder contains third-party components that are redistributed unmodified.
+
+1. Vosk speech recognition toolkit — native library, version 0.3.45
+   Files: win/libvosk.dll, linux/libvosk.so
+   Copyright 2019-2022 Alpha Cephei Inc.
+   Licence: Apache License 2.0 (see LICENSE-Apache-2.0.txt)
+   Source:  https://github.com/alphacep/vosk-api  (release v0.3.45:
+            vosk-win64-0.3.45.zip, vosk-linux-x86_64-0.3.45.zip)
+   Vosk is built on Kaldi (Apache-2.0, https://github.com/kaldi-asr/kaldi) and
+   OpenFst (Apache-2.0, https://www.openfst.org).
+
+2. Vosk small US English model — vosk-model-small-en-us-0.15
+   Folder: model-en-us/
+   Copyright 2020 Alpha Cephei Inc.
+   Licence: Apache License 2.0 (see LICENSE-Apache-2.0.txt)
+   Source:  https://alphacephei.com/vosk/models
+
+3. MinGW-w64 runtime DLLs shipped with the Windows Vosk build (win/ only)
+   libstdc++-6.dll, libgcc_s_seh-1.dll — GCC runtime libraries, GPL-3.0 with the
+     GCC Runtime Library Exception 3.1 (https://www.gnu.org/licenses/gcc-exception-3.1.html)
+   libwinpthread-1.dll — MinGW-w64 winpthreads, MIT/BSD-style licence
+     (https://www.mingw-w64.org)
+
+The FFI bridge used to call the library is koffi (MIT licence, Niels Martignène,
+https://koffi.dev), installed as an npm dependency; its licence is in
+node_modules/koffi/LICENSE.txt inside the application package.
+
+BTS Creative itself is MIT licensed. Nothing here is affiliated with Adobe Inc.

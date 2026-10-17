@@ -120,5 +120,28 @@ function alignTranscript(text, speech, env, rate, t0, t1, opt = {}) {
   return caps;
 }
 const clampI = (v, a, b) => Math.max(a, Math.min(b, v));
-window.VCAP = { parse, toSRT, toVTT, parseTs, fmt, PRESETS, DEFAULT_STYLE, draw, censor, censorRe, isCensored, wordTimes, bleepRanges, alignTranscript, tokens };
+
+// ---------------------------------------------------------------------  speech recognition words → captions ("Auto-transcribe")
+// words: [{word,start,end}] on the timeline time base (from bts.stt.transcribe). Groups them into caption lines no longer
+// than maxWords words / maxSecs seconds, breaking at pauses. Every caption keeps per-word timings {s,e}.
+function wordsToCaptions(words, opt = {}) {
+  const maxW = Math.max(1, opt.maxWords || 7), maxS = Math.max(0.5, opt.maxSecs || 3.5), gapBreak = opt.gap ?? 0.7, t1 = opt.t1 ?? Infinity;
+  const ws = (words || []).filter(w => w && w.word && !/^\[.*\]$/.test(w.word) && isFinite(w.start) && isFinite(w.end)).map(w => ({ ...w, end: Math.max(w.end, w.start + 0.04) })).sort((a, b) => a.start - b.start);
+  const groups = []; let cur = [];
+  ws.forEach((w, i) => {
+    const prev = ws[i - 1];
+    if (cur.length && (cur.length >= maxW || w.end - cur[0].start > maxS || w.start - prev.end > gapBreak)) { groups.push(cur); cur = []; }
+    cur.push(w);
+  });
+  if (cur.length) groups.push(cur);
+  const fixI = s => s.replace(/^i(?=$|')/, 'I');
+  const caps = groups.map((g, gi) => {
+    const prevEnd = gi ? groups[gi - 1][groups[gi - 1].length - 1].end : -Infinity;
+    const text = g.map((w, j) => { let t = fixI(String(w.word)); if (j === 0 && g[0].start - prevEnd > 0.6) t = t.charAt(0).toUpperCase() + t.slice(1); return t; }).join(' ');
+    return { start: +g[0].start.toFixed(3), end: g[g.length - 1].end, text, words: g.map(w => ({ s: +w.start.toFixed(3), e: +w.end.toFixed(3) })) };
+  });
+  caps.forEach((c, i) => { const nx = caps[i + 1]; c.end = +Math.max(c.start + 0.2, Math.min(nx ? nx.start : t1, c.end + 0.25)).toFixed(3); });
+  return caps;
+}
+window.VCAP = { parse, toSRT, toVTT, parseTs, fmt, PRESETS, DEFAULT_STYLE, draw, censor, censorRe, isCensored, wordTimes, bleepRanges, alignTranscript, wordsToCaptions, tokens };
 })();
