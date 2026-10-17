@@ -15,6 +15,9 @@ import * as EX from './extract.js';
 import * as AY from './a11y.js';
 import * as SE from './session.js';
 import * as QB from './quickbar.js';
+import * as TE from './textedit.js';
+import * as SG from './signatures.js';
+import * as HO from './handoff.js';
 // file I/O goes through X.io so automated tests can intercept dialogs
 const IO = X.io = { open: o => bts.fs.open(o), read: p => bts.fs.read(p), saveAs: o => bts.fs.saveAs(o), write: o => bts.fs.write(o), pickSavePath: o => bts.fs.pickSavePath(o) };
 // extra icons (24px stroke) not in the shared kit
@@ -78,6 +81,10 @@ const MENUS = [
       { label: 'Comments summary…', action: () => RV.exportComments() },
       { label: 'Form data (JSON)…', action: () => RV.exportFormData() },
     ], disabled: noDoc() },
+    { label: 'Send to', sub: [
+      { label: 'Send to Photo', action: () => HO.sendToPhoto() },
+      { label: 'Send to Vector', action: () => HO.sendToVector() },
+    ], disabled: noDoc() },
     { label: 'Optimize / compress PDF…', action: () => DO.optimizeDialog(), disabled: noDoc() },
     '-',
     { label: 'Document properties…', kbd: 'Ctrl+D', action: propertiesDialog, disabled: noDoc() },
@@ -100,6 +107,18 @@ const MENUS = [
     { label: 'Duplicate annotation', kbd: 'Ctrl+J', action: duplicateSelected, disabled: !S.sel },
     '-',
     { label: 'Edit existing text', kbd: 'E', action: () => setTool('edit') },
+    { label: 'Replace text everywhere…', kbd: 'Ctrl+H', action: () => TE.replaceDialog(), disabled: noDoc() },
+    { label: 'Text editing', sub: [
+      { label: 'Edit whole paragraphs', checked: () => TE.ST.mode === 'para', action: () => { TE.ST.mode = 'para'; setTool('edit'); } },
+      { label: 'Edit single lines', checked: () => TE.ST.mode === 'line', action: () => { TE.ST.mode = 'line'; setTool('edit'); } },
+      '-',
+      { label: 'Keep the original font', checked: () => TE.ST.font.mode === 'auto', action: () => { TE.ST.font.mode = 'auto'; renderOptions(); } },
+      { label: 'Match fonts installed on this computer', checked: () => TE.ST.matchLocal, action: () => { TE.ST.matchLocal = !TE.ST.matchLocal; renderOptions(); } },
+      { label: 'Use an installed font for edited text…', action: () => TE.pickSystemFont() },
+      { label: 'Use a font file for edited text…', action: () => TE.pickFontFile() },
+      '-',
+      { label: 'Add a paragraph (click empty space)', action: () => { setTool('edit'); toast('Click an empty place on the page to add a paragraph'); } },
+    ] },
     { label: 'Add text box', kbd: 'T', action: () => setTool('text') },
     { label: 'Add image…', kbd: 'I', action: addImage },
     { label: 'Add link', action: () => setTool('link') },
@@ -198,6 +217,13 @@ const MENUS = [
     { label: 'Request signature: "Sign here" tag', action: () => { S.stamp = 'SIGNHERE'; setTool('stamp'); } },
     { label: 'Digital-signature-look stamp (visual only)…', action: () => RV.dsigDialog() },
     { label: 'Manage saved signatures…', action: () => RV.manageSignatures() },
+    '-',
+    { label: 'Sign with certificate (digital signature)…', action: () => SG.signDialog(), disabled: noDoc() },
+    { label: 'Certify document (digital signature)…', action: () => SG.signDialog({ certify: true }), disabled: noDoc() },
+    { label: 'Validate signatures', action: () => showLeft('sigs'), disabled: noDoc() },
+    { label: 'Create personal certificate…', action: () => SG.createCertificateDialog() },
+    { label: 'Import certificate (.p12 / .pfx)…', action: () => SG.importCertificateDialog() },
+    { label: 'Forget saved certificate', action: () => SG.forget() },
   ] },
   { label: 'Forms', items: () => [
     { label: 'Add form field', kbd: 'F', action: () => setTool('field') },
@@ -281,7 +307,7 @@ const MENUS = [
     { label: 'Keyboard shortcuts', kbd: 'Ctrl+/', action: UI.shortcutSheet },
     { label: 'Tool keys', action: shortcutsHelp },
     { label: 'Check for updates', action: () => bts.update.check().then(r => toast(r.state === 'store' ? 'Updates are delivered by the Microsoft Store.' : r.state === 'dev' ? 'Updates run in the installed version.' : 'Checking for updates…')) },
-    { label: 'About BTS PDF Pro', action: () => modal({ title: 'BTS PDF Pro', body: 'Part of BTS Creative — free and open source for students.<br>OCR by Tesseract (Apache-2.0), encryption by @cantoo/pdf-lib (MIT), Word export by docx (MIT), PowerPoint export by PptxGenJS (MIT).<br>The document assistant works offline with classic text-ranking and search methods — no AI model and no internet.<br>Not affiliated with Adobe Inc.' }) },
+    { label: 'About BTS PDF Pro', action: () => modal({ title: 'BTS PDF Pro', body: 'Part of BTS Creative — free and open source for students.<br>OCR by Tesseract (Apache-2.0), encryption by @cantoo/pdf-lib (MIT), Word export by docx (MIT), PowerPoint export by PptxGenJS (MIT), digital signatures by node-forge (BSD), font embedding by fontkit (MIT).<br>The document assistant works offline with classic text-ranking and search methods — no AI model and no internet.<br>Not affiliated with Adobe Inc.' }) },
   ] },
 ];
 UI.titlebar({ logo: 'Pdf', menus: MENUS });
@@ -309,7 +335,7 @@ TOOLS.forEach(t => {
 const keyTools = { v: 'select', z: 'zoom', h: 'highlight', u: 'underline', k: 'strike', n: 'note', t: 'text', p: 'ink', r: 'rect', o: 'ellipse', l: 'line', a: 'arrow', e: 'edit', m: 'stamp', f: 'field', x: 'redact', c: 'callout', g: 'measure', w: 'link', y: 'mark', j: 'crop' };
 Object.entries(keyTools).forEach(([k, t]) => UI.shortcut(k, () => setTool(t)));
 UI.shortcut('i', addImage); UI.shortcut('s', () => signDialog());
-UI.shortcut('ctrl+n', newBlankDoc); UI.shortcut('ctrl+b', () => DO.addBookmark()); UI.shortcut('ctrl+l', () => RD.present()); UI.shortcut('ctrl+shift+l', () => RD.toggleRuler());
+UI.shortcut('ctrl+n', newBlankDoc); UI.shortcut('ctrl+h', () => TE.replaceDialog()); UI.shortcut('ctrl+b', () => DO.addBookmark()); UI.shortcut('ctrl+l', () => RD.present()); UI.shortcut('ctrl+shift+l', () => RD.toggleRuler());
 UI.shortcut('ctrl+shift+a', () => AS.openAssistant()); UI.shortcut('ctrl+tab', () => SE.nextTab(1), { global: true }); UI.shortcut('ctrl+shift+tab', () => SE.nextTab(-1), { global: true }); UI.shortcut('ctrl+f4', () => SE.closeTab());
 UI.shortcut('f11', () => RD.fullScreen()); UI.shortcut('ctrl+shift+y', () => RD.readAloud('page')); UI.shortcut('ctrl+shift+t', () => OCR.ocrDialog());
 
@@ -367,6 +393,8 @@ function renderOptions() {
     ob.append(h('span', { class: 'muted' }, 'Drag a box over the area that should open a web address or jump to a page'));
   } else if (t === 'crop') {
     ob.append(h('span', { class: 'muted' }, 'Drag a box on a page to keep only that area'), vsep(), h('button', { class: 'btn sm', onclick: () => DO.cropDialog() }, 'Crop margins…'), h('button', { class: 'btn sm', onclick: () => DO.clearCrop() }, 'Remove crop'));
+  } else if (t === 'edit' && !selAnn()) {
+    TE.options(ob, grp, vsep, swatchRow);
   } else if (t === 'text' || t === 'edit' || t === 'callout' || ['text', 'callout'].includes(selAnn()?.type)) {
     const f = h('select', { style: { width: '150px' } }, ...FONTS.map(x => h('option', { selected: x === S.style.font }, x)));
     f.onchange = () => { S.style.font = f.value; applyStyleToSelected(); };
@@ -421,7 +449,8 @@ function renderProps() {
     p.append(h('div', { class: 'panel' }, h('div', { class: 'panel-h' }, 'Properties'), body));
   }
   const tools = [
-    ['ocr', 'Recognize text (OCR)', () => OCR.ocrDialog()], ['note', 'Comment', () => setTool('note')], ['pen', 'Edit PDF text', () => setTool('edit')],
+    ['ocr', 'Recognize text (OCR)', () => OCR.ocrDialog()], ['note', 'Comment', () => setTool('note')], ['pen', 'Edit PDF text', () => setTool('edit')], ['search', 'Replace text everywhere', () => TE.replaceDialog()],
+    ['shield', 'Sign with certificate', () => SG.signDialog()], ['shield', 'Validate signatures', () => showLeft('sigs')],
     ['pages', 'Organize pages', () => toggleOrganizer(true)], ['merge', 'Combine files', combineFiles], ['sign', 'Fill & Sign', () => signDialog()],
     ['form', 'Prepare form', () => setTool('field')], ['search', 'Auto-detect form fields', () => RV.autoDetectFields()],
     ['redact', 'Redact', () => setTool('redact')], ['redact', 'Redact patterns', () => RV.redactPatternsDialog()],
@@ -473,6 +502,7 @@ async function openDoc(bytes, name, path, opts = {}) {
     if (path) bts.recent.add(path).then(() => SE.refreshRecent());
     showLeft(S.leftTab); renderOptions(); renderProps();
     $('.welcome')?.remove(); SE.afterOpen();
+    SG.onOpened().catch(err => console.warn('signature check', err));
   } catch (e) {
     if (/password/i.test(e.name + e.message)) return DO.openEncrypted(bytes, name, path);
     console.error(e); toast('Could not open PDF: ' + e.message, 'err', 6000);
@@ -867,20 +897,9 @@ function editTextAnnot(pg, a, isNew) {
   box.addEventListener('keydown', e => { e.stopPropagation(); if (e.key === 'Escape') { box.removeEventListener('blur', onBlur); finish(true); } });
 }
 
-// edit existing PDF text: click a text span → whiteout + editable replacement
-$('#stage').addEventListener('click', e => {
-  if (S.tool !== 'edit') return;
-  const span = e.target.closest('.textLayer span'); if (!span || !span.textContent.trim()) return;
-  const pgEl = span.closest('.page'); const pg = pageById(pgEl.dataset.id);
-  const pr = pgEl.getBoundingClientRect(), sr = span.getBoundingClientRect();
-  const p1 = pg._vp.convertToPdfPoint(sr.left - pr.left, sr.top - pr.top), p2 = pg._vp.convertToPdfPoint(sr.right - pr.left, sr.bottom - pr.top);
-  const x = Math.min(p1[0], p2[0]) - 1, y = Math.min(p1[1], p2[1]) - 1, w = Math.abs(p2[0] - p1[0]) + 2, hh = Math.abs(p2[1] - p1[1]) + 2;
-  const size = Math.max(4, Math.round(hh * 0.82 * 10) / 10);
-  const ff = (getComputedStyle(span).fontFamily || '').toLowerCase();
-  const font = /serif|times|roman/.test(ff) && !/sans/.test(ff) ? 'Times' : /mono|courier/.test(ff) ? 'Courier' : 'Helvetica';
-  const a = { id: nid(), type: 'text', x, y, w, h: hh, text: span.textContent, size, color: S.style.textColor, font, bold: false, bg: '#ffffff' };
-  pg.annots.push(a); drawAnnots(pg); editTextAnnot(pg, a, false);
-});
+// edit existing PDF text: real content-stream editing (textedit.js); falls back to cover-and-replace
+$('#stage').addEventListener('click', e => { TE.onStageClick(e); });
+$('#stage').addEventListener('contextmenu', e => { TE.contextMenu(e); });
 
 // text markup from selection
 // current text selection as PDF-space rectangles per page: Map(page -> [{x,y,w,h}])
@@ -961,9 +980,10 @@ UI.shortcut('escape', () => { if (S.pending) { S.pending = null; updateInteract(
 });
 
 // ------------------------------------------------------------------ history
-function snapshot() { return JSON.stringify({ pages: S.pages.map(({ id, src, index, rot, baseRot, w, h, annots, crop }) => ({ id, src, index, rot, baseRot, w, h, annots, crop })), formValues: S.formValues, outline: S.outline }); }
+function snapshot() { return JSON.stringify({ pages: S.pages.map(({ id, src, index, rot, baseRot, w, h, annots, crop }) => ({ id, src, index, rot, baseRot, w, h, annots, crop })), formValues: S.formValues, outline: S.outline, sv: S.sources.map(s => s.ver || 0) }); }
 async function restore(snap) {
   const d = JSON.parse(snap); const old = new Map(S.pages.map(p => [p.id, p]));
+  await TE.restoreVersions(d.sv);
   const structural = d.pages.length !== S.pages.length || d.pages.some((p, i) => { const o = S.pages[i]; return !o || o.id !== p.id || o.rot !== p.rot || String(o.crop || '') !== String(p.crop || ''); });
   S.formValues = d.formValues || {}; S.outline = d.outline; if (S.leftTab === 'outline') DO.renderOutline();
   if (structural) { S.pages = d.pages; S.sel = null; await buildPages(); relayout(); }
@@ -1034,6 +1054,7 @@ function showLeft(tab, focus) {
   else if (tab === 'outline') renderOutline();
   else if (tab === 'comments') renderComments();
   else if (tab === 'search') renderSearch(focus);
+  else if (tab === 'sigs') SG.renderPanel();
 }
 UI.shortcut('ctrl+f', () => showLeft('search', true), { global: true });
 const thumbIo = new IntersectionObserver(ents => ents.forEach(async e => { if (!e.isIntersecting) return; thumbIo.unobserve(e.target); const pg = pageById(e.target.dataset.id); if (pg) await drawThumb(pg, e.target.querySelector('canvas'), 140); }), { root: null });
@@ -1455,6 +1476,12 @@ async function rasterizePages(bytes, indices, scale = 2, fmt = 'png', quality = 
 async function save(as = false) {
   if (!S.pages.length) return;
   try {
+    const g = await SG.guardSave(); if (g === 'cancel') return;
+    if (g === 'keep') { // unchanged signed document: write the original bytes so the signatures stay valid
+      let path = S.filePath; const data = S.sources[0].bytes;
+      if (as || !path) { path = await IO.saveAs({ data, defaultPath: S.fileName || 'document.pdf', filters: [{ name: 'PDF', extensions: ['pdf'] }] }); if (!path) return; } else await IO.write({ path, data });
+      S.filePath = path; S.fileName = path.split(/[\\/]/).pop(); UI.setDocTitle(S.fileName, 'BTS PDF Pro'); toast('Saved ' + S.fileName + ' (signatures kept)', 'ok'); SE.render(); return;
+    }
     toast('Saving…');
     const bytes = await buildPdf();
     const outBytes = S.protect ? await DO.encryptBytes(bytes, S.protect) : bytes;
@@ -1583,7 +1610,8 @@ UI.fileDrop(async files => {
 setTool('select'); renderProps(); showLeft('thumbs'); welcome(); SE.refreshRecent(); SE.startAutosave();
 UI.setDocTitle('', 'BTS PDF Pro');
 const qf = UI.queryFile(); if (qf) IO.read(qf).then(f => openFiles([{ ...f, data: new Uint8Array(f.data) }]));
-Object.assign(X, { S, hist, IO, PX, pdfjsLib, buildPdf, openFiles, openDoc, loadPdfBytes, reloadFromBytes, rebase, drawAnnots, drawForms, commit, commitDebounced, setTool, select, selAnn, save, rotatePages, toggleOrganizer, signDialog,
+setTimeout(() => HO.takeOnStartup(), 0);
+Object.assign(X, { S, hist, IO, PX, pdfjsLib, buildPdf, renderPage, openFiles, openDoc, loadPdfBytes, reloadFromBytes, rebase, drawAnnots, drawForms, commit, commitDebounced, setTool, select, selAnn, save, rotatePages, toggleOrganizer, signDialog,
   pageText, ensureJs, viewportOf, renderProps, renderOptions, renderThumbs, scrollToPage, currentPageIdx, curPage, pageById, nid, parseRange, pageBox, buildPages, relayout, refreshAfterPageOp, appendPdf,
   addSourcePages, loadFormFields, rasterizePages, imagesToPdf, toPngBytes, u8ToDataUrl, loadImg, dataUrlBytes, hex2rgb, hexArr, pdfDate, getFont, canEncode, textToPng, startPlacement, showLeft, markDirty, fmtSize, svgEl, cssFont,
   undo, redo, bbox, moveAnn, esc, escRe, trimCanvas, editTextAnnot, insertBlank, newBlankDoc, setZoom, exportImages, exportText, printDoc, gotoDest, deletePages, movePages, duplicatePages, icon, toPdf, propertiesDialog, mergeRects,

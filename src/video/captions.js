@@ -15,7 +15,8 @@ function parse(text) {
   }
   return out.sort((a, b) => a.start - b.start);
 }
-const toSRT = caps => caps.map((c, i) => `${i + 1}\n${fmt(c.start, ',')} --> ${fmt(c.end, ',')}\n${c.text}\n`).join('\n');
+// SRT gets a UTF-8 byte-order mark when it contains non-ASCII text (Devanagari etc.) so older Windows players detect UTF-8
+const toSRT = caps => { const t = caps.map((c, i) => `${i + 1}\n${fmt(c.start, ',')} --> ${fmt(c.end, ',')}\n${c.text}\n`).join('\n'); return (caps.some(c => hasNonAscii(c.text)) ? '\uFEFF' : '') + t; };
 const toVTT = caps => 'WEBVTT\n\n' + caps.map((c, i) => `${i + 1}\n${fmt(c.start, '.')} --> ${fmt(c.end, '.')}\n${c.text}\n`).join('\n');
 
 const PRESETS = {
@@ -28,6 +29,10 @@ const PRESETS = {
   'Top': { font: 'Segoe UI', size: 48, weight: 600, color: '#ffffff', bg: '#000000', bgOpacity: 60, outline: 0, outlineColor: '#000000', pos: 'top', margin: 6, upper: false },
 };
 const DEFAULT_STYLE = { preset: 'Classic box', ...PRESETS['Classic box'] };
+// Devanagari (Hindi / Marathi) fallbacks: Windows ships Nirmala UI (8+) and Mangal; Linux usually has Noto / Lohit.
+// Canvas picks these per glyph when the chosen caption font has no Devanagari.
+const DEVA_FONTS = '"Nirmala UI", "Mangal", "Noto Sans Devanagari", "Lohit Devanagari", "Kohinoor Devanagari"';
+const hasNonAscii = t => /[^\x00-\x7f]/.test(t);
 
 function wrap(ctx, text, maxW) {
   const out = [];
@@ -38,7 +43,7 @@ function wrap(ctx, text, maxW) {
 // Draws one caption onto ctx in sequence units (W×H).
 function draw(ctx, cap, st, W, H) {
   st = { ...DEFAULT_STYLE, ...st }; const k = Math.min(W, H) / 1080; const size = st.size * k;
-  ctx.save(); ctx.font = `${st.weight} ${size}px "${st.font}", "Segoe UI", sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.save(); ctx.font = `${st.weight} ${size}px "${st.font}", "Segoe UI", ${DEVA_FONTS}, sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
   const lines = wrap(ctx, st.upper ? cap.text.toUpperCase() : cap.text, W * 0.84); const lh = size * 1.25; const total = lines.length * lh;
   const cy = st.pos === 'top' ? H * st.margin / 100 + total / 2 + size * 0.3 : st.pos === 'middle' ? H / 2 : H - H * st.margin / 100 - total / 2 - size * 0.3;
   lines.forEach((ln, i) => {
@@ -55,12 +60,12 @@ const esc = w => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 const reCache = new Map();
 function censorRe(list) {
   const key = (list || []).join('|'); if (reCache.has(key)) return reCache.get(key);
-  const parts = (list || []).map(w => String(w).trim().toLowerCase()).filter(Boolean).map(w => w.endsWith('*') ? esc(w.slice(0, -1)) + '[\\p{L}\\p{N}]*' : esc(w));
-  const re = parts.length ? new RegExp(`(?<![\\p{L}\\p{N}])(?:${parts.join('|')})(?![\\p{L}\\p{N}])`, 'giu') : null; reCache.set(key, re); return re;
+  const parts = (list || []).map(w => String(w).trim().toLowerCase()).filter(Boolean).map(w => w.endsWith('*') ? esc(w.slice(0, -1)) + '[\\p{L}\\p{M}\\p{N}]*' : esc(w));
+  const re = parts.length ? new RegExp(`(?<![\\p{L}\\p{M}\\p{N}])(?:${parts.join('|')})(?![\\p{L}\\p{M}\\p{N}])`, 'giu') : null; reCache.set(key, re); return re;
 }
 const maskWord = w => { const ch = [...w]; return ch[0] + '*'.repeat(Math.max(2, ch.length - 1)); };
 function censor(text, list) { const re = censorRe(list); return re ? String(text).replace(re, maskWord) : text; }
-function isCensored(token, list) { const re = censorRe(list); if (!re) return false; re.lastIndex = 0; const t = String(token).replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}*]+$/gu, ''); re.lastIndex = 0; const m = re.exec(t); re.lastIndex = 0; return !!m && m[0].length === t.length; }
+function isCensored(token, list) { const re = censorRe(list); if (!re) return false; re.lastIndex = 0; const t = String(token).replace(/^[^\p{L}\p{M}\p{N}]+|[^\p{L}\p{M}\p{N}*]+$/gu, ''); re.lastIndex = 0; const m = re.exec(t); re.lastIndex = 0; return !!m && m[0].length === t.length; }
 const tokens = text => String(text).split(/\s+/).filter(Boolean);
 // word timings of a caption: real ones (from transcript alignment) when they still match the text, else an estimate by character length
 function wordTimes(cap, estimate = true) {
@@ -143,5 +148,5 @@ function wordsToCaptions(words, opt = {}) {
   caps.forEach((c, i) => { const nx = caps[i + 1]; c.end = +Math.max(c.start + 0.2, Math.min(nx ? nx.start : t1, c.end + 0.25)).toFixed(3); });
   return caps;
 }
-window.VCAP = { parse, toSRT, toVTT, parseTs, fmt, PRESETS, DEFAULT_STYLE, draw, censor, censorRe, isCensored, wordTimes, bleepRanges, alignTranscript, wordsToCaptions, tokens };
+window.VCAP = { DEVA_FONTS, parse, toSRT, toVTT, parseTs, fmt, PRESETS, DEFAULT_STYLE, draw, censor, censorRe, isCensored, wordTimes, bleepRanges, alignTranscript, wordsToCaptions, tokens };
 })();

@@ -18,7 +18,13 @@ This folder contains third-party components that are redistributed unmodified.
    Licence: Apache License 2.0 (see LICENSE-Apache-2.0.txt)
    Source:  https://alphacephei.com/vosk/models
 
-3. MinGW-w64 runtime DLLs shipped with the Windows Vosk build (win/ only)
+3. Vosk small Hindi model — vosk-model-small-hi-0.22
+   Folder: model-hi/
+   Copyright Alpha Cephei Inc.
+   Licence: Apache License 2.0 (see LICENSE-Apache-2.0.txt)
+   Source:  https://alphacephei.com/vosk/models (vosk-model-small-hi-0.22.zip, redistributed unmodified)
+
+4. MinGW-w64 runtime DLLs shipped with the Windows Vosk build (win/ only)
    libstdc++-6.dll, libgcc_s_seh-1.dll — GCC runtime libraries, GPL-3.0 with the
      GCC Runtime Library Exception 3.1 (https://www.gnu.org/licenses/gcc-exception-3.1.html)
    libwinpthread-1.dll — MinGW-w64 winpthreads, MIT/BSD-style licence

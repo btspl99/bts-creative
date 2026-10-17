@@ -218,6 +218,20 @@ void main(){ float cells = mix(600.0, 14.0, pow(sin(p * 3.14159), 0.6)); vec2 g 
     return ok;
   }
   function mkTex() { const t = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, t); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE); return t; }
+  // float data textures for colour grading (3D LUTs, curve tables): {kind:'3d'|'2d', key, w, h, d, data: Float32Array, ch: 1|3}
+  const dtex = new Map();
+  function dataTex(T) {
+    let t = dtex.get(T.key); if (t) { dtex.delete(T.key); dtex.set(T.key, t); return t; }
+    t = gl.createTexture(); const tgt = T.kind === '3d' ? gl.TEXTURE_3D : gl.TEXTURE_2D; gl.bindTexture(tgt, t);
+    gl.texParameteri(tgt, gl.TEXTURE_MIN_FILTER, gl.NEAREST); gl.texParameteri(tgt, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+    [gl.TEXTURE_WRAP_S, gl.TEXTURE_WRAP_T].concat(T.kind === '3d' ? [gl.TEXTURE_WRAP_R] : []).forEach(w => gl.texParameteri(tgt, w, gl.CLAMP_TO_EDGE));
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false); gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
+    const fmt = T.ch === 3 ? [gl.RGB32F, gl.RGB] : [gl.R32F, gl.RED];
+    if (T.kind === '3d') gl.texImage3D(tgt, 0, fmt[0], T.w, T.h, T.d, 0, fmt[1], gl.FLOAT, T.data); else gl.texImage2D(tgt, 0, fmt[0], T.w, T.h, 0, fmt[1], gl.FLOAT, T.data);
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true); gl.pixelStorei(gl.UNPACK_ALIGNMENT, 4);
+    dtex.set(T.key, t); while (dtex.size > 24) { const [k0, t0] = dtex.entries().next().value; gl.deleteTexture(t0); dtex.delete(k0); }
+    return t;
+  }
   function program(name) {
     if (progs[name]) return progs[name];
     const sh = (type, src) => { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(name + ': ' + gl.getShaderInfoLog(s)); return s; };
@@ -247,9 +261,10 @@ void main(){ float cells = mix(600.0, 14.0, pow(sin(p * 3.14159), 0.6)); vec2 g 
       gl.useProgram(pr.p); gl.bindFramebuffer(gl.FRAMEBUFFER, last ? null : fbs[i % 2]);
       gl.bindTexture(gl.TEXTURE_2D, input);
       const u = { tex: 0, res: [W, H], time: time || 0, ...ps.u };
+      if (ps.tex) { let unit = 2; for (const [k, T] of Object.entries(ps.tex)) { gl.activeTexture(gl.TEXTURE0 + unit); gl.bindTexture(T.kind === '3d' ? gl.TEXTURE_3D : gl.TEXTURE_2D, dataTex(T)); u[k] = { unit }; unit++; } gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, input); }
       for (const [k, v] of Object.entries(u)) {
         let l = pr.loc[k]; if (l === undefined) l = pr.loc[k] = gl.getUniformLocation(pr.p, k); if (l == null) continue;
-        if (k === 'tex') gl.uniform1i(l, 0); else if (k === 'texB') gl.uniform1i(l, 1); else if (Array.isArray(v)) (v.length === 2 ? gl.uniform2fv : v.length === 3 ? gl.uniform3fv : gl.uniform4fv).call(gl, l, v); else gl.uniform1f(l, +v || 0);
+        if (k === 'tex') gl.uniform1i(l, 0); else if (k === 'texB') gl.uniform1i(l, 1); else if (v && v.unit != null) gl.uniform1i(l, v.unit); else if (Array.isArray(v)) (v.length === 2 ? gl.uniform2fv : v.length === 3 ? gl.uniform3fv : gl.uniform4fv).call(gl, l, v); else gl.uniform1f(l, +v || 0);
       }
       gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT); gl.drawArrays(gl.TRIANGLES, 0, 6);
       input = last ? null : txs[i % 2];
@@ -273,7 +288,7 @@ void main(){ float cells = mix(600.0, 14.0, pow(sin(p * 3.14159), 0.6)); vec2 g 
     const x = out.getContext('2d'); x.save(); x.setTransform(1, 0, 0, 1, 0, 0); x.globalAlpha = 1; x.filter = 'none'; x.globalCompositeOperation = 'copy'; x.drawImage(cv, 0, 0); x.restore();
     return true;
   }
-  return { apply, apply2, init, get ok() { return init(); } };
+  return { apply, apply2, init, addShader: (name, src) => { FS[name] = src; }, get ok() { return init(); } };
 })();
 
 // CPU fallback for the two per-pixel effects people rely on most (colour + chroma key).
@@ -316,8 +331,11 @@ let warnedGL = false;
 function runPasses(canvas, passes, time) {
   if (!passes.length) return;
   if (GL.apply(canvas, passes, time)) return;
-  const cpu = passes.filter(p => p.name === 'color' || p.name === 'chroma');
-  if (cpu.length) cpuApply(canvas, cpu);
+  const isGrade = p => window.VGRADE && VGRADE.cpuPass && VGRADE.CPU_PASSES.includes(p.name);
+  const cpu = passes.filter(p => p.name === 'color' || p.name === 'chroma' || isGrade(p));
+  // CPU path keeps the order of the passes it can run (grading passes run in VGRADE's exact JS port of the shaders)
+  let run = []; const flushCpu = () => { if (run.length) { cpuApply(canvas, run); run = []; } };
+  for (const p of cpu) { if (isGrade(p)) { flushCpu(); VGRADE.cpuPass(canvas, p); } else run.push(p); } flushCpu();
   if (cpu.length < passes.length && !warnedGL) { warnedGL = true; console.warn('WebGL is unavailable: some effects are skipped'); window.UI && UI.toast('WebGL is unavailable on this computer — some effects (sharpen, grain, glitch, VHS…) are skipped.', 'err', 7000); }
 }
 
@@ -393,7 +411,7 @@ const FX_PRESETS = [
   ['VHS tape', 'vhs', { amount: 80 }], ['Cinematic bars 2.39:1', 'letterbox', {}], ['Neon edges', 'edgeglow', { color: '#ff3df2', dark: 85 }], ['Comic halftone', 'halftone', { size: 7 }], ['Retro TV', 'crt', { amount: 85, curve: 60 }], ['Handheld shake', 'shake', { amount: 8, rot: 0.6, speed: 4 }], ['Earthquake', 'shake', { amount: 40, rot: 3, speed: 22 }],
   ['Face blur (pixelate)', 'mosaic', {}], ['Face blur (soft)', 'mosaic', { mode: 'blur', size: 30 }], ['Pixelate whole frame', 'mosaic', { whole: true, size: 32 }],
 ];
-function newFx(type, over = {}) { const d = EFFECTS[type]; const f = { id: 'f' + Math.random().toString(36).slice(2, 9), type, on: true }; d.params.forEach(p => f[p.k] = p.def); return Object.assign(f, over); }
+function newFx(type, over = {}) { const d = EFFECTS[type]; const f = { id: 'f' + Math.random().toString(36).slice(2, 9), type, on: true }; d.params.forEach(p => f[p.k] = Array.isArray(p.def) ? JSON.parse(JSON.stringify(p.def)) : p.def); return Object.assign(f, over); }
 
 // Applies the pixel-stage effects of a stack to a layer canvas (in place). env: {rs, t}
 function applyStack(canvas, fxs, env) {
@@ -424,6 +442,7 @@ function applyStack(canvas, fxs, env) {
       case 'colorize': if (f.amount > 0) passes.push({ name: 'colorize', u: { col: hex2rgb(f.color), amt: f.amount } }); break;
       case 'dirblur': if (f.amount > 0) { const a = f.angle * Math.PI / 180; passes.push({ name: 'dirblur', u: { dir: [Math.cos(a) * f.amount * rs / 2, -Math.sin(a) * f.amount * rs / 2] } }); } break;
       case 'radblur': if (f.amount > 0) passes.push({ name: 'radblur', u: { amt: f.amount, ctr: [f.cx / 100, 1 - f.cy / 100] } }); break;
+      case 'lut': case 'wheels': case 'curves': { const ps = window.VGRADE ? VGRADE.passFor(f) : null; if (ps) passes.push(ps); break; }
       default: flush(); apply2d(canvas, f, env, W, H, rs);
     }
   }

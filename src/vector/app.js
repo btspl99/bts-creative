@@ -95,10 +95,11 @@ const F = (name, ...a) => () => { const fn = VX.f[name]; if (fn) return fn(...a)
 VX.F = F;
 UI.titlebar({ logo: 'Vc', menus: [
   { label: 'File', items: () => [
-    { label: 'New…', kbd: 'Ctrl+N', action: newDialog }, { label: 'New from template…', action: () => newDialog(true) }, { label: 'Open…', kbd: 'Ctrl+O', action: openDialog }, { label: 'Open SVG…', action: () => openDialog(['svg']) }, { label: 'Place image…', kbd: 'Ctrl+Shift+P', action: placeImage }, '-',
+    { label: 'New…', kbd: 'Ctrl+N', action: newDialog }, { label: 'New from template…', action: () => newDialog(true) }, { label: 'Open…', kbd: 'Ctrl+O', action: openDialog }, { label: 'Open SVG…', action: () => openDialog(['svg']) }, { label: 'Open PDF, Illustrator or EPS as vectors…', action: F('openVectorDialog') }, { label: 'Open DXF…', action: F('openDXFDialog') }, { label: 'Place image…', kbd: 'Ctrl+Shift+P', action: placeImage }, { label: 'Place PDF, AI or EPS as vectors…', action: F('placeVectorDialog') }, { label: 'Place DXF…', action: F('placeDXFDialog') }, '-',
     { label: 'Save (.btsv)', kbd: 'Ctrl+S', action: () => save(false) }, { label: 'Save as…', kbd: 'Ctrl+Shift+S', action: () => save(true) },
-    { label: 'Export', sub: [{ label: 'Export…', kbd: 'Ctrl+Alt+E', action: () => exportDialog() }, '-', { label: 'SVG…', action: () => exportDialog('svg') }, { label: 'PNG…', action: () => exportDialog('png') }, { label: 'JPEG…', action: () => exportDialog('jpeg') }, { label: 'WebP…', action: () => exportDialog('webp') }, { label: 'PDF (vector)…', action: () => exportDialog('pdf') }, '-',
+    { label: 'Export', sub: [{ label: 'Export…', kbd: 'Ctrl+Alt+E', action: () => exportDialog() }, '-', { label: 'SVG…', action: () => exportDialog('svg') }, { label: 'PNG…', action: () => exportDialog('png') }, { label: 'JPEG…', action: () => exportDialog('jpeg') }, { label: 'WebP…', action: () => exportDialog('webp') }, { label: 'PDF (vector)…', action: () => exportDialog('pdf') }, { label: 'DXF for laser cutters and CNC…', action: F('dxfExportDialog') }, '-',
       { label: 'Export selection…', action: () => exportDialog('png', 'selection') }, { label: 'Export all artboards…', action: () => exportDialog('png', 'all') }, { label: 'Export selected artboards…', action: () => exportDialog('png', 'selected') }, { label: 'Multi-page PDF (all artboards)…', action: () => exportDialog('pdf', 'all') }, { label: 'PNG with gradient dithering…', action: () => exportDialog('png', null, { dither: true }) }] },
+    { label: 'Send to', sub: [{ label: 'Send to Photo', action: F('sendTo', 'photo') }, { label: 'Send to Video', action: F('sendTo', 'video') }, { label: 'Send to PDF Pro', action: F('sendTo', 'pdf') }] },
     { label: 'Copy as SVG', kbd: 'Ctrl+Alt+C', action: copyAsSVG }, '-', { label: 'Recover autosaved document…', action: F('recoverDialog') }, { label: 'Autosave settings…', action: F('autosaveDialog') }, '-',
     { label: 'Document setup…', kbd: 'Ctrl+Alt+P', action: docSetup }, '-', { label: 'BTS Creative home', action: () => bts.openApp('home') }, { label: 'Close window', kbd: 'Ctrl+W', action: closeWindow } ] },
   { label: 'Edit', items: () => [
@@ -888,6 +889,7 @@ function docState() { return { boards: DOC.boards.map(b => ({ ...b })), ab: DOC.
 function snapshot() { if (O.outline) setOutline(false); try { return JSON.stringify({ doc: docState(), layers: userLayers().map(L => L.exportJSON({ asString: false })), active: userLayers().indexOf(topLayerOf(project.activeLayer)) }); } finally { if (O.outline) setOutline(true); } }
 function commit(label) { VX.beforeCommit.forEach(fn => { try { fn(label); } catch (e) { console.warn(e); } }); hist = hist.slice(0, hi + 1); hist.push({ label, s: snapshot() }); if (hist.length > 100) hist.shift(); hi = hist.length - 1; if (hist.length > 1) { DOC.dirty = true; UI.setDocTitle(DOC.name + ' •', 'BTS Vector'); } if (rtab === 'layers' || rtab === 'boards') renderRight(); }
 let cdT = null, cdL = null; function commitDebounced(l) { clearTimeout(cdT); cdL = l; cdT = setTimeout(() => { cdT = null; commit(l); }, 400); }
+function resetHistory(label = 'Open') { hist = []; hi = -1; commit(label); DOC.dirty = false; UI.setDocTitle(DOC.name, 'BTS Vector'); }
 function flushCommit() { if (cdT) { clearTimeout(cdT); cdT = null; commit(cdL); } }
 function loadDocState(d) {
   if (d.boards) { DOC.boards = d.boards.map(b => ({ ...b })); DOC.ab = Math.min(d.ab || 0, DOC.boards.length - 1); }
@@ -969,11 +971,13 @@ async function docSetup() { const v = await form({ title: 'Document setup', fiel
 UI.shortcut('ctrl+alt+p', docSetup);
 
 // ---------------------------------------------------------------- files
-async function openDialog(exts) { const fs = await bts.fs.open({ filters: [{ name: 'Vector & images', extensions: Array.isArray(exts) ? exts : ['btsv', 'svg', 'png', 'jpg', 'jpeg', 'webp'] }] }); if (fs) openFile(fs[0]); }
+async function openDialog(exts) { const fs = await bts.fs.open({ filters: [{ name: 'Vector & images', extensions: Array.isArray(exts) ? exts : ['btsv', 'svg', 'pdf', 'ai', 'eps', 'dxf', 'png', 'jpg', 'jpeg', 'webp'] }] }); if (fs) openFile(fs[0]); }
 UI.shortcut('ctrl+o', () => openDialog());
 async function openFile(f) {
   const txt = () => new TextDecoder().decode(new Uint8Array(f.data));
   try {
+    if (/\.(pdf|ai|eps|epsf|ps)$/i.test(f.name) || (!/\.(btsv|svg|dxf|png|jpe?g|webp)$/i.test(f.name) && VX.f.sniffVector && VX.f.sniffVector(new Uint8Array(f.data)) !== 'unknown')) { const r = await VX.f.importVector({ ...f, data: new Uint8Array(f.data) }, { mode: 'open', ...(f.importOpts || {}) }); if (r && f.path) bts.recent.add(f.path); return r; }
+    if (/\.dxf$/i.test(f.name)) { const r = await VX.f.importDXF({ ...f, data: new Uint8Array(f.data) }, { mode: 'open', ...(f.importOpts || {}) }); if (r && f.path) bts.recent.add(f.path); return r; }
     if (/\.btsv$/i.test(f.name)) { const j = JSON.parse(txt()); resetDoc(1, 1, f.name); userLayers().forEach(L => L.remove()); loadDocState(j.doc); importLayers(j.layers); activateUserLayer(); drawArtboard(); hist = []; hi = -1; commit('Open'); DOC.dirty = false; }
     else if (/\.svg$/i.test(f.name)) {
       const s = txt(); const doc = new DOMParser().parseFromString(s, 'image/svg+xml').documentElement; let w = parseFloat(doc.getAttribute('width')) || 0, hh = parseFloat(doc.getAttribute('height')) || 0; const vb = (doc.getAttribute('viewBox') || '').split(/[\s,]+/).map(Number); if ((!w || !hh) && vb.length === 4) { w = vb[2]; hh = vb[3]; }
@@ -988,7 +992,8 @@ async function openFile(f) {
 }
 const toDataUrl = (u8, name) => new Promise(r => { const fr = new FileReader(); fr.onload = () => r(fr.result); fr.readAsDataURL(new Blob([u8], { type: /\.png$/i.test(name) ? 'image/png' : /\.svg$/i.test(name) ? 'image/svg+xml' : /\.webp$/i.test(name) ? 'image/webp' : 'image/jpeg' })); });
 function placeRaster(url, at) { return new Promise(res => { const r = new P.Raster({ source: url, position: at || view.center }); if (VX.iso) VX.iso.addChild(r); r.onLoad = () => { const k = Math.min(1, DOC.w * 0.8 / r.width, DOC.h * 0.8 / r.height); r.scale(k); setSel([r]); commit('Place image'); res(r); }; }); }
-async function placeImage() { const fs = await bts.fs.open({ filters: [{ name: 'Images', extensions: ['png', 'jpg', 'jpeg', 'webp', 'svg'] }] }); if (!fs) return; const f = fs[0];
+async function placeImage() { const fs = await bts.fs.open({ filters: [{ name: 'Images & vector files', extensions: ['png', 'jpg', 'jpeg', 'webp', 'svg', 'pdf', 'ai', 'eps', 'dxf'] }] }); if (!fs) return; const f = fs[0];
+  if (/\.(pdf|ai|eps|epsf|ps|dxf)$/i.test(f.name)) { try { return await (/\.dxf$/i.test(f.name) ? VX.f.importDXF : VX.f.importVector)({ ...f, data: new Uint8Array(f.data) }, { mode: 'place' }); } catch (e) { console.error(e); toast('Could not place file: ' + e.message, 'err', 7000); } return; }
   if (/\.svg$/i.test(f.name)) { const it = (VX.iso || project.activeLayer).importSVG(new TextDecoder().decode(new Uint8Array(f.data)), { expandShapes: true }); it.position = view.center; setSel([it]); commit('Place SVG'); return; }
   await placeRaster(await toDataUrl(new Uint8Array(f.data), f.name)); }
 UI.shortcut('ctrl+shift+p', placeImage);
@@ -1070,7 +1075,7 @@ async function exportTo({ fmt = 'png', scope = 'board', scale = 1, transparent =
     let S = null, keys = null; const hasText = selectableItems().some(i => i instanceof P.PointText || i.data?.live?.kind === 'top' || (i.getItems && i.getItems({ class: P.PointText }).length));
     if (outlineText && hasText && VX.f.createOutlines) { S = snapshot(); keys = selKeys(); const onlyKeys = targets.map(t => t.opts.only ? selKeys(t.opts.only) : null); setSel(allLayers().flatMap(L => L.getItems({ recursive: true, match: i => i instanceof P.PointText || i.data?.live?.kind === 'top' })).filter(i => !i.parent?.data?.live)); await VX.f.createOutlines({ quiet: true }); targets.forEach((t, k) => { if (onlyKeys[k]) t.opts.only = resolveKeys(onlyKeys[k]); }); }
     let pages; try { pages = targets.map(t => { const r = rectOf(t); return { svg: svgString(true, t.opts), w: r.width, h: r.height }; }); } finally { if (S) { restore(S); setSel(resolveKeys(keys)); } }
-    const data = await buildPDF(pages); const name = scope === 'all' || scope === 'selected' ? base : targets[0].name;
+    const data = await buildPDF(pages); if (path === 'bytes') return data; const name = scope === 'all' || scope === 'selected' ? base : targets[0].name;
     const p = path ? await bts.fs.write({ path, data }) : await bts.fs.saveAs({ data, defaultPath: name + '.pdf', filters }); if (p) toast(`Exported ${pages.length}-page vector PDF`, 'ok'); return p ? [p] : [];
   }
   const out = []; let first = path;
@@ -1110,15 +1115,16 @@ Object.defineProperties(VX, Object.getOwnPropertyDescriptors({
   setSel, commit, commitDebounced, flushCommit, drawGuides, drawArtboard, renderProps, renderRight, renderOptions, renderFS, showTab, get rtab() { return rtab; },
   eachStyled, firstStyled, userLayers, allLayers, isSys, topItem, selBounds, selectableItems, hitOpts, hitTop, styleNew, abRect, boardAt, setActiveBoard, addBoard, duplicateBoard, deleteBoard, renameBoard, rearrangeBoards, moveBoard, itemsOnBoard,
   applyColor, toHex, withPreview, snapshot, restore, restoreQuiet, selKeys, resolveKeys, lightenModal, splitCompound, isShape, selPaths, setTool, finishText, editText, enterIsolation, exitIsolation,
-  svgString, exportTo, exportDialog, buildPDF, fitRect, renderToCanvas, copyAsSVG, save, docJSON, openFile, placeRaster, toDataUrl, createDoc, newDialog, fitArt, fitAll, zoomToSel, zoomAt, afterView,
+  svgString, exportTo, exportDialog, buildPDF, resetHistory, fitRect, renderToCanvas, copyAsSVG, save, docJSON, openFile, placeRaster, toDataUrl, createDoc, newDialog, fitArt, fitAll, zoomToSel, zoomAt, afterView,
   duplicate, lockSel, hideSel, deleteSel, boardLocked, toggleBoardLock, boardBgDialog, colorToJSON, colorFromJSON, svgToCanvas,
   pathfinder, group, ungroup, align, distribute, distributeSpacing, makeClip, makeCompound, reflect, rotateSel, rotateDialog, scaleDialog, moveSel, undo, redo, get hist() { return hist; }, cssVar, toggleOutline, drawRulers, newSubLayer, newUserLayer,
 }));
 VX.boot = () => {
-  UI.fileDrop(async files => { const f = files[0]; const data = new Uint8Array(await f.arrayBuffer()); if (/\.(png|jpe?g|webp|svg)$/i.test(f.name) && hist.length > 1) { if (/\.svg$/i.test(f.name)) { const it = project.activeLayer.importSVG(new TextDecoder().decode(data), { expandShapes: true }); it.position = view.center; setSel([it]); commit('Place SVG'); } else placeRaster(await toDataUrl(data, f.name)); } else openFile({ name: f.name, path: bts.fs.pathOf(f), data }); }, 'Drop SVG or images');
+  UI.fileDrop(async files => { const f = files[0]; const data = new Uint8Array(await f.arrayBuffer()); if (/\.(pdf|ai|eps|dxf)$/i.test(f.name) && hist.length > 1) { try { await (/\.dxf$/i.test(f.name) ? VX.f.importDXF : VX.f.importVector)({ name: f.name, data }, { mode: 'place' }); } catch (e) { toast('Could not place file: ' + e.message, 'err', 7000); } return; } if (/\.(png|jpe?g|webp|svg)$/i.test(f.name) && hist.length > 1) { if (/\.svg$/i.test(f.name)) { const it = project.activeLayer.importSVG(new TextDecoder().decode(data), { expandShapes: true }); it.position = view.center; setSel([it]); commit('Place SVG'); } else placeRaster(await toDataUrl(data, f.name)); } else openFile({ name: f.name, path: bts.fs.pathOf(f), data }); }, 'Drop SVG, PDF, AI, EPS, DXF or images');
   view.onResize = () => { drawGuides(); drawRulers(); };
   resetDoc(1200, 800, 'Untitled-1'); setTool('select'); renderFS(); renderRight(); drawRulers();
   const qf = UI.queryFile(); if (qf) bts.fs.read(qf).then(f => openFile({ ...f, data: new Uint8Array(f.data) }));
+  else VX.f.bootHandoff?.();
   window.__bts = { svgPdf: () => svgString(true), P, DOC, O, setSel, get sel() { return sel; }, commit, pathfinder, group, svgString, exportPDF: () => exportDialog('pdf'), exportTo, setTool, align, renderToCanvas, makeClip, userLayers, VX };
 };
 })();

@@ -34,7 +34,7 @@ async function exportFrame() {
   const p = await bts.fs.saveAs({ data: await UI.blobToU8(blob), defaultPath: `frame-${tc(ST.t).replace(/:/g, '-')}.png`, filters: [{ name: 'PNG', extensions: ['png'] }] }); if (p) toast('Frame exported', 'ok');
 }
 // make sure the preview elements show the exact frame at t
-async function prepareStill(t) { const save = ST.t; ST.t = t; syncMedia(false); ST.t = save; await seekForExport(t); }
+async function prepareStill(t) { if (window.VGRADE) await VGRADE.preloadAll(); const save = ST.t; ST.t = t; syncMedia(false); ST.t = save; await seekForExport(t); }
 // every video clip that is visible at t — including the ones inside nested sequences — with its source time and effective speed
 function videoSourcesAt(t, depth = 0, rate = 1, out = []) {
   videoClipsAt(t).forEach(c => {
@@ -210,6 +210,7 @@ async function graphArgs(graph) {
 
 // ---------------------------------------------------------------------  FFmpeg export
 async function exportFFmpeg(out, o, t0, t1) {
+  if (window.VGRADE) await VGRADE.preloadAll(); // every LUT must be loaded before the first frame renders
   EXP.on = true; EXP.cancel = false; const fmt = o.fmt; const fps = o.fps || PJ.seq.fps; const W = Math.round(o.W / 2) * 2, H = Math.round(o.H / 2) * 2; const total = t1 - t0; const N = Math.max(1, Math.round(total * fps));
   const pm = progressModal('Exporting ' + (fmt === 'pngseq' ? 'PNG sequence' : fmt.toUpperCase()));
   try {
@@ -255,6 +256,7 @@ async function exportFFmpeg(out, o, t0, t1) {
   } finally { pm.close(); EXP.on = false; }
 }
 async function exportWebM(out, t0, t1, W, H, kbps) {
+  if (window.VGRADE) await VGRADE.preloadAll();
   EXP.on = true; EXP.cancel = false; ensureAudio(); await audioCtx.resume();
   const pm = progressModal('Exporting WebM (real-time)');
   const c = document.createElement('canvas'); c.width = W; c.height = H; const cx = c.getContext('2d'); const full = document.createElement('canvas'); full.width = PJ.seq.w; full.height = PJ.seq.h; const fx = full.getContext('2d');

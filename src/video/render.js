@@ -177,7 +177,7 @@ function drawTitle(x, P, lt, D) {
     default: if (GLYPH_ANIMS[P.anim]) { glyph = GLYPH_ANIMS[P.anim]; a = ao; }
   }
   x.globalAlpha *= clamp(a, 0, 1); x.translate(dx, dy); x.scale(sc, sc); if (blurPx > 0.3) x.filter = `blur(${blurPx * (x.getTransform().a || 1)}px)`;
-  const fontOf = (sz, wt) => `${P.italic ? 'italic ' : ''}${wt} ${sz}px "${P.font}", "Segoe UI", sans-serif`;
+  const fontOf = (sz, wt) => `${P.italic ? 'italic ' : ''}${wt} ${sz}px "${P.font}", "Segoe UI", ${VCAP.DEVA_FONTS}, sans-serif`;
   x.font = fontOf(size, P.weight); x.textBaseline = 'middle'; try { x.letterSpacing = (P.spacing || 0) + 'px'; } catch { }
   // per-line sizes: lower thirds / quotes use a smaller second line
   const lsz = lines.map((l, i) => (P.style === 'lower3' && i > 0) || (P.style === 'quote' && /^[—-]/.test(l)) ? size * 0.58 : size);
@@ -311,7 +311,7 @@ function renderAt(ctx, t, rs = 1, opts = {}) {
   if (PJ.capBurn || !EXP.on) { const cap = captionAt(t); if (cap && (EXP.on ? PJ.capBurn : ST.capShow !== false)) { ctx.save(); ctx.setTransform(rs, 0, 0, rs, 0, 0); VCAP.draw(ctx, PJ.censor && PJ.censor.on && PJ.censor.words.length ? { ...cap, text: VCAP.censor(cap.text, PJ.censor.words) } : cap, PJ.capStyle, PJ.seq.w, PJ.seq.h); ctx.restore(); } }
 }
 function captionAt(t) { return PJ.captions.find(c => t >= c.start && t < c.end); }
-function drawFrame() { if (!EXP.on) { renderAt(pctx, ST.t, ST.rs); drawOverlay(); } }
+function drawFrame() { if (!EXP.on) { renderAt(pctx, ST.t, ST.rs); drawOverlay(); if (typeof scopesTick === 'function') scopesTick(); if (typeof transcriptTick === 'function') transcriptTick(); } }
 let dfT = null; function drawFrameSoon() { if (dfT) return; dfT = requestAnimationFrame(() => { dfT = null; if (!ST.playing) syncMedia(false); drawFrame(); }); }
 
 // ---------------------------------------------------------------------  transport
@@ -336,7 +336,7 @@ function loop() {
   const endT = ST.loopIO && ST.outP != null ? ST.outP : seqDuration();
   if (ST.rate > 0 && ST.t >= endT) { if (ST.loopIO && ST.inP != null) { ST.t = ST.inP; playBase = { wall: performance.now(), t: ST.t }; syncMedia(true); } else { ST.t = endT; pause(); placePlayhead(); return; } }
   if (ST.rate < 0 && ST.t <= 0) { ST.t = 0; pause(); placePlayhead(); return; }
-  syncMedia(ST.rate > 0); renderAt(pctx, ST.t, ST.rs); drawOverlay(); placePlayhead(); autoscroll(); if (ST.recording) updateRecording();
+  syncMedia(ST.rate > 0); renderAt(pctx, ST.t, ST.rs); drawOverlay(); placePlayhead(); autoscroll(); if (ST.recording) updateRecording(); if (typeof scopesTick === 'function') scopesTick(); if (typeof transcriptTick === 'function') transcriptTick();
   requestAnimationFrame(loop);
 }
 

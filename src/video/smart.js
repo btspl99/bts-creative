@@ -143,7 +143,7 @@ async function transcriptDialog() {
 // FFmpeg input (sequence mix or one clip), shows progress and turns the recognised words into editable captions.
 let sttBusy = false;
 function sttSourceClip() { return selected().find(c => (c.type === 'video' || c.type === 'audio') && hasAudioOf(c) && mediaById(c.mediaId)?.path) || selected().find(hasAudioOf) || null; }
-async function autoTranscribe({ source = 'all', t0, t1, maxWords = 7, maxSecs = 3.5, replace = true, onProgress } = {}) {
+async function autoTranscribe({ source = 'all', t0, t1, maxWords = 7, maxSecs = 3.5, replace = true, onProgress, lang } = {}) {
   if (!ST.ffmpeg) throw new Error('Auto-transcribe needs FFmpeg');
   if (!(await bts.stt.available())) { const e = new Error('The offline speech engine is not available in this copy of BTS Creative.'); e.unavailable = true; throw e; }
   let req, map, lo, hi;
@@ -162,6 +162,7 @@ async function autoTranscribe({ source = 'all', t0, t1, maxWords = 7, maxSecs = 
     map = s => lo + s;
   }
   req.duration = req.duration || hi - lo;
+  if (lang && lang !== 'en') req.model = lang; // optional speech model (e.g. 'hi' = Hindi), resolved by the main process
   const off = onProgress ? bts.stt.onProgress(onProgress) : null;
   let r; try { r = await bts.stt.transcribe(req); } finally { off && off(); }
   if (!r || !r.ok) { const e = new Error(r?.cancelled ? 'Transcription cancelled' : (r?.error || 'Transcription failed')); e.cancelled = !!r?.cancelled; e.unavailable = !!r?.unavailable; throw e; }
@@ -196,17 +197,19 @@ async function autoTranscribeDialog() {
     return modal({ title: 'Auto-transcribe', body: 'The offline speech engine is not available in this copy of BTS Creative (it is included with the 64-bit Windows and Linux builds).<br><br>You can still make timed captions: use <b>Captions › Auto-time transcript…</b> and paste what is said — BTS Video times it to the speech.', buttons: [{ label: 'Close', value: null }, { label: 'Auto-time transcript…', primary: true, value: 'paste' }] }).then(r => { if (r === 'paste') transcriptDialog(); });
   }
   const clip = sttSourceClip(); const io = ST.inP != null || ST.outP != null;
+  let langs = []; try { langs = bts.stt.models ? await bts.stt.models() : []; } catch { } if (!langs.length) langs = [{ id: 'en', label: 'English' }];
   const v = await form({ title: 'Auto-transcribe (offline speech recognition)', width: 500, fields: [
+    { key: 'lang', label: 'Language', type: 'select', value: langs.some(l => l.id === PREFS.sttLang) ? PREFS.sttLang : langs[0].id, options: langs.map(l => ({ value: l.id, label: l.id === 'en' ? 'English' : l.id === 'hi' ? 'हिन्दी (Hindi)' : l.label })) },
     { key: 'source', label: 'Audio to transcribe', type: 'select', value: clip ? 'clip' : io ? 'io' : 'all', options: [{ value: 'all', label: 'Whole sequence (mix of all audio)' }, ...(io ? [{ value: 'io', label: 'Sequence mix, In to Out' }] : []), ...(clip ? [{ value: 'clip', label: `Selected clip — ${clip.name || 'clip'}` }] : [])] },
     { key: 'maxWords', label: 'Max words per caption', type: 'number', value: 7, min: 1, max: 20 },
     { key: 'maxSecs', label: 'Max caption length (seconds)', type: 'number', value: 3.5, min: 0.5, max: 15, step: 0.5 },
     { key: 'censor', label: 'Censor words from the censor list (mask f*** + bleep with real word timings)', type: 'checkbox', value: !!(PJ.censor.words.length && (PJ.censor.on || PJ.censor.bleep)) },
     { key: 'replace', label: 'Replace existing captions in that range', type: 'checkbox', value: true }], ok: 'Transcribe' });
-  if (!v) return;
+  if (!v) return; PREFS.sttLang = v.lang; savePrefs();
   const [t0, t1] = v.source === 'io' ? exportRange('io') : [0, seqDuration()];
   sttBusy = true; const pm = sttProgressModal(); setStatus('Transcribing…');
   try {
-    const r = await autoTranscribe({ source: v.source === 'clip' ? 'clip' : 'all', t0, t1, maxWords: +v.maxWords || 7, maxSecs: +v.maxSecs || 3.5, replace: v.replace, onProgress: pm.update });
+    const r = await autoTranscribe({ source: v.source === 'clip' ? 'clip' : 'all', t0, t1, maxWords: +v.maxWords || 7, maxSecs: +v.maxSecs || 3.5, replace: v.replace, onProgress: pm.update, lang: v.lang });
     pm.close(); setStatus('Ready');
     if (!r.captions) { toast('No speech was recognised in that audio', 'err', 6000); return r; }
     if (v.censor) { if (PJ.censor.words.length) setCensor({ on: true, bleep: true }); else { toast(`Created ${r.captions} captions — now add the words to censor`, 'ok', 5000); await censorDialog(); return r; } }
