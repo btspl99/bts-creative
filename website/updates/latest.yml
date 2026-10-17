@@ -1,8 +1,8 @@
-version: 1.1.0
+version: 1.1.1
 files:
-  - url: https://github.com/btspl99/bts-creative/releases/download/v1.1.0/BTS-Creative-Setup-1.1.0.exe
-    sha512: UXyav76CFPL1GmuIahsVfr7HwT8dYy8H9qYW/ozvyI8Av9Aj9dOlrRtnJ1zsHaPVlCO6d/EUy67jZTX+A0JmLA==
-    size: 142523201
-path: https://github.com/btspl99/bts-creative/releases/download/v1.1.0/BTS-Creative-Setup-1.1.0.exe
-sha512: UXyav76CFPL1GmuIahsVfr7HwT8dYy8H9qYW/ozvyI8Av9Aj9dOlrRtnJ1zsHaPVlCO6d/EUy67jZTX+A0JmLA==
-releaseDate: '2026-10-16T19:32:20.984Z'
+  - url: https://github.com/btspl99/bts-creative/releases/download/v1.1.1/BTS-Creative-Setup-1.1.1.exe
+    sha512: 387xi9DFvepfJM4sFG8JsaA75GL/jgr0TtetHED/hDybBPL5d06wJka1EImstJCFbQVWGpnAj+WMW1gKpwbkuQ==
+    size: 188043487
+path: https://github.com/btspl99/bts-creative/releases/download/v1.1.1/BTS-Creative-Setup-1.1.1.exe
+sha512: 387xi9DFvepfJM4sFG8JsaA75GL/jgr0TtetHED/hDybBPL5d06wJka1EImstJCFbQVWGpnAj+WMW1gKpwbkuQ==
+releaseDate: '2026-10-17T02:12:19.047Z'
