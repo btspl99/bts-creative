@@ -1,0 +1,19 @@
+# Strings found by runtime screenshot review (composites and dynamic text)
+{p0}% clipped highlights | {p0}% हाइलाइट क्लिप हुए | {p0}% हायलाइट क्लिप झाले
+{p0}% clipped shadows | {p0}% छाया क्लिप हुई | {p0}% सावल्या क्लिप झाल्या
+{n} ms | = | =
+Autosaved {time} | {time} पर ऑटोसेव हुआ | {time} ला ऑटोसेव्ह झाले
+{p0} under the brush | {p0} ब्रश के नीचे | {p0} ब्रशखाली
+(cancelled early) | (जल्दी रद्द किया गया) | (लवकर रद्द केले)
+(written when you save) | (सहेजते समय लिखा जाएगा) | (जतन करताना लिहिले जाईल)
+will be bleeped | पर बीप लगेगी | वर बीप वाजेल
+lost the target, stopped early | लक्ष्य खो गया, जल्दी रुक गया | लक्ष्य हरवले, लवकर थांबले
+# not UI text (SVG path data, template placeholder content, internal id prefixes)
+M{p0} {p1}h{p2}M{p3} {p4}h{p5}M{p6} {p7}h{p8} | - |
+Once upon a time… | - |
+WAIT FOR IT… | - |
+doc: | - |
+lib: | - |
+std: | - |
+{p0}Filter Gallery… | - |
+{p0}Liquify… | - |

@@ -288,7 +288,7 @@ function autosaveNow() {
   const rec = { at: Date.now(), name: PJ.name, path: PJ.path, win: WIN_ID, data: JSON.parse(projectJSON()) };
   lsSet(autosaveKey(), JSON.stringify(rec));
   if (ST.ffmpeg) bts.ffmpeg.tmpWrite('autosave-' + (PJ.name || 'project').replace(/[^\w.-]+/g, '_').replace(/\.btsvid$/, '') + '-' + WIN_ID + '.btsvid', new TextEncoder().encode(JSON.stringify(rec.data))).catch(() => { });
-  setStatus('Autosaved ' + new Date().toLocaleTimeString());
+  setStatus(I18N.T('Autosaved {time}', { time: I18N.date(Date.now(), { hour: '2-digit', minute: '2-digit', second: '2-digit' }) }));
 }
 function clearAutosave() { lsDel(autosaveKey()); }
 function getAutosave() { try { return JSON.parse(lsGet(autosaveKey()) || 'null'); } catch { return null; } }
@@ -309,12 +309,12 @@ async function recoverAutosave(ask = true) {
   if (!rec) {
     const orph = orphanAutosaves(); if (!orph.length) { if (!ask) return; return toast('No autosaved project to recover'); }
     let pick = orph[0];
-    if (orph.length > 1 && ask) { const v = await form({ title: 'Recover autosaved project', width: 460, fields: [{ key: 'k', label: 'Autosaved projects from windows that closed unexpectedly', type: 'select', value: orph[0].key, options: orph.map(o => ({ value: o.key, label: `${o.rec.name} — ${new Date(o.rec.at).toLocaleString()}` })) }] }); if (!v) return; pick = orph.find(o => o.key === v.k) || orph[0]; }
-    else if (ask) { const ok = await confirm('Recover project?', `An autosaved copy of “${pick.rec.name}” from ${new Date(pick.rec.at).toLocaleString()} was found. Recover it?`, 'Recover'); if (!ok) { lsDel(pick.key); return; } }
+    if (orph.length > 1 && ask) { const v = await form({ title: 'Recover autosaved project', width: 460, fields: [{ key: 'k', label: 'Autosaved projects from windows that closed unexpectedly', type: 'select', value: orph[0].key, options: orph.map(o => ({ value: o.key, label: `${o.rec.name} — ${I18N.date(o.rec.at)}` })) }] }); if (!v) return; pick = orph.find(o => o.key === v.k) || orph[0]; }
+    else if (ask) { const ok = await confirm('Recover project?', `An autosaved copy of “${pick.rec.name}” from ${I18N.date(pick.rec.at)} was found. Recover it?`, 'Recover'); if (!ok) { lsDel(pick.key); return; } }
     // claim it so another window starting at the same time doesn't recover it too
     lsSet(pick.key + '.claim', WIN_ID); await UI.sleep(60); if (lsGet(pick.key + '.claim') !== WIN_ID) return; lsDel(pick.key + '.claim');
     rec = pick.rec; key = pick.key;
-  } else if (ask) { const ok = await confirm('Recover project?', `An autosaved copy of “${rec.name}” from ${new Date(rec.at).toLocaleString()} was found. Recover it?`, 'Recover'); if (!ok) { clearAutosave(); return; } }
+  } else if (ask) { const ok = await confirm('Recover project?', `An autosaved copy of “${rec.name}” from ${I18N.date(rec.at)} was found. Recover it?`, 'Recover'); if (!ok) { clearAutosave(); return; } }
   await loadProject(rec.path ? { path: rec.path, name: rec.name } : null, rec.data); if (rec.path) { PJ.dirty = true; UI.setDocTitle(PJ.name + ' •', 'BTS Video'); }
   if (key !== autosaveKey()) { lsDel(key); autosaveNow(); } // the recovered copy now belongs to this window
   toast('Project recovered — save it to keep the changes.', 'ok', 6000);

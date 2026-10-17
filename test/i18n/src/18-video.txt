@@ -1,0 +1,281 @@
+# Video (inspector, masks, smart features, transcription, templates, stabilise, timeline)
+Position Y | स्थिति Y | स्थान Y
+Fill (crop) | भरें (क्रॉप) | भरा (क्रॉप)
+Frame fit | फ़्रेम फ़िट | फ्रेम बसवणे
+Blurred copy (social) | धुंधली प्रति (सोशल) | धूसर प्रत (सोशल)
+Empty area | खाली क्षेत्र | रिकामा भाग
+Apply motion preset | मोशन प्रीसेट लागू करें | मोशन प्रीसेट लागू करा
+Fade in (s) | फ़ेड इन (s) | फेड इन (s)
+Fade out (s) | फ़ेड आउट (s) | फेड आउट (s)
+Bottom % | नीचे % | तळ %
+Left % | बाएँ % | डावीकडे %
+Right % | दाएँ % | उजवीकडे %
+Top % | ऊपर % | वर %
+Mask on/off | मास्क चालू/बंद | मास्क चालू/बंद
+Expansion | विस्तार | विस्तार
+Smooth (bezier) | चिकना (बेज़ियर) | गुळगुळीत (बेझियर)
+Animate path | पाथ एनिमेट करें | पाथ ॲनिमेट करा
+Animate the mask shape (keyframe the path at the playhead) | मास्क आकृति एनिमेट करें (प्लेहेड पर पाथ का कीफ़्रेम) | मास्कचा आकार ॲनिमेट करा (प्लेहेडवर पाथचा कीफ्रेम)
+Path keyframe | पाथ कीफ़्रेम | पाथ कीफ्रेम
+◆ Path animated | ◆ पाथ एनिमेटेड | ◆ पाथ ॲनिमेटेड
+Track the masked area backward from the playhead | प्लेहेड से मास्क वाले क्षेत्र को पीछे की ओर ट्रैक करें | प्लेहेडपासून मास्क केलेला भाग मागे ट्रॅक करा
+Track the masked area forward from the playhead (writes position keyframes) | प्लेहेड से मास्क वाले क्षेत्र को आगे की ओर ट्रैक करें (स्थिति कीफ़्रेम लिखता है) | प्लेहेडपासून मास्क केलेला भाग पुढे ट्रॅक करा (स्थान कीफ्रेम लिहिते)
+Track ▶ | ट्रैक ▶ | ट्रॅक ▶
+◀ Track | ◀ ट्रैक | ◀ ट्रॅक
+Click points on the program monitor | प्रोग्राम मॉनिटर पर बिंदुओं पर क्लिक करें | प्रोग्राम मॉनिटरवर बिंदूंवर क्लिक करा
+Draw pen | पेन से बनाएँ | पेनने काढा
+Masks cut out part of this clip. Drag them on the program monitor; animate or track them. | मास्क इस क्लिप का हिस्सा काटते हैं। उन्हें प्रोग्राम मॉनिटर पर ड्रैग करें; एनिमेट या ट्रैक करें। | मास्क या क्लिपचा भाग कापतात. ते प्रोग्राम मॉनिटरवर ड्रॅग करा; ॲनिमेट किंवा ट्रॅक करा.
+Effect on/off | इफ़ेक्ट चालू/बंद | इफेक्ट चालू/बंद
+Reorder effects | इफ़ेक्ट का क्रम बदलें | इफेक्टचा क्रम बदला
+Remove {name} | {name} हटाएँ | {name} काढा
+Eyedropper on monitor | मॉनिटर पर आईड्रॉपर | मॉनिटरवर आयड्रॉपर
+Pick key | की चुनें | की निवडा
+Drag the region box on the program monitor to cover a face, then track it — or animate Region X/Y with the stopwatches. | चेहरा ढकने के लिए प्रोग्राम मॉनिटर पर क्षेत्र बॉक्स ड्रैग करें, फिर उसे ट्रैक करें — या स्टॉपवॉच से क्षेत्र X/Y एनिमेट करें। | चेहरा झाकण्यासाठी प्रोग्राम मॉनिटरवर भाग बॉक्स ड्रॅग करा, मग तो ट्रॅक करा — किंवा स्टॉपवॉचने भाग X/Y ॲनिमेट करा.
+Track face ▶ | चेहरा ट्रैक करें ▶ | चेहरा ट्रॅक करा ▶
+◀ Track face | ◀ चेहरा ट्रैक करें | ◀ चेहरा ट्रॅक करा
+No effects. Drag effects here from the Effects panel or add one below. | कोई इफ़ेक्ट नहीं। इफ़ेक्ट पैनल से इफ़ेक्ट यहाँ ड्रैग करें या नीचे जोड़ें। | इफेक्ट नाहीत. इफेक्ट पॅनेलमधून इफेक्ट येथे ड्रॅग करा किंवा खाली जोडा.
+Basic correction | मूल सुधार | मूलभूत सुधारणा
+Temperature | तापमान | तापमान
+Creative | रचनात्मक | सर्जनशील
+Reset Lumetri | Lumetri रीसेट करें | Lumetri रीसेट करा
+Reset colour | रंग रीसेट करें | रंग रीसेट करा
+Blur px | ब्लर px | ब्लर px
+Hue° | ह्यू° | ह्यू°
+Remove transition | ट्रांज़िशन हटाएँ | ट्रान्झिशन काढा
+In duration | In अवधि | In कालावधी
+Out duration | Out अवधि | Out कालावधी
+At end | अंत में | शेवटी
+At start | शुरुआत में | सुरुवातीला
+Pan (L/R) | पैन (L/R) | पॅन (L/R)
+Volume % | वॉल्यूम % | व्हॉल्यूम %
+Render normalize / noise reduction / voice enhance into a new audio file so you can hear them in the preview | सामान्य करें / नॉइज़ कमी करना / आवाज़ सुधारें को नई ऑडियो फ़ाइल में रेंडर करें ताकि आप उन्हें पूर्वावलोकन में सुन सकें | सामान्य करा / नॉइज कमी करणे / आवाज सुधारा नवीन ऑडिओ फाइलमध्ये रेंडर करा म्हणजे ते पूर्वावलोकनात ऐकू येतील
+Unlink audio | ऑडियो अनलिंक करें | ऑडिओ अनलिंक करा
+Frame hold | फ़्रेम होल्ड | फ्रेम होल्ड
+Release hold | होल्ड हटाएँ | होल्ड सोडा
+Speed & time | गति और समय | वेग आणि वेळ
+Speed × | गति × | वेग ×
+Reset all effects | सभी इफ़ेक्ट रीसेट करें | सर्व इफेक्ट रीसेट करा
+Transition duration | ट्रांज़िशन अवधि | ट्रान्झिशन कालावधी
+Media handles — outgoing clip: {p0} after its Out point · incoming clip: {p1} before its In point. This transition needs {p2} s on each side. | मीडिया हैंडल — जाती क्लिप: Out बिंदु के बाद {p0} · आती क्लिप: In बिंदु से पहले {p1}। इस ट्रांज़िशन को हर ओर {p2} s चाहिए। | मीडिया हँडल — जाणारी क्लिप: Out बिंदूनंतर {p0} · येणारी क्लिप: In बिंदूपूर्वी {p1}. या ट्रान्झिशनला प्रत्येक बाजूला {p2} s लागतात.
+⚠ Insufficient media: {p0}{p1}{p2} — the edge frames will be held (frozen). Shorten the transition to {p3} s or trim the clips. | ⚠ अपर्याप्त मीडिया: {p0}{p1}{p2} — किनारे के फ़्रेम रोके (फ़्रीज़) जाएँगे। ट्रांज़िशन को {p3} s तक छोटा करें या क्लिप ट्रिम करें। | ⚠ अपुरा मीडिया: {p0}{p1}{p2} — कडेच्या फ्रेम थांबवल्या (फ्रीझ) जातील. ट्रान्झिशन {p3} s पर्यंत लहान करा किंवा क्लिप ट्रिम करा.
+Fit to available media | उपलब्ध मीडिया में फ़िट करें | उपलब्ध मीडियानुसार बसवा
+Fit transition to handles | ट्रांज़िशन को हैंडल में फ़िट करें | ट्रान्झिशन हँडलनुसार बसवा
+One-sided transition — no extra media needed. | एक-तरफ़ा ट्रांज़िशन — अतिरिक्त मीडिया की ज़रूरत नहीं। | एकतर्फी ट्रान्झिशन — अतिरिक्त मीडियाची गरज नाही.
+Duration (s) | अवधि (s) | कालावधी (s)
+Preview | पूर्वावलोकन | पूर्वावलोकन
+blur region | ब्लर क्षेत्र | ब्लर भाग
+inverted | उलटा | उलट
+Key colour {hex} | की रंग {hex} | की रंग {hex}
+Pick key colour | की रंग चुनें | की रंग निवडा
+Move blur region | ब्लर क्षेत्र खिसकाएँ | ब्लर भाग हलवा
+Move clip | क्लिप खिसकाएँ | क्लिप हलवा
+Click the colour to key out on the program monitor | प्रोग्राम मॉनिटर पर हटाने वाले रंग पर क्लिक करें | प्रोग्राम मॉनिटरवर काढायच्या रंगावर क्लिक करा
+{w}×{h} · {fps} fps{p3}{p4} | = | =
+Shuttle {p0} {p1}× | शटल {p0} {p1}× | शटल {p0} {p1}×
+Rendering frame | फ़्रेम रेंडर हो रहा है | फ्रेम रेंडर होत आहे
+Frame sent to BTS Photo | फ़्रेम BTS Photo में भेजा गया | फ्रेम BTS Photo मध्ये पाठवली
+Nothing to put on the contact sheet | कॉन्टैक्ट शीट पर रखने के लिए कुछ नहीं | कॉन्टॅक्ट शीटवर ठेवण्यासारखे काही नाही
+Contact sheet | कॉन्टैक्ट शीट | कॉन्टॅक्ट शीट
+Rendering frame {p0} of {length} | फ़्रेम {p0} / {length} रेंडर हो रहा है | फ्रेम {p0} / {length} रेंडर होत आहे
+{w}×{h} · {fps} fps · {p3} · BTS Video | = | =
+{p0} contact sheet.pdf | - |
+Contact sheet sent to PDF Pro | कॉन्टैक्ट शीट PDF Pro में भेजी गई | कॉन्टॅक्ट शीट PDF Pro मध्ये पाठवली
+The drawing could not be read | ड्रॉइंग पढ़ी नहीं जा सकी | रेखाचित्र वाचता आले नाही
+BTS Video can receive images and SVG drawings | BTS Video छवियाँ और SVG ड्रॉइंग प्राप्त कर सकता है | BTS Video प्रतिमा आणि SVG रेखाचित्रे स्वीकारू शकते
+Added {name} at the playhead | प्लेहेड पर {name} जोड़ा गया | प्लेहेडवर {name} जोडले
+Receive | प्राप्त करें | स्वीकारा
+Receive {p0} | {p0} प्राप्त करें | {p0} स्वीकारा
+Could not receive the item | आइटम प्राप्त नहीं हो सका | घटक स्वीकारता आला नाही
+Could not receive the item: {message} | आइटम प्राप्त नहीं हो सका: {message} | घटक स्वीकारता आला नाही: {message}
+Could not read the audio | ऑडियो पढ़ा नहीं जा सका | ऑडिओ वाचता आला नाही
+Could not read the audio: {p0} | ऑडियो पढ़ा नहीं जा सका: {p0} | ऑडिओ वाचता आला नाही: {p0}
+Select a music clip (or put one on an audio track) | कोई संगीत क्लिप चुनें (या किसी ऑडियो ट्रैक पर रखें) | संगीत क्लिप निवडा (किंवा ऑडिओ ट्रॅकवर ठेवा)
+Beat detection needs FFmpeg | बीट पहचान के लिए FFmpeg चाहिए | बीट ओळखण्यासाठी FFmpeg आवश्यक
+The media is offline | मीडिया ऑफ़लाइन है | मीडिया ऑफलाइन आहे
+Analysing beats | बीट का विश्लेषण हो रहा है | बीटचे विश्लेषण होत आहे
+No steady beat found in this clip | इस क्लिप में कोई स्थिर बीट नहीं मिली | या क्लिपमध्ये स्थिर बीट सापडली नाही
+Bar {p0} | बार {p0} | बार {p0}
+Detect beats | बीट पहचानें | बीट ओळखा
+{bpm} BPM | = | =
+{n} beat markers added ({bpm} BPM) — snapping to beats is on | {n} बीट मार्कर जोड़े गए ({bpm} BPM) — बीट पर स्नैपिंग चालू है | {n} बीट मार्कर जोडले ({bpm} BPM) — बीटवर स्नॅपिंग चालू आहे
+Removed {p0} beat markers | {p0} बीट मार्कर हटाए गए | {p0} बीट मार्कर काढले
+Select the clips to cut to the beat | बीट पर काटने के लिए क्लिप चुनें | बीटनुसार कापण्यासाठी क्लिप निवडा
+No beats after the first selected clip | पहली चुनी गई क्लिप के बाद कोई बीट नहीं | पहिल्या निवडलेल्या क्लिपनंतर बीट नाहीत
+Auto-cut to beats | बीट पर अपने-आप काटें | बीटनुसार आपोआप कापा
+Cut {length} clip(s) to the beat (every {every} beat{p2}) | {length} क्लिप बीट पर काटी गईं (हर {every} बीट) | {length} क्लिप बीटनुसार कापल्या (दर {every} बीट)
+1 beat | 1 बीट | 1 बीट
+2 beats | 2 बीट | 2 बीट
+4 beats (1 bar) | 4 बीट (1 बार) | 4 बीट (1 बार)
+8 beats (2 bars) | 8 बीट (2 बार) | 8 बीट (2 बार)
+Cut every | हर इतने पर काटें | दर इतक्यावर कापा
+Repeat the clips until the beats run out | बीट खत्म होने तक क्लिप दोहराएँ | बीट संपेपर्यंत क्लिप पुन्हा वापरा
+FFmpeg could not analyse the clip | FFmpeg क्लिप का विश्लेषण नहीं कर सका | FFmpeg क्लिपचे विश्लेषण करू शकले नाही
+Scene detection needs FFmpeg | दृश्य पहचान के लिए FFmpeg चाहिए | दृश्य ओळखण्यासाठी FFmpeg आवश्यक
+Select a video clip | कोई वीडियो क्लिप चुनें | व्हिडिओ क्लिप निवडा
+Detecting scene changes | दृश्य बदलाव पहचाने जा रहे हैं | दृश्य बदल ओळखत आहे
+No scene changes found | कोई दृश्य बदलाव नहीं मिला | दृश्य बदल सापडले नाहीत
+Scene | दृश्य | दृश्य
+Found {length} scene change(s) — the clip was cut at each one | {length} दृश्य बदलाव मिले — हर एक पर क्लिप काटी गई | {length} दृश्य बदल सापडले — प्रत्येक ठिकाणी क्लिप कापली
+Scene edit detection | दृश्य एडिट पहचान | दृश्य एडिट ओळख
+Sensitivity (lower finds more cuts) | संवेदनशीलता (कम = अधिक कट मिलते हैं) | संवेदनशीलता (कमी = जास्त कट सापडतात)
+There is no audio in this range | इस सीमा में कोई ऑडियो नहीं है | या श्रेणीत ऑडिओ नाही
+Could not render the audio | ऑडियो रेंडर नहीं हो सका | ऑडिओ रेंडर करता आला नाही
+Needs FFmpeg | FFmpeg चाहिए | FFmpeg आवश्यक
+Paste the transcript first | पहले ट्रांसक्रिप्ट चिपकाएँ | आधी ट्रान्सक्रिप्ट पेस्ट करा
+Timing transcript | ट्रांसक्रिप्ट का समय-निर्धारण | ट्रान्सक्रिप्टची वेळ जुळवणी
+Nothing to align | संरेखित करने के लिए कुछ नहीं | जुळवण्यासारखे काही नाही
+Auto-time transcript | ट्रांसक्रिप्ट का अपने-आप समय-निर्धारण | ट्रान्सक्रिप्टची आपोआप वेळ जुळवणी
+Add a clip with speech first | पहले आवाज़ वाली क्लिप जोड़ें | आधी बोलणे असलेली क्लिप जोडा
+Auto-time a transcript (offline captions) | ट्रांसक्रिप्ट का अपने-आप समय-निर्धारण (ऑफ़लाइन कैप्शन) | ट्रान्सक्रिप्टची आपोआप वेळ जुळवणी (ऑफलाइन कॅप्शन)
+Paste what is said (one block of text; punctuation helps place the line breaks) | जो बोला गया है वह चिपकाएँ (टेक्स्ट का एक खंड; विराम चिह्न पंक्ति विराम तय करने में मदद करते हैं) | जे बोलले आहे ते पेस्ट करा (मजकुराचा एक भाग; विरामचिन्हे ओळी तोडण्यास मदत करतात)
+Audio to align | संरेखित करने वाला ऑडियो | जुळवायचा ऑडिओ
+In to Out | In से Out | In ते Out
+Whole sequence | पूरा सीक्वेंस | संपूर्ण सीक्वेन्स
+Max words per caption | प्रति कैप्शन अधिकतम शब्द | प्रति कॅप्शन कमाल शब्द
+Replace captions in that range | उस सीमा में कैप्शन बदलें | त्या श्रेणीतील कॅप्शन बदला
+Rendering audio, detecting pauses and word boundaries | ऑडियो रेंडर हो रहा है, विराम और शब्द-सीमाएँ पहचानी जा रही हैं | ऑडिओ रेंडर होत आहे, विराम आणि शब्द-सीमा ओळखत आहे
+Timing the transcript | ट्रांसक्रिप्ट का समय-निर्धारण हो रहा है | ट्रान्सक्रिप्टची वेळ जुळवत आहे
+Created {captions} timed captions ({words} words) — edit them in the Captions panel | {captions} समय-बद्ध कैप्शन बने ({words} शब्द) — इन्हें कैप्शन पैनल में संपादित करें | {captions} वेळ जुळवलेले कॅप्शन तयार झाले ({words} शब्द) — ते कॅप्शन पॅनेलमध्ये संपादित करा
+Auto-transcribe needs FFmpeg | अपने-आप ट्रांसक्राइब के लिए FFmpeg चाहिए | आपोआप ट्रान्सक्राइबसाठी FFmpeg आवश्यक
+The offline speech engine is not available in this copy of BTS Creative. | BTS Creative की इस प्रति में ऑफ़लाइन वाक् इंजन उपलब्ध नहीं है। | BTS Creative च्या या प्रतीत ऑफलाइन वाचा इंजिन उपलब्ध नाही.
+Select a clip with audio first | पहले ऑडियो वाली क्लिप चुनें | आधी ऑडिओ असलेली क्लिप निवडा
+Transcription cancelled | ट्रांसक्रिप्शन रद्द हुआ | ट्रान्सक्रिप्शन रद्द झाले
+Transcription failed | ट्रांसक्रिप्शन विफल रहा | ट्रान्सक्रिप्शन अयशस्वी
+Starting the speech engine | वाक् इंजन शुरू हो रहा है | वाचा इंजिन सुरू होत आहे
+Loading the speech model | वाक् मॉडल लोड हो रहा है | वाचा मॉडेल लोड होत आहे
+Recognising speech… {p0}%{p1}{p2} | आवाज़ पहचानी जा रही है… {p0}%{p1}{p2} | आवाज ओळखत आहे… {p0}%{p1}{p2}
+Auto-transcribe is already running | अपने-आप ट्रांसक्राइब पहले से चल रहा है | आपोआप ट्रान्सक्राइब आधीच चालू आहे
+Captions › Auto-time transcript | कैप्शन › ट्रांसक्रिप्ट का अपने-आप समय-निर्धारण | कॅप्शन › ट्रान्सक्रिप्टची आपोआप वेळ जुळवणी
+The offline speech engine is not available in this copy of BTS Creative (it is included with the 64-bit Windows and Linux builds). | BTS Creative की इस प्रति में ऑफ़लाइन वाक् इंजन उपलब्ध नहीं है (यह 64-बिट Windows और Linux बिल्ड में शामिल है)। | BTS Creative च्या या प्रतीत ऑफलाइन वाचा इंजिन उपलब्ध नाही (ते 64-बिट Windows आणि Linux बिल्डमध्ये समाविष्ट आहे).
+You can still make timed captions: use | आप फिर भी समय-बद्ध कैप्शन बना सकते हैं: उपयोग करें | तरीही तुम्ही वेळ जुळवलेले कॅप्शन तयार करू शकता: वापरा
+and paste what is said — BTS Video times it to the speech. | और जो बोला गया है वह चिपकाएँ — BTS Video उसे आवाज़ के साथ समय-बद्ध करता है। | आणि जे बोलले आहे ते पेस्ट करा — BTS Video ते आवाजाशी वेळ जुळवते.
+Auto-transcribe (offline speech recognition) | अपने-आप ट्रांसक्राइब (ऑफ़लाइन वाक् पहचान) | आपोआप ट्रान्सक्राइब (ऑफलाइन वाचा ओळख)
+हिन्दी (Hindi) | हिन्दी | हिंदी
+Audio to transcribe | ट्रांसक्राइब करने वाला ऑडियो | ट्रान्सक्राइब करायचा ऑडिओ
+Selected clip — {p0} | चुनी गई क्लिप — {p0} | निवडलेली क्लिप — {p0}
+Sequence mix, In to Out | सीक्वेंस मिक्स, In से Out | सीक्वेन्स मिक्स, In ते Out
+Whole sequence (mix of all audio) | पूरा सीक्वेंस (सभी ऑडियो का मिक्स) | संपूर्ण सीक्वेन्स (सर्व ऑडिओचे मिश्रण)
+Max caption length (seconds) | अधिकतम कैप्शन लंबाई (सेकंड) | कमाल कॅप्शन लांबी (सेकंद)
+Censor words from the censor list (mask f*** + bleep with real word timings) | सेंसर सूची के शब्द सेंसर करें (असली शब्द समय के साथ f*** मास्क + बीप) | सेन्सॉर यादीतील शब्द सेन्सॉर करा (खऱ्या शब्दवेळेसह f*** मास्क + बीप)
+Replace existing captions in that range | उस सीमा में मौजूदा कैप्शन बदलें | त्या श्रेणीतील विद्यमान कॅप्शन बदला
+Transcribe | ट्रांसक्राइब करें | ट्रान्सक्राइब करा
+Transcribing | ट्रांसक्राइब हो रहा है | ट्रान्सक्राइब होत आहे
+No speech was recognised in that audio | उस ऑडियो में कोई आवाज़ नहीं पहचानी गई | त्या ऑडिओमध्ये कोणतेही बोलणे ओळखले नाही
+Created {captions} captions — now add the words to censor | {captions} कैप्शन बने — अब सेंसर करने वाले शब्द जोड़ें | {captions} कॅप्शन तयार झाले — आता सेन्सॉर करायचे शब्द जोडा
+Created {captions} captions ({words} timed words) — edit them in the Captions panel | {captions} कैप्शन बने ({words} समय-बद्ध शब्द) — इन्हें कैप्शन पैनल में संपादित करें | {captions} कॅप्शन तयार झाले ({words} वेळ जुळवलेले शब्द) — ते कॅप्शन पॅनेलमध्ये संपादित करा
+Filter censored words | सेंसर किए गए शब्द फ़िल्टर करें | सेन्सॉर केलेले शब्द फिल्टर करा
+Words to censor (comma or new line; end with * to match endings, e.g. damn*) | सेंसर करने वाले शब्द (अल्पविराम या नई पंक्ति; अंत मिलाने के लिए * लगाएँ, जैसे damn*) | सेन्सॉर करायचे शब्द (स्वल्पविराम किंवा नवीन ओळ; शेवट जुळवण्यासाठी * लावा, उदा. damn*)
+Mask them in captions (e.g. f***) — preview, burn-in and SRT/VTT export | कैप्शन में इन्हें छिपाएँ (जैसे f***) — पूर्वावलोकन, बर्न-इन और SRT/VTT एक्सपोर्ट | कॅप्शनमध्ये ते लपवा (उदा. f***) — पूर्वावलोकन, बर्न-इन आणि SRT/VTT एक्सपोर्ट
+Bleep: mute the audio and play a 1 kHz tone over each censored word | बीप: हर सेंसर किए गए शब्द पर ऑडियो म्यूट करें और 1 kHz टोन चलाएँ | बीप: प्रत्येक सेन्सॉर केलेल्या शब्दावर ऑडिओ म्यूट करा आणि 1 kHz टोन वाजवा
+Estimate word timings for captions without them (imported SRT) | जिन कैप्शन में शब्द-समय नहीं है उनके लिए अनुमान लगाएँ (इम्पोर्ट किया SRT) | शब्दवेळ नसलेल्या कॅप्शनसाठी अंदाज लावा (इम्पोर्ट केलेले SRT)
+{length} word(s) in the censor list · {n} occurrence(s) in the captions{p2} | सेंसर सूची में {length} शब्द · कैप्शन में {n} बार{p2} | सेन्सॉर यादीत {length} शब्द · कॅप्शनमध्ये {n} वेळा{p2}
+Reels / Shorts (9:16) | Reels / Shorts (9:16) | Reels / Shorts (9:16)
+Vlog intro | व्लॉग इंट्रो | व्लॉग इंट्रो
+YouTube with lower thirds | लोअर थर्ड के साथ YouTube | लोअर थर्डसह YouTube
+MY VLOG | - |
+Episode 1 · a day in my city | - |
+Subtitle | उपशीर्षक | उपशीर्षक
+Drop your footage here (replace this placeholder) | - |
+Placeholder — replace with your footage | - |
+Your footage starts here | - |
+Placeholder background | प्लेसहोल्डर पृष्ठभूमि | प्लेसहोल्डर पार्श्वभूमी
+Reels / Shorts | = | =
+WAIT FOR IT | - |
+Put your clip on V1 — 9:16, 1080×1920 | - |
+Subscribe button | सब्सक्राइब बटन | सबस्क्राइब बटण
+Big, bold and centred | - |
+Your captions appear here | - |
+Content | सामग्री | मजकूर
+Hook | हुक | हुक
+YouTube video | YouTube वीडियो | YouTube व्हिडिओ
+Guest name What they do | - |
+Your Name Creator · Channel name | - |
+THANKS FOR WATCHING Subscribe for more | - |
+Intro | इंट्रो | इंट्रो
+Outro / end screen | आउट्रो / अंतिम स्क्रीन | आउट्रो / शेवटची स्क्रीन
+Part 1 | भाग 1 | भाग 1
+Part 2 | भाग 2 | भाग 2
+Started from the “{p0}” template | “{p0}” टेम्पलेट से शुरू किया गया | “{p0}” टेम्पलेटपासून सुरू केले
+Template | टेम्पलेट | टेम्पलेट
+Template: {kind} | टेम्पलेट: {kind} | टेम्पलेट: {kind}
+Photos | फ़ोटो | फोटो
+Add music? | संगीत जोड़ें? | संगीत जोडायचे?
+Pick a music file — the slideshow length is fitted to it. | कोई संगीत फ़ाइल चुनें — स्लाइडशो की लंबाई उसके अनुसार होगी। | संगीत फाइल निवडा — स्लाइडशोची लांबी त्यानुसार जुळवली जाईल.
+Pick music | संगीत चुनें | संगीत निवडा
+Slideshow | स्लाइडशो | स्लाइडशो
+Building slideshow | स्लाइडशो बन रहा है | स्लाइडशो तयार होत आहे
+Importing photo {p0} of {length} | फ़ोटो {p0} / {length} इम्पोर्ट हो रही है | फोटो {p0} / {length} इम्पोर्ट होत आहे
+Importing music | संगीत इम्पोर्ट हो रहा है | संगीत इम्पोर्ट होत आहे
+No photos could be imported | कोई फ़ोटो इम्पोर्ट नहीं हो सकी | एकही फोटो इम्पोर्ट करता आला नाही
+Ken Burns zoom in | Ken Burns ज़ूम इन | Ken Burns झूम इन
+Ken Burns zoom out | Ken Burns ज़ूम आउट | Ken Burns झूम आउट
+My slideshow | - |
+Slideshow from photos | फ़ोटो से स्लाइडशो | फोटोंपासून स्लाइडशो
+Slideshow: {length} photos × {p1} s{p2} | स्लाइडशो: {length} फ़ोटो × {p1} s{p2} | स्लाइडशो: {length} फोटो × {p1} s{p2}
+fitted to the music | संगीत के अनुसार | संगीतानुसार जुळवलेले
+Select a video clip to stabilise | स्थिर करने के लिए कोई वीडियो क्लिप चुनें | स्थिर करण्यासाठी व्हिडिओ क्लिप निवडा
+Release the frame hold first | पहले फ़्रेम होल्ड हटाएँ | आधी फ्रेम होल्ड सोडा
+Stabilisation needs FFmpeg | स्थिरीकरण के लिए FFmpeg चाहिए | स्थिरीकरणासाठी FFmpeg आवश्यक
+This FFmpeg build has no stabilisation filters | इस FFmpeg बिल्ड में स्थिरीकरण फ़िल्टर नहीं हैं | या FFmpeg बिल्डमध्ये स्थिरीकरण फिल्टर नाहीत
+Stabilize clip | क्लिप स्थिर करें | क्लिप स्थिर करा
+Smoothing (frames to average — higher is steadier) | चिकनाई (औसत के लिए फ़्रेम — अधिक = अधिक स्थिर) | गुळगुळीतपणा (सरासरीसाठी फ्रेम — जास्त = अधिक स्थिर)
+Shakiness of the footage (1 = slight, 10 = very shaky) | फ़ुटेज का कंपन (1 = हल्का, 10 = बहुत अधिक) | फुटेजचा हादरा (1 = थोडा, 10 = खूप जास्त)
+Keep framing, black edges | फ़्रेमिंग रखें, काले किनारे | फ्रेमिंग ठेवा, काळ्या कडा
+Keep framing, fill edges from earlier frames | फ़्रेमिंग रखें, पिछले फ़्रेम से किनारे भरें | फ्रेमिंग ठेवा, आधीच्या फ्रेमने कडा भरा
+Zoom in to hide the moving edges (crop) | हिलते किनारे छिपाने के लिए ज़ूम इन करें (क्रॉप) | हलणाऱ्या कडा लपवण्यासाठी झूम इन करा (क्रॉप)
+Extra zoom % | अतिरिक्त ज़ूम % | अतिरिक्त झूम %
+Stabilize | स्थिर करें | स्थिर करा
+Tripod mode (lock the camera completely) | ट्राइपॉड मोड (कैमरा पूरी तरह लॉक करें) | ट्रायपॉड मोड (कॅमेरा पूर्ण लॉक करा)
+The clip’s media is offline | क्लिप का मीडिया ऑफ़लाइन है | क्लिपचा मीडिया ऑफलाइन आहे
+Analysing motion | गति का विश्लेषण हो रहा है | हालचालीचे विश्लेषण होत आहे
+Pass 1 of 2 · analysing camera motion | चरण 1 / 2 · कैमरा गति का विश्लेषण | टप्पा 1 / 2 · कॅमेरा हालचालीचे विश्लेषण
+Pass 1 of 2 · analysing camera motion… {p0}% | चरण 1 / 2 · कैमरा गति का विश्लेषण… {p0}% | टप्पा 1 / 2 · कॅमेरा हालचालीचे विश्लेषण… {p0}%
+Motion analysis failed | गति विश्लेषण विफल रहा | हालचाल विश्लेषण अयशस्वी
+Motion analysis failed: {p0} | गति विश्लेषण विफल रहा: {p0} | हालचाल विश्लेषण अयशस्वी: {p0}
+Stabilisation cancelled | स्थिरीकरण रद्द हुआ | स्थिरीकरण रद्द झाले
+Pass 2 of 2 · rendering the stabilised clip | चरण 2 / 2 · स्थिर की गई क्लिप रेंडर हो रही है | टप्पा 2 / 2 · स्थिर केलेली क्लिप रेंडर होत आहे
+Stabilising (deshake) | स्थिर हो रहा है (deshake) | स्थिर होत आहे (deshake)
+{vf},pad=ceil(iw/2)*2:ceil(ih/2)*2,format=yuv420p | - |
+Pass 2 of 2 · rendering | चरण 2 / 2 · रेंडर हो रहा है | टप्पा 2 / 2 · रेंडर होत आहे
+Stabilising | स्थिर हो रहा है | स्थिर होत आहे
+Rendering the stabilised clip failed | स्थिर की गई क्लिप का रेंडर विफल रहा | स्थिर केलेल्या क्लिपचे रेंडर अयशस्वी
+Rendering the stabilised clip failed: {p0} | स्थिर की गई क्लिप का रेंडर विफल रहा: {p0} | स्थिर केलेल्या क्लिपचे रेंडर अयशस्वी: {p0}
+Importing | इम्पोर्ट हो रहा है | इम्पोर्ट होत आहे
+Could not import the stabilised clip | स्थिर की गई क्लिप इम्पोर्ट नहीं हो सकी | स्थिर केलेली क्लिप इम्पोर्ट करता आली नाही
+Stabilised {name} ({p1}) — the original stays in the Project panel | {name} स्थिर हुआ ({p1}) — मूल प्रोजेक्ट पैनल में रहता है | {name} स्थिर झाले ({p1}) — मूळ प्रकल्प पॅनेलमध्ये राहते
+Select a stabilised clip | कोई स्थिर की गई क्लिप चुनें | स्थिर केलेली क्लिप निवडा
+Switched back to the original media | मूल मीडिया पर वापस गए | मूळ मीडियावर परत गेले
+Rate stretch tool | रेट स्ट्रेच टूल | रेट स्ट्रेच साधन
+Razor tool | रेज़र टूल | रेझर साधन
+Ripple edit tool | रिपल एडिट टूल | रिपल एडिट साधन
+Rolling edit tool | रोलिंग एडिट टूल | रोलिंग एडिट साधन
+Slip tool | स्लिप टूल | स्लिप साधन
+Edit mode for drops & paste: Overwrite (.) or Insert (,) | छोड़ने और चिपकाने का एडिट मोड: ओवरराइट (.) या डालें (,) | टाकणे आणि पेस्टसाठी एडिट मोड: ओव्हरराइट (.) किंवा घाला (,)
+Snapping (S) | स्नैपिंग (S) | स्नॅपिंग (S)
+{p0}Audio | - |
+{p0}Video | - |
+In {p0} · Out {p1} | = | =
+Snapping {p0} | स्नैपिंग {p0} | स्नॅपिंग {p0}
+CC | = | =
+Hide captions in preview | पूर्वावलोकन में कैप्शन छिपाएँ | पूर्वावलोकनात कॅप्शन लपवा
+Hide track | ट्रैक छिपाएँ | ट्रॅक लपवा
+Mute track | ट्रैक म्यूट करें | ट्रॅक म्यूट करा
+Mute this track’s clip audio | इस ट्रैक की क्लिप का ऑडियो म्यूट करें | या ट्रॅकच्या क्लिपचा ऑडिओ म्यूट करा
+Voice track (for auto-ducking) | आवाज़ ट्रैक (ऑटो-डकिंग के लिए) | आवाज ट्रॅक (ऑटो-डकिंगसाठी)
+Lock track | ट्रैक लॉक करें | ट्रॅक लॉक करा
+Delete track | ट्रैक हटाएँ | ट्रॅक हटवा
+Delete track {id} | ट्रैक {id} हटाएँ | ट्रॅक {id} हटवा
+{length} clips · {p1} | {length} क्लिप · {p1} | {length} क्लिप · {p1}
+{length} clip{p1} selected | {length} क्लिप चयनित | {length} क्लिप निवडल्या
+Missing sequence | अनुपलब्ध सीक्वेंस | गहाळ सीक्वेन्स
+{p0}px 100% | - |
+Drag to fade in | फ़ेड इन के लिए ड्रैग करें | फेड इनसाठी ड्रॅग करा
+Drag to fade out | फ़ेड आउट के लिए ड्रैग करें | फेड आउटसाठी ड्रॅग करा
+Keyframe {kt}s | कीफ़्रेम {kt}s | कीफ्रेम {kt}s
+Pen (bezier) | पेन (बेज़ियर) | पेन (बेझियर)
+Track mask / blur forward | मास्क / ब्लर आगे ट्रैक करें | मास्क / ब्लर पुढे ट्रॅक करा
+Transition at start | शुरुआत में ट्रांज़िशन | सुरुवातीला ट्रान्झिशन
+Transition at end | अंत में ट्रांज़िशन | शेवटी ट्रान्झिशन
+Keyframe preset | कीफ़्रेम प्रीसेट | कीफ्रेम प्रीसेट
+Fade in / out | फ़ेड इन / आउट | फेड इन / आउट
+Add frame hold segment | फ़्रेम होल्ड खंड जोड़ें | फ्रेम होल्ड खंड जोडा

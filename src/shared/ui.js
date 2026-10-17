@@ -1,5 +1,8 @@
 // BTS Creative — shared UI kit: title bar, menus, shortcuts, modals, toasts, icons, history
 (function () {
+  // i18n: T() translates; tx() makes a text node that is translated now and re-translated on a language switch.
+  const I = window.I18N || { T: s => s, text: s => document.createTextNode(s), translateText: s => s, setLang() { }, LANGS: [{ id: 'en', native: 'English' }], lang: 'en', source: el => el.textContent, date: d => new Date(d).toLocaleString() };
+  const T = I.T, tx = (s, p) => (s == null || s === '' ? '' : typeof s === 'string' ? I.text(s, p) : s);
   const $ = (s, r = document) => r.querySelector(s);
   const h = (tag, attrs = {}, ...kids) => {
     const el = document.createElement(tag);
@@ -113,7 +116,23 @@
 
   // ---------- Title bar with menus ----------
   let registeredMenus = [];
+  // View › Language submenu, added to every app's View menu (before “Appearance…” when present).
+  function languageItems() { return I.LANGS.map(l => ({ label: l.native, noT: true, checked: () => (getSettings().lang || 'en') === l.id, action: () => setLanguage(l.id) })); }
+  function withLanguageMenu(menus) {
+    return menus.map(m => {
+      if (m.label !== 'View') return m;
+      const base = m.items;
+      return { ...m, items: () => {
+        const list = (typeof base === 'function' ? base() : base || []).slice();
+        const lang = { label: 'Language', sub: languageItems() };
+        const i = list.findIndex(it => it && it.label === 'Appearance…');
+        if (i >= 0) list.splice(i, 0, lang); else list.push('-', lang);
+        return list;
+      } };
+    });
+  }
   function titlebar({ logo = 'B', menus = [], actions = null }) {
+    menus = withLanguageMenu(menus);
     registeredMenus = menus;
     const bar = h('div', { class: 'titlebar' });
     bar.append(h('div', { class: 'logo' }, logo));
@@ -121,7 +140,7 @@
     let openMenu = null;
     const closeAll = () => { document.querySelectorAll('.dropdown').forEach(d => d.remove()); mwrap.querySelectorAll('.open').forEach(b => b.classList.remove('open')); openMenu = null; };
     menus.forEach(m => {
-      const b = h('button', { class: 'menu-btn' }, m.label);
+      const b = h('button', { class: 'menu-btn' }, tx(m.label));
       const show = () => {
         closeAll(); b.classList.add('open'); openMenu = b;
         const r = b.getBoundingClientRect();
@@ -135,7 +154,7 @@
     bar.append(mwrap, h('div', { class: 'doc-title', id: 'docTitle' }), h('div', { class: 'spacer' }));
     const acts = h('div', { class: 'tb-actions' });
     const pill = h('div', { class: 'update-pill', id: 'updatePill', html: icon('update', 14) + '<span>Update</span>' });
-    const cmdBtn = h('button', { class: 'cmd-btn', onclick: () => commandPalette(), html: icon('search') + '<span>Search features</span><kbd>Ctrl+K</kbd>' });
+    const cmdBtn = h('button', { class: 'cmd-btn', onclick: () => commandPalette(), html: icon('search') + '<span class="cmd-lbl">Search features</span><kbd data-no-i18n>Ctrl+K</kbd>' });
     acts.append(pill, cmdBtn); if (actions) acts.append(actions);
     bar.append(acts);
     const ctl = h('div', { class: 'win-ctl' },
@@ -154,9 +173,10 @@
       if (it === '-' || it.sep) { dd.append(h('div', { class: 'sep' })); return; }
       const dis = typeof it.disabled === 'function' ? it.disabled() : it.disabled;
       const chk = typeof it.checked === 'function' ? it.checked() : it.checked;
+      const lbl = it.noT ? h('span', { class: 'lbl', 'data-no-i18n': '', lang: it.noT === true ? undefined : it.noT }, it.label) : h('span', { class: 'lbl' }, tx(it.label));
       const row = h('div', { class: 'item' + (dis ? ' disabled' : '') },
-        h('span', { class: 'check' }, chk ? '✓' : ''), h('span', {}, it.label),
-        it.sub ? h('span', { class: 'sub-arrow' }, '›') : h('span', { class: 'kbd' }, it.kbd || ''));
+        h('span', { class: 'check' }, chk ? '✓' : ''), lbl,
+        it.sub ? h('span', { class: 'sub-arrow' }, '›') : h('span', { class: 'kbd', 'data-no-i18n': '' }, it.kbd || ''));
       if (it.sub) {
         let subEl = null;
         row.addEventListener('mouseenter', () => {
@@ -173,7 +193,10 @@
     document.body.append(dd);
     const r = dd.getBoundingClientRect();
     dd.style.left = Math.min(x, innerWidth - r.width - 6) + 'px';
-    dd.style.top = Math.min(y, innerHeight - r.height - 6) + 'px';
+    // Long menus (and longer translated labels) scroll inside the space below the menu bar instead of covering it.
+    const below = innerHeight - y - 6;
+    if (r.height > below && below >= 240 && r.height > innerHeight * 0.6) { dd.style.maxHeight = below + 'px'; dd.style.overflowY = 'auto'; dd.style.top = y + 'px'; }
+    else dd.style.top = Math.max(6, Math.min(y, innerHeight - r.height - 6)) + 'px';
     return dd;
   }
   function contextMenu(e, items) {
@@ -184,7 +207,7 @@
   }
 
   function setDocTitle(t, appName) {
-    const el = $('#docTitle'); if (el) el.textContent = t;
+    const el = $('#docTitle'); if (el) { el.textContent = ''; el.append(tx(t || '')); }   // default names (“Untitled project”) translate; file names never match
     bts.win.title(t ? `${t} — ${appName}` : appName);
   }
 
@@ -193,9 +216,9 @@
     if (!window.bts || !bts.update) return;
     bts.update.onStatus(s => {
       const label = pill.querySelector('span');
-      if (s.state === 'downloading') { pill.classList.add('show'); label.textContent = `Downloading update ${s.percent}%`; pill.onclick = null; }
-      else if (s.state === 'ready') { pill.classList.add('show'); label.textContent = `Restart to update (v${s.version})`; pill.onclick = () => bts.update.install(); toast(`Update v${s.version} ready. Click the pill in the title bar to restart.`, 'ok'); }
-      else if (s.state === 'available') { pill.classList.add('show'); label.textContent = `Update v${s.version} found`; }
+      if (s.state === 'downloading') { pill.classList.add('show'); label.textContent = T('Downloading update {percent}%', { percent: s.percent }); pill.onclick = null; }
+      else if (s.state === 'ready') { pill.classList.add('show'); label.textContent = T('Restart to update (v{version})', { version: s.version }); pill.onclick = () => bts.update.install(); toast(T('Update v{version} ready. Click the pill in the title bar to restart.', { version: s.version }), 'ok'); }
+      else if (s.state === 'available') { pill.classList.add('show'); label.textContent = T('Update v{version} found', { version: s.version }); }
       else if (s.state !== 'checking') pill.classList.remove('show');
     });
   }
@@ -240,8 +263,9 @@
       const b = h('div', { class: 'm-b' }); if (typeof body === 'string') b.innerHTML = body; else if (body) b.append(body);
       const f = h('div', { class: 'm-f' });
       const close = v => { back.remove(); resolve(v); };
-      buttons.forEach(bt => f.append(h('button', { class: 'btn' + (bt.primary ? ' primary' : ''), onclick: () => close(bt.value !== undefined ? bt.value : bt.label) }, bt.label)));
-      m.append(h('div', { class: 'm-h' }, title), b, f); back.append(m); document.body.append(back);
+      // Buttons show translated labels but still resolve with the English label/value the app expects.
+      buttons.forEach(bt => f.append(h('button', { class: 'btn' + (bt.primary ? ' primary' : ''), onclick: () => close(bt.value !== undefined ? bt.value : bt.label) }, tx(bt.label))));
+      m.append(h('div', { class: 'm-h' }, tx(title)), b, f); back.append(m); document.body.append(back);
       back.addEventListener('mousedown', e => { if (e.target === back) close(null); });
       m.addEventListener('keydown', e => { if (e.key === 'Escape') close(null); if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') { const p = buttons.find(x => x.primary); if (p) close(p.value !== undefined ? p.value : p.label); } });
       onOpen && onOpen(b);
@@ -250,7 +274,7 @@
   }
   async function prompt(title, label, value = '', type = 'text') {
     const inp = h('input', { type, value });
-    const r = await modal({ title, body: h('label', { class: 'field' }, label, inp), buttons: [{ label: 'Cancel', value: null }, { label: 'OK', primary: true, value: 'ok' }] });
+    const r = await modal({ title, body: h('label', { class: 'field' }, tx(label), inp), buttons: [{ label: 'Cancel', value: null }, { label: 'OK', primary: true, value: 'ok' }] });
     return r === 'ok' ? inp.value : null;
   }
   async function confirm(title, msg, ok = 'OK', danger) {
@@ -262,20 +286,20 @@
     fields.forEach(fd => {
       vals[fd.key] = fd.value;
       let inp;
-      if (fd.type === 'select') { inp = h('select', {}, ...fd.options.map(o => h('option', { value: o.value ?? o, selected: (o.value ?? o) == fd.value }, o.label ?? o))); }
+      if (fd.type === 'select') { inp = h('select', {}, ...fd.options.map(o => h('option', { value: o.value ?? o, selected: (o.value ?? o) == fd.value }, tx(String(o.label ?? o))))); }
       else if (fd.type === 'range') {
         const num = h('input', { type: 'number', value: fd.value, min: fd.min, max: fd.max, step: fd.step || 1, style: { width: '64px' } });
         const rng = h('input', { type: 'range', value: fd.value, min: fd.min, max: fd.max, step: fd.step || 1 });
         rng.oninput = () => { num.value = rng.value; vals[fd.key] = +rng.value; onChange && onChange(vals); };
         num.oninput = () => { rng.value = num.value; vals[fd.key] = +num.value; onChange && onChange(vals); };
-        wrap.append(h('label', { class: 'field' }, fd.label, h('div', { class: 'row' }, rng, num))); return;
+        wrap.append(h('label', { class: 'field' }, tx(fd.label), h('div', { class: 'row' }, rng, num))); return;
       }
-      else if (fd.type === 'checkbox') { inp = h('input', { type: 'checkbox', checked: !!fd.value }); inp.onchange = () => { vals[fd.key] = inp.checked; onChange && onChange(vals); }; wrap.append(h('label', { class: 'row', style: { color: 'var(--tx-1)' } }, inp, fd.label)); return; }
+      else if (fd.type === 'checkbox') { inp = h('input', { type: 'checkbox', checked: !!fd.value }); inp.onchange = () => { vals[fd.key] = inp.checked; onChange && onChange(vals); }; wrap.append(h('label', { class: 'row', style: { color: 'var(--tx-1)' } }, inp, tx(fd.label))); return; }
       else if (fd.type === 'textarea') inp = h('textarea', { rows: fd.rows || 4 }, fd.value || '');
       else inp = h('input', { type: fd.type || 'text', value: fd.value ?? '', min: fd.min, max: fd.max, step: fd.step });
       const upd = () => { vals[fd.key] = (fd.type === 'number') ? +inp.value : inp.value; onChange && onChange(vals); };
       inp.oninput = upd; inp.onchange = upd;
-      wrap.append(h('label', { class: 'field' }, fd.label, inp));
+      wrap.append(h('label', { class: 'field' }, tx(fd.label), inp));
     });
     const r = await modal({ title, body: wrap, width, buttons: [{ label: 'Cancel', value: null }, { label: ok, primary: true, value: 'ok' }] });
     return r === 'ok' ? vals : null;
@@ -283,7 +307,7 @@
   let toastWrap = null;
   function toast(msg, kind = '', ms = 3200) {
     if (!toastWrap) { toastWrap = h('div', { class: 'toasts' }); document.body.append(toastWrap); }
-    const t = h('div', { class: 'toast ' + kind }, msg); toastWrap.append(t);
+    const t = h('div', { class: 'toast ' + kind }, typeof msg === 'string' ? tx(msg) : msg); toastWrap.append(t);
     setTimeout(() => t.remove(), ms);
   }
 
@@ -298,7 +322,7 @@
   ];
   const ACCENTS = ['', '#4f8cff', '#31a8ff', '#ff5a5f', '#ff9a00', '#9a7bff', '#3ccf8e', '#ff4fa3', '#14b8a6', '#eab308'];
   const SKEY = 'bts.settings';
-  function getSettings() { try { return Object.assign({ skin: 'dark', accent: '', scale: 100, reduceMotion: false }, JSON.parse(localStorage.getItem(SKEY) || '{}')); } catch { return { skin: 'dark', accent: '', scale: 100, reduceMotion: false }; } }
+  function getSettings() { try { return Object.assign({ skin: 'dark', accent: '', scale: 100, reduceMotion: false, lang: 'en' }, JSON.parse(localStorage.getItem(SKEY) || '{}')); } catch { return { skin: 'dark', accent: '', scale: 100, reduceMotion: false, lang: 'en' }; } }
   function applySettings(st = getSettings()) {
     const r = document.documentElement;
     if (st.skin && st.skin !== 'dark') r.dataset.skin = st.skin; else delete r.dataset.skin;
@@ -306,8 +330,11 @@
     if (st.reduceMotion) r.dataset.reduceMotion = ''; else delete r.dataset.reduceMotion;
     const z = (st.scale || 100) / 100;
     try { if (window.bts && bts.zoom) bts.zoom(z); else document.body && (document.body.style.zoom = z === 1 ? '' : z); } catch { }
+    if ((st.lang || 'en') !== I.lang) I.setLang(st.lang || 'en');   // live: menus, panels and dialogs re-translate in place
     window.dispatchEvent(new CustomEvent('bts:settings', { detail: st }));
   }
+  // The language applies live in every open window (no reload, so open documents are never lost).
+  function setLanguage(id) { setSettings({ lang: id }); const l = I.LANGS.find(x => x.id === id); toast(T('Language: {name}', { name: l ? l.native : id }), 'ok', 1800); }
   function setSettings(patch) { const st = { ...getSettings(), ...patch }; try { localStorage.setItem(SKEY, JSON.stringify(st)); } catch { } applySettings(st); return st; }
   window.addEventListener('storage', e => { if (e.key === SKEY) applySettings(); });
   applySettings();
@@ -317,17 +344,19 @@
     const st = getSettings(); const wrap = h('div', { style: { display: 'flex', flexDirection: 'column', gap: '14px' } });
     const render = () => {
       const s = getSettings(); wrap.innerHTML = '';
-      wrap.append(h('div', { class: 'muted' }, 'Skin'), h('div', { class: 'skin-grid' }, ...SKINS.map(k => h('div', { class: 'skin-card' + (s.skin === k.id ? ' on' : ''), onclick: () => { setSettings({ skin: k.id }); render(); } },
-        h('div', { class: 'sw', html: `<div style="background:${k.sw[0]}"></div><div style="background:${k.sw[1]}"></div>` }), k.name))));
-      wrap.append(h('div', { class: 'muted' }, 'Accent colour'), h('div', { class: 'accent-row' }, ...ACCENTS.map(a => h('div', {
+      wrap.append(h('div', { class: 'muted' }, tx('Language')), h('div', { class: 'lang-grid' }, ...I.LANGS.map(l => h('div', { class: 'lang-card' + ((s.lang || 'en') === l.id ? ' on' : ''), lang: l.id, 'data-no-i18n': '', onclick: () => { setLanguage(l.id); render(); } },
+        h('b', {}, l.native), h('span', {}, l.id === 'en' ? 'Interface in English' : l.id === 'hi' ? 'इंटरफ़ेस हिन्दी में' : 'इंटरफेस मराठीत')))));
+      wrap.append(h('div', { class: 'muted' }, tx('Skin')), h('div', { class: 'skin-grid' }, ...SKINS.map(k => h('div', { class: 'skin-card' + (s.skin === k.id ? ' on' : ''), onclick: () => { setSettings({ skin: k.id }); render(); } },
+        h('div', { class: 'sw', html: `<div style="background:${k.sw[0]}"></div><div style="background:${k.sw[1]}"></div>` }), tx(k.name)))));
+      wrap.append(h('div', { class: 'muted' }, tx('Accent colour')), h('div', { class: 'accent-row' }, ...ACCENTS.map(a => h('div', {
         class: 'accent-dot' + ((s.accent || '') === a ? ' on' : ''), 'data-tip': a ? a : 'Each app\'s own colour',
         style: { background: a || 'conic-gradient(#ff5a5f 0 25%,#31a8ff 0 50%,#ff9a00 0 75%,#9a7bff 0)' }, onclick: () => { setSettings({ accent: a }); render(); } })),
         (() => { const c = h('input', { type: 'color', value: s.accent || '#4f8cff', 'data-tip': 'Custom colour' }); c.oninput = () => setSettings({ accent: c.value }); return c; })()));
       const sc = h('select', {}, ...[80, 90, 100, 110, 125, 150].map(v => h('option', { value: v, selected: +s.scale === v }, v + '%')));
       sc.onchange = () => setSettings({ scale: +sc.value });
-      wrap.append(h('label', { class: 'field' }, 'Interface size', sc));
+      wrap.append(h('label', { class: 'field' }, tx('Interface size'), sc));
       const rm = h('input', { type: 'checkbox', checked: !!s.reduceMotion }); rm.onchange = () => setSettings({ reduceMotion: rm.checked });
-      wrap.append(h('label', { class: 'row', style: { color: 'var(--tx-1)' } }, rm, 'Reduce motion (no animations)'));
+      wrap.append(h('label', { class: 'row', style: { color: 'var(--tx-1)' } }, rm, tx('Reduce motion (no animations)')));
     };
     render(); return wrap;
   }
@@ -350,6 +379,7 @@
   function builtinCommands() {
     return [
       { label: 'Appearance: skins, accent colour, interface size', path: 'Settings', action: appearanceDialog },
+      ...I.LANGS.map(l => ({ label: 'Language: ' + l.native, path: 'Settings', action: () => setLanguage(l.id) })),
       { label: 'Keyboard shortcuts', path: 'Help', kbd: 'Ctrl+/', action: shortcutSheet },
       ...SKINS.map(k => ({ label: 'Skin: ' + k.name, path: 'Settings', action: () => setSettings({ skin: k.id }) })),
     ];
@@ -365,27 +395,37 @@
     for (let k = 0; k < text.length; k++) { if (j < q.length && t[k] === q[j]) { html += '<mark>' + esc(text[k]) + '</mark>'; j++; } else html += esc(text[k]); }
     return j === q.length ? { score: 10, html } : null;
   }
+  function trLabel(s) { return s ? I.translateText(String(s)) : ''; }
   function esc(s) { return String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
   let paletteOpen = false;
   function commandPalette() {
     if (paletteOpen) return; paletteOpen = true;
     document.querySelectorAll('.dropdown').forEach(d => d.remove());
-    const all = [...flattenMenus(), ...extraCommands, ...builtinCommands()];
+    // Each command is searchable by its translated label and by its English label (students may type either).
+    const all = [...flattenMenus(), ...extraCommands, ...builtinCommands()].map(c => {
+      const en = String(c.label || ''), tl = trLabel(en), ep = String(c.path || '');
+      return { ...c, en, label: tl, enPath: ep, path: ep.split(' › ').map(p => trLabel(p)).join(' › ') };
+    });
     const back = h('div', { class: 'cmd-back' }), box = h('div', { class: 'cmd' });
-    const inp = h('input', { type: 'text', placeholder: 'Search for a feature, filter, tool or command…' });
+    const inp = h('input', { type: 'text', placeholder: T('Search for a feature, filter, tool or command…') });
     const list = h('div', { class: 'list' }); box.append(inp, list); back.append(box); document.body.append(back);
     let rows = [], sel = 0;
     const close = () => { back.remove(); paletteOpen = false; };
     const run = r => { close(); setTimeout(() => r.action(), 30); };
     const render = () => {
       const q = inp.value.trim();
-      rows = all.map(c => { const m = fuzzy(q, c.label) || (q && fuzzy(q, c.path + ' ' + c.label) ? { score: 5, html: esc(c.label) } : null); return m && { ...c, ...m }; }).filter(Boolean);
+      rows = all.map(c => {
+        let m = fuzzy(q, c.label);
+        if (c.en !== c.label) { const e = fuzzy(q, c.en); if (e && (!m || e.score > m.score)) m = { score: e.score, html: esc(c.label), viaEn: e.html }; }
+        if (!m && q && (fuzzy(q, c.path + ' ' + c.label) || fuzzy(q, c.enPath + ' ' + c.en))) m = { score: 5, html: esc(c.label) };
+        return m && { ...c, ...m };
+      }).filter(Boolean);
       if (q) rows.sort((a, b) => b.score - a.score);
       rows = rows.slice(0, 80); sel = Math.min(sel, Math.max(0, rows.length - 1));
       list.innerHTML = '';
-      if (!rows.length) { list.append(h('div', { class: 'empty' }, 'No matching features')); return; }
+      if (!rows.length) { list.append(h('div', { class: 'empty' }, T('No matching features'))); return; }
       rows.forEach((r, i) => {
-        const el = h('div', { class: 'it' + (i === sel ? ' sel' : '') }, h('span', { html: r.html }), r.path ? h('span', { class: 'path' }, r.path) : null, h('span', { class: 'kbd' }, r.kbd || ''));
+        const el = h('div', { class: 'it' + (i === sel ? ' sel' : '') }, h('span', { class: 'lbl', html: r.html }), r.viaEn ? h('span', { class: 'en', html: r.viaEn }) : null, r.path ? h('span', { class: 'path' }, r.path) : null, h('span', { class: 'kbd' }, r.kbd || ''));
         el.onmousemove = () => { if (sel !== i) { sel = i; list.querySelectorAll('.it').forEach((x, k) => x.classList.toggle('sel', k === i)); } };
         el.onclick = () => run(r); list.append(el);
       });
@@ -403,8 +443,8 @@
   }
   function shortcutSheet() {
     const rows = [...flattenMenus(), ...builtinCommands()].filter(r => r.kbd);
-    const tb = h('table', { class: 'kb-table' }, ...rows.map(r => h('tr', {}, h('td', {}, r.label), h('td', {}, r.kbd))));
-    return modal({ title: 'Keyboard shortcuts', body: h('div', {}, h('div', { class: 'muted', style: { marginBottom: '8px' } }, 'Press Ctrl+K anywhere to search every feature.'), tb), width: 520 });
+    const tb = h('table', { class: 'kb-table' }, ...rows.map(r => h('tr', {}, h('td', {}, tx(r.label)), h('td', { 'data-no-i18n': '' }, r.kbd))));
+    return modal({ title: 'Keyboard shortcuts', body: h('div', {}, h('div', { class: 'muted', style: { marginBottom: '8px' } }, tx('Press Ctrl+K anywhere to search every feature.')), tb), width: 560 });
   }
   shortcut('ctrl+k', () => commandPalette(), { global: true });
   shortcut('ctrl+/', () => shortcutSheet());
@@ -426,7 +466,7 @@
 
   // ---------- File drop helper ----------
   function fileDrop(onFiles, label = 'Drop files to open') {
-    const ov = h('div', { class: 'drop-overlay' }, label); document.body.append(ov);
+    const ov = h('div', { class: 'drop-overlay' }, tx(label)); document.body.append(ov);
     let n = 0;
     window.addEventListener('dragenter', e => { if (e.dataTransfer.types.includes('Files')) { n++; ov.classList.add('show'); } });
     window.addEventListener('dragleave', () => { if (--n <= 0) { n = 0; ov.classList.remove('show'); } });
@@ -441,5 +481,5 @@
   const fmtTime = s => { s = Math.max(0, s); const m = Math.floor(s / 60), ss = Math.floor(s % 60), f = Math.floor((s % 1) * 30); return `${String(m).padStart(2, '0')}:${String(ss).padStart(2, '0')}:${String(f).padStart(2, '0')}`; };
   async function blobToU8(b) { return new Uint8Array(await b.arrayBuffer()); }
 
-  window.UI = { appearanceBody, getSettings, setSettings, applySettings, appearanceDialog, commandPalette, shortcutSheet, registerCommands, SKINS, $, h, icon, titlebar, showDropdown, contextMenu, setDocTitle, shortcut, modal, prompt, confirm, form, toast, History, fileDrop, queryFile, sleep, clamp, download, fmtTime, blobToU8 };
+  window.UI = { _menus: () => registeredMenus, T, setLanguage, languageItems, appearanceBody, getSettings, setSettings, applySettings, appearanceDialog, commandPalette, shortcutSheet, registerCommands, SKINS, $, h, icon, titlebar, showDropdown, contextMenu, setDocTitle, shortcut, modal, prompt, confirm, form, toast, History, fileDrop, queryFile, sleep, clamp, download, fmtTime, blobToU8 };
 })();

@@ -171,3 +171,31 @@ label.field { display: flex; flex-direction: column; gap: 4px; color: var(--tx-2
 .kb-table { width:100%; border-collapse:collapse; font-size:12.5px; }
 .kb-table td { padding:5px 8px; border-bottom:1px solid var(--line); }
 .kb-table td:last-child { text-align:right; color:var(--tx-2); font-family:var(--mono); }
+
+/* ---------- Languages (हिन्दी / मराठी) ---------- */
+/* Devanagari font stack: Nirmala UI (Windows 8+), Mangal (older Windows), Noto Sans Devanagari (Linux). Latin glyphs come from the same fonts. */
+:root[lang="hi"], :root[lang="mr"] { --font: "Segoe UI Variable", "Segoe UI", "Nirmala UI", Mangal, "Noto Sans Devanagari", "Noto Sans", Inter, system-ui, sans-serif; }
+:root[lang="hi"] body, :root[lang="mr"] body { line-height: 1.5; }
+:lang(hi), :lang(mr) { font-family: var(--font); }
+.lang-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+.lang-card { border:2px solid var(--line-2); border-radius:10px; padding:10px 12px; cursor:pointer; display:flex; flex-direction:column; gap:2px; font-family: "Segoe UI", "Nirmala UI", Mangal, "Noto Sans Devanagari", system-ui, sans-serif; }
+.lang-card b { font-size:15px; color:var(--tx-0); font-weight:600; }
+.lang-card span { font-size:11.5px; color:var(--tx-2); }
+.lang-card.on { border-color:var(--accent); background:var(--accent-soft); }
+.cmd .it .en { color:var(--tx-3); font-size:11.5px; } .cmd .it.sel .en { color:rgba(255,255,255,.75); }
+/* Longer Devanagari labels: dialogs wrap, tight bars truncate with an ellipsis (the full text is in a tooltip). */
+:root[data-lang="hi"] .modal, :root[data-lang="mr"] .modal { max-width: min(92vw, 980px); }
+:root[data-lang="hi"] .modal .m-h, :root[data-lang="mr"] .modal .m-h { line-height: 1.45; }
+:root[data-lang="hi"] .modal label.field, :root[data-lang="mr"] .modal label.field { line-height: 1.45; }
+:root[data-lang="hi"] .modal .btn, :root[data-lang="mr"] .modal .btn { white-space: normal; height: auto; min-height: 30px; padding-top: 3px; padding-bottom: 3px; line-height: 1.35; text-align: center; }
+:root[data-lang="hi"] .dropdown .item, :root[data-lang="mr"] .dropdown .item { padding: 5px 10px; line-height: 1.45; }
+:root[data-lang="hi"] .dropdown .item .lbl, :root[data-lang="mr"] .dropdown .item .lbl { max-width: 460px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+:root[data-lang="hi"] .dropdown, :root[data-lang="mr"] .dropdown { max-height: calc(100vh - 12px); overflow-y: auto; }
+:root[data-lang="hi"] .tabs .tab, :root[data-lang="mr"] .tabs .tab { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; padding-left: 4px; padding-right: 4px; }
+:root[data-lang="hi"] .panel > .panel-h, :root[data-lang="mr"] .panel > .panel-h { letter-spacing: 0; text-transform: none; font-size: 12px; white-space: nowrap; overflow: hidden; }
+:root[data-lang="hi"] .options-bar .grp, :root[data-lang="mr"] .options-bar .grp { white-space: nowrap; }
+:root[data-lang="hi"] .cmd-btn .cmd-lbl, :root[data-lang="mr"] .cmd-btn .cmd-lbl { max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+:root[data-lang="hi"] .toast, :root[data-lang="mr"] .toast { line-height: 1.5; }
+:root[data-lang="hi"] .tip-pop, :root[data-lang="mr"] .tip-pop { white-space: normal; max-width: 360px; line-height: 1.45; }
+/* Letter-spacing breaks Devanagari conjuncts and matras in Chromium; small-caps headings use normal spacing. */
+:root[data-lang="hi"] *, :root[data-lang="mr"] * { letter-spacing: 0 !important; }

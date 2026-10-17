@@ -195,7 +195,7 @@ FX.extrude = { name: '3D Extrude & Bevel',
   setup: (api, preset) => {
     const m = api.modal; const foot = m?.querySelector('.m-f'); if (!foot) return null; let tmr = null, yaw = 0;
     const btn = h('button', { class: 'btn tt-btn', style: { marginRight: 'auto' } }, '▶ Turntable');
-    const slider = () => [...m.querySelectorAll('label.field')].find(l => l.textContent.startsWith('Rotate Y'));
+    const slider = () => [...m.querySelectorAll('label.field')].find(l => I18N.source(l).startsWith('Rotate Y'));
     const stop = () => { if (!tmr) return; clearInterval(tmr); tmr = null; btn.textContent = '▶ Turntable'; const sl = slider(); const rng = sl?.querySelector('input[type=range]'); if (rng) { rng.value = Math.round(((yaw + 180) % 360 + 360) % 360 - 180); rng.dispatchEvent(new Event('input')); } };
     const start = () => { yaw = +api.vals().ry || 0; btn.textContent = '■ Stop'; tmr = setInterval(() => { yaw = (yaw + 8) % 360; api.run({ ry: ((yaw + 180) % 360) - 180 }); }, 70); };
     btn.onclick = () => tmr ? stop() : start(); foot.prepend(btn); VX._turntable = { start, stop, get spinning() { return !!tmr; } };

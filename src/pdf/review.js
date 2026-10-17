@@ -16,7 +16,7 @@ export function typeLabel(a) {
   if (a.type === 'text' && a.hf) return 'Header / footer';
   return LBL[a.type] || (a.type[0].toUpperCase() + a.type.slice(1));
 }
-const fmtDate = d => { try { return new Date(d).toLocaleString(undefined, { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }); } catch { return ''; } };
+const fmtDate = d => { try { return I18N.date(d, { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }); } catch { return ''; } };
 
 // =====================================================================================  comments panel
 const CF = { type: 'all', status: 'all', author: 'all', q: '' };

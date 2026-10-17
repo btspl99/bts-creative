@@ -134,7 +134,7 @@ function renderHistory() {
   if (ltab !== 'history') return; const b = $('#lbody'); b.innerHTML = '';
   b.append(h('div', { class: 'bin-tools' }, h('button', { class: 'btn sm', html: icon('undo') + 'Undo', onclick: undo }), h('button', { class: 'btn sm', html: icon('redo') + 'Redo', onclick: redo }), h('span', { class: 'muted cnt' }, `${hist.length} steps`)));
   const list = h('div', { class: 'hist-list' });
-  hist.forEach((st, i) => list.append(h('div', { class: 'hist-it' + (i === hi ? ' cur' : '') + (i > hi ? ' fut' : ''), onclick: () => jumpHistory(i) }, h('span', { class: 'n' }, String(i + 1)), h('span', { class: 'lbl' }, st.label), h('span', { class: 'muted tm' }, new Date(st.at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })))));
+  hist.forEach((st, i) => list.append(h('div', { class: 'hist-it' + (i === hi ? ' cur' : '') + (i > hi ? ' fut' : ''), onclick: () => jumpHistory(i) }, h('span', { class: 'n' }, String(i + 1)), h('span', { class: 'lbl' }, st.label), h('span', { class: 'muted tm' }, I18N.date(st.at, { hour: '2-digit', minute: '2-digit' })))));
   b.append(list); const cur = list.querySelector('.cur'); cur && cur.scrollIntoView({ block: 'nearest' });
 }
 
@@ -294,7 +294,7 @@ function drawOverlay() {
   x.setLineDash([5, 4]); x.lineWidth = 1.5; x.strokeStyle = 'rgba(255,255,255,.85)'; poly([M.toS(R.x, R.y), M.toS(R.x + R.w, R.y), M.toS(R.x + R.w, R.y + R.h), M.toS(R.x, R.y + R.h)]); x.stroke();
   x.setLineDash([]); x.strokeStyle = cssVar('--accent', '#9a7bff'); const [cx, cy] = M.toS(0, 0); x.beginPath(); x.arc(cx, cy, 5, 0, Math.PI * 2); x.stroke();
   const mos = mosaicFx(c); if (mos) { const f = evalFx(c, ST.t - c.start).find(g => g.id === mos.id); const rx = f.rx / 100 * W - W / 2, ry = f.ry / 100 * H - H / 2, rw = f.rw / 100 * W, rh = f.rh / 100 * H;
-    x.lineWidth = 2; x.strokeStyle = '#ffd400'; poly([M.toS(rx, ry), M.toS(rx + rw, ry), M.toS(rx + rw, ry + rh), M.toS(rx, ry + rh)]); x.stroke(); const [hx, hy] = M.toS(rx + rw, ry + rh); x.fillStyle = '#ffd400'; x.fillRect(hx - 5, hy - 5, 10, 10); x.font = '11px sans-serif'; x.fillText('blur region', ...M.toS(rx, ry - 8 / M.k)); }
+    x.lineWidth = 2; x.strokeStyle = '#ffd400'; poly([M.toS(rx, ry), M.toS(rx + rw, ry), M.toS(rx + rw, ry + rh), M.toS(rx, ry + rh)]); x.stroke(); const [hx, hy] = M.toS(rx + rw, ry + rh); x.fillStyle = '#ffd400'; x.fillRect(hx - 5, hy - 5, 10, 10); x.font = '11px sans-serif'; x.fillText(I18N.T('blur region'), ...M.toS(rx, ry - 8 / M.k)); }
   if ((c.masks && c.masks.length) || ST.penDraw) drawMaskOverlay(x, c, M);
 }
 function mosaicFx(c) { const ms = c.fx.filter(f => f.type === 'mosaic' && f.on && !f.whole); return ms.find(f => f.id === ST.fxFocus) || ms[0] || null; }

@@ -1,0 +1,281 @@
+# PDF Pro (part 5): review, stamps, forms, search, session, certificates
+Export a summary of all comments | सभी टिप्पणियों का सारांश एक्सपोर्ट करें | सर्व टिप्पण्यांचा सारांश एक्सपोर्ट करा
+{X}Export | - |
+Added in this session — {length} of {p1} item(s) | इस सत्र में जोड़े गए — {p1} में से {length} आइटम | या सत्रात जोडलेले — {p1} पैकी {length} घटक
+No new comments in this session. Use the Comment menu or the tools on the left to add some. | इस सत्र में कोई नई टिप्पणी नहीं। जोड़ने के लिए टिप्पणी मेनू या बाईं ओर के टूल का उपयोग करें। | या सत्रात नवीन टिप्पण्या नाहीत. जोडण्यासाठी टिप्पणी मेनू किंवा डावीकडील साधने वापरा.
+Saved in the document ({length}) | दस्तावेज़ में सहेजे गए ({length}) | दस्तऐवजात जतन केलेले ({length})
+{label} · Page {p1}{p2}{p3} | {label} · पृष्ठ {p1}{p2}{p3} | {label} · पृष्ठ {p1}{p2}{p3}
+✓ Resolved | ✓ हल किया गया | ✓ निकाली काढले
+{p0} · Page {p1}{p2}{p3} | {p0} · पृष्ठ {p1}{p2}{p3} | {p0} · पृष्ठ {p1}{p2}{p3}
+Go to page {page} | पृष्ठ {page} पर जाएँ | पृष्ठ {page} वर जा
+Delete reply | उत्तर हटाएँ | उत्तर हटवा
+✓ Resolved{p0} | ✓ हल किया गया{p0} | ✓ निकाली काढले{p0}
+Reply | उत्तर दें | उत्तर द्या
+Reopen | फिर से खोलें | पुन्हा उघडा
+Resolve | हल करें | निकाली काढा
+Write a reply | उत्तर लिखें | उत्तर लिहा
+Date | दिनांक | दिनांक
+Replies | उत्तर | उत्तरे
+Status | स्थिति | स्थिती
+Comments summary — {p0} Exported {p1} · {length} item(s) | टिप्पणियों का सारांश — {p0} एक्सपोर्ट {p1} · {length} आइटम | टिप्पण्यांचा सारांश — {p0} एक्सपोर्ट {p1} · {length} घटक
+Export comments summary | टिप्पणियों का सारांश एक्सपोर्ट करें | टिप्पण्यांचा सारांश एक्सपोर्ट करा
+Spreadsheet (.csv) | स्प्रेडशीट (.csv) | स्प्रेडशीट (.csv)
+Text summary (.txt) | टेक्स्ट सारांश (.txt) | मजकूर सारांश (.txt)
+Comments exported | टिप्पणियाँ एक्सपोर्ट की गईं | टिप्पण्या एक्सपोर्ट केल्या
+Value | मान | मूल्य
+1 in = 1 in | = | =
+Scale | स्केल | प्रमाण
+Web address | वेब पता | वेब पत्ता
+Stamp text | स्टैम्प टेक्स्ट | शिक्का मजकूर
+Rotation | घुमाव | फिरवणे
+Reason | कारण | कारण
+Label | लेबल | लेबल
+Add reply | उत्तर जोड़ें | उत्तर जोडा
+Replies · ✓ resolved | उत्तर · ✓ हल | उत्तरे · ✓ निकाली
+Edit link | लिंक संपादित करें | लिंक संपादित करा
+A page in this document | इस दस्तावेज़ का एक पृष्ठ | या दस्तऐवजातील एक पृष्ठ
+Link to | इससे लिंक करें | याला लिंक करा
+Web address or email | वेब पता या ईमेल | वेब पत्ता किंवा ईमेल
+Page number | पृष्ठ संख्या | पृष्ठ क्रमांक
+Approved | स्वीकृत | मंजूर
+Draft | मसौदा | मसुदा
+Reviewed | समीक्षित | पुनरावलोकन केले
+Confidential | गोपनीय | गोपनीय
+Final | अंतिम | अंतिम
+Not approved | अस्वीकृत | नामंजूर
+For comment | टिप्पणी हेतु | टिप्पणीसाठी
+Void | निरस्त | रद्दबातल
+Date stamp | दिनांक स्टैम्प | दिनांक शिक्का
+Received (with date) | प्राप्त (दिनांक सहित) | प्राप्त (दिनांकासह)
+Sign here (tag) | यहाँ हस्ताक्षर करें (टैग) | येथे स्वाक्षरी करा (टॅग)
+Could not save stamp (storage full) | स्टैम्प नहीं सहेजा जा सका (स्टोरेज भरा है) | शिक्का जतन करता आला नाही (साठवण भरली आहे)
+Image stamp {p0} | छवि स्टैम्प {p0} | प्रतिमा शिक्का {p0}
+My stamps | मेरे स्टैम्प | माझे शिक्के
+custom | कस्टम | सानुकूल
+Add name & date | नाम और दिनांक जोड़ें | नाव आणि दिनांक जोडा
+Click on the page to place | रखने के लिए पृष्ठ पर क्लिक करें | ठेवण्यासाठी पृष्ठावर क्लिक करा
+Custom text | कस्टम टेक्स्ट | सानुकूल मजकूर
+Image stamp | छवि स्टैम्प | प्रतिमा शिक्का
+Custom | कस्टम | सानुकूल
+Custom text stamp | कस्टम टेक्स्ट स्टैम्प | सानुकूल मजकूर शिक्का
+Save stamp | स्टैम्प सहेजें | शिक्का जतन करा
+Image stamp saved — click on the page to place it | छवि स्टैम्प सहेजा गया — रखने के लिए पृष्ठ पर क्लिक करें | प्रतिमा शिक्का जतन केला — ठेवण्यासाठी पृष्ठावर क्लिक करा
+1 cm = 1 cm | = | =
+Click points; double-click or Enter to finish | बिंदुओं पर क्लिक करें; समाप्त करने के लिए डबल-क्लिक करें या Enter दबाएँ | बिंदूंवर क्लिक करा; संपवण्यासाठी डबल-क्लिक करा किंवा Enter दाबा
+Drag to measure | मापने के लिए ड्रैग करें | मोजण्यासाठी ड्रॅग करा
+Measurement scale | माप का स्केल | मापनाचे प्रमाण
+On the page | पृष्ठ पर | पृष्ठावर
+Page unit | पृष्ठ इकाई | पृष्ठ एकक
+Real unit | वास्तविक इकाई | प्रत्यक्ष एकक
+Set scale | स्केल सेट करें | प्रमाण सेट करा
+equals in real life | वास्तविकता में बराबर है | प्रत्यक्षात इतके
+Place | रखें | ठेवा
+Click where the date should go | जहाँ दिनांक लगाना है वहाँ क्लिक करें | जिथे दिनांक हवा तिथे क्लिक करा
+Signature stamp (visual only) | हस्ताक्षर स्टैम्प (केवल दिखावटी) | स्वाक्षरी शिक्का (फक्त दृश्य)
+I approve this document | मैं इस दस्तावेज़ को स्वीकृत करता/करती हूँ | मी हा दस्तऐवज मंजूर करतो/करते
+Location | स्थान | स्थान
+Signer name | हस्ताक्षरकर्ता का नाम | स्वाक्षरीकर्त्याचे नाव
+Note: this is a visual stamp only, not a cryptographic digital signature. | ध्यान दें: यह केवल दिखावटी स्टैम्प है, क्रिप्टोग्राफ़िक डिजिटल हस्ताक्षर नहीं। | टीप: हा फक्त दृश्य शिक्का आहे, क्रिप्टोग्राफिक डिजिटल स्वाक्षरी नाही.
+Click where the signature stamp should go | जहाँ हस्ताक्षर स्टैम्प लगाना है वहाँ क्लिक करें | जिथे स्वाक्षरी शिक्का हवा तिथे क्लिक करा
+None saved | कोई सहेजा नहीं गया | काहीही जतन केलेले नाही
+Done | हो गया | झाले
+New initials | नए आद्याक्षर | नवीन आद्याक्षरे
+New signature | नया हस्ताक्षर | नवीन स्वाक्षरी
+Saved signatures | सहेजे गए हस्ताक्षर | जतन केलेल्या स्वाक्षऱ्या
+Checkbox | चेकबॉक्स | चेकबॉक्स
+Dropdown list | ड्रॉपडाउन सूची | ड्रॉपडाउन यादी
+Multi-line text | बहु-पंक्ति टेक्स्ट | अनेक ओळींचा मजकूर
+Number | संख्या | संख्या
+Radio button | रेडियो बटन | रेडिओ बटण
+Text field | टेक्स्ट फ़ील्ड | मजकूर फील्ड
+Check | चेक | चेक
+Choice | विकल्प | पर्याय
+Field | फ़ील्ड | फील्ड
+Notes | नोट्स | टिपा
+Radio | रेडियो | रेडिओ
+Choice{p0} | विकल्प{p0} | पर्याय{p0}
+Date (dd/mm/yyyy) | दिनांक (dd/mm/yyyy) | दिनांक (dd/mm/yyyy)
+Group1 | - |
+Option 1 | विकल्प 1 | पर्याय 1
+Option 2 | विकल्प 2 | पर्याय 2
+Option 3 | विकल्प 3 | पर्याय 3
+Field name | फ़ील्ड का नाम | फील्डचे नाव
+Rename field | फ़ील्ड का नाम बदलें | फील्डचे नाव बदला
+Shown to screen readers | स्क्रीन रीडर को दिखाया जाता है | स्क्रीन रीडरना दाखवले जाते
+Tooltip | टूलटिप | टूलटिप
+Required | आवश्यक | आवश्यक
+0 = auto | 0 = स्वतः | 0 = स्वयं
+Default value | डिफ़ॉल्ट मान | डीफॉल्ट मूल्य
+0 = unlimited | 0 = असीमित | 0 = अमर्यादित
+Max characters | अधिकतम अक्षर | कमाल अक्षरे
+Max length | अधिकतम लंबाई | कमाल लांबी
+Checked by default | डिफ़ॉल्ट रूप से चेक किया हुआ | डीफॉल्टनुसार चेक केलेले
+Default | डिफ़ॉल्ट | डीफॉल्ट
+Options | विकल्प | पर्याय
+Options (one per line) | विकल्प (हर पंक्ति में एक) | पर्याय (प्रत्येक ओळीत एक)
+Group | समूह | गट
+Radio group | रेडियो समूह | रेडिओ गट
+Radio value | रेडियो मान | रेडिओ मूल्य
+Set tab order | टैब क्रम सेट करें | टॅब क्रम सेट करा
+Tab order | टैब क्रम | टॅब क्रम
+No form fields on this page | इस पृष्ठ पर कोई फ़ॉर्म फ़ील्ड नहीं | या पृष्ठावर फॉर्म फील्ड नाहीत
+Page {p0} — order used by the Tab key | पृष्ठ {p0} — Tab कुंजी द्वारा प्रयुक्त क्रम | पृष्ठ {p0} — Tab कळेने वापरलेला क्रम
+By columns | कॉलम के अनुसार | स्तंभांनुसार
+By rows | पंक्तियों के अनुसार | ओळींनुसार
+Tab order set — written when you save | टैब क्रम सेट हुआ — सहेजते समय लिखा जाएगा | टॅब क्रम सेट झाला — जतन करताना लिहिला जाईल
+Form cleared | फ़ॉर्म साफ़ हुआ | फॉर्म साफ झाला
+This document has no form fields | इस दस्तावेज़ में कोई फ़ॉर्म फ़ील्ड नहीं है | या दस्तऐवजात फॉर्म फील्ड नाहीत
+JSON | = | =
+Form data exported | फ़ॉर्म डेटा एक्सपोर्ट हुआ | फॉर्म डेटा एक्सपोर्ट झाला
+Not a valid JSON file | मान्य JSON फ़ाइल नहीं है | वैध JSON फाइल नाही
+Filled {n} field(s) | {n} फ़ील्ड भरे गए | {n} फील्ड भरल्या
+Import form data | फ़ॉर्म डेटा इम्पोर्ट करें | फॉर्म डेटा इम्पोर्ट करा
+graphic field scan | - |
+Looking for blanks, boxes and lines | रिक्त स्थान, बॉक्स और रेखाएँ खोजी जा रही हैं | रिकाम्या जागा, बॉक्स आणि रेषा शोधत आहे
+No likely form fields found. Use the Form field tool (F) to add them by hand. | संभावित फ़ॉर्म फ़ील्ड नहीं मिले। इन्हें हाथ से जोड़ने के लिए फ़ॉर्म फ़ील्ड टूल (F) का उपयोग करें। | संभाव्य फॉर्म फील्ड सापडल्या नाहीत. त्या हाताने जोडण्यासाठी फॉर्म फील्ड साधन (F) वापरा.
+Add fields | फ़ील्ड जोड़ें | फील्ड जोडा
+Auto-detect form fields — {length} found | फ़ॉर्म फ़ील्ड अपने-आप पहचानें — {length} मिले | फॉर्म फील्ड आपोआप ओळखा — {length} सापडल्या
+Found from blank lines (____), boxes and checkbox symbols. Untick anything that should not become a field. | खाली रेखाओं (____), बॉक्स और चेकबॉक्स चिह्नों से मिले। जो फ़ील्ड नहीं बनना चाहिए उसका चिह्न हटाएँ। | रिकाम्या रेषा (____), बॉक्स आणि चेकबॉक्स चिन्हांवरून सापडल्या. जे फील्ड होऊ नये त्याची खूण काढा.
+Auto-detect fields | फ़ील्ड अपने-आप पहचानें | फील्ड आपोआप ओळखा
+Added {n} field(s). Select one to edit its properties; save to make them fillable. | {n} फ़ील्ड जोड़े गए। गुण संपादित करने के लिए किसी एक को चुनें; भरने योग्य बनाने के लिए सहेजें। | {n} फील्ड जोडल्या. गुणधर्म संपादित करण्यासाठी एक निवडा; भरण्यायोग्य करण्यासाठी जतन करा.
+Find in document | दस्तावेज़ में ढूँढें | दस्तऐवजात शोधा
+Highlight all | सभी हाइलाइट करें | सर्व हायलाइट करा
+Match case | अक्षर-आकार मिलाएँ | अक्षरांचा आकार जुळवा
+Whole words | पूरे शब्द | संपूर्ण शब्द
+Next › | अगला › | पुढील ›
+‹ Prev | ‹ पिछला | ‹ मागील
+Mark every match for permanent redaction | हर मिलान को स्थायी रिडैक्शन के लिए चिह्नित करें | प्रत्येक जुळणी कायमच्या रिडॅक्शनसाठी चिन्हांकित करा
+Redact all | सभी रिडैक्ट करें | सर्व रिडॅक्ट करा
+Redact sensitive data (email, phone, ID) | संवेदनशील डेटा रिडैक्ट करें (ईमेल, फ़ोन, ID) | संवेदनशील डेटा रिडॅक्ट करा (ईमेल, फोन, ID)
+No results | कोई परिणाम नहीं | परिणाम नाहीत
+{length} result{p1} on {size} page(s) | {size} पृष्ठों पर {length} परिणाम | {size} पृष्ठांवर {length} परिणाम
+Search for something first | पहले कुछ खोजें | आधी काहीतरी शोधा
+Mark all {length} match(es) of "{lastQ}" for redaction? Text under the black boxes is removed permanently when you save. | "{lastQ}" के सभी {length} मिलानों को रिडैक्शन के लिए चिह्नित करें? सहेजते समय काले बॉक्स के नीचे का टेक्स्ट स्थायी रूप से हट जाता है। | "{lastQ}" च्या सर्व {length} जुळण्या रिडॅक्शनसाठी चिन्हांकित करायच्या? जतन करताना काळ्या बॉक्सखालील मजकूर कायमचा काढला जातो.
+Redact all matches | सभी मिलान रिडैक्ट करें | सर्व जुळण्या रिडॅक्ट करा
+Redact matches | मिलान रिडैक्ट करें | जुळण्या रिडॅक्ट करा
+{n} area(s) marked — they become permanent when you save | {n} क्षेत्र चिह्नित — सहेजते समय ये स्थायी हो जाते हैं | {n} भाग चिन्हांकित — जतन करताना ते कायमचे होतात
+Email addresses | ईमेल पते | ईमेल पत्ते
+Phone numbers | फ़ोन नंबर | फोन नंबर
+Aadhaar-like numbers (12 digits) | आधार जैसे नंबर (12 अंक) | आधारसारखे क्रमांक (12 अंक)
+PAN-like codes (ABCDE1234F) | PAN जैसे कोड (ABCDE1234F) | PAN सारखे कोड (ABCDE1234F)
+Custom pattern is not a valid regular expression | कस्टम पैटर्न मान्य रेगुलर एक्सप्रेशन नहीं है | सानुकूल पॅटर्न वैध रेग्युलर एक्सप्रेशन नाही
+Redact sensitive information | संवेदनशील जानकारी रिडैक्ट करें | संवेदनशील माहिती रिडॅक्ट करा
+Custom pattern (regular expression, optional) | कस्टम पैटर्न (रेगुलर एक्सप्रेशन, वैकल्पिक) | सानुकूल पॅटर्न (रेग्युलर एक्सप्रेशन, ऐच्छिक)
+No matching information found | कोई मेल खाती जानकारी नहीं मिली | जुळणारी माहिती सापडली नाही
+Custom pattern | कस्टम पैटर्न | सानुकूल पॅटर्न
+Found {total} item(s) | {total} आइटम मिले | {total} घटक सापडले
+They will be covered with black boxes. The text underneath is removed permanently when you save. | इन्हें काले बॉक्स से ढक दिया जाएगा। सहेजते समय नीचे का टेक्स्ट स्थायी रूप से हट जाता है। | ते काळ्या बॉक्सने झाकले जातील. जतन करताना खालील मजकूर कायमचा काढला जातो.
+{n} area(s) marked for redaction — applied when you save | रिडैक्शन के लिए {n} क्षेत्र चिह्नित — सहेजते समय लागू होंगे | रिडॅक्शनसाठी {n} भाग चिन्हांकित — जतन करताना लागू होतील
+Don't save | न सहेजें | जतन करू नका
+Save changes to {p0} before closing it? | बंद करने से पहले {p0} के बदलाव सहेजें? | बंद करण्यापूर्वी {p0} मधील बदल जतन करायचे?
+Save changes? | बदलाव सहेजें? | बदल जतन करायचे?
+Close other tabs | अन्य टैब बंद करें | इतर टॅब बंद करा
+Move to new window | नई विंडो में ले जाएँ | नवीन विंडोमध्ये हलवा
+Open another PDF in a new tab | नए टैब में दूसरा PDF खोलें | नवीन टॅबमध्ये दुसरा PDF उघडा
+No recent PDFs | कोई हाल का PDF नहीं | अलीकडील PDF नाहीत
+Open recent in new window | हाल वाला नई विंडो में खोलें | अलीकडील नवीन विंडोमध्ये उघडा
+Could not open | नहीं खुल सका | उघडता आले नाही
+Could not open {p}: {message} | {p} नहीं खुल सका: {message} | {p} उघडता आले नाही: {message}
+The document must be saved first. Save it now? | दस्तावेज़ पहले सहेजना होगा। अभी सहेजें? | दस्तऐवज आधी जतन करणे आवश्यक आहे. आता जतन करायचा?
+Autosave turned off | ऑटोसेव बंद किया गया | ऑटोसेव्ह बंद केले
+Unsaved work is backed up every {p0} | बिना सहेजा काम हर {p0} बैकअप होता है | जतन न केलेल्या कामाचा दर {p0} बॅकअप घेतला जातो
+autosave failed | - |
+There is no unsaved work to recover | पुनर्प्राप्त करने के लिए कोई बिना सहेजा काम नहीं है | पुनर्प्राप्त करण्यासाठी जतन न केलेले काम नाही
+BTS PDF Pro closed before these documents were saved. Recover the unsaved changes? | ये दस्तावेज़ सहेजे जाने से पहले BTS PDF Pro बंद हो गया। बिना सहेजे बदलाव पुनर्प्राप्त करें? | हे दस्तऐवज जतन होण्यापूर्वी BTS PDF Pro बंद झाले. जतन न केलेले बदल पुनर्प्राप्त करायचे?
+{pages} page(s) · {p1} | {pages} पृष्ठ · {p1} | {pages} पृष्ठे · {p1}
+Not now | अभी नहीं | आता नाही
+Recover | पुनर्प्राप्त करें | पुनर्प्राप्त करा
+Recover unsaved work | बिना सहेजा काम पुनर्प्राप्त करें | जतन न केलेले काम पुनर्प्राप्त करा
+Recovery data discarded | पुनर्प्राप्ति डेटा हटाया गया | पुनर्प्राप्ती डेटा टाकून दिला
+Could not recover | पुनर्प्राप्त नहीं हो सका | पुनर्प्राप्त करता आले नाही
+Could not recover {fileName}: {message} | {fileName} पुनर्प्राप्त नहीं हो सका: {message} | {fileName} पुनर्प्राप्त करता आले नाही: {message}
+Recovered {p0} — save to keep the changes | {p0} पुनर्प्राप्त हुआ — बदलाव रखने के लिए सहेजें | {p0} पुनर्प्राप्त झाले — बदल ठेवण्यासाठी जतन करा
+Recovered | पुनर्प्राप्त हुआ | पुनर्प्राप्त झाले
+3des | - |
+BTS signing certificate | BTS हस्ताक्षर प्रमाणपत्र | BTS स्वाक्षरी प्रमाणपत्र
+Only RSA keys are supported | केवल RSA कुंजियाँ समर्थित हैं | फक्त RSA की समर्थित आहेत
+No startxref | - |
+Signature{p0} | हस्ताक्षर{p0} | स्वाक्षरी{p0}
+Digitally signed by | द्वारा डिजिटल रूप से हस्ताक्षरित | यांनी डिजिटल स्वाक्षरी केलेले
+BT 0 g | - |
+Sig | - |
+Widget | - |
+SigFlags | - |
+Perms | - |
+{xn} 0 obj << /Type /XRef /Size {p1} {trailerExtra} /W [1 4 2] /Index [{p3}] /Length {length} >> stream | - |
+ByteRange too long | - |
+Signature too large | हस्ताक्षर बहुत बड़ा है | स्वाक्षरी खूप मोठी आहे
+ContactInfo | - |
+The byte range is damaged. | बाइट रेंज क्षतिग्रस्त है। | बाइट रेंज खराब झाली आहे.
+Unsupported digest algorithm | असमर्थित डाइजेस्ट एल्गोरिदम | असमर्थित डायजेस्ट अल्गोरिदम
+No signer certificate | कोई हस्ताक्षरकर्ता प्रमाणपत्र नहीं | स्वाक्षरीकर्त्याचे प्रमाणपत्र नाही
+Create personal certificate | व्यक्तिगत प्रमाणपत्र बनाएँ | वैयक्तिक प्रमाणपत्र तयार करा
+Email | ईमेल | ईमेल
+Organisation (school, college or company) | संगठन (स्कूल, कॉलेज या कंपनी) | संस्था (शाळा, महाविद्यालय किंवा कंपनी)
+Your name | आपका नाम | तुमचे नाव
+1 year | 1 वर्ष | 1 वर्ष
+10 years | 10 वर्ष | 10 वर्षे
+2 years | 2 वर्ष | 2 वर्षे
+3 years | 3 वर्ष | 3 वर्षे
+5 years | 5 वर्ष | 5 वर्षे
+Valid for | इतने समय के लिए मान्य | इतक्या काळासाठी वैध
+Create | बनाएँ | तयार करा
+Password to protect the certificate file | प्रमाणपत्र फ़ाइल को सुरक्षित करने का पासवर्ड | प्रमाणपत्र फाइल संरक्षित करण्याचा पासवर्ड
+Repeat the password | पासवर्ड दोहराएँ | पासवर्ड पुन्हा लिहा
+Enter your name | अपना नाम दर्ज करें | तुमचे नाव प्रविष्ट करा
+Choose a password of at least 4 characters | कम से कम 4 अक्षरों का पासवर्ड चुनें | किमान 4 अक्षरांचा पासवर्ड निवडा
+The passwords do not match | पासवर्ड मेल नहीं खाते | पासवर्ड जुळत नाहीत
+Creating your certificate (RSA 2048) | आपका प्रमाणपत्र बन रहा है (RSA 2048) | तुमचे प्रमाणपत्र तयार होत आहे (RSA 2048)
+Certificate (PKCS#12) | प्रमाणपत्र (PKCS#12) | प्रमाणपत्र (PKCS#12)
+The certificate was not saved | प्रमाणपत्र सहेजा नहीं गया | प्रमाणपत्र जतन केले नाही
+Certificate saved. Keep the file and its password safe: it is your signing identity. | प्रमाणपत्र सहेजा गया। फ़ाइल और उसका पासवर्ड सुरक्षित रखें: यह आपकी हस्ताक्षर पहचान है। | प्रमाणपत्र जतन केले. फाइल आणि तिचा पासवर्ड सुरक्षित ठेवा: ती तुमची स्वाक्षरी ओळख आहे.
+Certificate password | प्रमाणपत्र पासवर्ड | प्रमाणपत्र पासवर्ड
+Password for {p0} | {p0} के लिए पासवर्ड | {p0} साठी पासवर्ड
+Using the certificate of {cn} | {cn} के प्रमाणपत्र का उपयोग हो रहा है | {cn} यांचे प्रमाणपत्र वापरत आहे
+Wrong password | गलत पासवर्ड | चुकीचा पासवर्ड
+Only RSA certificates are supported. | केवल RSA प्रमाणपत्र समर्थित हैं। | फक्त RSA प्रमाणपत्रे समर्थित आहेत.
+This certificate file cannot be read | यह प्रमाणपत्र फ़ाइल पढ़ी नहीं जा सकती | ही प्रमाणपत्र फाइल वाचता येत नाही
+This certificate file cannot be read: {message} | यह प्रमाणपत्र फ़ाइल पढ़ी नहीं जा सकती: {message} | ही प्रमाणपत्र फाइल वाचता येत नाही: {message}
+This file has no private key, so it cannot be used for signing. | इस फ़ाइल में निजी कुंजी नहीं है, इसलिए इससे हस्ताक्षर नहीं किए जा सकते। | या फाइलमध्ये खाजगी की नाही, त्यामुळे ती स्वाक्षरीसाठी वापरता येत नाही.
+The saved certificate file was not found | सहेजी गई प्रमाणपत्र फ़ाइल नहीं मिली | जतन केलेली प्रमाणपत्र फाइल सापडली नाही
+The saved certificate file was not found: {path} | सहेजी गई प्रमाणपत्र फ़ाइल नहीं मिली: {path} | जतन केलेली प्रमाणपत्र फाइल सापडली नाही: {path}
+Create certificate | प्रमाणपत्र बनाएँ | प्रमाणपत्र तयार करा
+Digital signature | डिजिटल हस्ताक्षर | डिजिटल स्वाक्षरी
+Import .p12 / .pfx | .p12 / .pfx इम्पोर्ट करें | .p12 / .pfx इम्पोर्ट करा
+To sign digitally you need a personal certificate (a .p12 or .pfx file). Create one now, or use one you already have. | डिजिटल हस्ताक्षर के लिए आपको व्यक्तिगत प्रमाणपत्र (.p12 या .pfx फ़ाइल) चाहिए। अभी एक बनाएँ, या पहले से मौजूद का उपयोग करें। | डिजिटल स्वाक्षरीसाठी तुम्हाला वैयक्तिक प्रमाणपत्र (.p12 किंवा .pfx फाइल) लागेल. आता एक तयार करा किंवा आधीचे वापरा.
+The certificate will no longer be used automatically | प्रमाणपत्र अब अपने-आप उपयोग नहीं होगा | प्रमाणपत्र यापुढे आपोआप वापरले जाणार नाही
+Signing cancelled | हस्ताक्षर रद्द किया गया | स्वाक्षरी रद्द केली
+Remove password protection before signing (Tools › Remove password protection). | हस्ताक्षर से पहले पासवर्ड सुरक्षा हटाएँ (टूल › पासवर्ड सुरक्षा हटाएँ)। | स्वाक्षरीपूर्वी पासवर्ड संरक्षण काढा (साधने › पासवर्ड संरक्षण काढा).
+This document is certified with "no changes allowed", so it cannot be signed again. | यह दस्तावेज़ "कोई बदलाव नहीं" के साथ प्रमाणित है, इसलिए इस पर फिर से हस्ताक्षर नहीं हो सकते। | हा दस्तऐवज "कोणतेही बदल नाहीत" सह प्रमाणित आहे, त्यामुळे त्यावर पुन्हा स्वाक्षरी करता येत नाही.
+A document can only be certified before anyone signs it. | किसी के हस्ताक्षर करने से पहले ही दस्तावेज़ प्रमाणित किया जा सकता है। | कोणीही स्वाक्षरी करण्यापूर्वीच दस्तऐवज प्रमाणित करता येतो.
+Certify document | दस्तावेज़ प्रमाणित करें | दस्तऐवज प्रमाणित करा
+Invisible (shown only in the Signatures panel) | अदृश्य (केवल हस्ताक्षर पैनल में दिखता है) | अदृश्य (फक्त स्वाक्षऱ्या पॅनेलमध्ये दिसते)
+Visible: drag a box on the page | दृश्य: पृष्ठ पर एक बॉक्स ड्रैग करें | दृश्य: पृष्ठावर बॉक्स ड्रॅग करा
+None (name and date only) | कोई नहीं (केवल नाम और दिनांक) | काहीही नाही (फक्त नाव आणि दिनांक)
+Saved signature {p0} | सहेजा गया हस्ताक्षर {p0} | जतन केलेली स्वाक्षरी {p0}
+Signature image | हस्ताक्षर छवि | स्वाक्षरी प्रतिमा
+I am the author of this document | मैं इस दस्तावेज़ का/की लेखक हूँ | मी या दस्तऐवजाचा/ची लेखक आहे
+Name shown | दिखाया गया नाम | दाखवलेले नाव
+Certify | प्रमाणित करें | प्रमाणित करा
+Changes allowed after certifying | प्रमाणित करने के बाद अनुमत बदलाव | प्रमाणित केल्यानंतर परवानगी असलेले बदल
+Form filling and signing | फ़ॉर्म भरना और हस्ताक्षर | फॉर्म भरणे आणि स्वाक्षरी
+Form filling, signing and comments | फ़ॉर्म भरना, हस्ताक्षर और टिप्पणियाँ | फॉर्म भरणे, स्वाक्षरी आणि टिप्पण्या
+No changes | कोई बदलाव नहीं | कोणतेही बदल नाहीत
+Continue | जारी रखें | पुढे सुरू ठेवा
+Save changes first | पहले बदलाव सहेजें | आधी बदल जतन करा
+Your changes must be written into the document before it is signed. This rewrites the file, so the {existing} existing signature(s) will no longer be valid. Continue? | हस्ताक्षर से पहले आपके बदलाव दस्तावेज़ में लिखे जाने चाहिए। इससे फ़ाइल फिर से लिखी जाती है, इसलिए {existing} मौजूदा हस्ताक्षर अब मान्य नहीं रहेंगे। जारी रखें? | स्वाक्षरीपूर्वी तुमचे बदल दस्तऐवजात लिहिले गेले पाहिजेत. यामुळे फाइल पुन्हा लिहिली जाते, त्यामुळे {existing} विद्यमान स्वाक्षऱ्या यापुढे वैध राहणार नाहीत. पुढे जायचे?
+Drag a box where the signature should appear (Esc to cancel) | जहाँ हस्ताक्षर दिखना चाहिए वहाँ बॉक्स ड्रैग करें (रद्द करने के लिए Esc) | जिथे स्वाक्षरी दिसावी तिथे बॉक्स ड्रॅग करा (रद्द करण्यासाठी Esc)
+Certifying | प्रमाणित हो रहा है | प्रमाणित करत आहे
+Signing | हस्ताक्षर हो रहे हैं | स्वाक्षरी करत आहे
+Signing failed | हस्ताक्षर विफल रहा | स्वाक्षरी अयशस्वी
+Signing failed: {p0} | हस्ताक्षर विफल रहा: {p0} | स्वाक्षरी अयशस्वी: {p0}
+the document is encrypted | दस्तावेज़ एन्क्रिप्टेड है | दस्तऐवज एन्क्रिप्ट केलेला आहे
+The signed document was not saved | हस्ताक्षरित दस्तावेज़ सहेजा नहीं गया | स्वाक्षरी केलेला दस्तऐवज जतन केला नाही
+Document certified and saved | दस्तावेज़ प्रमाणित और सहेजा गया | दस्तऐवज प्रमाणित करून जतन केला
+Signed and saved as {p0} | हस्ताक्षर करके {p0} के रूप में सहेजा गया | स्वाक्षरी करून {p0} म्हणून जतन केले
+Save anyway | फिर भी सहेजें | तरीही जतन करा
+Signed document | हस्ताक्षरित दस्तावेज़ | स्वाक्षरी केलेला दस्तऐवज
+This document has {n} digital signature(s). Saving your changes rewrites the file and the signatures will show as invalid. Save anyway? | इस दस्तावेज़ में {n} डिजिटल हस्ताक्षर हैं। बदलाव सहेजने से फ़ाइल फिर से लिखी जाती है और हस्ताक्षर अमान्य दिखेंगे। फिर भी सहेजें? | या दस्तऐवजात {n} डिजिटल स्वाक्षऱ्या आहेत. बदल जतन केल्याने फाइल पुन्हा लिहिली जाते आणि स्वाक्षऱ्या अवैध दिसतील. तरीही जतन करायचे?
+This document has a signature that is not valid. See the Signatures panel. | इस दस्तावेज़ में एक अमान्य हस्ताक्षर है। हस्ताक्षर पैनल देखें। | या दस्तऐवजात एक अवैध स्वाक्षरी आहे. स्वाक्षऱ्या पॅनेल पाहा.
+This document is digitally signed ({length} signature(s)). See the Signatures panel. | यह दस्तावेज़ डिजिटल रूप से हस्ताक्षरित है ({length} हस्ताक्षर)। हस्ताक्षर पैनल देखें। | हा दस्तऐवज डिजिटल स्वाक्षरी केलेला आहे ({length} स्वाक्षऱ्या). स्वाक्षऱ्या पॅनेल पाहा.
+Could not be checked | जाँच नहीं हो सकी | तपासता आले नाही

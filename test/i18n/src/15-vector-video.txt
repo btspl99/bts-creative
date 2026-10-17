@@ -1,0 +1,280 @@
+# Vector (tools, trace, type, workflow) and Video (shell, menus)
+Erasing from the selected objects | चुने गए ऑब्जेक्ट से मिटाया जा रहा है | निवडलेल्या ऑब्जेक्टमधून खोडत आहे
+Drag across closed shapes to cut them into pieces | बंद आकृतियों को टुकड़ों में काटने के लिए उन पर ड्रैग करें | बंद आकार तुकड्यांमध्ये कापण्यासाठी त्यांवरून ड्रॅग करा
+Drag fully across a closed shape to cut it | काटने के लिए बंद आकृति के पूरे आर-पार ड्रैग करें | कापण्यासाठी बंद आकाराच्या पूर्ण आरपार ड्रॅग करा
+Decay % | क्षय % | घट %
+Drag from the centre | केंद्र से ड्रैग करें | मध्यापासून ड्रॅग करा
+Segments | खंड | खंड
+Drag from the centre to set size and ring direction | आकार और वलय दिशा सेट करने के लिए केंद्र से ड्रैग करें | आकार आणि वलय दिशा सेट करण्यासाठी मध्यापासून ड्रॅग करा
+Click to set the reference point, drag to reflect across an axis through it · Alt+click for dialog | संदर्भ बिंदु सेट करने के लिए क्लिक करें, उससे गुज़रती अक्ष पर प्रतिबिंब के लिए ड्रैग करें · डायलॉग के लिए Alt+क्लिक | संदर्भ बिंदू सेट करण्यासाठी क्लिक करा, त्यातून जाणाऱ्या अक्षावर प्रतिबिंबासाठी ड्रॅग करा · संवादासाठी Alt+क्लिक
+Click to set the reference point, drag to rotate (Shift = 45°) · Alt+click for exact angle | संदर्भ बिंदु सेट करने के लिए क्लिक करें, घुमाने के लिए ड्रैग करें (Shift = 45°) · सटीक कोण के लिए Alt+क्लिक | संदर्भ बिंदू सेट करण्यासाठी क्लिक करा, फिरवण्यासाठी ड्रॅग करा (Shift = 45°) · अचूक कोनासाठी Alt+क्लिक
+Click to set the reference point, drag to scale (Shift = uniform) · Alt+click for dialog | संदर्भ बिंदु सेट करने के लिए क्लिक करें, स्केल के लिए ड्रैग करें (Shift = समान) · डायलॉग के लिए Alt+क्लिक | संदर्भ बिंदू सेट करण्यासाठी क्लिक करा, प्रमाण बदलण्यासाठी ड्रॅग करा (Shift = समान) · संवादासाठी Alt+क्लिक
+Reset reference point | संदर्भ बिंदु रीसेट करें | संदर्भ बिंदू रीसेट करा
+Select objects first | पहले ऑब्जेक्ट चुनें | आधी ऑब्जेक्ट निवडा
+Axis {p0}° | अक्ष {p0}° | अक्ष {p0}°
+Drag on a stroke to add or adjust a width point · Alt+click a width point to delete it · works on any stroked path | चौड़ाई बिंदु जोड़ने या बदलने के लिए स्ट्रोक पर ड्रैग करें · हटाने के लिए चौड़ाई बिंदु पर Alt+क्लिक · किसी भी स्ट्रोक वाले पाथ पर काम करता है | रुंदी बिंदू जोडण्यासाठी किंवा बदलण्यासाठी स्ट्रोकवर ड्रॅग करा · हटवण्यासाठी रुंदी बिंदूवर Alt+क्लिक · स्ट्रोक असलेल्या कोणत्याही पाथवर चालते
+Delete width point | चौड़ाई बिंदु हटाएँ | रुंदी बिंदू हटवा
+Width {p0} px | चौड़ाई {p0} px | रुंदी {p0} px
+Width point | चौड़ाई बिंदु | रुंदी बिंदू
+Drag any of the four corner handles to distort the selection · Esc resets the handles | चयन को विकृत करने के लिए चारों में से कोई कोना हैंडल ड्रैग करें · Esc से हैंडल रीसेट होते हैं | निवड विकृत करण्यासाठी चारपैकी कोणतेही कोपरा हँडल ड्रॅग करा · Esc ने हँडल रीसेट होतात
+Convert type to outlines first (Type › Create outlines) | पहले टेक्स्ट को आउटलाइन में बदलें (टेक्स्ट › आउटलाइन बनाएँ) | आधी मजकूर आउटलाइनमध्ये बदला (मजकूर › आउटलाइन तयार करा)
+Images cannot be distorted | छवियाँ विकृत नहीं की जा सकतीं | प्रतिमा विकृत करता येत नाहीत
+Drag across regions to merge them · Alt+drag deletes regions | क्षेत्रों को मर्ज करने के लिए उन पर ड्रैग करें · Alt+ड्रैग क्षेत्र हटाता है | भाग विलीन करण्यासाठी त्यांवरून ड्रॅग करा · Alt+ड्रॅग भाग हटवते
+Select two or more overlapping shapes first (Selection tool), then drag across regions to merge · Alt+click / Alt+drag deletes regions | पहले दो या अधिक ओवरलैप करने वाली आकृतियाँ चुनें (चयन टूल), फिर मर्ज करने के लिए क्षेत्रों पर ड्रैग करें · Alt+क्लिक / Alt+ड्रैग क्षेत्र हटाता है | आधी एकमेकांवर येणारे दोन किंवा अधिक आकार निवडा (निवड साधन), मग विलीन करण्यासाठी भागांवरून ड्रॅग करा · Alt+क्लिक / Alt+ड्रॅग भाग हटवते
+Shape builder (delete) | शेप बिल्डर (हटाएँ) | शेप बिल्डर (हटवा)
+Shape builder (merge) | शेप बिल्डर (मर्ज) | शेप बिल्डर (विलीन)
+Click inside any region formed by overlapping shapes to fill it with the current fill colour | ओवरलैप करने वाली आकृतियों से बने किसी क्षेत्र को वर्तमान भरण रंग से भरने के लिए उसके अंदर क्लिक करें | एकमेकांवर येणाऱ्या आकारांनी तयार झालेला भाग सध्याच्या भरण रंगाने भरण्यासाठी त्याच्या आत क्लिक करा
+Click inside a closed shape | किसी बंद आकृति के अंदर क्लिक करें | बंद आकाराच्या आत क्लिक करा
+Live paint | लाइव पेंट | लाइव्ह पेंट
+No region under the cursor | कर्सर के नीचे कोई क्षेत्र नहीं | कर्सरखाली कोणताही भाग नाही
+Live paint fill | लाइव पेंट भरण | लाइव्ह पेंट भरण
+Live paint edge | लाइव पेंट किनारा | लाइव्ह पेंट कडा
+Click the first object, then the second · double-click a blend to edit | पहले ऑब्जेक्ट पर क्लिक करें, फिर दूसरे पर · संपादित करने के लिए ब्लेंड पर डबल-क्लिक करें | पहिल्या ऑब्जेक्टवर क्लिक करा, मग दुसऱ्यावर · संपादनासाठी ब्लेंडवर डबल-क्लिक करा
+Now click the second object | अब दूसरे ऑब्जेक्ट पर क्लिक करें | आता दुसऱ्या ऑब्जेक्टवर क्लिक करा
+Steps | चरण | टप्पे
+Density | घनत्व | घनता
+Random rotation | यादृच्छिक घुमाव | यादृच्छिक फिरवणे
+Size variation % | आकार भिन्नता % | आकारातील फरक %
+Symbol set | प्रतीक सेट | चिन्ह संच
+Distance {p0} px · Angle {p1}° · ΔX {p2} · ΔY {p3} | दूरी {p0} px · कोण {p1}° · ΔX {p2} · ΔY {p3} | अंतर {p0} px · कोन {p1}° · ΔX {p2} · ΔY {p3}
+D {p0} px ∠ {p1}° ΔX {p2} ΔY {p3} | = | =
+{p0} px {p1}° | = | =
+Drag empty canvas = new artboard | खाली कैनवस पर ड्रैग = नया आर्टबोर्ड | रिकाम्या कॅनव्हासवर ड्रॅग = नवीन आर्टबोर्ड
+Move artwork | कलाकृति खिसकाएँ | कलाकृती हलवा
+Resize artboard | आर्टबोर्ड का आकार बदलें | आर्टबोर्डचा आकार बदला
+Select a placed image to trace (File › Place image…) | ट्रेस करने के लिए रखी गई छवि चुनें (फ़ाइल › छवि रखें…) | ट्रेस करण्यासाठी ठेवलेली प्रतिमा निवडा (फाइल › प्रतिमा ठेवा…)
+Image trace engine not loaded | इमेज ट्रेस इंजन लोड नहीं हुआ | इमेज ट्रेस इंजिन लोड झाले नाही
+Tracing | ट्रेस हो रहा है | ट्रेस होत आहे
+Black and white | श्वेत-श्याम | कृष्णधवल
+Colours / grays | रंग / ग्रे | रंग / राखाडी
+Corners | कोने | कोपरे
+Noise (ignore areas smaller than px) | नॉइज़ (इतने px से छोटे क्षेत्र अनदेखा करें) | नॉइज (इतक्या px पेक्षा लहान भाग दुर्लक्षित करा)
+Paths (fidelity) | पाथ (सटीकता) | पाथ (अचूकता)
+Resolution (max px) | रिज़ॉल्यूशन (अधिकतम px) | रिझोल्यूशन (कमाल px)
+Smoothing (blur) | चिकनाई (ब्लर) | गुळगुळीतपणा (ब्लर)
+Ignore white | सफ़ेद अनदेखा करें | पांढरा दुर्लक्षित करा
+Keep the original image underneath | मूल छवि को नीचे रखें | मूळ प्रतिमा खाली ठेवा
+Preset | प्रीसेट | प्रीसेट
+Trace failed | ट्रेस विफल रहा | ट्रेस अयशस्वी
+Trace failed: {message} | ट्रेस विफल रहा: {message} | ट्रेस अयशस्वी: {message}
+{paths} paths · {colors} colour{p2} · {p3} ms | {paths} पाथ · {colors} रंग · {p3} ms | {paths} पाथ · {colors} रंग · {p3} ms
+Original · Tracing result (live preview) | मूल · ट्रेस परिणाम (लाइव पूर्वावलोकन) | मूळ · ट्रेस परिणाम (लाइव्ह पूर्वावलोकन)
+Image Trace | इमेज ट्रेस | इमेज ट्रेस
+Trace & expand | ट्रेस करें और फैलाएँ | ट्रेस करा आणि विस्तारित करा
+Traced into {length} editable paths | {length} संपादन योग्य पाथ में ट्रेस किया गया | {length} संपादित करता येणाऱ्या पाथमध्ये ट्रेस केले
+DejaVu Sans | = | =
+Inter | = | =
+Liberation Sans | = | =
+Noto Sans | = | =
+Open Sans | = | =
+Poppins | = | =
+Roboto | = | =
+opentype parse failed | - |
+opentype outline failed, using trace | - |
+Outlined | आउटलाइन किया गया | आउटलाइन केले
+Outlined: {p0} | आउटलाइन किया गया: {p0} | आउटलाइन केले: {p0}
+{fontWeight} {fs}px "{fontFamily}" | - |
+Select type to outline | आउटलाइन के लिए टेक्स्ट चुनें | आउटलाइनसाठी मजकूर निवडा
+Some fonts were not available as files — outlined by tracing the rendered text | कुछ फ़ॉन्ट फ़ाइलों के रूप में उपलब्ध नहीं थे — रेंडर किए गए टेक्स्ट को ट्रेस करके आउटलाइन किया गया | काही फॉन्ट फाइल्स म्हणून उपलब्ध नव्हते — रेंडर केलेला मजकूर ट्रेस करून आउटलाइन केले
+Select type to warp | वार्प के लिए टेक्स्ट चुनें | वार्पसाठी मजकूर निवडा
+{fw} {size}px "{font}" | - |
+Along path (top) | पाथ के साथ (ऊपर) | पाथलगत (वर)
+Baseline shift (px) | बेसलाइन खिसकाव (px) | बेसलाइन सरकवणे (px)
+Flipped (other side) | पलटा हुआ (दूसरी ओर) | उलटलेले (दुसरी बाजू)
+Side | ओर | बाजू
+Start / centre position along path (%) | पाथ पर प्रारंभ / केंद्र स्थिति (%) | पाथवर सुरुवात / मध्य स्थान (%)
+Tracking (1/1000 em) | ट्रैकिंग (1/1000 em) | ट्रॅकिंग (1/1000 em)
+“{p0}” — double-click to edit text & position | “{p0}” — टेक्स्ट और स्थिति संपादित करने के लिए डबल-क्लिक करें | “{p0}” — मजकूर आणि स्थान संपादित करण्यासाठी डबल-क्लिक करा
+Edit type on path | पाथ पर टेक्स्ट संपादित करें | पाथवरील मजकूर संपादित करा
+Type on path (expanded) | पाथ पर टेक्स्ट (फैलाया गया) | पाथवरील मजकूर (विस्तारित)
+Click a path with the Type-on-a-path tool | पाथ-पर-टेक्स्ट टूल से किसी पाथ पर क्लिक करें | पाथवर-मजकूर साधनाने पाथवर क्लिक करा
+BTS CREATIVE • TEXT ON A CIRCLE • | - |
+Bottom (reads left to right) | नीचे (बाएँ से दाएँ पढ़ा जाता है) | तळ (डावीकडून उजवीकडे वाचले जाते)
+Show the circle | वृत्त दिखाएँ | वर्तुळ दाखवा
+Spread around the full circle | पूरे वृत्त में फैलाएँ | संपूर्ण वर्तुळभर पसरवा
+Text on a circle | वृत्त पर टेक्स्ट | वर्तुळावर मजकूर
+Top (reads clockwise) | ऊपर (दक्षिणावर्त पढ़ा जाता है) | वर (घड्याळाच्या दिशेने वाचले जाते)
+Tracking | ट्रैकिंग | ट्रॅकिंग
+{fontWeight} {size}px "{font}" | - |
+Click any path to type along it · double-click existing type on a path to edit | किसी भी पाथ पर टाइप करने के लिए उस पर क्लिक करें · संपादित करने के लिए पाथ पर मौजूद टेक्स्ट पर डबल-क्लिक करें | पाथलगत टाइप करण्यासाठी कोणत्याही पाथवर क्लिक करा · संपादनासाठी पाथवरील विद्यमान मजकुरावर डबल-क्लिक करा
+Click on a path | किसी पाथ पर क्लिक करें | पाथवर क्लिक करा
+Search {length} fonts | {length} फ़ॉन्ट खोजें | {length} फॉन्ट शोधा
+Black 900 | काला 900 | ब्लॅक 900
+Bold 700 | मोटा 700 | ठळक 700
+Extrabold 800 | अति मोटा 800 | अति ठळक 800
+Light 300 | हल्का 300 | फिकट 300
+Medium 500 | मध्यम 500 | मध्यम 500
+Regular 400 | सामान्य 400 | सामान्य 400
+Semibold 600 | अर्ध मोटा 600 | अर्ध ठळक 600
+Thin 100 | पतला 100 | पातळ 100
+Character{p0} | कैरेक्टर{p0} | कॅरेक्टर{p0}
+Leading (line height, × size) | लीडिंग (पंक्ति ऊँचाई, × आकार) | लीडिंग (ओळ उंची, × आकार)
+VA | = | =
+Editing {p0} type object(s) | {p0} टेक्स्ट ऑब्जेक्ट संपादित हो रहे हैं | {p0} मजकूर ऑब्जेक्ट संपादित होत आहेत
+Settings apply to the next text you type. Select text to edit it. | सेटिंग्ज़ आपके अगले टाइप किए टेक्स्ट पर लागू होंगी। संपादित करने के लिए टेक्स्ट चुनें। | सेटिंग्ज तुम्ही पुढे टाइप कराल त्या मजकुराला लागू होतील. संपादित करण्यासाठी मजकूर निवडा.
+Edit path type | पाथ टेक्स्ट संपादित करें | पाथ मजकूर संपादित करा
+Type tools | टेक्स्ट टूल | मजकूर साधने
+{fontFamily} · {p1} px · {fontWeight}{p3} | = | =
+Display | डिस्प्ले | डिस्प्ले
+Handwriting | हस्तलेख | हस्ताक्षर
+Monospace | मोनोस्पेस | मोनोस्पेस
+Sans serif | सैंस सेरिफ़ | सॅन्स सेरिफ
+Serif | सेरिफ़ | सेरिफ
+★ Favourites | ★ पसंदीदा | ★ आवडते
+The quick brown fox jumps over 123 | = | =
+Preview text | पूर्वावलोकन टेक्स्ट | पूर्वावलोकन मजकूर
+Favourite | पसंदीदा | आवडते
+Show more ({p0}) | और दिखाएँ ({p0}) | अधिक दाखवा ({p0})
+Applies to the selected type · current | चुने गए टेक्स्ट पर लागू होता है · वर्तमान | निवडलेल्या मजकुराला लागू होते · सध्याचा
+Sets the font for new type · current | नए टेक्स्ट का फ़ॉन्ट सेट करता है · वर्तमान | नवीन मजकुराचा फॉन्ट सेट करतो · सध्याचा
+Applies to the selected type · current: {font} | चुने गए टेक्स्ट पर लागू होता है · वर्तमान: {font} | निवडलेल्या मजकुराला लागू होते · सध्याचा: {font}
+Repeat (radial / grid / mirror) | रिपीट (त्रिज्य / ग्रिड / मिरर) | पुनरावृत्ती (त्रिज्य / ग्रिड / आरसा)
+Repeat ▾ | रिपीट ▾ | पुनरावृत्ती ▾
+Pathfinder › Unite | पाथफ़ाइंडर › एक करें | पाथफाइंडर › एकत्र करा
+Select two or more shapes to unite | एक करने के लिए दो या अधिक आकृतियाँ चुनें | एकत्र करण्यासाठी दोन किंवा अधिक आकार निवडा
+Align & distribute | संरेखित और वितरित करें | संरेखित करा आणि समान अंतरावर ठेवा
+Align ▾ | संरेखित ▾ | संरेखित ▾
+Distribute horizontally | क्षैतिज वितरित करें | आडवे समान अंतरावर ठेवा
+Distribute vertically | लंबवत वितरित करें | उभे समान अंतरावर ठेवा
+Type › Create outlines | टेक्स्ट › आउटलाइन बनाएँ | मजकूर › आउटलाइन तयार करा
+Hide the task bar (View › Contextual task bar) | कार्य बार छिपाएँ (देखें › प्रासंगिक कार्य बार) | कार्य पट्टी लपवा (दृश्य › संदर्भानुसार कार्य पट्टी)
+Task bar hidden — turn it back on in View › Contextual task bar | कार्य बार छिपा — इसे देखें › प्रासंगिक कार्य बार में फिर से चालू करें | कार्य पट्टी लपवली — दृश्य › संदर्भानुसार कार्य पट्टी मध्ये ती पुन्हा चालू करा
+Autosave off | ऑटोसेव बंद | ऑटोसेव्ह बंद
+Autosave recovery data while you work | काम करते समय पुनर्प्राप्ति डेटा ऑटोसेव करें | काम करताना पुनर्प्राप्ती डेटा ऑटोसेव्ह करा
+Autosaving recovery data every {sec} s | हर {sec} s पर पुनर्प्राप्ति डेटा ऑटोसेव हो रहा है | दर {sec} s ला पुनर्प्राप्ती डेटा ऑटोसेव्ह होत आहे
+{n} min ago | {n} मिनट पहले | {n} मिनिटांपूर्वी
+{n} s ago | {n} सेकंड पहले | {n} सेकंदांपूर्वी
+Recovered “ | पुनर्प्राप्त हुआ “ | पुनर्प्राप्त झाले “
+Recovered “{p0}” — save it to keep it | “{p0}” पुनर्प्राप्त हुआ — रखने के लिए इसे सहेजें | “{p0}” पुनर्प्राप्त झाले — ठेवण्यासाठी ते जतन करा
+” — save it to keep it | ” — रखने के लिए इसे सहेजें | ” — ठेवण्यासाठी ते जतन करा
+Delete this recovery file | यह पुनर्प्राप्ति फ़ाइल हटाएँ | ही पुनर्प्राप्ती फाइल हटवा
+{p0} artboard(s) · {p1} | {p0} आर्टबोर्ड · {p1} | {p0} आर्टबोर्ड · {p1}
+Autosaved recovery data from other or earlier sessions | अन्य या पिछले सत्रों का ऑटोसेव पुनर्प्राप्ति डेटा | इतर किंवा आधीच्या सत्रांतील ऑटोसेव्ह पुनर्प्राप्ती डेटा
+BTS Vector closed unexpectedly. These documents have autosaved recovery data | BTS Vector अचानक बंद हो गया। इन दस्तावेज़ों का ऑटोसेव पुनर्प्राप्ति डेटा मौजूद है | BTS Vector अनपेक्षितपणे बंद झाले. या दस्तऐवजांचा ऑटोसेव्ह पुनर्प्राप्ती डेटा उपलब्ध आहे
+Discard all | सब छोड़ दें | सर्व टाकून द्या
+Recover autosaved document | ऑटोसेव दस्तावेज़ पुनर्प्राप्त करें | ऑटोसेव्ह दस्तऐवज पुनर्प्राप्त करा
+Recover unsaved work? | बिना सहेजा काम पुनर्प्राप्त करें? | जतन न केलेले काम पुनर्प्राप्त करायचे?
+Colour snapping — new fills use the nearest swatch | रंग स्नैपिंग — नए भरण निकटतम स्वैच उपयोग करते हैं | रंग स्नॅपिंग — नवीन भरण जवळचा स्वॅच वापरतात
+Perpendicular snapping — line / pen end meets curves at 90° | लंबवत स्नैपिंग — रेखा / पेन का छोर कर्व से 90° पर मिलता है | लंब स्नॅपिंग — रेषा / पेनचे टोक कर्व्हला 90° वर मिळते
+Smart guides (align to edges & centres) | स्मार्ट गाइड (किनारों और केंद्रों से संरेखित करें) | स्मार्ट मार्गदर्शक (कडा आणि मध्यांशी संरेखित करा)
+Snap to anchor points & centres | एंकर पॉइंट और केंद्रों पर स्नैप करें | अँकर पॉइंट आणि मध्यांवर स्नॅप करा
+Tangent snapping — line / pen end touches curves tangentially | स्पर्शरेखा स्नैपिंग — रेखा / पेन का छोर कर्व को स्पर्शरेखीय रूप से छूता है | स्पर्शरेषा स्नॅपिंग — रेषा / पेनचे टोक कर्व्हला स्पर्शरेषीय स्पर्श करते
+Snap distance (screen px) | स्नैप दूरी (स्क्रीन px) | स्नॅप अंतर (स्क्रीन px)
+Snapping options | स्नैपिंग विकल्प | स्नॅपिंग पर्याय
+Snapping options updated | स्नैपिंग विकल्प अपडेट हुए | स्नॅपिंग पर्याय अपडेट झाले
+1080p HD · 16:9 | = | =
+480p SD · 16:9 | = | =
+4K UHD · 16:9 | = | =
+720p HD · 16:9 | = | =
+Cinema 21:9 · 4K | सिनेमा 21:9 · 4K | सिनेमा 21:9 · 4K
+Portrait 4:5 · 1080×1350 | पोर्ट्रेट 4:5 · 1080×1350 | पोर्ट्रेट 4:5 · 1080×1350
+Square 1:1 · 1080 | वर्ग 1:1 · 1080 | चौरस 1:1 · 1080
+Ultrawide 21:9 · 2560×1080 | अल्ट्रावाइड 21:9 · 2560×1080 | अल्ट्रावाइड 21:9 · 2560×1080
+Vertical 9:16 · 1080×1920 (Reels / Shorts) | लंबवत 9:16 · 1080×1920 (Reels / Shorts) | उभे 9:16 · 1080×1920 (Reels / Shorts)
+Vertical 9:16 · 4K | लंबवत 9:16 · 4K | उभे 9:16 · 4K
+Vertical 9:16 · 720×1280 | लंबवत 9:16 · 720×1280 | उभे 9:16 · 720×1280
+Sequence settings | सीक्वेंस सेटिंग्ज़ | सीक्वेन्स सेटिंग्ज
+Custom · {w}×{h} | कस्टम · {w}×{h} | सानुकूल · {w}×{h}
+Frame size | फ़्रेम आकार | फ्रेम आकार
+Frame rate | फ़्रेम दर | फ्रेम दर
+Existing clips | मौजूदा क्लिप | विद्यमान क्लिप
+Fill frame (crop centre — auto reframe) | फ़्रेम भरें (केंद्र क्रॉप — ऑटो रीफ़्रेम) | फ्रेम भरा (मध्य क्रॉप — स्वयं रीफ्रेम)
+Fit whole picture (letterbox) | पूरी तस्वीर फ़िट करें (लेटरबॉक्स) | संपूर्ण चित्र बसवा (लेटरबॉक्स)
+Fit with blurred background (social) | धुंधली पृष्ठभूमि के साथ फ़िट करें (सोशल) | धूसर पार्श्वभूमीसह बसवा (सोशल)
+Keep each clip’s fit setting | हर क्लिप की फ़िट सेटिंग रखें | प्रत्येक क्लिपची बसवण्याची सेटिंग ठेवा
+Auto reframe for social | सोशल के लिए ऑटो रीफ़्रेम | सोशलसाठी स्वयं रीफ्रेम
+Target aspect ratio | लक्ष्य आस्पेक्ट रेशियो | लक्ष्य आस्पेक्ट रेशो
+Crop centre (fill the frame) | केंद्र क्रॉप करें (फ़्रेम भरें) | मध्य क्रॉप करा (फ्रेम भरा)
+Keep whole picture, blurred background | पूरी तस्वीर रखें, धुंधली पृष्ठभूमि | संपूर्ण चित्र ठेवा, धूसर पार्श्वभूमी
+Keep whole picture, letterbox | पूरी तस्वीर रखें, लेटरबॉक्स | संपूर्ण चित्र ठेवा, लेटरबॉक्स
+Reframe | रीफ़्रेम | रीफ्रेम
+Reframed to {a} | {a} पर रीफ़्रेम किया गया | {a} वर रीफ्रेम केले
+Autosave every (seconds, 0 = off) | हर इतने पर ऑटोसेव (सेकंड, 0 = बंद) | दर इतक्या वेळाने ऑटोसेव्ह (सेकंद, 0 = बंद)
+Default transition duration (s) | डिफ़ॉल्ट ट्रांज़िशन अवधि (s) | डीफॉल्ट ट्रान्झिशन कालावधी (s)
+Full | पूर्ण | पूर्ण
+Half | आधा | अर्धा
+Playback resolution | प्लेबैक रिज़ॉल्यूशन | प्लेबॅक रिझोल्यूशन
+Preferences | प्राथमिकताएँ | प्राधान्ये
+Quarter | चौथाई | पाव
+Still image default duration (s) | स्थिर छवि की डिफ़ॉल्ट अवधि (s) | स्थिर प्रतिमेचा डीफॉल्ट कालावधी (s)
+Recording is not supported here | यहाँ रिकॉर्डिंग समर्थित नहीं है | येथे रेकॉर्डिंग समर्थित नाही
+Microphone not available | माइक्रोफ़ोन उपलब्ध नहीं | मायक्रोफोन उपलब्ध नाही
+Microphone not available: {message} | माइक्रोफ़ोन उपलब्ध नहीं: {message} | मायक्रोफोन उपलब्ध नाही: {message}
+● Recording voice-over on {track} — press Space or click Stop to finish | ● {track} पर वॉइस-ओवर रिकॉर्ड हो रहा है — समाप्त करने के लिए Space दबाएँ या रोकें पर क्लिक करें | ● {track} वर व्हॉइस-ओव्हर रेकॉर्ड होत आहे — संपवण्यासाठी Space दाबा किंवा थांबवा वर क्लिक करा
+Nothing was recorded | कुछ रिकॉर्ड नहीं हुआ | काहीही रेकॉर्ड झाले नाही
+Saving voice-over | वॉइस-ओवर सहेजा जा रहा है | व्हॉइस-ओव्हर जतन होत आहे
+Voice-over {n}.{p1} | वॉइस-ओवर {n}.{p1} | व्हॉइस-ओव्हर {n}.{p1}
+Record voice-over | वॉइस-ओवर रिकॉर्ड करें | व्हॉइस-ओव्हर रेकॉर्ड करा
+Voice-over saved to {track} ({p1} s) | वॉइस-ओवर {track} में सहेजा गया ({p1} s) | व्हॉइस-ओव्हर {track} मध्ये जतन केला ({p1} s)
+New from template | टेम्पलेट से नया | टेम्पलेटपासून नवीन
+New project | नया प्रोजेक्ट | नवीन प्रकल्प
+Open project | प्रोजेक्ट खोलें | प्रकल्प उघडा
+Import captions (SRT / VTT) | कैप्शन इम्पोर्ट करें (SRT / VTT) | कॅप्शन इम्पोर्ट करा (SRT / VTT)
+Import media | मीडिया इम्पोर्ट करें | मीडिया इम्पोर्ट करा
+Save project | प्रोजेक्ट सहेजें | प्रकल्प जतन करा
+Export captions as SRT | कैप्शन SRT के रूप में एक्सपोर्ट करें | कॅप्शन SRT म्हणून एक्सपोर्ट करा
+Export captions as WebVTT | कैप्शन WebVTT के रूप में एक्सपोर्ट करें | कॅप्शन WebVTT म्हणून एक्सपोर्ट करा
+Export current frame (PNG) | वर्तमान फ़्रेम एक्सपोर्ट करें (PNG) | सध्याची फ्रेम एक्सपोर्ट करा (PNG)
+Export transcript (TXT) | ट्रांसक्रिप्ट एक्सपोर्ट करें (TXT) | ट्रान्सक्रिप्ट एक्सपोर्ट करा (TXT)
+Export with preset | प्रीसेट से एक्सपोर्ट करें | प्रीसेटने एक्सपोर्ट करा
+History panel | इतिहास पैनल | इतिहास पॅनेल
+Paste at playhead | प्लेहेड पर चिपकाएँ | प्लेहेडवर पेस्ट करा
+Clear (delete) | साफ़ करें (हटाएँ) | साफ करा (हटवा)
+Ripple delete | रिपल डिलीट | रिपल डिलीट
+Deselect all | सब का चयन हटाएँ | सर्वांची निवड रद्द करा
+Clip | क्लिप | क्लिप
+Add edit (split at playhead) | एडिट जोड़ें (प्लेहेड पर विभाजित करें) | एडिट जोडा (प्लेहेडवर विभाजित करा)
+Reverse clip | क्लिप उलटें | क्लिप उलट करा
+Add frame hold segment (freeze frame) | फ़्रेम होल्ड खंड जोड़ें (फ़्रीज़ फ़्रेम) | फ्रेम होल्ड खंड जोडा (फ्रीझ फ्रेम)
+Frame hold (whole clip) | फ़्रेम होल्ड (पूरी क्लिप) | फ्रेम होल्ड (संपूर्ण क्लिप)
+Match nest to sequence length | नेस्ट को सीक्वेंस की लंबाई से मिलाएँ | नेस्ट सीक्वेन्सच्या लांबीशी जुळवा
+Nest… (selected clips → nested sequence) | नेस्ट… (चुनी गई क्लिप → नेस्टेड सीक्वेंस) | नेस्ट… (निवडलेल्या क्लिप → नेस्टेड सीक्वेन्स)
+Open nested sequence | नेस्टेड सीक्वेंस खोलें | नेस्टेड सीक्वेन्स उघडा
+Add {l} mask | {l} मास्क जोड़ें | {l} मास्क जोडा
+Draw pen mask on monitor | मॉनिटर पर पेन मास्क बनाएँ | मॉनिटरवर पेन मास्क काढा
+Masks | मास्क | मास्क
+Remove all masks | सभी मास्क हटाएँ | सर्व मास्क काढा
+Track mask backward | मास्क को पीछे की ओर ट्रैक करें | मास्क मागे ट्रॅक करा
+Track mask forward | मास्क को आगे की ओर ट्रैक करें | मास्क पुढे ट्रॅक करा
+Add face blur (pixelate) | चेहरा ब्लर जोड़ें (पिक्सेलेट) | चेहरा ब्लर जोडा (पिक्सेलेट)
+Add face blur (soft) | चेहरा ब्लर जोड़ें (नरम) | चेहरा ब्लर जोडा (मऊ)
+Face blur | चेहरा ब्लर | चेहरा ब्लर
+Track face-blur region backward | चेहरा-ब्लर क्षेत्र को पीछे की ओर ट्रैक करें | चेहरा-ब्लर भाग मागे ट्रॅक करा
+Track face-blur region forward | चेहरा-ब्लर क्षेत्र को आगे की ओर ट्रैक करें | चेहरा-ब्लर भाग पुढे ट्रॅक करा
+Remove stabilisation | स्थिरीकरण हटाएँ | स्थिरीकरण काढा
+Apply LUT | LUT लागू करें | LUT लागू करा
+Colour wheels | कलर व्हील | कलर व्हील
+Import LUT (.cube) | LUT इम्पोर्ट करें (.cube) | LUT इम्पोर्ट करा (.cube)
+Lumetri Color | = | =
+RGB curves | RGB कर्व | RGB कर्व्ह
+Scopes panel | स्कोप पैनल | स्कोप पॅनेल
+Show Lumetri Color controls | Lumetri Color नियंत्रण दिखाएँ | Lumetri Color नियंत्रणे दाखवा
+Check transition handles | ट्रांज़िशन हैंडल जाँचें | ट्रान्झिशन हँडल तपासा
+Link / unlink | लिंक / अनलिंक करें | लिंक / अनलिंक करा
+Unlink audio to an A track | ऑडियो को A ट्रैक पर अनलिंक करें | ऑडिओ A ट्रॅकवर अनलिंक करा
+Effect presets | इफ़ेक्ट प्रीसेट | इफेक्ट प्रीसेट
+Lumetri look | Lumetri लुक | Lumetri लुक
+Motion presets (keyframes) | मोशन प्रीसेट (कीफ़्रेम) | मोशन प्रीसेट (कीफ्रेम)
+Picture-in-picture & split screen | पिक्चर-इन-पिक्चर और स्प्लिट स्क्रीन | पिक्चर-इन-पिक्चर आणि स्प्लिट स्क्रीन
+Apply default (cross dissolve) | डिफ़ॉल्ट लागू करें (क्रॉस डिज़ॉल्व) | डीफॉल्ट लागू करा (क्रॉस डिझॉल्व्ह)
+Video transition | वीडियो ट्रांज़िशन | व्हिडिओ ट्रान्झिशन
+Add crop keyframes at playhead | प्लेहेड पर क्रॉप कीफ़्रेम जोड़ें | प्लेहेडवर क्रॉप कीफ्रेम जोडा
+Add motion keyframes at playhead | प्लेहेड पर मोशन कीफ़्रेम जोड़ें | प्लेहेडवर मोशन कीफ्रेम जोडा
+Add volume keyframe at playhead | प्लेहेड पर वॉल्यूम कीफ़्रेम जोड़ें | प्लेहेडवर व्हॉल्यूम कीफ्रेम जोडा
+Interpolation at playhead | प्लेहेड पर इंटरपोलेशन | प्लेहेडवर इंटरपोलेशन
+Keyframes | कीफ़्रेम | कीफ्रेम
+Next keyframe | अगला कीफ़्रेम | पुढील कीफ्रेम
+Previous keyframe | पिछला कीफ़्रेम | मागील कीफ्रेम
+Remove all keyframes | सभी कीफ़्रेम हटाएँ | सर्व कीफ्रेम काढा
+Effects | इफ़ेक्ट | इफेक्ट
+Effects on / off (bypass) | इफ़ेक्ट चालू / बंद (बायपास) | इफेक्ट चालू / बंद (बायपास)
+Show Effect controls › Effects | इफ़ेक्ट नियंत्रण › इफ़ेक्ट दिखाएँ | इफेक्ट नियंत्रणे › इफेक्ट दाखवा
+Fade in / out (0.5 s) | फ़ेड इन / आउट (0.5 s) | फेड इन / आउट (0.5 s)
+Fit to frame | फ़्रेम में फ़िट करें | फ्रेममध्ये बसवा
+Reset effects | इफ़ेक्ट रीसेट करें | इफेक्ट रीसेट करा
+Sequence | सीक्वेंस | सीक्वेन्स
+Delete sequence | सीक्वेंस हटाएँ | सीक्वेन्स हटवा
+Duplicate sequence | सीक्वेंस की प्रतिलिपि बनाएँ | सीक्वेन्सची प्रत बनवा
+Insert sequence as nest | सीक्वेंस को नेस्ट के रूप में डालें | सीक्वेन्स नेस्ट म्हणून घाला
+Switch to sequence | सीक्वेंस पर जाएँ | सीक्वेन्सवर जा
+Smart reframe (follow subject) | स्मार्ट रीफ़्रेम (विषय का अनुसरण करें) | स्मार्ट रीफ्रेम (विषयाचा पाठलाग करा)

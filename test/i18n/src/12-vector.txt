@@ -1,0 +1,269 @@
+# Vector (menus, tools, panels, artboards)
+Create outlines | आउटलाइन बनाएँ | आउटलाइन तयार करा
+Warp text | टेक्स्ट वार्प करें | मजकूर वार्प करा
+Align centre | केंद्र में संरेखित करें | मध्यभागी संरेखित करा
+Align left | बाएँ संरेखित करें | डावीकडे संरेखित करा
+Align right | दाएँ संरेखित करें | उजवीकडे संरेखित करा
+Bold | मोटा | ठळक
+Italic | तिरछा | तिरके
+Font size down | फ़ॉन्ट आकार घटाएँ | फॉन्ट आकार कमी करा
+Font size up | फ़ॉन्ट आकार बढ़ाएँ | फॉन्ट आकार वाढवा
+Rasterize type | टेक्स्ट रास्टराइज़ करें | मजकूर रास्टराइझ करा
+Effect | इफ़ेक्ट | इफेक्ट
+Distort & Transform | विकृति और ट्रांसफ़ॉर्म | विकृती आणि रूपांतर
+Arc | चाप | कंस
+Arch | मेहराब | कमान
+Bulge | उभार | फुगवटा
+Fish | मछली | मासा
+Fisheye | फ़िशआई | फिशआय
+Flag | झंडा | झेंडा
+Inflate | फुलाएँ | फुगवा
+Rise | उठान | चढ
+Squeeze | दबाएँ | दाबा
+Twist | मरोड़ | पीळ
+Warp | वार्प | वार्प
+Expand 3D to paths | 3D को पाथ में फैलाएँ | 3D चे पाथमध्ये विस्तार करा
+Extrude & Bevel | एक्सट्रूड और बेवल | एक्सट्रूड आणि बेव्हल
+Turntable preview (spin 360°) | टर्नटेबल पूर्वावलोकन (360° घुमाव) | टर्नटेबल पूर्वावलोकन (360° फिरकी)
+Remove shadow / glow | छाया / चमक हटाएँ | सावली / चमक काढा
+Edit effects on selection | चयन पर इफ़ेक्ट संपादित करें | निवडीवरील इफेक्ट संपादित करा
+Actual size | वास्तविक आकार | वास्तविक आकार
+Fit all artboards | सभी आर्टबोर्ड फ़िट करें | सर्व आर्टबोर्ड बसवा
+Fit artboard in window | आर्टबोर्ड को विंडो में फ़िट करें | आर्टबोर्ड विंडोमध्ये बसवा
+Zoom to selection | चयन तक ज़ूम करें | निवडीपर्यंत झूम करा
+Outline mode | आउटलाइन मोड | आउटलाइन मोड
+Make guides from selection | चयन से गाइड बनाएँ | निवडीपासून मार्गदर्शक तयार करा
+Show guides | गाइड दिखाएँ | मार्गदर्शक दाखवा
+Snap to grid | ग्रिड पर स्नैप करें | ग्रिडवर स्नॅप करा
+Snapping | स्नैपिंग | स्नॅपिंग
+Snap to point | बिंदु पर स्नैप करें | बिंदूवर स्नॅप करा
+Snap to pixel | पिक्सेल पर स्नैप करें | पिक्सेलवर स्नॅप करा
+Snap to guides | गाइड पर स्नैप करें | मार्गदर्शकांवर स्नॅप करा
+Tangent snapping (lines to curves) | स्पर्शरेखा स्नैपिंग (रेखाएँ कर्व पर) | स्पर्शरेषा स्नॅपिंग (रेषा कर्व्हवर)
+Perpendicular snapping | लंबवत स्नैपिंग | लंब स्नॅपिंग
+Colour snapping | रंग स्नैपिंग | रंग स्नॅपिंग
+Colour snapping (nearest swatch for new fills) | रंग स्नैपिंग (नए भरण के लिए निकटतम स्वैच) | रंग स्नॅपिंग (नवीन भरणसाठी जवळचा स्वॅच)
+Colour snapping {p0} | रंग स्नैपिंग {p0} | रंग स्नॅपिंग {p0}
+Artboard names | आर्टबोर्ड नाम | आर्टबोर्ड नावे
+Character | कैरेक्टर | कॅरेक्टर
+Color, swatches & gradients | रंग, स्वैच और ग्रेडिएंट | रंग, स्वॅच आणि ग्रेडियंट
+Font browser | फ़ॉन्ट ब्राउज़र | फॉन्ट ब्राउझर
+Symbols & shapes library | प्रतीक और आकृति लाइब्रेरी | चिन्हे आणि आकार संग्रह
+Window | विंडो | विंडो
+About BTS Vector | BTS Vector के बारे में | BTS Vector बद्दल
+Image trace by imagetracerjs (public domain), type outlines by opentype.js (MIT). | इमेज ट्रेस: imagetracerjs (पब्लिक डोमेन), टेक्स्ट आउटलाइन: opentype.js (MIT)। | इमेज ट्रेस: imagetracerjs (पब्लिक डोमेन), मजकूर आउटलाइन: opentype.js (MIT).
+Tool reference | टूल संदर्भ | साधन संदर्भ
+Pencil (smoothing) | पेंसिल (चिकनाई) | पेन्सिल (गुळगुळीत)
+Paintbrush (width profiles) | पेंटब्रश (चौड़ाई प्रोफ़ाइल) | पेंटब्रश (रुंदी प्रोफाइल)
+Free distort (drag corners) | मुक्त विकृति (कोने ड्रैग करें) | मुक्त विकृती (कोपरे ड्रॅग करा)
+Reflect (click = reference point) | प्रतिबिंब (क्लिक = संदर्भ बिंदु) | प्रतिबिंब (क्लिक = संदर्भ बिंदू)
+Rotate (click = reference point) | घुमाएँ (क्लिक = संदर्भ बिंदु) | फिरवा (क्लिक = संदर्भ बिंदू)
+Scale (click = reference point) | स्केल (क्लिक = संदर्भ बिंदु) | प्रमाण (क्लिक = संदर्भ बिंदू)
+Width (variable stroke) | चौड़ाई (परिवर्ती स्ट्रोक) | रुंदी (बदलता स्ट्रोक)
+Blend (click two objects) | ब्लेंड (दो ऑब्जेक्ट पर क्लिक करें) | ब्लेंड (दोन ऑब्जेक्टवर क्लिक करा)
+Shape builder (drag to merge, Alt to delete) | शेप बिल्डर (मर्ज के लिए ड्रैग, हटाने के लिए Alt) | शेप बिल्डर (विलीन करण्यासाठी ड्रॅग, हटवण्यासाठी Alt)
+Dimension (linear / angular / radial) | आयाम (रैखिक / कोणीय / त्रिज्य) | परिमाण (रेषीय / कोनीय / त्रिज्य)
+Eyedropper (copy appearance) | आईड्रॉपर (रूप कॉपी करें) | आयड्रॉपर (स्वरूप कॉपी करा)
+Gradient (edit on canvas) | ग्रेडिएंट (कैनवस पर संपादित करें) | ग्रेडियंट (कॅनव्हासवर संपादित करा)
+Fill (click to edit, X to toggle) | भरण (संपादित करने के लिए क्लिक, बदलने के लिए X) | भरण (संपादनासाठी क्लिक, बदलण्यासाठी X)
+Default fill & stroke (D) | डिफ़ॉल्ट भरण और स्ट्रोक (D) | डीफॉल्ट भरण आणि स्ट्रोक (D)
+None (/) | कोई नहीं (/) | काहीही नाही (/)
+Swap | अदला-बदली | अदलाबदल
+Default colors | डिफ़ॉल्ट रंग | डीफॉल्ट रंग
+Swap fill/stroke | भरण/स्ट्रोक बदलें | भरण/स्ट्रोक अदलाबदल करा
+Fill color | भरण रंग | भरण रंग
+Stroke color | स्ट्रोक रंग | स्ट्रोक रंग
+None | कोई नहीं | काहीही नाही
+◧ Isolation | ◧ आइसोलेशन | ◧ आयसोलेशन
+◧ Isolation: {p0} | ◧ आइसोलेशन: {p0} | ◧ आयसोलेशन: {p0}
+Stroke weight | स्ट्रोक मोटाई | स्ट्रोक जाडी
+Weight | मोटाई | जाडी
+Inner % | भीतरी % | आतील %
+Points | बिंदु | बिंदू
+Higher = smoother curves; close near the start to fill | अधिक = चिकने कर्व; भरने के लिए शुरुआत के पास बंद करें | जास्त = गुळगुळीत कर्व्ह; भरण्यासाठी सुरुवातीजवळ बंद करा
+Smoothness | चिकनाई | गुळगुळीतपणा
+Click to type · set font, size, tracking and leading in the Character panel | टाइप करने के लिए क्लिक करें · कैरेक्टर पैनल में फ़ॉन्ट, आकार, ट्रैकिंग और लीडिंग सेट करें | टाइप करण्यासाठी क्लिक करा · कॅरेक्टर पॅनेलमध्ये फॉन्ट, आकार, ट्रॅकिंग आणि लीडिंग सेट करा
+Click for corners, drag for curves, click the first point to close, Enter to finish | कोनों के लिए क्लिक, कर्व के लिए ड्रैग करें, बंद करने के लिए पहले बिंदु पर क्लिक करें, समाप्त करने के लिए Enter | कोपऱ्यांसाठी क्लिक, कर्व्हसाठी ड्रॅग करा, बंद करण्यासाठी पहिल्या बिंदूवर क्लिक करा, संपवण्यासाठी Enter
+Drag anchors / handles · Alt+click adds a point · drag the ◉ widget to round selected corners · double-click toggles smooth | एंकर / हैंडल ड्रैग करें · Alt+क्लिक से बिंदु जुड़ता है · चुने कोनों को गोल करने के लिए ◉ विजेट ड्रैग करें · डबल-क्लिक से चिकना/कोना बदलें | अँकर / हँडल ड्रॅग करा · Alt+क्लिकने बिंदू जोडला जातो · निवडलेले कोपरे गोल करण्यासाठी ◉ विजेट ड्रॅग करा · डबल-क्लिकने गुळगुळीत/कोपरा बदला
+Click on a path to cut it | काटने के लिए पाथ पर क्लिक करें | कापण्यासाठी पाथवर क्लिक करा
+Boards | बोर्ड | बोर्ड
+Props | गुण | गुणधर्म
+Artboard color | आर्टबोर्ड रंग | आर्टबोर्ड रंग
+Artboard size | आर्टबोर्ड आकार | आर्टबोर्ड आकार
+Artboard — | आर्टबोर्ड — | आर्टबोर्ड —
+Artboard — {p0} | आर्टबोर्ड — {p0} | आर्टबोर्ड — {p0}
+Transparent artboard | पारदर्शी आर्टबोर्ड | पारदर्शक आर्टबोर्ड
+Document setup | दस्तावेज़ सेटअप | दस्तऐवज सेटअप
+Export PDF | PDF एक्सपोर्ट करें | PDF एक्सपोर्ट करा
+Export PNG | PNG एक्सपोर्ट करें | PNG एक्सपोर्ट करा
+Export SVG | SVG एक्सपोर्ट करें | SVG एक्सपोर्ट करा
+Quick actions | त्वरित क्रियाएँ | जलद क्रिया
+Recolor artwork | कलाकृति का रंग बदलें | कलाकृतीचा रंग बदला
+Toggle grid | ग्रिड चालू/बंद | ग्रिड चालू/बंद
+Rotate by° | इतना घुमाएँ° | इतके फिरवा°
+Rotate 90° | 90° घुमाएँ | 90° फिरवा
+Rotate −90° | −90° घुमाएँ | −90° फिरवा
+Linear gradient | रैखिक ग्रेडिएंट | रेषीय ग्रेडियंट
+Radial gradient | त्रिज्य ग्रेडिएंट | त्रिज्य ग्रेडियंट
+Solid | ठोस | घन
+Dashed | डैश वाली | तुटक
+Dotted | बिंदुदार | ठिपक्यांची
+Gradient / pattern | ग्रेडिएंट / पैटर्न | ग्रेडियंट / पॅटर्न
+Auto (selection / artboard) | स्वतः (चयन / आर्टबोर्ड) | स्वयं (निवड / आर्टबोर्ड)
+Key object | मुख्य ऑब्जेक्ट | मुख्य ऑब्जेक्ट
+Horizontal center | क्षैतिज केंद्र | आडवा मध्य
+Vertical center | लंबवत केंद्र | उभा मध्य
+Align to | इससे संरेखित करें | यानुसार संरेखित करा
+Space H | क्षैतिज दूरी | आडवे अंतर
+Space V | लंबवत दूरी | उभे अंतर
+Aligning to artboard | आर्टबोर्ड से संरेखित हो रहा है | आर्टबोर्डशी संरेखित होत आहे
+Aligning to selection | चयन से संरेखित हो रहा है | निवडीशी संरेखित होत आहे
+Click a selected object to make it the key object | मुख्य ऑब्जेक्ट बनाने के लिए किसी चयनित ऑब्जेक्ट पर क्लिक करें | मुख्य ऑब्जेक्ट करण्यासाठी निवडलेल्या ऑब्जेक्टवर क्लिक करा
+Backward | पीछे | मागे
+Clip mask | क्लिप मास्क | क्लिप मास्क
+Compound | कंपाउंड | कंपाउंड
+Forward | आगे | पुढे
+Isolate | अलग करें | वेगळे करा
+To back | सबसे पीछे | सर्वात मागे
+To front | सबसे आगे | सर्वात पुढे
+Clip group | क्लिप समूह | क्लिप गट
+Live | लाइव | लाइव्ह
+Pattern fill | पैटर्न भरण | पॅटर्न भरण
+Symbol: {p0} | प्रतीक: {p0} | चिन्ह: {p0}
+Type on path | पाथ पर टेक्स्ट | पाथवर मजकूर
+Width stroke | चौड़ाई स्ट्रोक | रुंदी स्ट्रोक
+Drop layers onto other layers | लेयर को दूसरी लेयर पर छोड़ें | लेयर इतर लेयरवर टाका
+Lock | लॉक | लॉक
+Visibility | दृश्यता | दृश्यमानता
+Layer lock | लेयर लॉक | लेयर लॉक
+Layer visibility | लेयर दृश्यता | लेयर दृश्यमानता
+1px solid var(--line) | - |
+New sublayer | नई उप-लेयर | नवीन उप-लेयर
+Keep at least one layer | कम से कम एक लेयर रखें | किमान एक लेयर ठेवा
+Layer order | लेयर क्रम | लेयर क्रम
+Move layer up | लेयर ऊपर ले जाएँ | लेयर वर हलवा
+Move layer down | लेयर नीचे ले जाएँ | लेयर खाली हलवा
+Drag rows to reorder or nest · double-click to rename | क्रम बदलने या नेस्ट करने के लिए पंक्तियाँ ड्रैग करें · नाम बदलने के लिए डबल-क्लिक करें | क्रम बदलण्यासाठी किंवा नेस्ट करण्यासाठी ओळी ड्रॅग करा · नाव बदलण्यासाठी डबल-क्लिक करा
+Move sel. here | चयन यहाँ लाएँ | निवड येथे हलवा
+Move to layer | लेयर में ले जाएँ | लेयरमध्ये हलवा
+Artboard {p0} | आर्टबोर्ड {p0} | आर्टबोर्ड {p0}
+A document needs at least one artboard | दस्तावेज़ में कम से कम एक आर्टबोर्ड होना चाहिए | दस्तऐवजात किमान एक आर्टबोर्ड असणे आवश्यक आहे
+Delete artwork too | कलाकृति भी हटाएँ | कलाकृतीही हटवा
+Delete “{name}”. Also delete the {length} object(s) on it? | “{name}” हटाएँ। इस पर के {length} ऑब्जेक्ट भी हटाएँ? | “{name}” हटवा. त्यावरील {length} ऑब्जेक्टही हटवायचे?
+Keep artwork | कलाकृति रखें | कलाकृती ठेवा
+Rename artboard | आर्टबोर्ड का नाम बदलें | आर्टबोर्डचे नाव बदला
+Reorder artboards | आर्टबोर्ड का क्रम बदलें | आर्टबोर्डचा क्रम बदला
+Fit artboard | आर्टबोर्ड फ़िट करें | आर्टबोर्ड बसवा
+No artwork | कोई कलाकृति नहीं | कलाकृती नाही
+Select something | कुछ चुनें | काहीतरी निवडा
+Grid by column | कॉलम के अनुसार ग्रिड | स्तंभांनुसार ग्रिड
+Grid by row | पंक्ति के अनुसार ग्रिड | ओळींनुसार ग्रिड
+Layout | लेआउट | मांडणी
+Move artwork with artboard | आर्टबोर्ड के साथ कलाकृति ले जाएँ | आर्टबोर्डसह कलाकृती हलवा
+Rearrange | फिर से व्यवस्थित करें | पुनर्रचना करा
+Rearrange all artboards | सभी आर्टबोर्ड फिर से व्यवस्थित करें | सर्व आर्टबोर्डची पुनर्रचना करा
+Spacing (px) | दूरी (px) | अंतर (px)
+Rearrange artboards | आर्टबोर्ड फिर से व्यवस्थित करें | आर्टबोर्डची पुनर्रचना करा
+{skipped} locked artboard(s) kept in place | {skipped} लॉक आर्टबोर्ड अपनी जगह रखे गए | {skipped} लॉक केलेले आर्टबोर्ड जागेवर ठेवले
+Unlock artboard | आर्टबोर्ड अनलॉक करें | आर्टबोर्ड अनलॉक करा
+Artboard “{name}” is locked (Object › Artboards › Lock artboard) | आर्टबोर्ड “{name}” लॉक है (ऑब्जेक्ट › आर्टबोर्ड › आर्टबोर्ड लॉक करें) | आर्टबोर्ड “{name}” लॉक आहे (ऑब्जेक्ट › आर्टबोर्ड › आर्टबोर्ड लॉक करा)
+Apply to all artboards | सभी आर्टबोर्ड पर लागू करें | सर्व आर्टबोर्डवर लागू करा
+Artboard background | आर्टबोर्ड पृष्ठभूमि | आर्टबोर्ड पार्श्वभूमी
+Artboard background — | आर्टबोर्ड पृष्ठभूमि — | आर्टबोर्ड पार्श्वभूमी —
+Artboard background — {name} | आर्टबोर्ड पृष्ठभूमि — {name} | आर्टबोर्ड पार्श्वभूमी — {name}
+Background colour | पृष्ठभूमि रंग | पार्श्वभूमी रंग
+Transparent (shows white on screen, exports transparent) | पारदर्शी (स्क्रीन पर सफ़ेद दिखता है, पारदर्शी एक्सपोर्ट होता है) | पारदर्शक (स्क्रीनवर पांढरे दिसते, पारदर्शक एक्सपोर्ट होते)
+Include in “Export selected artboards” | “चुने गए आर्टबोर्ड एक्सपोर्ट करें” में शामिल करें | “निवडलेले आर्टबोर्ड एक्सपोर्ट करा” मध्ये समाविष्ट करा
+Artboard tool | आर्टबोर्ड टूल | आर्टबोर्ड साधन
+Artboard preset | आर्टबोर्ड प्रीसेट | आर्टबोर्ड प्रीसेट
+Preset size | प्रीसेट आकार | प्रीसेट आकार
+Active artboard | सक्रिय आर्टबोर्ड | सक्रिय आर्टबोर्ड
+Fit to artwork | कलाकृति में फ़िट करें | कलाकृतीनुसार बसवा
+Fit to selection | चयन में फ़िट करें | निवडीनुसार बसवा
+Lock artboard (no move / resize / delete) | आर्टबोर्ड लॉक करें (खिसकाना / आकार बदलना / हटाना नहीं) | आर्टबोर्ड लॉक करा (हलवणे / आकार बदल / हटवणे नाही)
+Export artboards | आर्टबोर्ड एक्सपोर्ट करें | आर्टबोर्ड एक्सपोर्ट करा
+Multi-page PDF | बहु-पृष्ठ PDF | बहुपृष्ठी PDF
+PNG (each) | PNG (हर एक) | PNG (प्रत्येकी)
+SVG (each) | SVG (हर एक) | SVG (प्रत्येकी)
+Selected | चयनित | निवडलेले
+Tick all / none | सभी / कोई नहीं चिह्नित करें | सर्व / काहीही नाही खूण करा
+{length} of {p1} ticked for “selected” export | “चयनित” एक्सपोर्ट के लिए {p1} में से {length} चिह्नित | “निवडलेल्या” एक्सपोर्टसाठी {p1} पैकी {length} खूण केलेले
+{length} object{p1} selected | {length} ऑब्जेक्ट चयनित | {length} ऑब्जेक्ट निवडले
+Isolation mode — Esc or double-click outside to exit | आइसोलेशन मोड — बाहर निकलने के लिए Esc या बाहर डबल-क्लिक करें | आयसोलेशन मोड — बाहेर पडण्यासाठी Esc किंवा बाहेर डबल-क्लिक करा
+Select a group to isolate | अलग करने के लिए कोई समूह चुनें | वेगळा करण्यासाठी गट निवडा
+Snap to grid {p0} | ग्रिड पर स्नैप {p0} | ग्रिडवर स्नॅप {p0}
+Snap to point {p0} | बिंदु पर स्नैप {p0} | बिंदूवर स्नॅप {p0}
+Smart guides {p0} | स्मार्ट गाइड {p0} | स्मार्ट मार्गदर्शक {p0}
+Outline mode {p0} | आउटलाइन मोड {p0} | आउटलाइन मोड {p0}
+on (Ctrl+Y to exit) | चालू (बाहर निकलने के लिए Ctrl+Y) | चालू (बाहेर पडण्यासाठी Ctrl+Y)
+Rulers (Ctrl+R) — drag from a ruler to create a guide | रूलर (Ctrl+R) — गाइड बनाने के लिए रूलर से ड्रैग करें | रूलर (Ctrl+R) — मार्गदर्शक तयार करण्यासाठी रूलरवरून ड्रॅग करा
+Guide | गाइड | मार्गदर्शक
+Add guide | गाइड जोड़ें | मार्गदर्शक जोडा
+Position (px from artboard origin) | स्थिति (आर्टबोर्ड मूल बिंदु से px) | स्थान (आर्टबोर्ड उगमापासून px)
+Guides from selection | चयन से गाइड | निवडीपासून मार्गदर्शक
+Select objects | ऑब्जेक्ट चुनें | ऑब्जेक्ट निवडा
+Click on a path stroke | किसी पाथ स्ट्रोक पर क्लिक करें | पाथ स्ट्रोकवर क्लिक करा
+Artboard X {p0} Y {p1} | आर्टबोर्ड X {p0} Y {p1} | आर्टबोर्ड X {p0} Y {p1}
+Move artboard | आर्टबोर्ड खिसकाएँ | आर्टबोर्ड हलवा
+Move guide | गाइड खिसकाएँ | मार्गदर्शक हलवा
+Toggle smooth | चिकना/कोना बदलें | गुळगुळीत/कोपरा बदला
+Add anchor | एंकर जोड़ें | अँकर जोडा
+Corner radius {p0} | कोने की त्रिज्या {p0} | कोपऱ्याची त्रिज्या {p0}
+Round corners | कोने गोल करें | कोपरे गोल करा
+Edit handle | हैंडल संपादित करें | हँडल संपादित करा
+Move anchor | एंकर खिसकाएँ | अँकर हलवा
+Pen path | पेन पाथ | पेन पाथ
+Radius | त्रिज्या | त्रिज्या
+{fontWeight} {p1}px "{fontFamily}" | - |
+Copied {length} object(s) | {length} ऑब्जेक्ट कॉपी हुए | {length} ऑब्जेक्ट कॉपी झाले
+Paste SVG | SVG चिपकाएँ | SVG पेस्ट करा
+Delete anchors | एंकर हटाएँ | अँकर हटवा
+Angle° | कोण° | कोन°
+Horizontal % | क्षैतिज % | आडवे %
+Scale strokes | स्ट्रोक स्केल करें | स्ट्रोकचे प्रमाण बदला
+Vertical % | लंबवत % | उभे %
+Select two open paths | दो खुले पाथ चुनें | दोन उघडे पाथ निवडा
+Select paths | पाथ चुनें | पाथ निवडा
+Simplify | सरल करें | सोपे करा
+Select two or more paths | दो या अधिक पाथ चुनें | दोन किंवा अधिक पाथ निवडा
+Release compound path | कंपाउंड पाथ हटाएँ | कंपाउंड पाथ मोकळा करा
+Select the artwork and a shape on top to use as the mask | कलाकृति और मास्क के रूप में उपयोग के लिए ऊपर की कोई आकृति चुनें | कलाकृती आणि मास्क म्हणून वापरण्यासाठी वरचा आकार निवडा
+Select two or more shapes (paths or compound paths) | दो या अधिक आकृतियाँ चुनें (पाथ या कंपाउंड पाथ) | दोन किंवा अधिक आकार निवडा (पाथ किंवा कंपाउंड पाथ)
+Distribute | वितरित करें | समान अंतरावर ठेवा
+Select three or more objects | तीन या अधिक ऑब्जेक्ट चुनें | तीन किंवा अधिक ऑब्जेक्ट निवडा
+Select two or more objects | दो या अधिक ऑब्जेक्ट चुनें | दोन किंवा अधिक ऑब्जेक्ट निवडा
+Distribute spacing | दूरी वितरित करें | अंतर समान करा
+Even (keep outer objects) | समान (बाहरी ऑब्जेक्ट रखें) | समान (बाहेरील ऑब्जेक्ट ठेवा)
+Exact gap | सटीक अंतराल | नेमके अंतर
+Gap (px) — key object stays put when aligning to key object | अंतराल (px) — मुख्य ऑब्जेक्ट से संरेखित करते समय मुख्य ऑब्जेक्ट नहीं हिलता | अंतर (px) — मुख्य ऑब्जेक्टशी संरेखित करताना मुख्य ऑब्जेक्ट जागेवरच राहतो
+Spacing | दूरी | अंतर
+Isolate group | समूह अलग करें | गट वेगळा करा
+Make clipping mask | क्लिपिंग मास्क बनाएँ | क्लिपिंग मास्क तयार करा
+Artboard 1 | आर्टबोर्ड 1 | आर्टबोर्ड 1
+Select one or more objects first | पहले एक या अधिक ऑब्जेक्ट चुनें | आधी एक किंवा अधिक ऑब्जेक्ट निवडा
+Logo 1000×1000 | लोगो 1000×1000 | लोगो 1000×1000
+Poster A3 (297×420 mm) | पोस्टर A3 (297×420 mm) | पोस्टर A3 (297×420 mm)
+Poster A4 (210×297 mm) | पोस्टर A4 (210×297 mm) | पोस्टर A4 (210×297 mm)
+Business card 3.5×2 in | बिज़नेस कार्ड 3.5×2 in | बिझनेस कार्ड 3.5×2 in
+Instagram post 1080×1080 | Instagram पोस्ट 1080×1080 | Instagram पोस्ट 1080×1080
+Instagram story 1080×1920 | Instagram स्टोरी 1080×1920 | Instagram स्टोरी 1080×1920
+Icon 512×512 | आइकन 512×512 | आयकॉन 512×512
+Presentation 16:9 1920×1080 | प्रस्तुति 16:9 1920×1080 | सादरीकरण 16:9 1920×1080
+US Letter 8.5×11 in | = | =
+Discard changes? | बदलाव छोड़ दें? | बदल टाकून द्यायचे?
+The current artwork has unsaved changes. | वर्तमान कलाकृति में बिना सहेजे बदलाव हैं। | सध्याच्या कलाकृतीत जतन न केलेले बदल आहेत.
+Document preset | दस्तावेज़ प्रीसेट | दस्तऐवज प्रीसेट
+Start from template (starter layout, text and guides) | टेम्पलेट से शुरू करें (प्रारंभिक लेआउट, टेक्स्ट और गाइड) | टेम्पलेटपासून सुरू करा (प्रारंभिक मांडणी, मजकूर आणि मार्गदर्शक)
+Width / height apply to the Custom preset | चौड़ाई / ऊँचाई कस्टम प्रीसेट पर लागू होती हैं | रुंदी / उंची सानुकूल प्रीसेटला लागू होते
+A short subtitle goes here | - |
+Event details · Date · Venue More information line two | - |
+POSTER TITLE | - |
+Job title | - |
+Your Name | - |
+Big bold headline | - |
+Presentation title | - |
+Subtitle · Presenter name · Date | - |
+BRAND | - |
+Artboard height (px) | आर्टबोर्ड ऊँचाई (px) | आर्टबोर्ड उंची (px)
+Artboard width (px) | आर्टबोर्ड चौड़ाई (px) | आर्टबोर्ड रुंदी (px)
+Grid size (px) | ग्रिड आकार (px) | ग्रिड आकार (px)

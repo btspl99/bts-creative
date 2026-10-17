@@ -1,0 +1,282 @@
+# Photo (panels, adjustments, filters)
+Select a layer | कोई लेयर चुनें | लेयर निवडा
+Layer blend | लेयर ब्लेंड | लेयर ब्लेंड
+Clear all | सब साफ़ करें | सर्व साफ करा
+Copy style | शैली कॉपी करें | शैली कॉपी करा
+Paste style | शैली चिपकाएँ | शैली पेस्ट करा
+Style copied | शैली कॉपी हुई | शैली कॉपी झाली
+Layer style — | लेयर शैली — | लेयर शैली —
+Layer style — {name} | लेयर शैली — {name} | लेयर शैली — {name}
+Adjust | एडजस्ट करें | ॲडजस्ट करा
+History | इतिहास | इतिहास
+Lock layer | लेयर लॉक करें | लेयर लॉक करा
+Double-click to edit the adjustment | एडजस्टमेंट संपादित करने के लिए डबल-क्लिक करें | ॲडजस्टमेंट संपादित करण्यासाठी डबल-क्लिक करा
+▢ frame | ▢ फ़्रेम | ▢ फ्रेम
+◆ smart | ◆ स्मार्ट | ◆ स्मार्ट
+Layer style — double-click to edit | लेयर शैली — संपादित करने के लिए डबल-क्लिक करें | लेयर शैली — संपादित करण्यासाठी डबल-क्लिक करा
+Add mask | मास्क जोड़ें | मास्क जोडा
+Convert for smart filters | स्मार्ट फ़िल्टर के लिए बदलें | स्मार्ट फिल्टरसाठी रूपांतरित करा
+Edit adjustment | एडजस्टमेंट संपादित करें | ॲडजस्टमेंट संपादित करा
+Reorder layers | लेयर का क्रम बदलें | लेयरचा क्रम बदला
+New document from current state | वर्तमान स्थिति से नया दस्तावेज़ | सध्याच्या स्थितीपासून नवीन दस्तऐवज
+All styles | सभी शैलियाँ | सर्व शैली
+Place image | छवि रखें | प्रतिमा ठेवा
+Snapshots | स्नैपशॉट | स्नॅपशॉट
+{p0}New | - |
+Snapshots keep a state permanently, even after the history list moves on. | स्नैपशॉट किसी स्थिति को स्थायी रूप से रखते हैं, भले ही इतिहास सूची आगे बढ़ जाए। | इतिहास यादी पुढे गेली तरी स्नॅपशॉट एखादी स्थिती कायमची जपतात.
+Rename snapshot | स्नैपशॉट का नाम बदलें | स्नॅपशॉटचे नाव बदला
+Restore | पुनर्स्थापित करें | पुनर्संचयित करा
+Adjustment layers (non-destructive) | एडजस्टमेंट लेयर (मूल को नुकसान नहीं) | ॲडजस्टमेंट लेयर (मूळ अबाधित)
+{name} — adds an editable adjustment layer | {name} — संपादन योग्य एडजस्टमेंट लेयर जोड़ता है | {name} — संपादित करता येणारा ॲडजस्टमेंट लेयर जोडतो
+— adds an editable adjustment layer | — संपादन योग्य एडजस्टमेंट लेयर जोड़ता है | — संपादित करता येणारा ॲडजस्टमेंट लेयर जोडतो
+adds an editable adjustment layer | संपादन योग्य एडजस्टमेंट लेयर जोड़ता है | संपादित करता येणारा ॲडजस्टमेंट लेयर जोडतो
+Filters | फ़िल्टर | फिल्टर
+{p0}Filter Gallery | - |
+{p0}Liquify | - |
+Open an image to use Looks. | लुक उपयोग करने के लिए कोई छवि खोलें। | लुक वापरण्यासाठी प्रतिमा उघडा.
+Look intensity | लुक की तीव्रता | लुकची तीव्रता
+Click a look to add it as an adjustable layer | किसी लुक को समायोज्य लेयर के रूप में जोड़ने के लिए उस पर क्लिक करें | लुक ॲडजस्ट करता येणारा लेयर म्हणून जोडण्यासाठी त्यावर क्लिक करा
+Editing “ | संपादन: “ | संपादन: “
+Editing “{name}” — pick another look or change intensity | “{name}” संपादित हो रहा है — दूसरा लुक चुनें या तीव्रता बदलें | “{name}” संपादित होत आहे — दुसरा लुक निवडा किंवा तीव्रता बदला
+Intensity | तीव्रता | तीव्रता
+” — pick another look or change intensity | ” — दूसरा लुक चुनें या तीव्रता बदलें | ” — दुसरा लुक निवडा किंवा तीव्रता बदला
+Merge into layer below | नीचे की लेयर में मर्ज करें | खालच्या लेयरमध्ये विलीन करा
+Remove look | लुक हटाएँ | लुक काढा
+Look: {name} | लुक: {name} | लुक: {name}
+Brightness | चमक | उजळपणा
+Contrast | कंट्रास्ट | कॉन्ट्रास्ट
+Channel | चैनल | चॅनेल
+Gamma (midtones) | गामा (मिडटोन) | गॅमा (मिडटोन)
+Green | हरा | हिरवा
+Input black | इनपुट काला | इनपुट काळा
+Input white | इनपुट सफ़ेद | इनपुट पांढरा
+Levels | लेवल | लेव्हल
+Output black | आउटपुट काला | आउटपुट काळा
+Output white | आउटपुट सफ़ेद | आउटपुट पांढरा
+RGB | = | =
+Curves | कर्व | कर्व्ह
+Exposure (stops) | एक्सपोज़र (स्टॉप) | एक्सपोजर (स्टॉप)
+Gamma | गामा | गॅमा
+Offset | ऑफ़सेट | ऑफसेट
+Vibrance | वाइब्रेंस | व्हायब्रन्स
+Colorize | रंग भरें | रंग द्या
+Lightness | हल्कापन | फिकटपणा
+Color Balance | रंग संतुलन | रंग संतुलन
+Cyan ↔ Red | सियान ↔ लाल | सायन ↔ लाल
+Magenta ↔ Green | मैजेंटा ↔ हरा | मॅजेंटा ↔ हिरवा
+Preserve luminosity | ल्यूमिनोसिटी बनाए रखें | ल्युमिनोसिटी कायम ठेवा
+Yellow ↔ Blue | पीला ↔ नीला | पिवळा ↔ निळा
+Black & White | श्वेत-श्याम | कृष्णधवल
+Blues % | नीले % | निळे %
+Cyans % | सियान % | सायन %
+Greens % | हरे % | हिरवे %
+Magentas % | मैजेंटा % | मॅजेंटा %
+Reds % | लाल % | लाल %
+Tint | टिंट | छटा
+Tint color | टिंट रंग | छटा रंग
+Yellows % | पीले % | पिवळे %
+Cooling (80) | ठंडा (80) | थंड (80)
+Cooling (LBB) | ठंडा (LBB) | थंड (LBB)
+Density % | घनत्व % | घनता %
+Photo Filter | फ़ोटो फ़िल्टर | फोटो फिल्टर
+Warming (85) | गर्म (85) | उबदार (85)
+Warming (LBA) | गर्म (LBA) | उबदार (LBA)
+Blue % | नीला % | निळा %
+Blue output | नीला आउटपुट | निळा आउटपुट
+Channel Mixer | चैनल मिक्सर | चॅनेल मिक्सर
+Constant | स्थिरांक | स्थिरांक
+Green % | हरा % | हिरवा %
+Green output | हरा आउटपुट | हिरवा आउटपुट
+Monochrome (uses Red output row) | एकरंगी (लाल आउटपुट पंक्ति का उपयोग) | एकरंगी (लाल आउटपुट ओळ वापरते)
+Red % | लाल % | लाल %
+Red output | लाल आउटपुट | लाल आउटपुट
+Black → white | काला → सफ़ेद | काळा → पांढरा
+Copper | ताँबा | तांबे
+Custom (colors below) | कस्टम (नीचे के रंग) | सानुकूल (खालील रंग)
+Gradient Map | ग्रेडिएंट मैप | ग्रेडियंट मॅप
+Highlights color | हाइलाइट रंग | हायलाइट रंग
+Infrared | इन्फ़्रारेड | इन्फ्रारेड
+Midtone color | मिडटोन रंग | मिडटोन रंग
+Ocean | समुद्र | समुद्र
+Purple-pink duotone | बैंगनी-गुलाबी डुओटोन | जांभळा-गुलाबी ड्युओटोन
+Shadows color | छाया रंग | सावली रंग
+Sunset | सूर्यास्त | सूर्यास्त
+Teal duotone | टील डुओटोन | टील ड्युओटोन
+Use midtone color | मिडटोन रंग उपयोग करें | मिडटोन रंग वापरा
+Selective Color | चयनात्मक रंग | निवडक रंग
+Color correction | रंग सुधार | रंग सुधारणा
+Highlights amount | हाइलाइट मात्रा | हायलाइट प्रमाण
+Shadows amount | छाया मात्रा | सावली प्रमाण
+Temperature (cool ↔ warm) | तापमान (ठंडा ↔ गर्म) | तापमान (थंड ↔ उबदार)
+Tint (green ↔ magenta) | टिंट (हरा ↔ मैजेंटा) | छटा (हिरवा ↔ मॅजेंटा)
+Color & Vibrance | रंग और वाइब्रेंस | रंग आणि व्हायब्रन्स
+Clarity | स्पष्टता | स्पष्टता
+Amount | मात्रा | प्रमाण
+Dehaze | धुंध हटाएँ | धूसरता काढा
+Invert | उलटें | उलटा करा
+Equalize | समान करें | समान करा
+Auto Tone | ऑटो टोन | स्वयं टोन
+Auto Contrast | ऑटो कंट्रास्ट | स्वयं कॉन्ट्रास्ट
+Auto Color | ऑटो रंग | स्वयं रंग
+Desaturate | रंग हटाएँ | रंग काढा
+Posterize | पोस्टराइज़ | पोस्टराइझ
+Threshold | थ्रेशोल्ड | थ्रेशोल्ड
+Threshold level | थ्रेशोल्ड स्तर | थ्रेशोल्ड पातळी
+Match Color | रंग मिलाएँ | रंग जुळवा
+Amount % | मात्रा % | प्रमाण %
+Foreground lighting | अग्रभूमि प्रकाश | अग्रभूमी प्रकाश
+Look | लुक | लुक
+Open an image first | पहले कोई छवि खोलें | आधी प्रतिमा उघडा
+New {name} layer | नई {name} लेयर | नवीन {name} लेयर
+Select a pixel layer (or use Layer › New adjustment layer) | कोई पिक्सेल लेयर चुनें (या लेयर › नई एडजस्टमेंट लेयर का उपयोग करें) | पिक्सेल लेयर निवडा (किंवा लेयर › नवीन ॲडजस्टमेंट लेयर वापरा)
+Edit {name} | {name} संपादित करें | {name} संपादित करा
+Darker | और गहरा | अधिक गडद
+Increase contrast (S-curve) | कंट्रास्ट बढ़ाएँ (S-कर्व) | कॉन्ट्रास्ट वाढवा (S-कर्व्ह)
+Lighter | और हल्का | अधिक फिकट
+Linear (reset) | रैखिक (रीसेट) | रेषीय (रीसेट)
+Matte / faded blacks | मैट / फीके काले | मॅट / फिकट काळे
+Negative | नेगेटिव | निगेटिव्ह
+Click to add points · drag to shape · drag out or double-click to remove | बिंदु जोड़ने के लिए क्लिक करें · आकार देने के लिए ड्रैग करें · हटाने के लिए बाहर ड्रैग या डबल-क्लिक करें | बिंदू जोडण्यासाठी क्लिक करा · आकार देण्यासाठी ड्रॅग करा · काढण्यासाठी बाहेर ड्रॅग किंवा डबल-क्लिक करा
+Black % | काला % | काळा %
+Colors | रंग | रंग
+Cyan % | सियान % | सायन %
+Magenta % | मैजेंटा % | मॅजेंटा %
+Relative (otherwise absolute) | सापेक्ष (अन्यथा निरपेक्ष) | सापेक्ष (अन्यथा निरपेक्ष)
+Yellow % | पीला % | पिवळा %
+Document: {name} | दस्तावेज़: {name} | दस्तऐवज: {name}
+doc | - |
+Layer: {name} | लेयर: {name} | लेयर: {name}
+Merged image (this document) | मर्ज की गई छवि (यह दस्तावेज़) | विलीन प्रतिमा (हा दस्तऐवज)
+layer | लेयर | लेयर
+Open another image or add another layer to match from | मिलान के लिए दूसरी छवि खोलें या दूसरी लेयर जोड़ें | जुळवण्यासाठी दुसरी प्रतिमा उघडा किंवा दुसरा लेयर जोडा
+Color intensity % | रंग तीव्रता % | रंग तीव्रता %
+Fade % | फ़ेड % | फिका %
+Luminance % | ल्यूमिनेंस % | ल्युमिनन्स %
+Neutralize | तटस्थ करें | तटस्थ करा
+Match color | रंग मिलाएँ | रंग जुळवा
+Distort | विकृत करें | विकृत करा
+Pixelate | पिक्सेलेट | पिक्सेलेट
+Render | रेंडर | रेंडर
+Stylize | शैलीकरण | शैलीकरण
+Center X % | केंद्र X % | मध्य X %
+Center Y % | केंद्र Y % | मध्य Y %
+Gaussian Blur | गॉसियन ब्लर | गॉसियन ब्लर
+Box Blur | बॉक्स ब्लर | बॉक्स ब्लर
+Distance (px) | दूरी (px) | अंतर (px)
+Motion Blur | मोशन ब्लर | मोशन ब्लर
+Method | विधि | पद्धत
+Radial / Zoom Blur | रेडियल / ज़ूम ब्लर | रेडियल / झूम ब्लर
+Spin | घुमाव | फिरकी
+Circle | वृत्त | वर्तुळ
+Hexagon | षट्भुज | षटकोन
+Highlight threshold | हाइलाइट थ्रेशोल्ड | हायलाइट थ्रेशोल्ड
+Iris shape | आइरिस आकृति | आयरिस आकार
+Lens Blur (bokeh) | लेंस ब्लर (बोकेह) | लेन्स ब्लर (बोकेह)
+Specular brightness | स्पेक्युलर चमक | स्पेक्युलर उजळपणा
+Blur radius | ब्लर त्रिज्या | ब्लर त्रिज्या
+Focus line position % | फ़ोकस रेखा स्थिति % | फोकस रेषा स्थान %
+Miniature saturation % | मिनिएचर संतृप्ति % | मिनिएचर संपृक्तता %
+Sharp band % | तीक्ष्ण पट्टी % | तीक्ष्ण पट्टा %
+Transition % | ट्रांज़िशन % | ट्रान्झिशन %
+Surface Blur | सरफ़ेस ब्लर | सरफेस ब्लर
+Threshold (levels) | थ्रेशोल्ड (लेवल) | थ्रेशोल्ड (लेव्हल)
+Unsharp Mask | अनशार्प मास्क | अनशार्प मास्क
+Add Noise / Film Grain | नॉइज़ / फ़िल्म ग्रेन जोड़ें | नॉइज / फिल्म ग्रेन जोडा
+Distribution | वितरण | वितरण
+Film grain (stronger in midtones) | फ़िल्म ग्रेन (मिडटोन में अधिक) | फिल्म ग्रेन (मिडटोनमध्ये जास्त)
+Gaussian | गॉसियन | गॉसियन
+Grain size | ग्रेन आकार | ग्रेन आकार
+Monochromatic | एकरंगी | एकरंगी
+Seed | बीज | बीज
+Uniform | एकसमान | एकसमान
+Preserve details % | विवरण बनाए रखें % | तपशील जपा %
+Reduce Noise (Median) | नॉइज़ कम करें (माध्यिका) | नॉइज कमी करा (मध्यक)
+Cell size (px) | सेल आकार (px) | सेल आकार (px)
+Pixelate / Mosaic | पिक्सेलेट / मोज़ेक | पिक्सेलेट / मोझॅक
+Crystallize | क्रिस्टलाइज़ | क्रिस्टलाइझ
+Black & white | श्वेत-श्याम | कृष्णधवल
+Color (CMY screens) | रंगीन (CMY स्क्रीन) | रंगीत (CMY स्क्रीन)
+Color Halftone | रंगीन हाफ़टोन | रंगीत हाफटोन
+Dot size (px) | बिंदु आकार (px) | ठिपका आकार (px)
+Screen angle (B&W) | स्क्रीन कोण (श्वेत-श्याम) | स्क्रीन कोन (कृष्णधवल)
+Emboss | एम्बॉस | एम्बॉस
+Keep color | रंग रखें | रंग ठेवा
+Find Edges | किनारे खोजें | कडा शोधा
+Brush shine | ब्रश चमक | ब्रश चमक
+Oil Paint | ऑयल पेंट | तैलचित्र
+Stylization (px) | शैलीकरण (px) | शैलीकरण (px)
+Glitch / RGB Split | ग्लिच / RGB स्प्लिट | ग्लिच / RGB स्प्लिट
+RGB split (px) | RGB स्प्लिट (px) | RGB स्प्लिट (px)
+Scanlines | स्कैनलाइन | स्कॅनलाइन
+Slice offset (px) | स्लाइस ऑफ़सेट (px) | स्लाइस ऑफसेट (px)
+Slices | स्लाइस | स्लाइस
+Solarize | सोलराइज़ | सोलराइझ
+Chromatic Aberration | क्रोमैटिक एबरेशन | क्रोमॅटिक ॲबरेशन
+Radius % | त्रिज्या % | त्रिज्या %
+Twirl | ट्विर्ल | ट्विर्ल
+Amount (+ pinch, − bulge) | मात्रा (+ पिंच, − उभार) | प्रमाण (+ पिंच, − फुगवटा)
+Pinch / Bulge | पिंच / उभार | पिंच / फुगवटा
+Amplitude (px) | आयाम (px) | आयाम (px)
+Both | दोनों | दोन्ही
+Wave | लहर | लाट
+Wavelength (px) | तरंगदैर्ध्य (px) | तरंगलांबी (px)
+Ring spacing (px) | वलय दूरी (px) | वलय अंतर (px)
+Ripple (water drop) | लहरें (पानी की बूँद) | तरंग (पाण्याचा थेंब)
+Conversion | रूपांतरण | रूपांतरण
+Polar Coordinates | ध्रुवीय निर्देशांक | ध्रुवीय निर्देशांक
+Polar to rectangular | ध्रुवीय से आयताकार | ध्रुवीयवरून आयताकार
+Rectangular to polar | आयताकार से ध्रुवीय | आयताकारवरून ध्रुवीय
+Amount % (− = white) | मात्रा % (− = सफ़ेद) | प्रमाण % (− = पांढरा)
+Feather % | फ़ेदर % | फेदर %
+Midpoint % | मध्यबिंदु % | मध्यबिंदू %
+Roundness % | गोलाई % | गोलाई %
+Vignette | विनेट | व्हिनेट
+105mm zoom | 105mm ज़ूम | 105mm झूम
+50mm prime | 50mm प्राइम | 50mm प्राइम
+Anamorphic (blue streak) | एनामॉर्फ़िक (नीली रेखा) | ॲनामॉर्फिक (निळी रेघ)
+Brightness % | चमक % | उजळपणा %
+Lens Flare | लेंस फ़्लेयर | लेन्स फ्लेअर
+Lens type | लेंस प्रकार | लेन्स प्रकार
+Position X % | स्थिति X % | स्थान X %
+Position Y % | स्थिति Y % | स्थान Y %
+Clouds | बादल | ढग
+Detail | विवरण | तपशील
+Difference clouds | डिफ़रेंस बादल | डिफरन्स ढग
+Roughness % | खुरदरापन % | खडबडीतपणा %
+Scale (px) | स्केल (px) | प्रमाण (px)
+Uses the foreground and background colors | अग्रभूमि और पृष्ठभूमि रंगों का उपयोग करता है | अग्रभूमी आणि पार्श्वभूमी रंग वापरतो
+Keep skin texture % | त्वचा की बनावट रखें % | त्वचेचा पोत ठेवा %
+Only skin tones | केवल त्वचा के रंग | फक्त त्वचेचे रंग
+Skin Smoothing | त्वचा चिकनी करें | त्वचा गुळगुळीत करा
+Smoothness % | चिकनाई % | गुळगुळीतपणा %
+Rasterize the | रास्टराइज़ करें: | रास्टराइझ करा:
+Rasterize the {p0} layer first (Layer › Rasterize layer) | पहले {p0} लेयर रास्टराइज़ करें (लेयर › लेयर रास्टराइज़ करें) | आधी {p0} लेयर रास्टराइझ करा (लेयर › लेयर रास्टराइझ करा)
+Select a pixel layer — filters do not apply to adjustment layers | कोई पिक्सेल लेयर चुनें — फ़िल्टर एडजस्टमेंट लेयर पर लागू नहीं होते | पिक्सेल लेयर निवडा — फिल्टर ॲडजस्टमेंट लेयरवर लागू होत नाहीत
+layer first (Layer › Rasterize layer) | लेयर पहले (लेयर › लेयर रास्टराइज़ करें) | लेयर आधी (लेयर › लेयर रास्टराइझ करा)
+Nothing to filter in this area | इस क्षेत्र में फ़िल्टर करने के लिए कुछ नहीं | या भागात फिल्टर करण्यासारखे काही नाही
+No filter applied yet | अभी तक कोई फ़िल्टर लागू नहीं | अद्याप कोणताही फिल्टर लागू नाही
+Preview {p0}% · {p1} ms | पूर्वावलोकन {p0}% · {p1} ms | पूर्वावलोकन {p0}% · {p1} ms
+Click the preview to set the center · Alt+press to compare | केंद्र सेट करने के लिए पूर्वावलोकन पर क्लिक करें · तुलना के लिए Alt+दबाएँ | मध्य सेट करण्यासाठी पूर्वावलोकनावर क्लिक करा · तुलनेसाठी Alt+दाबा
+Press and hold the preview to see the original | मूल देखने के लिए पूर्वावलोकन को दबाए रखें | मूळ पाहण्यासाठी पूर्वावलोकन दाबून ठेवा
+This filter has no settings. | इस फ़िल्टर की कोई सेटिंग नहीं है। | या फिल्टरला सेटिंग्ज नाहीत.
+Filter Gallery | फ़िल्टर गैलरी | फिल्टर गॅलरी
+Smart filter — | स्मार्ट फ़िल्टर — | स्मार्ट फिल्टर —
+Edit smart filter | स्मार्ट फ़िल्टर संपादित करें | स्मार्ट फिल्टर संपादित करा
+Edit smart filter: {name} | स्मार्ट फ़िल्टर संपादित करें: {name} | स्मार्ट फिल्टर संपादित करा: {name}
+Bloat | फुलाएँ | फुगवा
+Forward warp | आगे वार्प | पुढे वार्प
+Pucker | सिकोड़ें | आकसवा
+Push left | बाएँ धकेलें | डावीकडे ढकला
+Reconstruct | पुनर्निर्माण | पुनर्रचना
+Smooth | चिकना करें | गुळगुळीत करा
+Twirl clockwise | दक्षिणावर्त ट्विर्ल | घड्याळाच्या दिशेने ट्विर्ल
+Twirl counter-clockwise | वामावर्त ट्विर्ल | घड्याळाच्या उलट ट्विर्ल
+Brush density | ब्रश घनत्व | ब्रश घनता
+Brush pressure | ब्रश दबाव | ब्रश दाब
+Brush size (px, wheel) | ब्रश आकार (px, व्हील) | ब्रश आकार (px, व्हील)
+Show mesh | मेश दिखाएँ | मेश दाखवा
+Restore all | सब पुनर्स्थापित करें | सर्व पुनर्संचयित करा
+Undo step | चरण पूर्ववत करें | टप्पा पूर्ववत करा
+Drag to warp. Hold the mouse for twirl, pucker and bloat. [ ] change the brush size. | वार्प के लिए ड्रैग करें। ट्विर्ल, सिकोड़ने और फुलाने के लिए माउस दबाए रखें। [ ] से ब्रश का आकार बदलें। | वार्पसाठी ड्रॅग करा. ट्विर्ल, आकसवणे आणि फुगवण्यासाठी माउस दाबून ठेवा. [ ] ने ब्रशचा आकार बदला.
+Liquify | लिक्विफ़ाई | लिक्विफाय
+Applying liquify | लिक्विफ़ाई लागू हो रहा है | लिक्विफाय लागू होत आहे

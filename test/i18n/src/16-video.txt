@@ -1,0 +1,282 @@
+# Video (menus, core, export, audio, effects)
+Auto-cut selected clips to beats | चुनी गई क्लिप को बीट पर अपने-आप काटें | निवडलेल्या क्लिप बीटनुसार आपोआप कापा
+Clear beat markers | बीट मार्कर साफ़ करें | बीट मार्कर साफ करा
+Detect beats → markers | बीट पहचानें → मार्कर | बीट ओळखा → मार्कर
+Back 5 frames | 5 फ़्रेम पीछे | 5 फ्रेम मागे
+Forward 5 frames | 5 फ़्रेम आगे | 5 फ्रेम पुढे
+Go to end | अंत पर जाएँ | शेवटी जा
+Go to start | शुरुआत पर जाएँ | सुरुवातीला जा
+Loop In/Out playback | In/Out प्लेबैक लूप करें | In/Out प्लेबॅक लूप करा
+Next edit point | अगला एडिट पॉइंट | पुढील एडिट पॉइंट
+Play / pause | चलाएँ / रोकें | चालवा / थांबवा
+Playback | प्लेबैक | प्लेबॅक
+Previous edit point | पिछला एडिट पॉइंट | मागील एडिट पॉइंट
+Shuttle forward | शटल आगे | शटल पुढे
+Shuttle reverse | शटल पीछे | शटल मागे
+Step back one frame | एक फ़्रेम पीछे जाएँ | एक फ्रेम मागे जा
+Step forward one frame | एक फ़्रेम आगे जाएँ | एक फ्रेम पुढे जा
+Clear In and Out | In और Out साफ़ करें | In आणि Out साफ करा
+Go to In | In पर जाएँ | In वर जा
+Go to Out | Out पर जाएँ | Out वर जा
+Mark In | In चिह्नित करें | In चिन्हांकित करा
+Mark Out | Out चिह्नित करें | Out चिन्हांकित करा
+Mark clip | क्लिप चिह्नित करें | क्लिप चिन्हांकित करा
+Extract (ripple) | निकालें (रिपल) | काढा (रिपल)
+Lift (leave gap) | उठाएँ (अंतराल छोड़ें) | उचला (जागा सोडा)
+Insert from Project panel | प्रोजेक्ट पैनल से डालें | प्रकल्प पॅनेलमधून घाला
+Overwrite from Project panel | प्रोजेक्ट पैनल से ओवरराइट करें | प्रकल्प पॅनेलमधून ओव्हरराइट करा
+Edit mode | एडिट मोड | एडिट मोड
+Insert (ripple) | डालें (रिपल) | घाला (रिपल)
+Overwrite | ओवरराइट | ओव्हरराइट
+Close gaps | अंतराल बंद करें | मोकळ्या जागा बंद करा
+Ripple trim next edit to playhead | अगले एडिट को प्लेहेड तक रिपल ट्रिम करें | पुढील एडिट प्लेहेडपर्यंत रिपल ट्रिम करा
+Ripple trim previous edit to playhead | पिछले एडिट को प्लेहेड तक रिपल ट्रिम करें | मागील एडिट प्लेहेडपर्यंत रिपल ट्रिम करा
+Add marker | मार्कर जोड़ें | मार्कर जोडा
+Edit marker at playhead | प्लेहेड पर मार्कर संपादित करें | प्लेहेडवरील मार्कर संपादित करा
+Next marker | अगला मार्कर | पुढील मार्कर
+No marker at the playhead | प्लेहेड पर कोई मार्कर नहीं | प्लेहेडवर मार्कर नाही
+Previous marker | पिछला मार्कर | मागील मार्कर
+Clear all markers | सभी मार्कर साफ़ करें | सर्व मार्कर साफ करा
+Clear markers | मार्कर साफ़ करें | मार्कर साफ करा
+Go to marker | मार्कर पर जाएँ | मार्करवर जा
+Marker | मार्कर | मार्कर
+Add audio track | ऑडियो ट्रैक जोड़ें | ऑडिओ ट्रॅक जोडा
+Add video track | वीडियो ट्रैक जोड़ें | व्हिडिओ ट्रॅक जोडा
+Linked selection | लिंक्ड चयन | जोडलेली निवड
+Graphics | ग्राफ़िक्स | ग्राफिक्स
+Add title | टाइटल जोड़ें | टायटल जोडा
+Big title | बड़ा टाइटल | मोठे टायटल
+Text templates | टेक्स्ट टेम्पलेट | मजकूर टेम्पलेट
+Stickers | स्टिकर | स्टिकर
+Black video | काला वीडियो | काळा व्हिडिओ
+Colour matte / solid | कलर मैट / ठोस | कलर मॅट / घन
+Countdown leader | काउंटडाउन लीडर | काउंटडाउन लीडर
+Gradient background | ग्रेडिएंट पृष्ठभूमि | ग्रेडियंट पार्श्वभूमी
+Text animation | टेक्स्ट एनिमेशन | मजकूर ॲनिमेशन
+Captions menu | कैप्शन मेनू | कॅप्शन मेनू
+Captions | कैप्शन | कॅप्शन
+Add caption at playhead | प्लेहेड पर कैप्शन जोड़ें | प्लेहेडवर कॅप्शन जोडा
+Auto-time transcript (paste text, offline) | ट्रांसक्रिप्ट का अपने-आप समय-निर्धारण (टेक्स्ट चिपकाएँ, ऑफ़लाइन) | ट्रान्सक्रिप्टची आपोआप वेळ जुळवणी (मजकूर पेस्ट करा, ऑफलाइन)
+Auto-transcribe | अपने-आप ट्रांसक्राइब करें | आपोआप ट्रान्सक्राइब करा
+Copy transcript | ट्रांसक्रिप्ट कॉपी करें | ट्रान्सक्रिप्ट कॉपी करा
+Cut selected words | चुने गए शब्द काटें | निवडलेले शब्द कापा
+Edit by transcript | ट्रांसक्रिप्ट से संपादित करें | ट्रान्सक्रिप्टद्वारे संपादित करा
+Transcript panel | ट्रांसक्रिप्ट पैनल | ट्रान्सक्रिप्ट पॅनेल
+Bleep censored words | सेंसर किए गए शब्दों पर बीप करें | सेन्सॉर केलेल्या शब्दांवर बीप करा
+Mask censored words (f***) | सेंसर किए गए शब्द छिपाएँ (f***) | सेन्सॉर केलेले शब्द लपवा (f***)
+Caption list | कैप्शन सूची | कॅप्शन यादी
+Caption style | कैप्शन शैली | कॅप्शन शैली
+Caption style preset | कैप्शन शैली प्रीसेट | कॅप्शन शैली प्रीसेट
+Burn captions into export | एक्सपोर्ट में कैप्शन बर्न करें | एक्सपोर्टमध्ये कॅप्शन बर्न करा
+Caption burn-in | कैप्शन बर्न-इन | कॅप्शन बर्न-इन
+Show captions in preview | पूर्वावलोकन में कैप्शन दिखाएँ | पूर्वावलोकनात कॅप्शन दाखवा
+Audio | ऑडियो | ऑडिओ
+Auto-duck music under voice | आवाज़ के नीचे संगीत अपने-आप धीमा करें | आवाजाखाली संगीत आपोआप कमी करा
+Detect beats in music → markers | संगीत में बीट पहचानें → मार्कर | संगीतातील बीट ओळखा → मार्कर
+Remove auto-ducking | ऑटो-डकिंग हटाएँ | ऑटो-डकिंग काढा
+Stop recording voice-over | वॉइस-ओवर रिकॉर्डिंग रोकें | व्हॉइस-ओव्हर रेकॉर्डिंग थांबवा
+Bake audio effects (hear them now) | ऑडियो इफ़ेक्ट बेक करें (अभी सुनें) | ऑडिओ इफेक्ट बेक करा (आता ऐका)
+Normalize | सामान्य करें | सामान्य करा
+Select a clip | कोई क्लिप चुनें | क्लिप निवडा
+Voice enhance | आवाज़ सुधारें | आवाज सुधारा
+Mute clip | क्लिप म्यूट करें | क्लिप म्यूट करा
+Pan centre | पैन केंद्र | पॅन मध्य
+Pan left | पैन बाएँ | पॅन डावीकडे
+Pan right | पैन दाएँ | पॅन उजवीकडे
+Fit timeline | टाइमलाइन फ़िट करें | टाइमलाइन बसवा
+Zoom timeline in | टाइमलाइन ज़ूम इन करें | टाइमलाइन झूम इन करा
+Zoom timeline out | टाइमलाइन ज़ूम आउट करें | टाइमलाइन झूम आउट करा
+Create proxies for all video | सभी वीडियो के लिए प्रॉक्सी बनाएँ | सर्व व्हिडिओसाठी प्रॉक्सी तयार करा
+Use proxies for playback | प्लेबैक के लिए प्रॉक्सी उपयोग करें | प्लेबॅकसाठी प्रॉक्सी वापरा
+Audio meters | ऑडियो मीटर | ऑडिओ मीटर
+Search media in Project panel | प्रोजेक्ट पैनल में मीडिया खोजें | प्रकल्प पॅनेलमध्ये मीडिया शोधा
+Safe margins | सुरक्षित हाशिये | सुरक्षित समास
+Scopes | स्कोप | स्कोप
+About BTS Video | BTS Video के बारे में | BTS Video बद्दल
+Auto-transcribe uses the Vosk speech recogniser and its small English and Hindi models (Apache-2.0), offline. | अपने-आप ट्रांसक्राइब Vosk वाक् पहचानकर्ता और उसके छोटे अंग्रेज़ी व हिन्दी मॉडल (Apache-2.0) का ऑफ़लाइन उपयोग करता है। | आपोआप ट्रान्सक्राइब Vosk वाचा ओळखकर्ता आणि त्याची लहान इंग्रजी व हिंदी मॉडेल (Apache-2.0) ऑफलाइन वापरते.
+Search all features | सभी सुविधाएँ खोजें | सर्व वैशिष्ट्ये शोधा
+Stabilisation uses FFmpeg vid.stab. The bundled LUTs are original BTS Creative looks (MIT). | स्थिरीकरण FFmpeg vid.stab का उपयोग करता है। शामिल LUT मूल BTS Creative लुक हैं (MIT)। | स्थिरीकरण FFmpeg vid.stab वापरते. समाविष्ट LUT हे मूळ BTS Creative लुक आहेत (MIT).
+Video export uses FFmpeg (bundled, GPL). | वीडियो एक्सपोर्ट FFmpeg (शामिल, GPL) का उपयोग करता है। | व्हिडिओ एक्सपोर्ट FFmpeg (समाविष्ट, GPL) वापरते.
+Sequence aspect ratio | सीक्वेंस आस्पेक्ट रेशियो | सीक्वेन्स आस्पेक्ट रेशो
+Add edit at playhead | प्लेहेड पर एडिट जोड़ें | प्लेहेडवर एडिट जोडा
+Cross dissolve at the nearest cut | निकटतम कट पर क्रॉस डिज़ॉल्व | जवळच्या कटवर क्रॉस डिझॉल्व्ह
+Transition | ट्रांज़िशन | ट्रान्झिशन
+Aspect | आस्पेक्ट | आस्पेक्ट
+Record a voice-over from the microphone | माइक्रोफ़ोन से वॉइस-ओवर रिकॉर्ड करें | मायक्रोफोनवरून व्हॉइस-ओव्हर रेकॉर्ड करा
+{p0}Export | - |
+Add marker here | यहाँ मार्कर जोड़ें | येथे मार्कर जोडा
+Mark In here | यहाँ In चिह्नित करें | येथे In चिन्हांकित करा
+Mark Out here | यहाँ Out चिह्नित करें | येथे Out चिन्हांकित करा
+The current project has unsaved changes. | वर्तमान प्रोजेक्ट में बिना सहेजे बदलाव हैं। | सध्याच्या प्रकल्पात जतन न केलेले बदल आहेत.
+Sequence 01 | सीक्वेंस 01 | सीक्वेन्स 01
+Sequence {p0} | सीक्वेंस {p0} | सीक्वेन्स {p0}
+Untitled project | बिना शीर्षक प्रोजेक्ट | शीर्षकरहित प्रकल्प
+All {length} transition(s) have enough media | सभी {length} ट्रांज़िशन के लिए पर्याप्त मीडिया है | सर्व {length} ट्रान्झिशनसाठी पुरेसा मीडिया आहे
+{length} transition(s) don't have enough media (marked ⚠ on the timeline) — the edge frames are held | {length} ट्रांज़िशन के लिए पर्याप्त मीडिया नहीं है (टाइमलाइन पर ⚠ से चिह्नित) — किनारे के फ़्रेम रोके जाते हैं | {length} ट्रान्झिशनसाठी पुरेसा मीडिया नाही (टाइमलाइनवर ⚠ ने चिन्हांकित) — कडेच्या फ्रेम थांबवल्या जातात
+Drop media, captions or projects to import | इम्पोर्ट करने के लिए मीडिया, कैप्शन या प्रोजेक्ट छोड़ें | इम्पोर्ट करण्यासाठी मीडिया, कॅप्शन किंवा प्रकल्प टाका
+FFmpeg not found — exporting uses built-in WebM | FFmpeg नहीं मिला — एक्सपोर्ट अंतर्निर्मित WebM का उपयोग करता है | FFmpeg सापडले नाही — एक्सपोर्ट अंगभूत WebM वापरते
+Classic box | क्लासिक बॉक्स | क्लासिक बॉक्स
+Yellow | पीला | पिवळा
+Social bold | सोशल बोल्ड | सोशल ठळक
+Minimal | न्यूनतम | किमान
+"Nirmala UI", "Mangal", "Noto Sans Devanagari", "Lohit Devanagari", "Kohinoor Devanagari" | - |
+Quick adjust | त्वरित एडजस्ट | जलद ॲडजस्ट
+Your title | - |
+Media | मीडिया | मीडिया
+Importing {name} | {name} इम्पोर्ट हो रहा है | {name} इम्पोर्ट होत आहे
+This format cannot be played. Convert it to MP4 (H.264) or WebM. | यह फ़ॉर्मेट चलाया नहीं जा सकता। इसे MP4 (H.264) या WebM में बदलें। | हा फॉरमॅट चालवता येत नाही. तो MP4 (H.264) किंवा WebM मध्ये बदला.
+Could not import {name}: {message} | {name} इम्पोर्ट नहीं हो सका: {message} | {name} इम्पोर्ट करता आले नाही: {message}
+Ready | तैयार | तयार
+The image could not be read | छवि पढ़ी नहीं जा सकी | प्रतिमा वाचता आली नाही
+Converting animated {name} ({n} frames) | एनिमेटेड {name} रूपांतरित हो रहा है ({n} फ़्रेम) | ॲनिमेटेड {name} रूपांतरित होत आहे ({n} फ्रेम)
+Could not convert the animation | एनिमेशन रूपांतरित नहीं हो सका | ॲनिमेशन रूपांतरित करता आले नाही
+Could not convert the animation: {p0} | एनिमेशन रूपांतरित नहीं हो सका: {p0} | ॲनिमेशन रूपांतरित करता आले नाही: {p0}
+Creating playable proxy for {name} | {name} के लिए चलाने योग्य प्रॉक्सी बन रही है | {name} साठी चालवता येणारी प्रॉक्सी तयार होत आहे
+Unsupported media format | असमर्थित मीडिया फ़ॉर्मेट | असमर्थित मीडिया फॉरमॅट
+Unsupported audio format | असमर्थित ऑडियो फ़ॉर्मेट | असमर्थित ऑडिओ फॉरमॅट
+Remove media | मीडिया हटाएँ | मीडिया काढा
+This media is used in the timeline. Remove it and its clips? | यह मीडिया टाइमलाइन में उपयोग हो रहा है। इसे और इसकी क्लिप हटाएँ? | हा मीडिया टाइमलाइनमध्ये वापरला आहे. तो आणि त्याच्या क्लिप काढायच्या?
+Image sequences need FFmpeg | इमेज सीक्वेंस के लिए FFmpeg चाहिए | इमेज सीक्वेन्ससाठी FFmpeg आवश्यक
+First image of the sequence | सीक्वेंस की पहली छवि | सीक्वेन्सची पहिली प्रतिमा
+The file name must end with a frame number, e.g. shot_0001.png | फ़ाइल का नाम फ़्रेम संख्या से समाप्त होना चाहिए, जैसे shot_0001.png | फाइलचे नाव फ्रेम क्रमांकाने संपले पाहिजे, उदा. shot_0001.png
+Import image sequence | इमेज सीक्वेंस इम्पोर्ट करें | इमेज सीक्वेन्स इम्पोर्ट करा
+Building image sequence | इमेज सीक्वेंस बन रहा है | इमेज सीक्वेन्स तयार होत आहे
+Could not build the sequence | सीक्वेंस नहीं बन सका | सीक्वेन्स तयार करता आला नाही
+Could not build the sequence: {p0} | सीक्वेंस नहीं बन सका: {p0} | सीक्वेन्स तयार करता आला नाही: {p0}
+Proxies need FFmpeg | प्रॉक्सी के लिए FFmpeg चाहिए | प्रॉक्सीसाठी FFmpeg आवश्यक
+No video media need proxies | किसी वीडियो मीडिया को प्रॉक्सी की ज़रूरत नहीं | कोणत्याही व्हिडिओ मीडियाला प्रॉक्सीची गरज नाही
+Creating proxy {p0}/{length}: {name} | प्रॉक्सी {p0}/{length} बन रही है: {name} | प्रॉक्सी {p0}/{length} तयार होत आहे: {name}
+Proxies ready — preview now uses low-res copies (View › Use proxies). | प्रॉक्सी तैयार — पूर्वावलोकन अब कम रिज़ॉल्यूशन वाली प्रतियाँ उपयोग करता है (देखें › प्रॉक्सी उपयोग करें)। | प्रॉक्सी तयार — पूर्वावलोकन आता कमी रिझोल्यूशनच्या प्रती वापरते (दृश्य › प्रॉक्सी वापरा).
+BTS Video project | BTS Video प्रोजेक्ट | BTS Video प्रकल्प
+Recovered project | पुनर्प्राप्त प्रोजेक्ट | पुनर्प्राप्त प्रकल्प
+{length} media file(s) are offline. Right-click them in the Project panel to relink. | {length} मीडिया फ़ाइलें ऑफ़लाइन हैं। फिर से लिंक करने के लिए प्रोजेक्ट पैनल में उन पर राइट-क्लिक करें। | {length} मीडिया फाइल्स ऑफलाइन आहेत. पुन्हा लिंक करण्यासाठी प्रकल्प पॅनेलमध्ये त्यांवर राइट-क्लिक करा.
+Could not open project | प्रोजेक्ट नहीं खुल सका | प्रकल्प उघडता आला नाही
+Could not open project: {message} | प्रोजेक्ट नहीं खुल सका: {message} | प्रकल्प उघडता आला नाही: {message}
+No autosaved project to recover | पुनर्प्राप्त करने के लिए कोई ऑटोसेव प्रोजेक्ट नहीं | पुनर्प्राप्त करण्यासाठी ऑटोसेव्ह प्रकल्प नाही
+Autosaved projects from windows that closed unexpectedly | अचानक बंद हुई विंडो के ऑटोसेव प्रोजेक्ट | अनपेक्षितपणे बंद झालेल्या विंडोंचे ऑटोसेव्ह प्रकल्प
+Recover autosaved project | ऑटोसेव प्रोजेक्ट पुनर्प्राप्त करें | ऑटोसेव्ह प्रकल्प पुनर्प्राप्त करा
+An autosaved copy of “{name}” from {p1} was found. Recover it? | {p1} की “{name}” की ऑटोसेव प्रति मिली। इसे पुनर्प्राप्त करें? | {p1} ची “{name}” ची ऑटोसेव्ह प्रत सापडली. ती पुनर्प्राप्त करायची?
+Recover project? | प्रोजेक्ट पुनर्प्राप्त करें? | प्रकल्प पुनर्प्राप्त करायचा?
+Project recovered — save it to keep the changes. | प्रोजेक्ट पुनर्प्राप्त हुआ — बदलाव रखने के लिए इसे सहेजें। | प्रकल्प पुनर्प्राप्त झाला — बदल ठेवण्यासाठी तो जतन करा.
+YouTube 1080p (H.264) | = | =
+YouTube 4K (H.264) | = | =
+Instagram Reel / Shorts 1080×1920 | = | =
+WhatsApp-friendly (small, 720p) | WhatsApp के अनुकूल (छोटा, 720p) | WhatsApp साठी योग्य (लहान, 720p)
+Twitter / X (720p) | = | =
+Match sequence (H.264) | सीक्वेंस से मिलाएँ (H.264) | सीक्वेन्सशी जुळवा (H.264)
+High efficiency (H.265 / HEVC) | उच्च दक्षता (H.265 / HEVC) | उच्च कार्यक्षमता (H.265 / HEVC)
+Master (ProRes 422 HQ .mov) | मास्टर (ProRes 422 HQ .mov) | मास्टर (ProRes 422 HQ .mov)
+Animated GIF | एनिमेटेड GIF | ॲनिमेटेड GIF
+MP3 audio only | केवल MP3 ऑडियो | फक्त MP3 ऑडिओ
+PNG frame (current frame) | PNG फ़्रेम (वर्तमान फ़्रेम) | PNG फ्रेम (सध्याची फ्रेम)
+PNG image sequence | PNG इमेज सीक्वेंस | PNG इमेज सीक्वेन्स
+WebM (VP9, built-in real-time) | WebM (VP9, अंतर्निर्मित रीयल-टाइम) | WebM (VP9, अंगभूत रिअल-टाइम)
+Preparing | तैयार हो रहा है | तयार होत आहे
+Frame exported | फ़्रेम एक्सपोर्ट हुआ | फ्रेम एक्सपोर्ट झाली
+The timeline is empty | टाइमलाइन खाली है | टाइमलाइन रिकामी आहे
+Entire sequence | पूरा सीक्वेंस | संपूर्ण सीक्वेन्स
+In to Out {p0} | In से Out {p0} | In ते Out {p0}
+Selected clips | चुनी गई क्लिप | निवडलेल्या क्लिप
+Fill (crop centre) | भरें (केंद्र क्रॉप) | भरा (मध्य क्रॉप)
+Fit (letterbox) | फ़िट (लेटरबॉक्स) | बसवा (लेटरबॉक्स)
+Aspect differs | आस्पेक्ट अलग है | आस्पेक्ट वेगळा आहे
+Apple ProRes 422 HQ | = | =
+H.264 / AVC | = | =
+H.265 / HEVC | = | =
+Video codec | वीडियो कोडेक | व्हिडिओ कोडेक
+Constant quality (CRF) | स्थिर गुणवत्ता (CRF) | स्थिर गुणवत्ता (CRF)
+Target bitrate | लक्ष्य बिटरेट | लक्ष्य बिटरेट
+Best (16) | सर्वोत्तम (16) | सर्वोत्तम (16)
+Good (20) | अच्छा (20) | चांगला (20)
+High (18) | उच्च (18) | उच्च (18)
+Medium (23) | मध्यम (23) | मध्यम (23)
+Small (26) | छोटा (26) | लहान (26)
+Smaller (28) | और छोटा (28) | अधिक लहान (28)
+Tiny (30) | बहुत छोटा (30) | खूप लहान (30)
+Quality mode | गुणवत्ता मोड | गुणवत्ता मोड
+Video kbps | वीडियो kbps | व्हिडिओ kbps
+Saves the frame at the playhead ({p0}) as a {w}×{h} PNG. | प्लेहेड ({p0}) वाले फ़्रेम को {w}×{h} PNG के रूप में सहेजता है। | प्लेहेडवरील ({p0}) फ्रेम {w}×{h} PNG म्हणून जतन करते.
+Duration {p0} | अवधि {p0} | कालावधी {p0}
+Estimated size ≈ {p0} | अनुमानित आकार ≈ {p0} | अंदाजित आकार ≈ {p0}
+The export range is empty | एक्सपोर्ट सीमा खाली है | एक्सपोर्ट श्रेणी रिकामी आहे
+{p0}amix=inputs={length}:normalize=0:dropout_transition=0,alimiter=limit=0.98:level=disabled,apad[aout] | - |
+{p0}amix=inputs={length}:normalize=0:dropout_transition=0,volume='if({cond},0,1)':eval=frame[prog] | - |
+Exporting | एक्सपोर्ट हो रहा है | एक्सपोर्ट होत आहे
+Exporting {p0} | {p0} एक्सपोर्ट हो रहा है | {p0} एक्सपोर्ट होत आहे
+PNG sequence | PNG सीक्वेंस | PNG सीक्वेन्स
+There is no audio in the timeline | टाइमलाइन में कोई ऑडियो नहीं है | टाइमलाइनमध्ये ऑडिओ नाही
+Mixing audio | ऑडियो मिक्स हो रहा है | ऑडिओ मिक्स होत आहे
+Exported | एक्सपोर्ट हुआ | एक्सपोर्ट झाले
+Exported {p0} | {p0} एक्सपोर्ट हुआ | {p0} एक्सपोर्ट झाले
+Export cancelled | एक्सपोर्ट रद्द हुआ | एक्सपोर्ट रद्द झाले
+Rendering frame {p0} of {N} · {p2}s remaining | फ़्रेम {p0} / {N} रेंडर हो रहा है · {p2}s शेष | फ्रेम {p0} / {N} रेंडर होत आहे · {p2}s बाकी
+Finishing | समाप्त हो रहा है | पूर्ण होत आहे
+FFmpeg | = | =
+FFmpeg: {p0} | = | =
+Exported {p0} in {p1}s | {p0} {p1}s में एक्सपोर्ट हुआ | {p0} {p1}s मध्ये एक्सपोर्ट झाले
+Exporting WebM (real-time) | WebM एक्सपोर्ट हो रहा है (रीयल-टाइम) | WebM एक्सपोर्ट होत आहे (रिअल-टाइम)
+Recording {p0} of {p1} | {p1} में से {p0} रिकॉर्ड हो रहा है | {p1} पैकी {p0} रेकॉर्ड होत आहे
+Baking needs FFmpeg | बेक करने के लिए FFmpeg चाहिए | बेक करण्यासाठी FFmpeg आवश्यक
+Turn on Normalize, Noise reduction or Voice enhance first | पहले सामान्य करें, नॉइज़ कमी करना या आवाज़ सुधारें चालू करें | आधी सामान्य करा, नॉइज कमी करणे किंवा आवाज सुधारा चालू करा
+Baking audio effects | ऑडियो इफ़ेक्ट बेक हो रहे हैं | ऑडिओ इफेक्ट बेक होत आहेत
+Processing with FFmpeg (afftdn / compressor / loudnorm) | FFmpeg से संसाधित हो रहा है (afftdn / compressor / loudnorm) | FFmpeg ने प्रक्रिया होत आहे (afftdn / compressor / loudnorm)
+Could not process audio | ऑडियो संसाधित नहीं हो सका | ऑडिओवर प्रक्रिया करता आली नाही
+Audio effects baked into a new file — you can hear them in the preview now. | ऑडियो इफ़ेक्ट नई फ़ाइल में बेक हुए — अब आप उन्हें पूर्वावलोकन में सुन सकते हैं। | ऑडिओ इफेक्ट नवीन फाइलमध्ये बेक झाले — आता तुम्ही ते पूर्वावलोकनात ऐकू शकता.
+Bake audio effects | ऑडियो इफ़ेक्ट बेक करें | ऑडिओ इफेक्ट बेक करा
+Audio inside video clips (V tracks) is voice | वीडियो क्लिप (V ट्रैक) के अंदर का ऑडियो आवाज़ है | व्हिडिओ क्लिपमधील (V ट्रॅक) ऑडिओ आवाज आहे
+{id} is voice | {id} आवाज़ है | {id} आवाज आहे
+Duck amount (dB) | डक मात्रा (dB) | डक प्रमाण (dB)
+Fade down (s) | धीरे कम करें (s) | हळूहळू कमी करा (s)
+Fade up (s) | धीरे बढ़ाएँ (s) | हळूहळू वाढवा (s)
+Voice detection threshold (dBFS) | आवाज़ पहचान थ्रेशोल्ड (dBFS) | आवाज ओळख थ्रेशोल्ड (dBFS)
+Auto-duck music under voice (other audio tracks are lowered while someone speaks) | आवाज़ के नीचे संगीत अपने-आप धीमा करें (कोई बोलते समय अन्य ऑडियो ट्रैक धीमे होते हैं) | आवाजाखाली संगीत आपोआप कमी करा (कोणी बोलताना इतर ऑडिओ ट्रॅक कमी होतात)
+No music clips found on the non-voice audio tracks | बिना आवाज़ वाले ऑडियो ट्रैक पर कोई संगीत क्लिप नहीं मिली | आवाज नसलेल्या ऑडिओ ट्रॅकवर संगीत क्लिप सापडल्या नाहीत
+Ducked {music} music clip(s) under {regions} voice section(s) | {regions} आवाज़ खंडों के नीचे {music} संगीत क्लिप धीमी की गईं | {regions} आवाज भागांखाली {music} संगीत क्लिप कमी केल्या
+No voice detected above the threshold | थ्रेशोल्ड से ऊपर कोई आवाज़ नहीं पहचानी गई | थ्रेशोल्डपेक्षा जास्त आवाज ओळखला नाही
+No auto-ducking to remove | हटाने के लिए कोई ऑटो-डकिंग नहीं | काढण्यासाठी ऑटो-डकिंग नाही
+Removed ducking from {n} clip(s) | {n} क्लिप से डकिंग हटाई गई | {n} क्लिपमधून डकिंग काढले
+Ease in | ईज़ इन | ईझ इन
+Ease in / out | ईज़ इन / आउट | ईझ इन / आउट
+Ease out | ईज़ आउट | ईझ आउट
+Hold | होल्ड | होल्ड
+WebGL unavailable | WebGL उपलब्ध नहीं | WebGL उपलब्ध नाही
+WebGL is unavailable on this computer — some effects (sharpen, grain, glitch, VHS…) are skipped. | इस कंप्यूटर पर WebGL उपलब्ध नहीं है — कुछ इफ़ेक्ट (तीक्ष्णता, ग्रेन, ग्लिच, VHS…) छोड़ दिए जाते हैं। | या संगणकावर WebGL उपलब्ध नाही — काही इफेक्ट (तीक्ष्णता, ग्रेन, ग्लिच, VHS…) वगळले जातात.
+WebGL is unavailable: some effects are skipped | WebGL उपलब्ध नहीं: कुछ इफ़ेक्ट छोड़ दिए गए | WebGL उपलब्ध नाही: काही इफेक्ट वगळले
+Teal & Orange | टील और नारंगी | टील आणि नारिंगी
+Noir | नुआर | नुआर
+Faded | फीका | फिका
+Moonlight | चाँदनी | चांदणे
+Film stock | फ़िल्म स्टॉक | फिल्म स्टॉक
+Chroma key | क्रोमा की | क्रोमा की
+Key colour | की रंग | की रंग
+Keying | कीइंग | कीइंग
+Spill suppress | स्पिल दबाएँ | स्पिल दाबा
+Blur & sharpen | ब्लर और तीक्ष्णता | ब्लर आणि तीक्ष्णता
+Blurriness | धुंधलापन | धूसरपणा
+Repeat edges | किनारे दोहराएँ | कडा पुन्हा वापरा
+Cell size / blur | सेल आकार / ब्लर | सेल आकार / ब्लर
+Mosaic / face blur | मोज़ेक / चेहरा ब्लर | मोझॅक / चेहरा ब्लर
+Region H % | क्षेत्र H % | भाग H %
+Region W % | क्षेत्र W % | भाग W %
+Region X % | क्षेत्र X % | भाग X %
+Region Y % | क्षेत्र Y % | भाग Y %
+Region shape | क्षेत्र आकृति | भागाचा आकार
+Whole frame | पूरा फ़्रेम | संपूर्ण फ्रेम
+Midpoint | मध्यबिंदु | मध्यबिंदू
+Film grain | फ़िल्म ग्रेन | फिल्म ग्रेन
+Glow | चमक | चमक
+Glitch | ग्लिच | ग्लिच
+Distance px | दूरी px | अंतर px
+RGB split | RGB स्प्लिट | RGB स्प्लिट
+VHS | = | =
+Bottom → top | नीचे → ऊपर | खाली → वर
+Keep side | ओर रखें | बाजू ठेवा
+Left → right | बाएँ → दाएँ | डावीकडून → उजवीकडे
+Mirror | दर्पण | आरसा
+Right → left | दाएँ → बाएँ | उजवीकडून → डावीकडे
+Top → bottom | ऊपर → नीचे | वर → खाली
+Flip | पलटें | उलटा
+Composite | कंपोज़िट | कंपोझिट
+Direction° | दिशा° | दिशा°
+Radius px | त्रिज्या px | त्रिज्या px
+Rounded corners | गोल कोने | गोलाकार कोपरे

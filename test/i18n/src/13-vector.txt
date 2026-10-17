@@ -1,0 +1,281 @@
+# Vector (file, export, colour, gradients, patterns, swatches, DXF, effects)
+Vector & images | वेक्टर और छवियाँ | वेक्टर आणि प्रतिमा
+Could not open file | फ़ाइल नहीं खुल सकी | फाइल उघडता आली नाही
+Could not open file: {message} | फ़ाइल नहीं खुल सकी: {message} | फाइल उघडता आली नाही: {message}
+Images & vector files | छवियाँ और वेक्टर फ़ाइलें | प्रतिमा आणि वेक्टर फाइल्स
+Could not place file | फ़ाइल नहीं रखी जा सकी | फाइल ठेवता आली नाही
+Could not place file: {message} | फ़ाइल नहीं रखी जा सकी: {message} | फाइल ठेवता आली नाही: {message}
+Place SVG | SVG रखें | SVG ठेवा
+-selection | - |
+Select something to export | एक्सपोर्ट करने के लिए कुछ चुनें | एक्सपोर्ट करण्यासाठी काहीतरी निवडा
+Tick one or more artboards in the Artboards panel first | पहले आर्टबोर्ड पैनल में एक या अधिक आर्टबोर्ड चिह्नित करें | आधी आर्टबोर्ड पॅनेलमध्ये एक किंवा अधिक आर्टबोर्डवर खूण करा
+Exported {length}-page vector PDF | {length}-पृष्ठ वेक्टर PDF एक्सपोर्ट हुआ | {length}-पृष्ठी वेक्टर PDF एक्सपोर्ट झाला
+Exported {length} {p1} file{p2} | {length} {p1} फ़ाइलें एक्सपोर्ट हुईं | {length} {p1} फाइल्स एक्सपोर्ट झाल्या
+PDF (vector) | PDF (वेक्टर) | PDF (वेक्टर)
+SVG (vector) | SVG (वेक्टर) | SVG (वेक्टर)
+All {length} artboard(s) — one file each / multi-page PDF | सभी {length} आर्टबोर्ड — हर एक की अलग फ़ाइल / बहु-पृष्ठ PDF | सर्व {length} आर्टबोर्ड — प्रत्येकी एक फाइल / बहुपृष्ठी PDF
+Current artboard ({name}) | वर्तमान आर्टबोर्ड ({name}) | सध्याचा आर्टबोर्ड ({name})
+Selected artboards ({npick} ticked in the Artboards panel) | चुने गए आर्टबोर्ड (आर्टबोर्ड पैनल में {npick} चिह्नित) | निवडलेले आर्टबोर्ड (आर्टबोर्ड पॅनेलमध्ये {npick} खूण केलेले)
+Selection only | केवल चयन | फक्त निवड
+What to export | क्या एक्सपोर्ट करें | काय एक्सपोर्ट करायचे
+4× (print) | 4× (प्रिंट) | 4× (प्रिंट)
+Scale (raster formats) | स्केल (रास्टर फ़ॉर्मेट) | प्रमाण (रास्टर फॉरमॅट)
+Quality (JPEG / WebP) | गुणवत्ता (JPEG / WebP) | गुणवत्ता (JPEG / WebP)
+Transparent background (PNG / WebP / SVG) | पारदर्शी पृष्ठभूमि (PNG / WebP / SVG) | पारदर्शक पार्श्वभूमी (PNG / WebP / SVG)
+Raster: dither gradients (adds slight noise to stop banding) | रास्टर: ग्रेडिएंट डिदर करें (बैंडिंग रोकने के लिए हल्का नॉइज़ जोड़ता है) | रास्टर: ग्रेडियंट डिदर करा (बँडिंग टाळण्यासाठी थोडा नॉइज जोडतो)
+PDF: convert type to outlines (keeps exact fonts) | PDF: टेक्स्ट को आउटलाइन में बदलें (फ़ॉन्ट हूबहू रहते हैं) | PDF: मजकूर आउटलाइनमध्ये बदला (फॉन्ट हुबेहूब राहतात)
+KB) | KB) | KB)
+SVG copied to the clipboard ( | SVG क्लिपबोर्ड पर कॉपी हुआ ( | SVG क्लिपबोर्डवर कॉपी झाला (
+SVG copied to the clipboard ({Math} KB) | SVG क्लिपबोर्ड पर कॉपी हुआ ({Math} KB) | SVG क्लिपबोर्डवर कॉपी झाला ({Math} KB)
+Alt (drag) | Alt (ड्रैग) | Alt (ड्रॅग)
+Constrain | सीमित करें | मर्यादित करा
+Double-click group | समूह पर डबल-क्लिक | गटावर डबल-क्लिक
+Double-click live object | लाइव ऑब्जेक्ट पर डबल-क्लिक | लाइव्ह ऑब्जेक्टवर डबल-क्लिक
+Duplicate / from center | प्रतिलिपि / केंद्र से | प्रत / मध्यापासून
+Edit repeat / blend / effect / type on path | रिपीट / ब्लेंड / इफ़ेक्ट / पाथ पर टेक्स्ट संपादित करें | पुनरावृत्ती / ब्लेंड / इफेक्ट / पाथवरील मजकूर संपादित करा
+Isolation mode | आइसोलेशन मोड | आयसोलेशन मोड
+Pan | पैन | पॅन
+Shift (drag) | Shift (ड्रैग) | Shift (ड्रॅग)
+Toggle fill-stroke / swap / none | भरण-स्ट्रोक बदलें / अदला-बदली / कोई नहीं | भरण-स्ट्रोक बदला / अदलाबदल / काहीही नाही
+X / Shift+X / / | = | =
+Drop SVG, PDF, AI, EPS, DXF or images | SVG, PDF, AI, EPS, DXF या छवियाँ छोड़ें | SVG, PDF, AI, EPS, DXF किंवा प्रतिमा टाका
+Analogous | सदृश | सदृश
+Complementary | पूरक | पूरक
+Monochrome | एकरंगी | एकरंगी
+Split complementary | विभाजित पूरक | विभाजित पूरक
+Tetradic | चतुष्कोणीय | चतुष्कोणीय
+Triadic | त्रिकोणीय | त्रिकोणीय
+CMYK | = | =
+HSB | = | =
+HEX | = | =
+OKLab | = | =
+Select objects to apply the gradient | ग्रेडिएंट लगाने के लिए ऑब्जेक्ट चुनें | ग्रेडियंट लावण्यासाठी ऑब्जेक्ट निवडा
+Mint | पुदीना | पुदिना
+Purple haze | बैंगनी धुंध | जांभळे धुके
+Sunrise | सूर्योदय | सूर्योदय
+Fire | आग | आग
+Night sky | रात का आसमान | रात्रीचे आकाश
+Peach | आड़ू | पीच
+Rainbow | इंद्रधनुष | इंद्रधनुष्य
+Candy | कैंडी | कँडी
+Gold | सोना | सोनेरी
+Steel | स्टील | पोलाद
+Blush | गुलाबी आभा | गुलाबी छटा
+Glow (radial) | चमक (त्रिज्य) | चमक (त्रिज्य)
+Lagoon | लैगून | खाजण
+Spotlight (radial) | स्पॉटलाइट (त्रिज्य) | स्पॉटलाइट (त्रिज्य)
+Aurora | ध्रुवीय ज्योति | ध्रुवीय प्रकाश
+Black to clear | काले से पारदर्शी | काळ्यापासून पारदर्शक
+Duotone | डुओटोन | ड्युओटोन
+Sphere (radial) | गोला (त्रिज्य) | गोल (त्रिज्य)
+Click a preset to apply it to the selection (Undo to revert). | चयन पर लागू करने के लिए किसी प्रीसेट पर क्लिक करें (वापस लाने के लिए पूर्ववत करें)। | निवडीवर लागू करण्यासाठी प्रीसेटवर क्लिक करा (परत आणण्यासाठी पूर्ववत करा).
+Click a preset to load it into the Gradient panel; select objects to apply it. | ग्रेडिएंट पैनल में लोड करने के लिए किसी प्रीसेट पर क्लिक करें; लगाने के लिए ऑब्जेक्ट चुनें। | ग्रेडियंट पॅनेलमध्ये लोड करण्यासाठी प्रीसेटवर क्लिक करा; लावण्यासाठी ऑब्जेक्ट निवडा.
+Blend: {l} | ब्लेंड: {l} | ब्लेंड: {l}
+Gradient presets ({length}) | ग्रेडिएंट प्रीसेट ({length}) | ग्रेडियंट प्रीसेट ({length})
+Gradient blending | ग्रेडिएंट ब्लेंडिंग | ग्रेडियंट ब्लेंडिंग
+Gradient blending: {p0} | ग्रेडिएंट ब्लेंडिंग: {p0} | ग्रेडियंट ब्लेंडिंग: {p0}
+Colour blending between stops | स्टॉप के बीच रंग ब्लेंडिंग | स्टॉपमधील रंग ब्लेंडिंग
+% op | % अपा. | % अपा.
+Delete stop (or double-click it) | स्टॉप हटाएँ (या उस पर डबल-क्लिक करें) | स्टॉप हटवा (किंवा त्यावर डबल-क्लिक करा)
+Apply to | इस पर लागू करें | यावर लागू करा
+Apply to {target} | {target} पर लागू करें | {target} वर लागू करा
+Edit on canvas (G) | कैनवस पर संपादित करें (G) | कॅनव्हासवर संपादित करा (G)
+Freeform | मुक्त रूप | मुक्त स्वरूप
+Click the bar to add a stop · drag stops · double-click a stop to remove it | स्टॉप जोड़ने के लिए बार पर क्लिक करें · स्टॉप ड्रैग करें · हटाने के लिए स्टॉप पर डबल-क्लिक करें | स्टॉप जोडण्यासाठी पट्टीवर क्लिक करा · स्टॉप ड्रॅग करा · काढण्यासाठी स्टॉपवर डबल-क्लिक करा
+Blending space | ब्लेंडिंग स्पेस | ब्लेंडिंग स्पेस
+Drag across objects to apply · drag end points or stops · double-click the line to add a stop · Alt+click a stop to remove | लगाने के लिए ऑब्जेक्ट पर ड्रैग करें · छोर या स्टॉप ड्रैग करें · स्टॉप जोड़ने के लिए रेखा पर डबल-क्लिक करें · हटाने के लिए स्टॉप पर Alt+क्लिक करें | लावण्यासाठी ऑब्जेक्टवरून ड्रॅग करा · टोके किंवा स्टॉप ड्रॅग करा · स्टॉप जोडण्यासाठी रेषेवर डबल-क्लिक करा · काढण्यासाठी स्टॉपवर Alt+क्लिक करा
+Delete gradient stop | ग्रेडिएंट स्टॉप हटाएँ | ग्रेडियंट स्टॉप हटवा
+Add gradient stop | ग्रेडिएंट स्टॉप जोड़ें | ग्रेडियंट स्टॉप जोडा
+Edit gradient | ग्रेडिएंट संपादित करें | ग्रेडियंट संपादित करा
+Select a closed shape | कोई बंद आकृति चुनें | बंद आकार निवडा
+Arrangement | व्यवस्था | मांडणी
+Colour points | रंग बिंदु | रंग बिंदू
+Colours | रंग | रंग
+Freeform gradient | मुक्त रूप ग्रेडिएंट | मुक्त स्वरूप ग्रेडियंट
+Harmony of current fill | वर्तमान भरण का सामंजस्य | सध्याच्या भरणचा सुसंवाद
+Spread (%) | फैलाव (%) | पसरण (%)
+Diagonal stripes | तिरछी धारियाँ | तिरपे पट्टे
+Dots | बिंदु | ठिपके
+Zig zag | टेढ़ी-मेढ़ी | नागमोडी
+Brick by column | कॉलम के अनुसार ईंट | स्तंभांनुसार वीट
+Brick by row | पंक्ति के अनुसार ईंट | ओळींनुसार वीट
+Foreground | अग्रभूमि | अग्रभूमी
+Pattern (expanded) | पैटर्न (फैलाया गया) | पॅटर्न (विस्तारित)
+Pattern options | पैटर्न विकल्प | पॅटर्न पर्याय
+Pattern: {p0} | पैटर्न: {p0} | पॅटर्न: {p0}
+Tile size (px) | टाइल आकार (px) | टाइल आकार (px)
+Transparent background | पारदर्शी पृष्ठभूमि | पारदर्शक पार्श्वभूमी
+Select closed shapes to fill with a pattern | पैटर्न से भरने के लिए बंद आकृतियाँ चुनें | पॅटर्नने भरण्यासाठी बंद आकार निवडा
+New pattern swatch | नया पैटर्न स्वैच | नवीन पॅटर्न स्वॅच
+Pattern swatch “ | पैटर्न स्वैच “ | पॅटर्न स्वॅच “
+Pattern swatch “{name}” added | पैटर्न स्वैच “{name}” जोड़ा गया | पॅटर्न स्वॅच “{name}” जोडला
+Select artwork to turn into a pattern tile | पैटर्न टाइल बनाने के लिए कलाकृति चुनें | पॅटर्न टाइल बनवण्यासाठी कलाकृती निवडा
+” added | ” जोड़ा गया | ” जोडला
+Select the artwork to turn into a pattern | पैटर्न बनाने के लिए कलाकृति चुनें | पॅटर्न बनवण्यासाठी कलाकृती निवडा
+Add a sample rectangle filled with the pattern | पैटर्न से भरा एक नमूना आयत जोड़ें | पॅटर्नने भरलेला नमुना आयत जोडा
+Artwork size in the pattern (px) | पैटर्न में कलाकृति का आकार (px) | पॅटर्नमधील कलाकृतीचा आकार (px)
+Brick offset (%) | ईंट ऑफ़सेट (%) | वीट ऑफसेट (%)
+Horizontal spacing (px) | क्षैतिज दूरी (px) | आडवे अंतर (px)
+Pattern maker | पैटर्न मेकर | पॅटर्न मेकर
+Pattern {n} | पैटर्न {n} | पॅटर्न {n}
+Swatch name | स्वैच का नाम | स्वॅचचे नाव
+Tile type | टाइल प्रकार | टाइल प्रकार
+Vertical spacing (px) | लंबवत दूरी (px) | उभे अंतर (px)
+Pattern sample — | पैटर्न नमूना — | पॅटर्न नमुना —
+Pattern sample — {name} | पैटर्न नमूना — {name} | पॅटर्न नमुना — {name}
+Pattern swatch added to Color › Pattern swatches | पैटर्न स्वैच रंग › पैटर्न स्वैच में जोड़ा गया | पॅटर्न स्वॅच रंग › पॅटर्न स्वॅचमध्ये जोडला
+Edit swatch | स्वैच संपादित करें | स्वॅच संपादित करा
+Edit swatch — {name}{p1} | स्वैच संपादित करें — {name}{p1} | स्वॅच संपादित करा — {name}{p1}
+Delete swatch | स्वैच हटाएँ | स्वॅच हटवा
+Edit colour | रंग संपादित करें | रंग संपादित करा
+Make global (linked) | ग्लोबल बनाएँ (जुड़ा हुआ) | ग्लोबल करा (जोडलेला)
+Make local (unlink) | लोकल बनाएँ (लिंक हटाएँ) | लोकल करा (दुवा तोडा)
+Rename swatch | स्वैच का नाम बदलें | स्वॅचचे नाव बदला
+Select objects using it | इसका उपयोग करने वाले ऑब्जेक्ट चुनें | हा वापरणारे ऑब्जेक्ट निवडा
+Swatch type | स्वैच प्रकार | स्वॅच प्रकार
+New swatch | नया स्वैच | नवीन स्वॅच
+Add used colours | प्रयुक्त रंग जोड़ें | वापरलेले रंग जोडा
+Click to apply · double-click to edit · right-click for options. Editing a global swatch (corner mark) recolours every object using it. | लगाने के लिए क्लिक करें · संपादित करने के लिए डबल-क्लिक · विकल्पों के लिए राइट-क्लिक। ग्लोबल स्वैच (कोने का निशान) संपादित करने से उसका उपयोग करने वाले हर ऑब्जेक्ट का रंग बदल जाता है। | लावण्यासाठी क्लिक करा · संपादनासाठी डबल-क्लिक · पर्यायांसाठी राइट-क्लिक. ग्लोबल स्वॅच (कोपऱ्यातील खूण) संपादित केल्यास तो वापरणाऱ्या प्रत्येक ऑब्जेक्टचा रंग बदलतो.
+Global | ग्लोबल | ग्लोबल
+Global {cp} | ग्लोबल {cp} | ग्लोबल {cp}
+Swatches | स्वैच | स्वॅच
+Add palette | पैलेट जोड़ें | पॅलेट जोडा
+Add to swatches | स्वैच में जोड़ें | स्वॅचमध्ये जोडा
+Colour themes | रंग थीम | रंग थीम
+Split compl. | विभाजित पूरक | विभाजित पूरक
+Libraries | लाइब्रेरी | संग्रह
+Presets ({length}) | प्रीसेट ({length}) | प्रीसेट ({length})
+New from selection | चयन से नया | निवडीपासून नवीन
+Pattern swatches | पैटर्न स्वैच | पॅटर्न स्वॅच
+Tile | टाइल | टाइल
+Uses the stroke colour as the foreground and fill as the background. Double-click a pattern-filled object to edit it. | स्ट्रोक रंग को अग्रभूमि और भरण को पृष्ठभूमि के रूप में उपयोग करता है। संपादित करने के लिए पैटर्न से भरे ऑब्जेक्ट पर डबल-क्लिक करें। | स्ट्रोक रंग अग्रभूमी आणि भरण पार्श्वभूमी म्हणून वापरतो. संपादित करण्यासाठी पॅटर्नने भरलेल्या ऑब्जेक्टवर डबल-क्लिक करा.
+Blend front→back | आगे→पीछे ब्लेंड करें | पुढे→मागे ब्लेंड करा
+Recolor | रंग बदलें | रंग बदला
+Nothing to recolor | रंग बदलने के लिए कुछ नहीं | रंग बदलण्यासारखे काही नाही
+No colours found | कोई रंग नहीं मिला | रंग सापडले नाहीत
+Harmony rule | सामंजस्य नियम | सुसंवाद नियम
+Map to library | लाइब्रेरी से मिलाएँ | संग्रहाशी जुळवा
+{length} colour(s) in {p1} — edit any colour, or remap all at once | {p1} में {length} रंग — कोई भी रंग संपादित करें, या सब एक साथ बदलें | {p1} मध्ये {length} रंग — कोणताही रंग संपादित करा, किंवा सर्व एकदम बदला
+✦ Generate palette | ✦ पैलेट बनाएँ | ✦ पॅलेट तयार करा
+⤨ Shuffle colours | ⤨ रंग फेंटें | ⤨ रंग मिसळा
+Keep black, white & grays | काला, सफ़ेद और ग्रे रखें | काळा, पांढरा आणि राखाडी ठेवा
+Preserve lightness | हल्कापन बनाए रखें | फिकटपणा जपा
+Intensity (%) | तीव्रता (%) | तीव्रता (%)
+Saturate | संतृप्त करें | संपृक्त करा
+Blend colors | रंग ब्लेंड करें | रंग ब्लेंड करा
+Front and back objects need solid fills | आगे और पीछे के ऑब्जेक्ट में ठोस भरण होना चाहिए | पुढील आणि मागील ऑब्जेक्टना घन भरण हवे
+Inches | इंच | इंच
+Millimetres | मिलीमीटर | मिलिमीटर
+Pixels (1 px = 1 unit) | पिक्सेल (1 px = 1 इकाई) | पिक्सेल (1 px = 1 एकक)
+AcDbSymbolTable | - |
+AcDbSymbolTableRecord | - |
+AcDbViewportTableRecord | - |
+AcDbLinetypeTableRecord | - |
+ByBlock | - |
+ByLayer | - |
+Continuous | - |
+Solid line | ठोस रेखा | घन रेषा
+AcDbLayerTableRecord | - |
+AcDbTextStyleTableRecord | - |
+AcDbRegAppTableRecord | - |
+AcDbDimStyleTable | - |
+AcDbDimStyleTableRecord | - |
+AcDbBlockTableRecord | - |
+AcDbBlockBegin | - |
+AcDbEntity | - |
+AcDbBlockEnd | - |
+AcDbLine | - |
+AcDbCircle | - |
+AcDbArc | - |
+AcDbEllipse | - |
+AcDbPolyline | - |
+AcDb2dPolyline | - |
+AcDb2dVertex | - |
+AcDbVertex | - |
+AcDbSpline | - |
+AcDbText | - |
+AcDbDictionary | - |
+Layout1 | - |
+Model | - |
+AcDbPlotSettings | - |
+AcDbLayout | - |
+Nothing to export | एक्सपोर्ट करने के लिए कुछ नहीं | एक्सपोर्ट करण्यासारखे काही नाही
+Export DXF | DXF एक्सपोर्ट करें | DXF एक्सपोर्ट करा
+Current artboard | वर्तमान आर्टबोर्ड | सध्याचा आर्टबोर्ड
+Everything (all artboards) | सब कुछ (सभी आर्टबोर्ड) | सर्व काही (सर्व आर्टबोर्ड)
+DXF version | DXF संस्करण | DXF आवृत्ती
+R12 ASCII — most compatible (laser cutters, CNC) | R12 ASCII — सबसे अधिक संगत (लेज़र कटर, CNC) | R12 ASCII — सर्वाधिक सुसंगत (लेझर कटर, CNC)
+R2000 — LWPOLYLINE, ELLIPSE, SPLINE, true colour | R2000 — LWPOLYLINE, ELLIPSE, SPLINE, ट्रू कलर | R2000 — LWPOLYLINE, ELLIPSE, SPLINE, ट्रू कलर
+Units | इकाइयाँ | एकके
+Scale factor | स्केल गुणक | प्रमाण गुणक
+Flatten to straight segments (safest for lasers) | सीधे खंडों में सपाट करें (लेज़र के लिए सबसे सुरक्षित) | सरळ खंडांमध्ये सपाट करा (लेझरसाठी सर्वात सुरक्षित)
+Polylines with true arcs (smooth, R12-safe) | वास्तविक चाप वाली पॉलीलाइन (चिकनी, R12-सुरक्षित) | खऱ्या कंसांच्या पॉलिलाइन (गुळगुळीत, R12-सुरक्षित)
+SPLINE entities (R2000 only) | SPLINE एंटिटी (केवल R2000) | SPLINE घटक (फक्त R2000)
+Separate LINE and ARC entities | अलग LINE और ARC एंटिटी | वेगळे LINE आणि ARC घटक
+Curve tolerance (mm) | कर्व सहनशीलता (mm) | कर्व्ह सहनशीलता (mm)
+Export exact circles / ellipses as CIRCLE / ELLIPSE | सटीक वृत्त / दीर्घवृत्त को CIRCLE / ELLIPSE के रूप में एक्सपोर्ट करें | अचूक वर्तुळे / लंबवर्तुळे CIRCLE / ELLIPSE म्हणून एक्सपोर्ट करा
+By layer | लेयर के अनुसार | लेयरनुसार
+Stroke colour → basic ACI 1–7 (cut / engrave mapping) | स्ट्रोक रंग → मूल ACI 1–7 (कट / उकेरना मैपिंग) | स्ट्रोक रंग → मूळ ACI 1–7 (कट / कोरीव मॅपिंग)
+Stroke colour → nearest ACI colour (256) | स्ट्रोक रंग → निकटतम ACI रंग (256) | स्ट्रोक रंग → जवळचा ACI रंग (256)
+True colour (R2000) + ACI fallback | ट्रू कलर (R2000) + ACI विकल्प | ट्रू कलर (R2000) + ACI पर्याय
+Convert to outlines | आउटलाइन में बदलें | आउटलाइनमध्ये बदला
+Leave text out | टेक्स्ट छोड़ दें | मजकूर वगळा
+TEXT entities | TEXT एंटिटी | TEXT घटक
+Join paths that touch (continuous cuts) | छूने वाले पाथ जोड़ें (लगातार कट) | स्पर्श करणारे पाथ जोडा (सलग कट)
+DXF | = | =
+Exported DXF: {entities} entities | DXF एक्सपोर्ट हुआ: {entities} एंटिटी | DXF एक्सपोर्ट झाले: {entities} घटक
+Binary DXF is not supported — save it as ASCII DXF. | बाइनरी DXF समर्थित नहीं है — इसे ASCII DXF के रूप में सहेजें। | बायनरी DXF समर्थित नाही — ते ASCII DXF म्हणून जतन करा.
+No drawing entities found in this DXF. | इस DXF में कोई ड्रॉइंग एंटिटी नहीं मिली। | या DXF मध्ये रेखाचित्र घटक सापडले नाहीत.
+1 inch | 1 इंच | 1 इंच
+1 millimetre | 1 मिलीमीटर | 1 मिलिमीटर
+1 pixel | 1 पिक्सेल | 1 पिक्सेल
+DXF units | DXF इकाइयाँ | DXF एकके
+Import | इम्पोर्ट करें | इम्पोर्ट करा
+This DXF does not say which units it uses. Treat one unit as | यह DXF नहीं बताता कि यह कौन-सी इकाई उपयोग करता है। एक इकाई को यह मानें | हे DXF कोणती एकके वापरते ते सांगत नाही. एक एकक हे माना
+Nothing drawable in this DXF. | इस DXF में बनाने योग्य कुछ नहीं। | या DXF मध्ये रेखाटण्याजोगे काही नाही.
+Layer 0 | लेयर 0 | लेयर 0
+Place {name} | {name} रखें | {name} ठेवा
+Imported {n} DXF entities | {n} DXF एंटिटी इम्पोर्ट हुईं | {n} DXF घटक इम्पोर्ट झाले
+Could not place DXF | DXF नहीं रखा जा सका | DXF ठेवता आले नाही
+Could not place DXF: {message} | DXF नहीं रखा जा सका: {message} | DXF ठेवता आले नाही: {message}
+Corner | कोना | कोपरा
+Detail (points per 100 px) | विवरण (प्रति 100 px बिंदु) | तपशील (प्रति 100 px बिंदू)
+Roughen | खुरदरा करें | खडबडीत करा
+Size (% of object) | आकार (ऑब्जेक्ट का %) | आकार (ऑब्जेक्टच्या %)
+Variation (seed) | भिन्नता (बीज) | फरक (बीज)
+Ridges per segment | प्रति खंड उभार | प्रति खंड उंचवटे
+Size (px) | आकार (px) | आकार (px)
+Pucker & bloat | सिकोड़ें और फुलाएँ | आकसवा आणि फुगवा
+Pucker ← → Bloat (%) | सिकोड़ें ← → फुलाएँ (%) | आकसवा ← → फुगवा (%)
+Horizontal (% of object) | क्षैतिज (ऑब्जेक्ट का %) | आडवे (ऑब्जेक्टच्या %)
+Modify anchor points | एंकर पॉइंट बदलें | अँकर पॉइंट बदला
+Modify control points (handles) | नियंत्रण बिंदु (हैंडल) बदलें | नियंत्रण बिंदू (हँडल) बदला
+Tweak | ट्वीक | ट्वीक
+Vertical (% of object) | लंबवत (ऑब्जेक्ट का %) | उभे (ऑब्जेक्टच्या %)
+Bend (%) | मोड़ (%) | वाक (%)
+Horizontal distortion (%) | क्षैतिज विकृति (%) | आडवी विकृती (%)
+Vertical distortion (%) | लंबवत विकृति (%) | उभी विकृती (%)
+Free distort | मुक्त विकृति | मुक्त विकृती
+X offset (%) | X ऑफ़सेट (%) | X ऑफसेट (%)
+Y offset (%) | Y ऑफ़सेट (%) | Y ऑफसेट (%)
+{p0} X offset (%) | {p0} X ऑफ़सेट (%) | {p0} X ऑफसेट (%)
+Copies | प्रतियाँ | प्रती
+Move H (px) | क्षैतिज खिसकाएँ (px) | आडवे हलवा (px)
+Move V (px) | लंबवत खिसकाएँ (px) | उभे हलवा (px)
+Rotate (°) | घुमाएँ (°) | फिरवा (°)
+Scale H (%) | क्षैतिज स्केल (%) | आडवे प्रमाण (%)
+Scale V (%) | लंबवत स्केल (%) | उभे प्रमाण (%)
+Bevel | बेवल | बेव्हल
+Joins | जोड़ | सांधे
+Keep original underneath | मूल को नीचे रखें | मूळ खाली ठेवा
+Miter | मीटर | मायटर
+Offset (px) | ऑफ़सेट (px) | ऑफसेट (px)
+Offset path | ऑफ़सेट पाथ | ऑफसेट पाथ
+Round | गोल | गोल
+Gaussian blur | गॉसियन ब्लर | गॉसियन ब्लर
+3D extrude | 3D एक्सट्रूड | 3D एक्सट्रूड
+3D Extrude & Bevel | 3D एक्सट्रूड और बेवल | 3D एक्सट्रूड आणि बेव्हल
+Ambient light (%) | परिवेश प्रकाश (%) | सभोवतालचा प्रकाश (%)
+Bevel size (px) | बेवल आकार (px) | बेव्हल आकार (px)
+Extrude depth (px) | एक्सट्रूड गहराई (px) | एक्सट्रूड खोली (px)
+Light direction (°) | प्रकाश दिशा (°) | प्रकाश दिशा (°)

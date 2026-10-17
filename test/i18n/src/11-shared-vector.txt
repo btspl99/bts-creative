@@ -1,0 +1,193 @@
+# Runtime strings, shared UI kit, Vector (menus)
+Material | मटीरियल | मटेरियल
+Neon | नियॉन | निऑन
+Tailwind | = | =
+Page 1 of 3 | पृष्ठ 1 / 3 | पृष्ठ 1 / 3
+Presets (20) | प्रीसेट (20) | प्रीसेट (20)
+Show more (144) | और दिखाएँ (144) | अधिक दाखवा (144)
+Sets the font for new type · current: {font} | नए टेक्स्ट का फ़ॉन्ट सेट करता है · वर्तमान: {font} | नवीन मजकुराचा फॉन्ट सेट करतो · सध्याचा: {font}
+Video effects · {cat} | वीडियो इफ़ेक्ट · {cat} | व्हिडिओ इफेक्ट · {cat}
+Video effects | वीडियो इफ़ेक्ट | व्हिडिओ इफेक्ट
+Voice-over | वॉइस-ओवर | व्हॉइस-ओव्हर
+Web 1080px JPEG | वेब 1080px JPEG | वेब 1080px JPEG
+agree | - |
+and | और | आणि
+at | पर | वर
+cm | = | =
+fx | = | =
+in | = | =
+mm | = | =
+pt | = | =
+px | = | =
+sRGB | = | =
+student.name | - |
+video | वीडियो | व्हिडिओ
+{p0} sticker | {p0} स्टिकर | {p0} स्टिकर
+✓ Apply crop | ✓ क्रॉप लागू करें | ✓ क्रॉप लागू करा
+Update | अपडेट | अपडेट
+Search features | सुविधाएँ खोजें | वैशिष्ट्ये शोधा
+Downloading update {percent}% | अपडेट डाउनलोड हो रहा है {percent}% | अपडेट डाउनलोड होत आहे {percent}%
+Restart to update (v{version}) | अपडेट के लिए पुनः आरंभ करें (v{version}) | अपडेटसाठी पुन्हा सुरू करा (v{version})
+Update v{version} ready. Click the pill in the title bar to restart. | अपडेट v{version} तैयार है। पुनः आरंभ करने के लिए टाइटल बार में बटन पर क्लिक करें। | अपडेट v{version} तयार आहे. पुन्हा सुरू करण्यासाठी शीर्षक पट्टीतील बटणावर क्लिक करा.
+Update v{version} found | अपडेट v{version} मिला | अपडेट v{version} सापडले
+Dark | गहरा | गडद
+Darkest | सबसे गहरा | सर्वात गडद
+Midnight blue | मिडनाइट ब्लू | मिडनाइट निळा
+Classic gray | क्लासिक ग्रे | क्लासिक राखाडी
+Light | हल्का | फिकट
+High contrast | उच्च कंट्रास्ट | उच्च कॉन्ट्रास्ट
+Interface in English | = | =
+Accent colour | एक्सेंट रंग | ॲक्सेंट रंग
+Each app's own colour | हर ऐप का अपना रंग | प्रत्येक ॲपचा स्वतःचा रंग
+Custom colour | कस्टम रंग | सानुकूल रंग
+Interface size | इंटरफ़ेस आकार | इंटरफेस आकार
+Reduce motion (no animations) | गति कम करें (कोई एनिमेशन नहीं) | हालचाल कमी करा (ॲनिमेशन नाहीत)
+Appearance: skins, accent colour, interface size | रूप-रंग: स्किन, एक्सेंट रंग, इंटरफ़ेस आकार | स्वरूप: स्किन, ॲक्सेंट रंग, इंटरफेस आकार
+Settings | सेटिंग्ज़ | सेटिंग्ज
+Language: {native} | भाषा: {native} | भाषा: {native}
+Skin: {name} | स्किन: {name} | स्किन: {name}
+Search for a feature, filter, tool or command | कोई सुविधा, फ़िल्टर, टूल या कमांड खोजें | वैशिष्ट्य, फिल्टर, साधन किंवा आदेश शोधा
+No matching features | कोई मेल खाती सुविधा नहीं | जुळणारी वैशिष्ट्ये नाहीत
+Press Ctrl+K anywhere to search every feature. | हर सुविधा खोजने के लिए कहीं भी Ctrl+K दबाएँ। | प्रत्येक वैशिष्ट्य शोधण्यासाठी कुठेही Ctrl+K दाबा.
+Drop files to open | खोलने के लिए फ़ाइलें छोड़ें | उघडण्यासाठी फाइल्स टाका
+Files | फ़ाइलें | फाइल्स
+__art | - |
+__guide | - |
+Artboard | आर्टबोर्ड | आर्टबोर्ड
+{p0} · {w} × {h} px | = | =
+Layer {p0} | लेयर {p0} | लेयर {p0}
+Sublayer {p0} | उप-लेयर {p0} | उप-लेयर {p0}
+Feature not loaded | सुविधा लोड नहीं हुई | वैशिष्ट्य लोड झाले नाही
+Feature not loaded: {name} | सुविधा लोड नहीं हुई: {name} | वैशिष्ट्य लोड झाले नाही: {name}
+Open DXF | DXF खोलें | DXF उघडा
+Open PDF, Illustrator or EPS as vectors | PDF, Illustrator या EPS को वेक्टर के रूप में खोलें | PDF, Illustrator किंवा EPS वेक्टर म्हणून उघडा
+Open SVG | SVG खोलें | SVG उघडा
+Place DXF | DXF रखें | DXF ठेवा
+Place PDF, AI or EPS as vectors | PDF, AI या EPS को वेक्टर के रूप में रखें | PDF, AI किंवा EPS वेक्टर म्हणून ठेवा
+Save (.btsv) | सहेजें (.btsv) | जतन करा (.btsv)
+DXF for laser cutters and CNC | लेज़र कटर और CNC के लिए DXF | लेझर कटर आणि CNC साठी DXF
+SVG | = | =
+Export all artboards | सभी आर्टबोर्ड एक्सपोर्ट करें | सर्व आर्टबोर्ड एक्सपोर्ट करा
+Export selected artboards | चुने गए आर्टबोर्ड एक्सपोर्ट करें | निवडलेले आर्टबोर्ड एक्सपोर्ट करा
+Export selection | चयन एक्सपोर्ट करें | निवड एक्सपोर्ट करा
+Multi-page PDF (all artboards) | बहु-पृष्ठ PDF (सभी आर्टबोर्ड) | बहुपृष्ठी PDF (सर्व आर्टबोर्ड)
+PNG with gradient dithering | ग्रेडिएंट डिदरिंग के साथ PNG | ग्रेडियंट डिदरिंगसह PNG
+Autosave settings | ऑटोसेव सेटिंग्ज़ | ऑटोसेव्ह सेटिंग्ज
+Copy as SVG | SVG के रूप में कॉपी करें | SVG म्हणून कॉपी करा
+Paste in place | उसी जगह चिपकाएँ | त्याच जागी पेस्ट करा
+Select all on artboard | आर्टबोर्ड पर सभी चुनें | आर्टबोर्डवरील सर्व निवडा
+Select same fill color | समान भरण रंग चुनें | समान भरण रंग निवडा
+Select same stroke color | समान स्ट्रोक रंग चुनें | समान स्ट्रोक रंग निवडा
+Blend front to back | आगे से पीछे ब्लेंड करें | पुढून मागे ब्लेंड करा
+Edit colors | रंग संपादित करें | रंग संपादित करा
+Invert colors | रंग उलटें | रंग उलटे करा
+Object | ऑब्जेक्ट | ऑब्जेक्ट
+Reflect horizontal | क्षैतिज प्रतिबिंब | आडवे प्रतिबिंब
+Reflect vertical | लंबवत प्रतिबिंब | उभे प्रतिबिंब
+Align {l} | संरेखित करें: {l} | संरेखित करा: {l}
+Bottom | नीचे | तळ
+Distribute horizontal centres | क्षैतिज केंद्र वितरित करें | आडवे मध्य समान अंतरावर ठेवा
+Distribute vertical centres | लंबवत केंद्र वितरित करें | उभे मध्य समान अंतरावर ठेवा
+Horizontal centre | क्षैतिज केंद्र | आडवा मध्य
+Top | ऊपर | वर
+Vertical centre | लंबवत केंद्र | उभा मध्य
+Align to artboard | आर्टबोर्ड से संरेखित करें | आर्टबोर्डशी संरेखित करा
+Align to key object | मुख्य ऑब्जेक्ट से संरेखित करें | मुख्य ऑब्जेक्टशी संरेखित करा
+Align to selection | चयन से संरेखित करें | निवडीशी संरेखित करा
+Ungroup | समूह तोड़ें | गट विभक्त करा
+Hide selection | चयन छिपाएँ | निवड लपवा
+Lock selection | चयन लॉक करें | निवड लॉक करा
+Show all | सब दिखाएँ | सर्व दाखवा
+Unlock all | सब अनलॉक करें | सर्व अनलॉक करा
+Enter isolation mode | आइसोलेशन मोड में जाएँ | आयसोलेशन मोडमध्ये जा
+Exit isolation mode | आइसोलेशन मोड से बाहर निकलें | आयसोलेशन मोडमधून बाहेर पडा
+Expand (outline strokes) | फैलाएँ (स्ट्रोक को आउटलाइन करें) | विस्तारित करा (स्ट्रोकची आउटलाइन करा)
+Expand appearance | रूप फैलाएँ | स्वरूप विस्तारित करा
+Add anchor points | एंकर पॉइंट जोड़ें | अँकर पॉइंट जोडा
+Average anchors | एंकर का औसत करें | अँकरची सरासरी करा
+Close path | पाथ बंद करें | पाथ बंद करा
+Flatten curves | कर्व सपाट करें | कर्व्ह सपाट करा
+Join | जोड़ें | जोडा
+Outline stroke | स्ट्रोक आउटलाइन करें | स्ट्रोक आउटलाइन करा
+Path | पाथ | पाथ
+Reverse direction | दिशा उलटें | दिशा उलटा करा
+Blend in linear light | रैखिक प्रकाश में ब्लेंड करें | रेषीय प्रकाशात ब्लेंड करा
+Blend in sRGB (classic) | sRGB में ब्लेंड करें (क्लासिक) | sRGB मध्ये ब्लेंड करा (क्लासिक)
+Blend perceptually (OKLab) | दृष्टिगत रूप से ब्लेंड करें (OKLab) | दृश्यानुभवानुसार ब्लेंड करा (OKLab)
+Gradient panel | ग्रेडिएंट पैनल | ग्रेडियंट पॅनेल
+Gradient presets | ग्रेडिएंट प्रीसेट | ग्रेडियंट प्रीसेट
+Release repeat | रिपीट हटाएँ | पुनरावृत्ती मोकळी करा
+Repeat | दोहराएँ | पुनरावृत्ती
+Repeat options | दोहराव विकल्प | पुनरावृत्ती पर्याय
+Blend | ब्लेंड | ब्लेंड
+Expand blend | ब्लेंड फैलाएँ | ब्लेंड विस्तारित करा
+Make (between two objects) | बनाएँ (दो ऑब्जेक्ट के बीच) | तयार करा (दोन ऑब्जेक्टमध्ये)
+Release blend | ब्लेंड हटाएँ | ब्लेंड मोकळा करा
+Envelope distort | एनवेलप विकृति | एन्व्हलप विकृती
+Make with warp | वार्प से बनाएँ | वार्पने तयार करा
+16 colours | 16 रंग | 16 रंग
+3 colours | 3 रंग | 3 रंग
+6 colours | 6 रंग | 6 रंग
+Black & white logo | श्वेत-श्याम लोगो | कृष्णधवल लोगो
+Grayscale | ग्रेस्केल | ग्रेस्केल
+Image trace | इमेज ट्रेस | इमेज ट्रेस
+Make (trace image) | बनाएँ (छवि ट्रेस करें) | तयार करा (प्रतिमा ट्रेस करा)
+Silhouette | छायाचित्र (सिल्हूट) | छायाकृती (सिल्हूट)
+Sketched art | स्केच कला | रेखाटन कला
+Trace with preset | प्रीसेट से ट्रेस करें | प्रीसेटने ट्रेस करा
+Compound path | कंपाउंड पाथ | कंपाउंड पाथ
+Make | बनाएँ | तयार करा
+Release | हटाएँ (रिलीज़) | मोकळे करा
+Clipping mask | क्लिपिंग मास्क | क्लिपिंग मास्क
+Make inverted opacity mask | उलटा अपारदर्शिता मास्क बनाएँ | उलट अपारदर्शकता मास्क तयार करा
+Make opacity mask | अपारदर्शिता मास्क बनाएँ | अपारदर्शकता मास्क तयार करा
+Mask options | मास्क विकल्प | मास्क पर्याय
+Opacity mask | अपारदर्शिता मास्क | अपारदर्शकता मास्क
+Release opacity mask | अपारदर्शिता मास्क हटाएँ | अपारदर्शकता मास्क मोकळा करा
+Divide | विभाजित करें | विभाजित करा
+Exclude | बाहर करें | वगळा
+Merge | मर्ज करें | विलीन करा
+Minus back | पीछे वाला घटाएँ | मागचे वजा करा
+Minus front | आगे वाला घटाएँ | पुढचे वजा करा
+Outline | आउटलाइन | आउटलाइन
+Pathfinder | पाथफ़ाइंडर | पाथफाइंडर
+Unite | एक करें | एकत्र करा
+Break link to symbol | प्रतीक से लिंक तोड़ें | चिन्हाशी दुवा तोडा
+New symbol from selection | चयन से नया प्रतीक | निवडीपासून नवीन चिन्ह
+Redefine symbol | प्रतीक फिर से परिभाषित करें | चिन्ह पुन्हा परिभाषित करा
+Show symbols library | प्रतीक लाइब्रेरी दिखाएँ | चिन्ह संग्रह दाखवा
+Symbols | प्रतीक | चिन्हे
+Apply pattern | पैटर्न लागू करें | पॅटर्न लागू करा
+Make pattern swatch from selection | चयन से पैटर्न स्वैच बनाएँ | निवडीपासून पॅटर्न स्वॅच तयार करा
+Pattern maker (generate from selection) | पैटर्न मेकर (चयन से बनाएँ) | पॅटर्न मेकर (निवडीपासून तयार करा)
+Artboard background colour | आर्टबोर्ड पृष्ठभूमि रंग | आर्टबोर्ड पार्श्वभूमी रंग
+Artboards | आर्टबोर्ड | आर्टबोर्ड
+Artboards panel | आर्टबोर्ड पैनल | आर्टबोर्ड पॅनेल
+Delete artboard | आर्टबोर्ड हटाएँ | आर्टबोर्ड हटवा
+Duplicate artboard | आर्टबोर्ड की प्रतिलिपि बनाएँ | आर्टबोर्डची प्रत बनवा
+Fit artboard to artwork | आर्टबोर्ड को कलाकृति में फ़िट करें | आर्टबोर्ड कलाकृतीनुसार बसवा
+Fit artboard to selection | आर्टबोर्ड को चयन में फ़िट करें | आर्टबोर्ड निवडीनुसार बसवा
+Lock artboard | आर्टबोर्ड लॉक करें | आर्टबोर्ड लॉक करा
+New artboard | नया आर्टबोर्ड | नवीन आर्टबोर्ड
+Select artboard for export | एक्सपोर्ट के लिए आर्टबोर्ड चुनें | एक्सपोर्टसाठी आर्टबोर्ड निवडा
+Show artboard names on canvas | कैनवस पर आर्टबोर्ड के नाम दिखाएँ | कॅनव्हासवर आर्टबोर्डची नावे दाखवा
+Rasterize to image | छवि में रास्टराइज़ करें | प्रतिमेत रास्टराइझ करा
+Character panel | कैरेक्टर पैनल | कॅरेक्टर पॅनेल
+Pen | पेन | पेन
+Selection tool | चयन टूल | निवड साधन
+Line segment | रेखा खंड | रेषाखंड
+Paintbrush | पेंटब्रश | पेंटब्रश
+Blob brush | ब्लॉब ब्रश | ब्लॉब ब्रश
+Polygon | बहुभुज | बहुभुज
+Spiral | सर्पिल | सर्पिल
+Flare | फ़्लेयर | फ्लेअर
+Scissors | कैंची | कात्री
+Knife | चाकू | सुरी
+Reflect | प्रतिबिंब | प्रतिबिंब
+Free distort | मुक्त विकृति | मुक्त विकृती
+Shape builder | शेप बिल्डर | शेप बिल्डर
+Live paint bucket | लाइव पेंट बकेट | लाइव्ह पेंट बकेट
+Symbol sprayer | प्रतीक स्प्रेयर | चिन्ह स्प्रेअर
+Dimension | आयाम | परिमाण
+Type on a path | पाथ पर टेक्स्ट | पाथवर मजकूर
+Direct selection | प्रत्यक्ष चयन | थेट निवड

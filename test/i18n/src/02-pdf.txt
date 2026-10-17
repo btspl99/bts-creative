@@ -1,0 +1,281 @@
+# PDF Pro (part 2)
+Header & footer / page numbers / Bates | हेडर और फ़ुटर / पृष्ठ संख्या / Bates | शीर्षलेख आणि तळटीप / पृष्ठ क्रमांक / Bates
+Remove watermark / header & footer / background | वॉटरमार्क / हेडर और फ़ुटर / पृष्ठभूमि हटाएँ | वॉटरमार्क / शीर्षलेख आणि तळटीप / पार्श्वभूमी काढा
+Tools | टूल | साधने
+OCR: copy recognised text | OCR: पहचाना गया टेक्स्ट कॉपी करें | OCR: ओळखलेला मजकूर कॉपी करा
+OCR: export recognised text | OCR: पहचाना गया टेक्स्ट एक्सपोर्ट करें | OCR: ओळखलेला मजकूर एक्सपोर्ट करा
+Enhance scan (grayscale, contrast, deskew) | स्कैन सुधारें (ग्रेस्केल, कंट्रास्ट, सीधा करें) | स्कॅन सुधारा (ग्रेस्केल, कॉन्ट्रास्ट, सरळ करा)
+Document assistant (offline) | दस्तावेज़ सहायक (ऑफ़लाइन) | दस्तऐवज सहाय्यक (ऑफलाइन)
+Summarise document | दस्तावेज़ का सारांश बनाएँ | दस्तऐवजाचा सारांश तयार करा
+Key points & keywords | मुख्य बिंदु और कीवर्ड | मुख्य मुद्दे आणि कीवर्ड
+Ask the document (keyword search) | दस्तावेज़ से पूछें (कीवर्ड खोज) | दस्तऐवजाला विचारा (कीवर्ड शोध)
+Study material: flashcards & quiz | अध्ययन सामग्री: फ़्लैशकार्ड और क्विज़ | अभ्यास साहित्य: फ्लॅशकार्ड आणि प्रश्नमंजूषा
+Export summary as text | सारांश को टेक्स्ट के रूप में एक्सपोर्ट करें | सारांश मजकूर म्हणून एक्सपोर्ट करा
+Export flashcards (CSV) | फ़्लैशकार्ड एक्सपोर्ट करें (CSV) | फ्लॅशकार्ड एक्सपोर्ट करा (CSV)
+Export quiz (CSV) | क्विज़ एक्सपोर्ट करें (CSV) | प्रश्नमंजूषा एक्सपोर्ट करा (CSV)
+Export study sheet (PDF) | अध्ययन शीट एक्सपोर्ट करें (PDF) | अभ्यास पत्रक एक्सपोर्ट करा (PDF)
+Close assistant | सहायक बंद करें | सहाय्यक बंद करा
+Extract tables (CSV / Excel) | तालिकाएँ निकालें (CSV / Excel) | सारण्या काढा (CSV / Excel)
+Compare files — visual overlay / pixel diff | फ़ाइलों की तुलना करें — दृश्य ओवरले / पिक्सेल अंतर | फाइल्सची तुलना करा — दृश्य ओव्हरले / पिक्सेल फरक
+Remove password protection | पासवर्ड सुरक्षा हटाएँ | पासवर्ड संरक्षण काढा
+Remove hidden metadata | छिपा मेटाडेटा हटाएँ | लपलेला मेटाडेटा काढा
+Accessibility | सुलभता | सुलभता
+Make accessible (title, language, image alt text) | सुलभ बनाएँ (शीर्षक, भाषा, छवि का alt टेक्स्ट) | सुलभ करा (शीर्षक, भाषा, प्रतिमेचा alt मजकूर)
+Show reading order on this page | इस पृष्ठ पर पढ़ने का क्रम दिखाएँ | या पृष्ठावर वाचन क्रम दाखवा
+Convert | रूपांतरित करें | रूपांतरित करा
+PDF to Word (.docx) | PDF से Word (.docx) | PDF ते Word (.docx)
+PDF to PowerPoint (.pptx) | PDF से PowerPoint (.pptx) | PDF ते PowerPoint (.pptx)
+PDF tables to Excel (.xlsx) / CSV | PDF तालिकाएँ Excel (.xlsx) / CSV में | PDF सारण्या Excel (.xlsx) / CSV मध्ये
+Tool keys | टूल कुंजियाँ | साधन कळा
+Updates run in the installed version. | अपडेट इंस्टॉल किए गए संस्करण में चलते हैं। | अपडेट इन्स्टॉल केलेल्या आवृत्तीत चालतात.
+About BTS PDF Pro | BTS PDF Pro के बारे में | BTS PDF Pro बद्दल
+Not affiliated with Adobe Inc. | Adobe Inc. से संबद्ध नहीं। | Adobe Inc. शी संलग्न नाही.
+OCR by Tesseract (Apache-2.0), encryption by @cantoo/pdf-lib (MIT), Word export by docx (MIT), PowerPoint export by PptxGenJS (MIT), digital signatures by node-forge (BSD), font embedding by fontkit (MIT). | OCR: Tesseract (Apache-2.0), एन्क्रिप्शन: @cantoo/pdf-lib (MIT), Word एक्सपोर्ट: docx (MIT), PowerPoint एक्सपोर्ट: PptxGenJS (MIT), डिजिटल हस्ताक्षर: node-forge (BSD), फ़ॉन्ट एम्बेडिंग: fontkit (MIT)। | OCR: Tesseract (Apache-2.0), एन्क्रिप्शन: @cantoo/pdf-lib (MIT), Word एक्सपोर्ट: docx (MIT), PowerPoint एक्सपोर्ट: PptxGenJS (MIT), डिजिटल स्वाक्षरी: node-forge (BSD), फॉन्ट एम्बेडिंग: fontkit (MIT).
+Part of BTS Creative — free and open source for students. | BTS Creative का हिस्सा — छात्रों के लिए मुफ़्त और ओपन सोर्स। | BTS Creative चा भाग — विद्यार्थ्यांसाठी मोफत आणि ओपन सोर्स.
+The document assistant works offline with classic text-ranking and search methods — no AI model and no internet. | दस्तावेज़ सहायक पारंपरिक टेक्स्ट-रैंकिंग और खोज विधियों से ऑफ़लाइन काम करता है — न कोई AI मॉडल, न इंटरनेट। | दस्तऐवज सहाय्यक पारंपरिक मजकूर-क्रमवारी आणि शोध पद्धतींनी ऑफलाइन काम करतो — AI मॉडेल नाही आणि इंटरनेटही नाही.
+Hand | हाथ | हात
+Select | चुनें | निवडा
+Space | = | =
+Highlight | हाइलाइट | हायलाइट
+Strikethrough | स्ट्राइकथ्रू | स्ट्राइकथ्रू
+Underline | रेखांकन | अधोरेखन
+Draw | ड्रॉ करें | रेखाटा
+Add image | छवि जोड़ें | प्रतिमा जोडा
+Edit text | टेक्स्ट संपादित करें | मजकूर संपादित करा
+Tick / cross mark | सही / क्रॉस का निशान | बरोबर / फुलीची खूण
+Crop pages | पृष्ठ क्रॉप करें | पृष्ठे क्रॉप करा
+Form field | फ़ॉर्म फ़ील्ड | फॉर्म फील्ड
+Redact | रिडैक्ट करें | रिडॅक्ट करा
+Courier | = | =
+Times | = | =
+Open | खोलें | उघडा
+Print | प्रिंट करें | प्रिंट करा
+Color | रंग | रंग
+Area highlight | क्षेत्र हाइलाइट | क्षेत्र हायलाइट
+Select text on the page to mark it up | चिह्नित करने के लिए पृष्ठ पर टेक्स्ट चुनें | खूण करण्यासाठी पृष्ठावरील मजकूर निवडा
+Stroke | स्ट्रोक | स्ट्रोक
+Fill | भरण | भरण
+Opacity | अपारदर्शिता | अपारदर्शकता
+Mark | निशान | खूण
+● Dot | ● बिंदु | ● ठिपका
+✓ Tick | ✓ सही | ✓ बरोबर
+✗ Cross | ✗ क्रॉस | ✗ फुली
+Click to place; drag to size | रखने के लिए क्लिक करें; आकार के लिए ड्रैग करें | ठेवण्यासाठी क्लिक करा; आकारासाठी ड्रॅग करा
+Mark colour | निशान का रंग | खुणेचा रंग
+Drag a box over the area that should open a web address or jump to a page | उस क्षेत्र पर बॉक्स ड्रैग करें जिससे वेब पता खुले या किसी पृष्ठ पर जाएँ | ज्या भागावर वेब पत्ता उघडावा किंवा पृष्ठावर जावे त्यावर बॉक्स ड्रॅग करा
+Drag a box on a page to keep only that area | केवल उसी क्षेत्र को रखने के लिए पृष्ठ पर बॉक्स ड्रैग करें | फक्त तोच भाग ठेवण्यासाठी पृष्ठावर बॉक्स ड्रॅग करा
+Remove crop | क्रॉप हटाएँ | क्रॉप काढा
+Font | फ़ॉन्ट | फॉन्ट
+Size | आकार | आकार
+Border | बॉर्डर | किनार
+Drag from the point you want to call out | जिस बिंदु को इंगित करना है, वहाँ से ड्रैग करें | ज्या बिंदूकडे लक्ष वेधायचे आहे तेथून ड्रॅग करा
+Click any text on the page to edit it | संपादित करने के लिए पृष्ठ पर किसी भी टेक्स्ट पर क्लिक करें | संपादित करण्यासाठी पृष्ठावरील कोणत्याही मजकुरावर क्लिक करा
+Drag on the page to add a fillable field | भरने योग्य फ़ील्ड जोड़ने के लिए पृष्ठ पर ड्रैग करें | भरण्यायोग्य फील्ड जोडण्यासाठी पृष्ठावर ड्रॅग करा
+Field type | फ़ील्ड प्रकार | फील्ड प्रकार
+Drag over content to redact. Redacted pages are flattened on save so hidden text cannot be recovered. | रिडैक्ट करने के लिए सामग्री पर ड्रैग करें। सहेजते समय रिडैक्ट किए गए पृष्ठ फ़्लैटन हो जाते हैं ताकि छिपा टेक्स्ट वापस न पाया जा सके। | रिडॅक्ट करण्यासाठी मजकुरावर ड्रॅग करा. जतन करताना रिडॅक्ट केलेली पृष्ठे सपाट केली जातात, त्यामुळे लपवलेला मजकूर परत मिळवता येत नाही.
+Click to zoom in, Alt+click to zoom out | ज़ूम इन के लिए क्लिक करें, ज़ूम आउट के लिए Alt+क्लिक करें | झूम इनसाठी क्लिक करा, झूम आउटसाठी Alt+क्लिक करा
+Click on the page to add a comment | टिप्पणी जोड़ने के लिए पृष्ठ पर क्लिक करें | टिप्पणी जोडण्यासाठी पृष्ठावर क्लिक करा
+Rotate left | बाएँ घुमाएँ | डावीकडे फिरवा
+Rotate right | दाएँ घुमाएँ | उजवीकडे फिरवा
+Combine | जोड़ें | एकत्र करा
+Combine files | फ़ाइलें जोड़ें | फाइल्स एकत्र करा
+Compress | संपीड़ित करें | कॉम्प्रेस करा
+Optimize / compress | अनुकूलित / संपीड़ित करें | ऑप्टिमाइझ / कॉम्प्रेस करा
+Organize | व्यवस्थित करें | व्यवस्थित करा
+Assistant | सहायक | सहाय्यक
+Document assistant — summary, key points, ask, study | दस्तावेज़ सहायक — सारांश, मुख्य बिंदु, पूछें, अध्ययन | दस्तऐवज सहाय्यक — सारांश, मुख्य मुद्दे, विचारा, अभ्यास
+Recognize text (OCR) | टेक्स्ट पहचानें (OCR) | मजकूर ओळखा (OCR)
+Type | प्रकार | प्रकार
+Author | लेखक | लेखक
+Duplicate | प्रतिलिपि बनाएँ | प्रत बनवा
+{p0}Duplicate | - |
+Delete | हटाएँ | हटवा
+{p0}Delete | - |
+Properties | गुण | गुणधर्म
+Edit PDF text | PDF टेक्स्ट संपादित करें | PDF मजकूर संपादित करा
+Replace text everywhere | हर जगह टेक्स्ट बदलें | सर्वत्र मजकूर बदला
+Sign with certificate | प्रमाणपत्र से हस्ताक्षर करें | प्रमाणपत्राने स्वाक्षरी करा
+Auto-detect form fields | फ़ॉर्म फ़ील्ड अपने-आप पहचानें | फॉर्म फील्ड आपोआप ओळखा
+Prepare form | फ़ॉर्म तैयार करें | फॉर्म तयार करा
+Redact patterns | पैटर्न रिडैक्ट करें | पॅटर्न रिडॅक्ट करा
+Protect (password) | सुरक्षित करें (पासवर्ड) | संरक्षित करा (पासवर्ड)
+Ask the document | दस्तावेज़ से पूछें | दस्तऐवजाला विचारा
+Document assistant | दस्तावेज़ सहायक | दस्तऐवज सहाय्यक
+Flashcards & quiz | फ़्लैशकार्ड और क्विज़ | फ्लॅशकार्ड आणि प्रश्नमंजूषा
+Extract tables | तालिकाएँ निकालें | सारण्या काढा
+PDF to HTML | PDF से HTML | PDF ते HTML
+PDF to PowerPoint | PDF से PowerPoint | PDF ते PowerPoint
+Compare files | फ़ाइलों की तुलना करें | फाइल्सची तुलना करा
+PDF to Word | PDF से Word | PDF ते Word
+PDF to images | PDF से छवियाँ | PDF ते प्रतिमा
+PDF to text | PDF से टेक्स्ट | PDF ते मजकूर
+Enhance scan | स्कैन सुधारें | स्कॅन सुधारा
+Images to PDF | छवियों से PDF | प्रतिमांपासून PDF
+Background | पृष्ठभूमि | पार्श्वभूमी
+Header, footer & Bates | हेडर, फ़ुटर और Bates | शीर्षलेख, तळटीप आणि Bates
+Watermark | वॉटरमार्क | वॉटरमार्क
+Resize pages | पृष्ठों का आकार बदलें | पृष्ठांचा आकार बदला
+Split PDF | PDF विभाजित करें | PDF विभाजित करा
+Accessibility check | सुलभता जाँच | सुलभता तपासणी
+Reading order check | पढ़ने के क्रम की जाँच | वाचन क्रम तपासणी
+Stamps | स्टैम्प | शिक्के
+Tick / cross marks | सही / क्रॉस के निशान | बरोबर / फुलीच्या खुणा
+Remove metadata | मेटाडेटा हटाएँ | मेटाडेटा काढा
+All tools | सभी टूल | सर्व साधने
+Unsupported file type | असमर्थित फ़ाइल प्रकार | असमर्थित फाइल प्रकार
+Discard | छोड़ें | टाकून द्या
+Discard changes to the current document? | वर्तमान दस्तावेज़ के बदलाव छोड़ दें? | सध्याच्या दस्तऐवजातील बदल टाकून द्यायचे?
+Unsaved changes | बिना सहेजे बदलाव | जतन न केलेले बदल
+signature check | - |
+Could not open PDF | PDF नहीं खुल सका | PDF उघडता आला नाही
+Could not open PDF: {message} | PDF नहीं खुल सका: {message} | PDF उघडता आला नाही: {message}
+form scan failed | - |
+RenderingCancelledException | - |
+text layer | - |
+Bring to front | सबसे आगे लाएँ | सर्वात पुढे आणा
+Send to back | सबसे पीछे भेजें | सर्वात मागे पाठवा
+rg_ | - |
+Add comment | टिप्पणी जोड़ें | टिप्पणी जोडा
+Add | जोड़ें | जोडा
+Add {type} | {type} जोड़ें | {type} जोडा
+Move | ले जाएँ | हलवा
+Resize | आकार बदलें | आकार बदला
+Escape | = | =
+Style | शैली | शैली
+Reorder | पुनः क्रमित करें | क्रम बदला
+Placement cancelled | रखना रद्द किया गया | ठेवणे रद्द केले
+Nudge | थोड़ा खिसकाएँ | थोडे सरकवा
+Go to page | पृष्ठ पर जाएँ | पृष्ठावर जा
+Page number (1–{length}) | पृष्ठ संख्या (1–{length}) | पृष्ठ क्रमांक (1–{length})
+No document | कोई दस्तावेज़ नहीं | दस्तऐवज नाही
+Page {p0} of {length} | पृष्ठ {p0} / {length} | पृष्ठ {p0} / {length}
+Open a PDF to see pages | पृष्ठ देखने के लिए कोई PDF खोलें | पृष्ठे पाहण्यासाठी PDF उघडा
+Rotate clockwise | दक्षिणावर्त घुमाएँ | घड्याळाच्या दिशेने फिरवा
+Rotate counter-clockwise | वामावर्त घुमाएँ | घड्याळाच्या उलट दिशेने फिरवा
+Insert blank page after | बाद में खाली पृष्ठ डालें | नंतर रिक्त पृष्ठ घाला
+Insert pages from file after | बाद में फ़ाइल से पृष्ठ डालें | नंतर फाइलमधून पृष्ठे घाला
+Duplicate page | पृष्ठ की प्रतिलिपि बनाएँ | पृष्ठाची प्रत बनवा
+Extract page | पृष्ठ निकालें | पृष्ठ काढा
+Export page as PNG | पृष्ठ को PNG के रूप में एक्सपोर्ट करें | पृष्ठ PNG म्हणून एक्सपोर्ट करा
+Delete page | पृष्ठ हटाएँ | पृष्ठ हटवा
+Delete {length} pages | {length} पृष्ठ हटाएँ | {length} पृष्ठे हटवा
+Rotate | घुमाएँ | फिरवा
+A document must keep at least one page. | दस्तावेज़ में कम से कम एक पृष्ठ होना चाहिए। | दस्तऐवजात किमान एक पृष्ठ असणे आवश्यक आहे.
+Delete pages | पृष्ठ हटाएँ | पृष्ठे हटवा
+Move pages | पृष्ठ ले जाएँ | पृष्ठे हलवा
+Duplicate pages | पृष्ठों की प्रतिलिपि बनाएँ | पृष्ठांची प्रत बनवा
+Blank | खाली | रिक्त
+PDF & images | PDF और छवियाँ | PDF आणि प्रतिमा
+Insert pages | पृष्ठ डालें | पृष्ठे घाला
+Inserted {p0} page(s) | {p0} पृष्ठ डाले गए | {p0} पृष्ठे घातली
+Files will be combined in this order | फ़ाइलें इसी क्रम में जोड़ी जाएँगी | फाइल्स याच क्रमाने एकत्र केल्या जातील
+These files will be appended to the current document in this order | ये फ़ाइलें इसी क्रम में वर्तमान दस्तावेज़ के अंत में जोड़ी जाएँगी | या फाइल्स याच क्रमाने सध्याच्या दस्तऐवजाच्या शेवटी जोडल्या जातील
+Files combined | फ़ाइलें जोड़ दी गईं | फाइल्स एकत्र केल्या
+Extract pages | पृष्ठ निकालें | पृष्ठे काढा
+Pages to extract (e.g. 1-3, 5) — 1 to {length} | निकालने के लिए पृष्ठ (जैसे 1-3, 5) — 1 से {length} | काढायची पृष्ठे (उदा. 1-3, 5) — 1 ते {length}
+No valid pages | कोई मान्य पृष्ठ नहीं | वैध पृष्ठे नाहीत
+PDF | = | =
+Pages extracted to | पृष्ठ यहाँ निकाले गए | पृष्ठे येथे काढली
+Pages extracted to {p} | पृष्ठ {p} में निकाले गए | पृष्ठे {p} मध्ये काढली
+Split document | दस्तावेज़ विभाजित करें | दस्तऐवज विभाजित करा
+Custom page ranges | कस्टम पृष्ठ श्रेणियाँ | सानुकूल पृष्ठ श्रेणी
+Number of pages per file | प्रति फ़ाइल पृष्ठों की संख्या | प्रति फाइल पृष्ठांची संख्या
+Split by | इसके अनुसार विभाजित करें | यानुसार विभाजित करा
+Pages per file | प्रति फ़ाइल पृष्ठ | प्रति फाइल पृष्ठे
+Ranges, separated by ; (e.g. 1-3; 4-6; 7) | श्रेणियाँ, ; से अलग की गईं (जैसे 1-3; 4-6; 7) | श्रेणी, ; ने वेगळ्या केलेल्या (उदा. 1-3; 4-6; 7)
+Split | विभाजित करें | विभाजित करा
+Nothing to split | विभाजित करने के लिए कुछ नहीं | विभाजित करण्यासारखे काही नाही
+Created {length} files | {length} फ़ाइलें बनाई गईं | {length} फाइल्स तयार केल्या
+Extract | निकालें | काढा
+Blank page | खाली पृष्ठ | रिक्त पृष्ठ
+Insert from file | फ़ाइल से डालें | फाइलमधून घाला
+Open a PDF first | पहले कोई PDF खोलें | आधी PDF उघडा
+Images | छवियाँ | प्रतिमा
+Click on a page to place the image | छवि रखने के लिए पृष्ठ पर क्लिक करें | प्रतिमा ठेवण्यासाठी पृष्ठावर क्लिक करा
+Initials | आद्याक्षर | आद्याक्षरे
+Sign | हस्ताक्षर करें | स्वाक्षरी करा
+Black | काला | काळा
+Blue | नीला | निळा
+Red | लाल | लाल
+Clear | साफ़ करें | साफ करा
+Draw your signature above | ऊपर अपना हस्ताक्षर बनाएँ | वर तुमची स्वाक्षरी रेखाटा
+Brush Script MT | = | =
+Ink Free | = | =
+Lucida Handwriting | = | =
+Segoe Script | = | =
+No image chosen | कोई छवि नहीं चुनी गई | प्रतिमा निवडलेली नाही
+Choose image | छवि चुनें | प्रतिमा निवडा
+No saved signatures yet. | अभी तक कोई सहेजा गया हस्ताक्षर नहीं। | अद्याप जतन केलेली स्वाक्षरी नाही.
+1fr 1fr | - |
+Image | छवि | प्रतिमा
+Saved | सहेजा गया | जतन केले
+Save initials for later | आद्याक्षर बाद के लिए सहेजें | आद्याक्षरे नंतरसाठी जतन करा
+Save signature for later | हस्ताक्षर बाद के लिए सहेजें | स्वाक्षरी नंतरसाठी जतन करा
+Fill & Sign — create signature | भरें और हस्ताक्षर करें — हस्ताक्षर बनाएँ | भरा आणि स्वाक्षरी करा — स्वाक्षरी तयार करा
+Fill & Sign — initials | भरें और हस्ताक्षर करें — आद्याक्षर | भरा आणि स्वाक्षरी करा — आद्याक्षरे
+Place initials | आद्याक्षर रखें | आद्याक्षरे ठेवा
+Place signature | हस्ताक्षर रखें | स्वाक्षरी ठेवा
+Draw a signature first | पहले हस्ताक्षर बनाएँ | आधी स्वाक्षरी रेखाटा
+Click where you want to sign | जहाँ हस्ताक्षर करना है वहाँ क्लिक करें | जिथे स्वाक्षरी करायची आहे तिथे क्लिक करा
+Click where you want your initials | जहाँ आद्याक्षर चाहिए वहाँ क्लिक करें | जिथे आद्याक्षरे हवी आहेत तिथे क्लिक करा
+Clear annotations | एनोटेशन साफ़ करें | भाष्ये साफ करा
+Remove | हटाएँ | काढा
+Remove all annotations added in this session from every page? | इस सत्र में जोड़े गए सभी एनोटेशन हर पृष्ठ से हटाएँ? | या सत्रात जोडलेली सर्व भाष्ये प्रत्येक पृष्ठावरून काढायची?
+Remove annotations | एनोटेशन हटाएँ | भाष्ये काढा
+BTS PDF Pro (BTS Creative) | = | =
+Multiply | गुणा (Multiply) | गुणाकार (Multiply)
+Annot | - |
+note annot | - |
+Saved {fileName} (signatures kept) | {fileName} सहेजा गया (हस्ताक्षर बरकरार) | {fileName} जतन केले (स्वाक्षऱ्या कायम)
+Saved {fileName}{p1} | {fileName}{p1} सहेजा गया | {fileName}{p1} जतन केले
+Save failed | सहेजना विफल रहा | जतन करणे अयशस्वी
+Save failed: {message} | सहेजना विफल रहा: {message} | जतन करणे अयशस्वी: {message}
+Export pages as images | पृष्ठों को छवियों के रूप में एक्सपोर्ट करें | पृष्ठे प्रतिमा म्हणून एक्सपोर्ट करा
+Resolution (DPI) | रिज़ॉल्यूशन (DPI) | रिझोल्यूशन (DPI)
+Format | फ़ॉर्मेट | फॉरमॅट
+JPEG | = | =
+PNG | = | =
+Exported {length} image(s) | {length} छवियाँ एक्सपोर्ट की गईं | {length} प्रतिमा एक्सपोर्ट केल्या
+Text exported | टेक्स्ट एक्सपोर्ट किया गया | मजकूर एक्सपोर्ट केला
+Document properties | दस्तावेज़ गुण | दस्तऐवज गुणधर्म
+Title | शीर्षक | शीर्षक
+Keywords (comma separated) | कीवर्ड (अल्पविराम से अलग) | कीवर्ड (स्वल्पविरामाने वेगळे)
+Subject | विषय | विषय
+Language (e.g. en-IN, hi-IN, mr-IN) | भाषा (जैसे en-IN, hi-IN, mr-IN) | भाषा (उदा. en-IN, hi-IN, mr-IN)
+Properties will be written on save · {length} pages · {p1}×{p2} mm | गुण सहेजते समय लिखे जाएँगे · {length} पृष्ठ · {p1}×{p2} mm | गुणधर्म जतन करताना लिहिले जातील · {length} पृष्ठे · {p1}×{p2} mm
+All pages ({length}) | सभी पृष्ठ ({length}) | सर्व पृष्ठे ({length})
+Current page ({p0}) | वर्तमान पृष्ठ ({p0}) | सध्याचे पृष्ठ ({p0})
+Page range | पृष्ठ श्रेणी | पृष्ठ श्रेणी
+Range (e.g. 1-3, 5, 8-10) | श्रेणी (जैसे 1-3, 5, 8-10) | श्रेणी (उदा. 1-3, 5, 8-10)
+Print comments, markups and stamps | टिप्पणियाँ, मार्कअप और स्टैम्प प्रिंट करें | टिप्पण्या, मार्कअप आणि शिक्के प्रिंट करा
+No valid pages in range | श्रेणी में कोई मान्य पृष्ठ नहीं | श्रेणीत वैध पृष्ठे नाहीत
+Preparing pages for printing | प्रिंट के लिए पृष्ठ तैयार हो रहे हैं | प्रिंटसाठी पृष्ठे तयार होत आहेत
+Crop | क्रॉप | क्रॉप
+Hand / pan | हाथ / पैन | हात / पॅन
+Highlight / underline / strike | हाइलाइट / रेखांकन / स्ट्राइक | हायलाइट / अधोरेखन / खोडा
+Link | लिंक | लिंक
+Rect / ellipse / line / arrow | आयत / दीर्घवृत्त / रेखा / तीर | आयत / लंबवर्तुळ / रेषा / बाण
+Space (hold) | Space (दबाए रखें) | Space (दाबून ठेवा)
+Zoom tool | ज़ूम टूल | झूम साधन
+Add bookmark | बुकमार्क जोड़ें | बुकमार्क जोडा
+Next / previous document tab | अगला / पिछला दस्तावेज़ टैब | पुढील / मागील दस्तऐवज टॅब
+Read page aloud | पृष्ठ ज़ोर से पढ़ें | पृष्ठ मोठ्याने वाचा
+Reading ruler | पठन रूलर | वाचन पट्टी
+Arrows | तीर कुंजियाँ | बाण कळा
+Ctrl + wheel | Ctrl + व्हील | Ctrl + व्हील
+Find | ढूँढें | शोधा
+Fit page / width / 100% | पृष्ठ / चौड़ाई / 100% में फ़िट करें | पृष्ठ / रुंदी / 100% मध्ये बसवा
+Nudge annotation | एनोटेशन थोड़ा खिसकाएँ | भाष्य थोडे सरकवा
+Open / save / save as | खोलें / सहेजें / इस रूप में सहेजें | उघडा / जतन करा / म्हणून जतन करा
+Undo / redo | पूर्ववत करें / फिर से करें | पूर्ववत करा / पुन्हा करा
+Open a PDF to view, comment, sign, fill forms and organize pages. You can also drop files here. | देखने, टिप्पणी करने, हस्ताक्षर करने, फ़ॉर्म भरने और पृष्ठ व्यवस्थित करने के लिए कोई PDF खोलें। आप फ़ाइलें यहाँ छोड़ भी सकते हैं। | पाहण्यासाठी, टिप्पणी करण्यासाठी, स्वाक्षरी करण्यासाठी, फॉर्म भरण्यासाठी आणि पृष्ठे व्यवस्थित करण्यासाठी PDF उघडा. तुम्ही फाइल्स येथे टाकूही शकता.
+Open PDF | PDF खोलें | PDF उघडा
+{p0}Combine files | - |
+{p0}Images to PDF | - |
+{p0}Open PDF | - |
+Add files | फ़ाइलें जोड़ें | फाइल्स जोडा
+Append | अंत में जोड़ें | शेवटी जोडा
+Append the dropped PDF(s) to this document? Choose Cancel to open the first one instead. | छोड़े गए PDF को इस दस्तावेज़ के अंत में जोड़ें? इसके बजाय पहला खोलने के लिए रद्द करें चुनें। | टाकलेले PDF या दस्तऐवजाच्या शेवटी जोडायचे? त्याऐवजी पहिला उघडण्यासाठी रद्द करा निवडा.
+Drop PDF or images to open | खोलने के लिए PDF या छवियाँ छोड़ें | उघडण्यासाठी PDF किंवा प्रतिमा टाका
+Explain: {t} | समझाएँ: {t} | स्पष्ट करा: {t}
+False | - |

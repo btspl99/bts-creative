@@ -35,6 +35,7 @@
   .empty { padding: 30px; text-align: center; color: var(--tx-3); }
   .about-box { background: var(--bg-2); border: 1px solid var(--line); border-radius: 12px; padding: 22px; max-width: 640px; line-height: 1.7; color: var(--tx-1); }
   .about-box b { color: var(--tx-0); }
+  .about-box p { margin: 0 0 14px; }
 </style>
 </head>
 <body>
@@ -44,13 +45,16 @@
     <div class="nav" data-view="recent"><svg viewBox="0 0 24 24"><path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM12 6v6l4 2"/></svg>Recent files</div>
     <div class="nav" data-view="appearance"><svg viewBox="0 0 24 24"><path d="M12 22a10 10 0 1 1 0-20c5.5 0 10 4 10 9a5 5 0 0 1-5 5h-2a2 2 0 0 0-1 3.7A1.6 1.6 0 0 1 12 22zM7.5 11.5h.01M10.5 7.5h.01M15.5 7.5h.01"/></svg>Appearance</div>
     <div class="nav" data-view="about"><svg viewBox="0 0 24 24"><path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM12 16v-4M12 8h.01"/></svg>About &amp; updates</div>
-    <div class="foot">BTS Creative <span id="ver"></span><br>Free &amp; open source for students<br>© Bhoomiputra Tech Solutions</div>
+    <div class="foot"><span data-no-i18n>BTS Creative <span id="ver"></span></span><br>Free &amp; open source for students<br>© Bhoomiputra Tech Solutions</div>
   </div>
   <div class="main" id="main"></div>
 </div>
+<script src="../shared/i18n.js"></script>
+<script src="../shared/i18n/hi.js"></script>
+<script src="../shared/i18n/mr.js"></script>
 <script src="../shared/ui.js"></script>
 <script>
-const { h, icon, titlebar, toast } = UI;
+const { h, icon, titlebar, toast } = UI; const T = I18N.T;
 titlebar({ logo: 'BTS', menus: [
   { label: 'File', items: [
     { label: 'Open file…', kbd: 'Ctrl+O', action: () => bts.openFileAuto() },
@@ -86,18 +90,18 @@ async function recentList(limit) {
   if (!list.length) return h('div', { class: 'recent' }, h('div', { class: 'empty' }, 'No recent files yet. Files you save will appear here.'));
   return h('div', { class: 'recent' }, ...list.map(r => h('div', { class: 'r', onclick: () => bts.openApp(r.app || 'home', r.path) },
     h('div', { class: 'badge', style: { background: colorOf(r.app) } }, shortOf(r.app)),
-    h('div', {}, h('div', {}, r.name), h('div', { class: 'path' }, r.path)),
+    h('div', { 'data-no-i18n': '' }, h('div', {}, r.name), h('div', { class: 'path' }, r.path)),
     h('div', { class: 'muted' }, (APPS.find(a => a.id === r.app) || {}).name || ''),
-    h('div', { class: 'muted' }, new Date(r.at).toLocaleString()))));
+    h('div', { class: 'muted' }, I18N.date(r.at)))));
 }
 
-async function show(view) {
+var show = async function (view) {
   document.querySelectorAll('.nav').forEach(n => n.classList.toggle('active', n.dataset.view === view));
   const main = document.getElementById('main'); main.innerHTML = '';
   if (view === 'home') {
     const hr = new Date().getHours();
     main.append(h('div', { class: 'hero' },
-      h('div', {}, h('h1', {}, (hr < 12 ? 'Good morning' : hr < 17 ? 'Good afternoon' : 'Good evening') + ' 👋'), h('p', {}, 'Pick an app to start creating, or open a file.')),
+      h('div', {}, h('h1', {}, T(hr < 12 ? 'Good morning' : hr < 17 ? 'Good afternoon' : 'Good evening') + ' 👋'), h('p', {}, 'Pick an app to start creating, or open a file.')),
       h('button', { class: 'btn primary', onclick: () => bts.openFileAuto(), html: icon('open') + 'Open file' })));
     main.append(h('div', { class: 'apps' }, ...APPS.map(a => h('div', { class: 'app-card', style: { '--c': a.c }, onclick: () => bts.openApp(a.id) },
       h('div', { class: 'ico' }, a.short), h('h3', {}, a.name), h('p', {}, a.desc), h('div', { class: 'like' }, a.like)))));
@@ -109,27 +113,32 @@ async function show(view) {
       h('div', { class: 'about-box' }, UI.appearanceBody()));
   } else {
     const v = await bts.version();
-    main.append(h('div', { class: 'hero' }, h('div', {}, h('h1', {}, 'About BTS Creative'), h('p', {}, 'Version ' + v))));
+    main.append(h('div', { class: 'hero' }, h('div', {}, h('h1', {}, 'About BTS Creative'), h('p', {}, T('Version {version}', { version: v })))));
     const st = h('span', { class: 'muted', id: 'updState' }, '');
-    main.append(h('div', { class: 'about-box', html: `<b>BTS Creative</b> is a free, open-source creative suite built for students by Bhoomiputra Tech Solutions Pvt Ltd.<br><br>
-      Includes <b>PDF Pro</b>, <b>Photo</b>, <b>Vector</b> and <b>Video</b>. Updates are delivered automatically.<br><br>
-      Licensed under the MIT License. BTS Creative is an independent project and is not affiliated with or endorsed by Adobe Inc.<br><br>` },
+    // Each paragraph is one translatable sentence (inline <b> markup is kept by the translator).
+    main.append(h('div', { class: 'about-box' },
+      h('p', { html: '<b>BTS Creative</b> is a free, open-source creative suite built for students by Bhoomiputra Tech Solutions Pvt Ltd.' }),
+      h('p', { html: 'Includes <b>PDF Pro</b>, <b>Photo</b>, <b>Vector</b> and <b>Video</b>. Updates are delivered automatically.' }),
+      h('p', {}, 'Licensed under the MIT License. BTS Creative is an independent project and is not affiliated with or endorsed by Adobe Inc.'),
       h('div', { class: 'row' }, h('button', { class: 'btn primary', onclick: checkUpdates, html: icon('update') + 'Check for updates' }), st)));
   }
-}
+};
 async function checkUpdates() {
   const r = await bts.update.check();
   if (r.state === 'store') toast('Updates are delivered by the Microsoft Store.'); else if (r.state === 'dev') toast('Updates are checked automatically in the installed version.');
-  else if (r.state === 'error') toast('Could not check for updates: ' + r.message, 'err');
+  else if (r.state === 'error') toast(T('Could not check for updates: {message}', { message: r.message }), 'err');
   else toast('Checking for updates…');
 }
 bts.update.onStatus(s => {
   const el = document.getElementById('updState'); if (!el) return;
-  el.textContent = { checking: 'Checking…', none: 'You have the latest version.', available: `Downloading v${s.version}…`, downloading: `Downloading ${s.percent}%`, ready: `v${s.version} ready — restart to install`, error: 'Update error: ' + s.message }[s.state] || '';
+  el.textContent = { checking: T('Checking…'), none: T('You have the latest version.'), available: T('Downloading v{version}…', s), downloading: T('Downloading {percent}%', s), ready: T('v{version} ready — restart to install', s), error: T('Update error: {message}', s) }[s.state] || '';
   if (s.state === 'none') toast('You have the latest version.', 'ok');
 });
 document.querySelectorAll('.nav').forEach(n => n.onclick = () => show(n.dataset.view));
 bts.version().then(v => document.getElementById('ver').textContent = 'v' + v);
+// Re-render the current view when the language changes (greeting, dates and descriptions are rebuilt).
+let curView = 'home'; const _show = show; show = v => { curView = v; return _show(v); };
+I18N.onChange(() => show(curView));
 UI.fileDrop(files => files.forEach(f => { const p = bts.fs.pathOf(f); if (p) bts.openApp(appFor(p), p); }));
 function appFor(p) { const e = p.split('.').pop().toLowerCase(); return e === 'pdf' ? 'pdf' : ['svg', 'btsv'].includes(e) ? 'vector' : ['mp4', 'webm', 'mov', 'mkv', 'btsvid'].includes(e) ? 'video' : 'photo'; }
 UI.setDocTitle('', 'BTS Creative');

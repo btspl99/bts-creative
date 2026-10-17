@@ -9,7 +9,7 @@ let forgeP = null;
 export async function ready() { if (!forgeP) forgeP = loadScript('../vendor/pdf-forge/forge.min.js').then(() => window.forge); return forgeP; }
 const remembered = () => { try { return JSON.parse(localStorage.getItem(KEY) || 'null'); } catch { return null; } };
 const remember = v => { try { localStorage.setItem(KEY, JSON.stringify(v)); } catch { } };
-const fmtDate = d => d ? new Date(d).toLocaleString() : '—';
+const fmtDate = d => d ? I18N.date(d) : '—';
 
 // ---------------------------------------------------------------- certificates
 export async function createCertificateDialog(preset = {}) {

@@ -1,0 +1,280 @@
+# Vector (3D, live objects, repeat, blend, width, dimensions, mockups, PDF/EPS import, symbols)
+Light intensity (%) | प्रकाश तीव्रता (%) | प्रकाश तीव्रता (%)
+Perspective (%) | परिप्रेक्ष्य (%) | दृष्टिकोन (%)
+Rotate X — tilt (°) | X घुमाव — झुकाव (°) | X फिरवणे — झुकाव (°)
+Rotate Y — turn (°) | Y घुमाव — मोड़ (°) | Y फिरवणे — वळण (°)
+Rotate Z — spin (°) | Z घुमाव — चक्कर (°) | Z फिरवणे — गिरकी (°)
+▶ Turntable | ▶ टर्नटेबल | ▶ टर्नटेबल
+Rotate Y | Y घुमाव | Y फिरवणे
+Convert type to outlines? | टेक्स्ट को आउटलाइन में बदलें? | मजकूर आउटलाइनमध्ये बदलायचा?
+Distortion effects work on paths. The selected text will be converted to outlines (shapes) first. | विकृति इफ़ेक्ट पाथ पर काम करते हैं। चुना गया टेक्स्ट पहले आउटलाइन (आकृतियों) में बदला जाएगा। | विकृती इफेक्ट पाथवर काम करतात. निवडलेला मजकूर आधी आउटलाइनमध्ये (आकारांमध्ये) बदलला जाईल.
+Edit effect | इफ़ेक्ट संपादित करें | इफेक्ट संपादित करा
+Effects (live) | इफ़ेक्ट (लाइव) | इफेक्ट (लाइव्ह)
+Remove effect | इफ़ेक्ट हटाएँ | इफेक्ट काढा
+Live object | लाइव ऑब्जेक्ट | लाइव्ह ऑब्जेक्ट
+Live, editable object | लाइव, संपादन योग्य ऑब्जेक्ट | लाइव्ह, संपादित करता येणारा ऑब्जेक्ट
+Number of instances | प्रतियों की संख्या | प्रतींची संख्या
+Rotate instances | प्रतियाँ घुमाएँ | प्रती फिरवा
+Flip alternate instances | बारी-बारी से प्रतियाँ पलटें | एकाआड प्रती उलटा
+Row offset / brick (%) | पंक्ति ऑफ़सेट / ईंट (%) | ओळ ऑफसेट / वीट (%)
+Rows | पंक्तियाँ | ओळी
+Axis | अक्ष | अक्ष
+Axis angle (°) | अक्ष कोण (°) | अक्ष कोन (°)
+Gap (px) | अंतराल (px) | अंतर (px)
+Horizontal (top ↕ bottom) | क्षैतिज (ऊपर ↕ नीचे) | आडवे (वर ↕ खाली)
+Vertical (left ↔ right) | लंबवत (बाएँ ↔ दाएँ) | उभे (डावे ↔ उजवे)
+Grid repeat | ग्रिड रिपीट | ग्रिड पुनरावृत्ती
+Mirror repeat | मिरर रिपीट | आरसा पुनरावृत्ती
+Radial repeat | त्रिज्य रिपीट | त्रिज्य पुनरावृत्ती
+{p0} · {length} instances — double-click to edit | {p0} · {length} प्रतियाँ — संपादित करने के लिए डबल-क्लिक करें | {p0} · {length} प्रती — संपादनासाठी डबल-क्लिक करा
+Edit repeat | रिपीट संपादित करें | पुनरावृत्ती संपादित करा
+Select the artwork to repeat | दोहराने के लिए कलाकृति चुनें | पुनरावृत्तीसाठी कलाकृती निवडा
+Nothing to edit | संपादित करने के लिए कुछ नहीं | संपादित करण्यासारखे काही नाही
+Select a live object (repeat, blend, effect, type on path) | कोई लाइव ऑब्जेक्ट चुनें (रिपीट, ब्लेंड, इफ़ेक्ट, पाथ पर टेक्स्ट) | लाइव्ह ऑब्जेक्ट निवडा (पुनरावृत्ती, ब्लेंड, इफेक्ट, पाथवर मजकूर)
+{steps} steps between 2 objects — double-click to edit | 2 ऑब्जेक्ट के बीच {steps} चरण — संपादित करने के लिए डबल-क्लिक करें | 2 ऑब्जेक्टमध्ये {steps} टप्पे — संपादनासाठी डबल-क्लिक करा
+Blend options | ब्लेंड विकल्प | ब्लेंड पर्याय
+Specified steps | निर्दिष्ट चरण | ठरवलेले टप्पे
+Expanded blend | फैलाया गया ब्लेंड | विस्तारित ब्लेंड
+Make blend | ब्लेंड बनाएँ | ब्लेंड तयार करा
+Select exactly two objects to blend | ब्लेंड के लिए ठीक दो ऑब्जेक्ट चुनें | ब्लेंडसाठी नेमके दोन ऑब्जेक्ट निवडा
+Select a blend | कोई ब्लेंड चुनें | ब्लेंड निवडा
+Profile: {profile} | प्रोफ़ाइल: {profile} | प्रोफाइल: {profile}
+Variable-width stroke | परिवर्ती-चौड़ाई स्ट्रोक | बदलत्या रुंदीचा स्ट्रोक
+{length} width points | {length} चौड़ाई बिंदु | {length} रुंदी बिंदू
+{p0} — use the Width tool (Shift+W) to edit | {p0} — संपादित करने के लिए चौड़ाई टूल (Shift+W) का उपयोग करें | {p0} — संपादनासाठी रुंदी साधन (Shift+W) वापरा
+Profile | प्रोफ़ाइल | प्रोफाइल
+Stroke width profile | स्ट्रोक चौड़ाई प्रोफ़ाइल | स्ट्रोक रुंदी प्रोफाइल
+Width profile | चौड़ाई प्रोफ़ाइल | रुंदी प्रोफाइल
+Select stroked paths | स्ट्रोक वाले पाथ चुनें | स्ट्रोक असलेले पाथ निवडा
+Curve precision (lower = fewer points) | कर्व सटीकता (कम = कम बिंदु) | कर्व्ह अचूकता (कमी = कमी बिंदू)
+Straight lines | सीधी रेखाएँ | सरळ रेषा
+Factor (catmull-rom / geometric) | गुणक (catmull-rom / ज्यामितीय) | गुणक (catmull-rom / भूमितीय)
+Round selected corners | चुने गए कोने गोल करें | निवडलेले कोपरे गोल करा
+Average | औसत | सरासरी
+Select two or more anchor points with the Direct selection tool | प्रत्यक्ष चयन टूल से दो या अधिक एंकर पॉइंट चुनें | थेट निवड साधनाने दोन किंवा अधिक अँकर पॉइंट निवडा
+Gutter (px) | गटर (px) | गटर (px)
+Split into grid | ग्रिड में विभाजित करें | ग्रिडमध्ये विभाजित करा
+Random | यादृच्छिक | यादृच्छिक
+Random seed | यादृच्छिक बीज | यादृच्छिक बीज
+Transform each | हर एक को ट्रांसफ़ॉर्म करें | प्रत्येकाचे रूपांतर करा
+Blur (px) | ब्लर (px) | ब्लर (px)
+Opacity (%) | अपारदर्शिता (%) | अपारदर्शकता (%)
+X offset (px) | X ऑफ़सेट (px) | X ऑफसेट (px)
+Y offset (px) | Y ऑफ़सेट (px) | Y ऑफसेट (px)
+Glow colour | चमक रंग | चमक रंग
+Remove shadow | छाया हटाएँ | सावली काढा
+Select objects to expand | फैलाने के लिए ऑब्जेक्ट चुनें | विस्तारासाठी ऑब्जेक्ट निवडा
+Clockwise | दक्षिणावर्त | घड्याळाच्या दिशेने
+Decay (%) | क्षय (%) | घट (%)
+Segments (quarter turns) | खंड (चौथाई चक्कर) | खंड (पाव फेरे)
+Centre radius (px) | केंद्र त्रिज्या (px) | मध्य त्रिज्या (px)
+Rays | किरणें | किरणे
+Ring direction (°) | वलय दिशा (°) | वलय दिशा (°)
+Rings | वलय | वलये
+Variation | भिन्नता | फरक
+Radius 1 | त्रिज्या 1 | त्रिज्या 1
+Radius 2 | त्रिज्या 2 | त्रिज्या 2
+Could not build the PDF | PDF नहीं बन सका | PDF तयार करता आला नाही
+Unknown app | अज्ञात ऐप | अज्ञात ॲप
+Unknown app {app} | अज्ञात ऐप {app} | अज्ञात ॲप {app}
+Send | भेजें | पाठवा
+Transparent PNG at artboard size | आर्टबोर्ड आकार में पारदर्शी PNG | आर्टबोर्ड आकारात पारदर्शक PNG
+Transparent PNG, 1920 px wide | पारदर्शी PNG, 1920 px चौड़ा | पारदर्शक PNG, 1920 px रुंद
+All artboards | सभी आर्टबोर्ड | सर्व आर्टबोर्ड
+Current artboard only | केवल वर्तमान आर्टबोर्ड | फक्त सध्याचा आर्टबोर्ड
+Sent to BTS Photo | BTS Photo में भेजा गया | BTS Photo मध्ये पाठवले
+Could not send | नहीं भेजा जा सका | पाठवता आले नाही
+Could not send: {message} | नहीं भेजा जा सका: {message} | पाठवता आले नाही: {message}
+Convert the received image to vector paths with Image Trace. | प्राप्त छवि को इमेज ट्रेस से वेक्टर पाथ में बदलें। | मिळालेली प्रतिमा इमेज ट्रेसने वेक्टर पाथमध्ये बदला.
+Image Trace now? | अभी इमेज ट्रेस करें? | आता इमेज ट्रेस करायचे?
+Trace | ट्रेस करें | ट्रेस करा
+Received an unsupported item | असमर्थित आइटम प्राप्त हुआ | असमर्थित घटक मिळाला
+Inverted | उलटा | उलट
+Luminance | ल्यूमिनेंस | ल्युमिनन्स
+{p0} mask — white shows, black hides · double-click for options | {p0} मास्क — सफ़ेद दिखाता है, काला छिपाता है · विकल्पों के लिए डबल-क्लिक | {p0} मास्क — पांढरा दाखवतो, काळा लपवतो · पर्यायांसाठी डबल-क्लिक
+Opacity mask options | अपारदर्शिता मास्क विकल्प | अपारदर्शकता मास्क पर्याय
+Select the artwork and a mask object on top (white shows, black hides) | कलाकृति और ऊपर कोई मास्क ऑब्जेक्ट चुनें (सफ़ेद दिखाता है, काला छिपाता है) | कलाकृती आणि वर मास्क ऑब्जेक्ट निवडा (पांढरा दाखवतो, काळा लपवतो)
+Select an opacity-masked object | अपारदर्शिता-मास्क वाला ऑब्जेक्ट चुनें | अपारदर्शकता-मास्क असलेला ऑब्जेक्ट निवडा
+Copies (repeat the selected objects) | प्रतियाँ (चुने गए ऑब्जेक्ट दोहराएँ) | प्रती (निवडलेले ऑब्जेक्ट पुन्हा वापरा)
+Count (copies) | गिनती (प्रतियाँ) | संख्या (प्रती)
+End along path (%) | पाथ पर अंत (%) | पाथवर शेवट (%)
+Even — by count | समान — गिनती से | समान — संख्येनुसार
+Extra rotation (°) | अतिरिक्त घुमाव (°) | अतिरिक्त फिरवणे (°)
+Fixed spacing | निश्चित दूरी | निश्चित अंतर
+Flip every other object | हर दूसरे ऑब्जेक्ट को पलटें | एकाआड ऑब्जेक्ट उलटा
+Hide the path | पाथ छिपाएँ | पाथ लपवा
+Offset from path (px) | पाथ से ऑफ़सेट (px) | पाथपासून ऑफसेट (px)
+Placement | स्थान | स्थान
+Rotate to path | पाथ के अनुसार घुमाएँ | पाथनुसार फिरवा
+Scale at end (%) | अंत में स्केल (%) | शेवटी प्रमाण (%)
+Spacing (px, fixed spacing) | दूरी (px, निश्चित दूरी) | अंतर (px, निश्चित अंतर)
+Start along path (%) | पाथ पर प्रारंभ (%) | पाथवर सुरुवात (%)
+The selected objects (one each) | चुने गए ऑब्जेक्ट (हर एक) | निवडलेले ऑब्जेक्ट (प्रत्येकी एक)
+Objects on path | पाथ पर ऑब्जेक्ट | पाथवरील ऑब्जेक्ट
+{p0} objects along a path — double-click to edit | पाथ पर {p0} ऑब्जेक्ट — संपादित करने के लिए डबल-क्लिक करें | पाथवर {p0} ऑब्जेक्ट — संपादनासाठी डबल-क्लिक करा
+Edit objects on path | पाथ पर ऑब्जेक्ट संपादित करें | पाथवरील ऑब्जेक्ट संपादित करा
+Objects on path (expanded) | पाथ पर ऑब्जेक्ट (फैलाए गए) | पाथवरील ऑब्जेक्ट (विस्तारित)
+Select a path and the objects to place along it (the topmost path is used) | कोई पाथ और उस पर रखने के लिए ऑब्जेक्ट चुनें (सबसे ऊपर का पाथ उपयोग होता है) | पाथ आणि त्यावर ठेवायचे ऑब्जेक्ट निवडा (सर्वात वरचा पाथ वापरला जातो)
+The selection needs a path to place objects along | ऑब्जेक्ट रखने के लिए चयन में एक पाथ होना चाहिए | ऑब्जेक्ट ठेवण्यासाठी निवडीत पाथ असणे आवश्यक आहे
+Dimension | आयाम | परिमाण
+{type} · {p1} — updates when measured objects move | {type} · {p1} — मापे गए ऑब्जेक्ट खिसकने पर अपडेट होता है | {type} · {p1} — मोजलेले ऑब्जेक्ट हलल्यावर अपडेट होते
+Edit dimension | आयाम संपादित करें | परिमाण संपादित करा
+Dimension (expanded) | आयाम (फैलाया गया) | परिमाण (विस्तारित)
+Decimals | दशमलव | दशांश
+Drawing scale (1 drawn unit = n real units) | ड्रॉइंग स्केल (1 बनाई इकाई = n वास्तविक इकाई) | रेखाचित्र प्रमाण (1 काढलेले एकक = n प्रत्यक्ष एकके)
+Text size (px) | टेक्स्ट आकार (px) | मजकूर आकार (px)
+Angular | कोणीय | कोनीय
+Click a circle / curved shape at the angle for the leader | लीडर के कोण पर किसी वृत्त / घुमावदार आकृति पर क्लिक करें | लीडरच्या कोनावर वर्तुळ / वक्र आकारावर क्लिक करा
+Click the second arm | दूसरी भुजा पर क्लिक करें | दुसऱ्या भुजेवर क्लिक करा
+Diameter | व्यास | व्यास
+Drag between two points (snaps to anchors and attaches to objects) | दो बिंदुओं के बीच ड्रैग करें (एंकर पर स्नैप होता है और ऑब्जेक्ट से जुड़ता है) | दोन बिंदूंमध्ये ड्रॅग करा (अँकरवर स्नॅप होते आणि ऑब्जेक्टला जोडले जाते)
+Drag from the vertex along the first arm, then click the second arm | शीर्ष से पहली भुजा के साथ ड्रैग करें, फिर दूसरी भुजा पर क्लिक करें | शिरोबिंदूपासून पहिल्या भुजेने ड्रॅग करा, मग दुसऱ्या भुजेवर क्लिक करा
+Linear (aligned) | रैखिक (संरेखित) | रेषीय (संरेखित)
+Scale 1 | स्केल 1 | प्रमाण 1
+Click on a circle or shape | किसी वृत्त या आकृति पर क्लिक करें | वर्तुळ किंवा आकारावर क्लिक करा
+Angular dimension | कोणीय आयाम | कोनीय परिमाण
+Arm | भुजा | भुजा
+Mug | मग | मग
+Phone screen | फ़ोन स्क्रीन | फोन स्क्रीन
+Business card | बिज़नेस कार्ड | बिझनेस कार्ड
+Poster on wall | दीवार पर पोस्टर | भिंतीवरील पोस्टर
+Mockup — | मॉकअप — | मॉकअप —
+Mockup — {name} | मॉकअप — {name} | मॉकअप — {name}
+Artwork | कलाकृति | कलाकृती
+Select the artwork to place on a mockup | मॉकअप पर रखने के लिए कलाकृति चुनें | मॉकअपवर ठेवण्यासाठी कलाकृती निवडा
+Artwork size (%) | कलाकृति आकार (%) | कलाकृती आकार (%)
+Mockup | मॉकअप | मॉकअप
+Move horizontally (%) | क्षैतिज खिसकाएँ (%) | आडवे हलवा (%)
+Move vertically (%) | लंबवत खिसकाएँ (%) | उभे हलवा (%)
+Place on a new artboard | नए आर्टबोर्ड पर रखें | नवीन आर्टबोर्डवर ठेवा
+Product colour | उत्पाद रंग | उत्पादन रंग
+Warp / perspective amount (%) | वार्प / परिप्रेक्ष्य मात्रा (%) | वार्प / दृष्टिकोन प्रमाण (%)
+Minion Pro | = | =
+Myriad Pro | = | =
+Wingdings | = | =
+RadialAxial | - |
+Mesh | मेश | मेश
+{p0};image-rendering:pixelated | - |
+Shading | - |
+TilingPattern | - |
+Image mask | छवि मास्क | प्रतिमा मास्क
+PDF import op | - |
+All pages — one artboard each | सभी पृष्ठ — हर एक के लिए एक आर्टबोर्ड | सर्व पृष्ठे — प्रत्येकी एक आर्टबोर्ड
+Page to place | रखने वाला पृष्ठ | ठेवायचे पृष्ठ
+Page {p0} only | केवल पृष्ठ {p0} | फक्त पृष्ठ {p0}
+Convert to outlines when the font is embedded (exact look) | फ़ॉन्ट एम्बेडेड होने पर आउटलाइन में बदलें (हूबहू रूप) | फॉन्ट एम्बेड केलेला असल्यास आउटलाइनमध्ये बदला (हुबेहूब स्वरूप)
+Keep as editable text (uses installed fonts) | संपादन योग्य टेक्स्ट के रूप में रखें (इंस्टॉल फ़ॉन्ट उपयोग करता है) | संपादित करता येणारा मजकूर म्हणून ठेवा (इन्स्टॉल केलेले फॉन्ट वापरतो)
+Open PDF as vectors | PDF को वेक्टर के रूप में खोलें | PDF वेक्टर म्हणून उघडा
+Place PDF as vectors | PDF को वेक्टर के रूप में रखें | PDF वेक्टर म्हणून ठेवा
+Not a PDF, Illustrator or EPS file. | यह PDF, Illustrator या EPS फ़ाइल नहीं है। | ही PDF, Illustrator किंवा EPS फाइल नाही.
+This .ai file has no PDF-compatible content and is not a PostScript Illustrator file. Re-save it in Illustrator with “Create PDF Compatible File” turned on. | इस .ai फ़ाइल में PDF-संगत सामग्री नहीं है और यह PostScript Illustrator फ़ाइल भी नहीं है। इसे Illustrator में “Create PDF Compatible File” चालू करके फिर से सहेजें। | या .ai फाइलमध्ये PDF-सुसंगत मजकूर नाही आणि ती PostScript Illustrator फाइलही नाही. Illustrator मध्ये “Create PDF Compatible File” चालू करून ती पुन्हा जतन करा.
+This PDF is password-protected. Open it in PDF Pro and remove the password first. | यह PDF पासवर्ड से सुरक्षित है। पहले इसे PDF Pro में खोलकर पासवर्ड हटाएँ। | हा PDF पासवर्डने संरक्षित आहे. आधी तो PDF Pro मध्ये उघडून पासवर्ड काढा.
+Page {k} | पृष्ठ {k} | पृष्ठ {k}
+Unlayered | बिना लेयर | लेयरविरहित
+Nothing to place on that page | उस पृष्ठ पर रखने के लिए कुछ नहीं | त्या पृष्ठावर ठेवण्यासारखे काही नाही
+{outlinedTexts} outlined text runs | {outlinedTexts} टेक्स्ट अंश आउटलाइन किए गए | {outlinedTexts} मजकूर भाग आउटलाइन केले
+{texts} text objects | {texts} टेक्स्ट ऑब्जेक्ट | {texts} मजकूर ऑब्जेक्ट
+Opened as vectors | वेक्टर के रूप में खुला | वेक्टर म्हणून उघडले
+Placed as vectors | वेक्टर के रूप में रखा गया | वेक्टर म्हणून ठेवले
+Some mesh shadings or patterns were approximated with flat colours. | कुछ मेश शेडिंग या पैटर्न सपाट रंगों से अनुमानित किए गए। | काही मेश शेडिंग किंवा पॅटर्न सपाट रंगांनी अंदाजे दाखवले.
+Xx | - |
+Unsupported TIFF compression | असमर्थित TIFF संपीड़न | असमर्थित TIFF कॉम्प्रेशन
+This file uses PostScript features BTS Vector can't convert, and it has no TIFF or EPSI preview. Save it as PDF or SVG from the original app. | यह फ़ाइल ऐसी PostScript सुविधाएँ उपयोग करती है जिन्हें BTS Vector नहीं बदल सकता, और इसमें TIFF या EPSI पूर्वावलोकन नहीं है। मूल ऐप से इसे PDF या SVG के रूप में सहेजें। | ही फाइल BTS Vector बदलू शकत नाही अशी PostScript वैशिष्ट्ये वापरते, आणि तिच्यात TIFF किंवा EPSI पूर्वावलोकन नाही. मूळ ॲपमधून ती PDF किंवा SVG म्हणून जतन करा.
+This file uses PostScript features BTS Vector can't convert, and its only preview is WMF, which is not supported. Save it as PDF or SVG from the original app. | यह फ़ाइल ऐसी PostScript सुविधाएँ उपयोग करती है जिन्हें BTS Vector नहीं बदल सकता, और इसका एकमात्र पूर्वावलोकन WMF है, जो समर्थित नहीं है। मूल ऐप से इसे PDF या SVG के रूप में सहेजें। | ही फाइल BTS Vector बदलू शकत नाही अशी PostScript वैशिष्ट्ये वापरते, आणि तिचे एकमेव पूर्वावलोकन WMF आहे, जे समर्थित नाही. मूळ ॲपमधून ती PDF किंवा SVG म्हणून जतन करा.
+EPS preview | EPS पूर्वावलोकन | EPS पूर्वावलोकन
+EPS/AI interpreter | EPS/AI इंटरप्रेटर | EPS/AI इंटरप्रिटर
+This file is too complex to convert to vectors, so its embedded preview image was placed instead. | यह फ़ाइल वेक्टर में बदलने के लिए बहुत जटिल है, इसलिए इसके बजाय इसकी एम्बेडेड पूर्वावलोकन छवि रखी गई। | ही फाइल वेक्टरमध्ये बदलण्यासाठी खूप गुंतागुंतीची आहे, म्हणून त्याऐवजी तिची एम्बेड केलेली पूर्वावलोकन प्रतिमा ठेवली.
+EPS/AI import stopped early | EPS/AI इम्पोर्ट जल्दी रुक गया | EPS/AI इम्पोर्ट लवकर थांबले
+Some PostScript in this file was skipped; check the result against the original. | इस फ़ाइल का कुछ PostScript छोड़ दिया गया; परिणाम को मूल से मिलाकर जाँचें। | या फाइलमधील काही PostScript वगळले; परिणाम मूळ फाइलशी पडताळून पाहा.
+PDF, Illustrator & EPS | PDF, Illustrator और EPS | PDF, Illustrator आणि EPS
+Arrow down | नीचे तीर | खालचा बाण
+Arrow left | बायाँ तीर | डावा बाण
+Arrow right | दायाँ तीर | उजवा बाण
+Arrow up | ऊपर तीर | वरचा बाण
+Arrow in circle | वृत्त में तीर | वर्तुळातील बाण
+Chevron | शेवरॉन | शेव्हरॉन
+Curved arrow | घुमावदार तीर | वक्र बाण
+Double arrow | दोहरा तीर | दुहेरी बाण
+Heart | दिल | हृदय
+Shapes | आकृतियाँ | आकार
+Sparkle | चमक | चमक
+Flower | फूल | फूल
+Octagon | अष्टभुज | अष्टकोन
+Pentagon | पंचभुज | पंचकोन
+Rounded square | गोल कोनों वाला वर्ग | गोलाकार कोपऱ्यांचा चौरस
+Cross | क्रॉस | फुली
+Plus | प्लस | अधिक
+Signs | संकेत | चिन्हे
+Check circle | वृत्त में सही | वर्तुळातील बरोबर
+Cross circle | वृत्त में क्रॉस | वर्तुळातील फुली
+Info | जानकारी | माहिती
+Warning | चेतावनी | इशारा
+Bubbles | बुलबुले | बुडबुडे
+Chat | चैट | चॅट
+Message box | संदेश बॉक्स | संदेश बॉक्स
+Speech bubble | बातचीत बुलबुला | संवाद बुडबुडा
+Thought bubble | विचार बुलबुला | विचार बुडबुडा
+Badges | बैज | बॅज
+Crown | मुकुट | मुकुट
+Ribbon badge | रिबन बैज | रिबन बॅज
+Seal badge | मुहर बैज | मुद्रा बॅज
+Shield | ढाल | ढाल
+Starburst | तारा विस्फोट | तारा स्फोट
+Trophy | ट्रॉफ़ी | ट्रॉफी
+Cloud | बादल | ढग
+Drop | बूँद | थेंब
+Flame | लौ | ज्योत
+Leaf | पत्ता | पान
+Lightning | बिजली | वीज
+Moon | चाँद | चंद्र
+Nature | प्रकृति | निसर्ग
+Sun | सूरज | सूर्य
+Bell | घंटी | घंटा
+Envelope | लिफ़ाफ़ा | लिफाफा
+Interface | इंटरफ़ेस | इंटरफेस
+Location pin | स्थान पिन | स्थान पिन
+Person | व्यक्ति | व्यक्ती
+Calendar | कैलेंडर | दिनदर्शिका
+Cart | कार्ट | कार्ट
+Clock | घड़ी | घड्याळ
+Eye | आँख | डोळा
+Gear | गियर | गियर
+Camera | कैमरा | कॅमेरा
+Music note | संगीत स्वर | संगीत स्वर
+Pause | रोकें | विराम
+Play | चलाएँ | चालवा
+Share | साझा करें | शेअर करा
+Tag | टैग | टॅग
+lib | - |
+Place symbol | प्रतीक रखें | चिन्ह ठेवा
+Select artwork to save as a symbol | प्रतीक के रूप में सहेजने के लिए कलाकृति चुनें | चिन्ह म्हणून जतन करण्यासाठी कलाकृती निवडा
+New symbol | नया प्रतीक | नवीन चिन्ह
+Symbol name | प्रतीक का नाम | चिन्हाचे नाव
+Symbol {p0} | प्रतीक {p0} | चिन्ह {p0}
+Select an edited symbol instance (or artwork) to redefine a symbol | प्रतीक फिर से परिभाषित करने के लिए संपादित प्रतीक प्रति (या कलाकृति) चुनें | चिन्ह पुन्हा परिभाषित करण्यासाठी संपादित चिन्ह प्रत (किंवा कलाकृती) निवडा
+No document symbols yet | अभी तक कोई दस्तावेज़ प्रतीक नहीं | अद्याप दस्तऐवज चिन्हे नाहीत
+Replace the artwork of | इसकी कलाकृति बदलें | याची कलाकृती बदला
+Updated {length} instance(s) of “{name}” | “{name}” की {length} प्रतियाँ अपडेट हुईं | “{name}” च्या {length} प्रती अपडेट झाल्या
+Select symbol instances | प्रतीक प्रतियाँ चुनें | चिन्ह प्रती निवडा
+Break link | लिंक तोड़ें | दुवा तोडा
+Edit (isolate) | संपादित करें (अलग करें) | संपादित करा (वेगळे करा)
+Redefine from this | इससे फिर से परिभाषित करें | यावरून पुन्हा परिभाषित करा
+Symbol instance | प्रतीक प्रति | चिन्ह प्रत
+Search {length} symbols | {length} प्रतीक खोजें | {length} चिन्हे शोधा
+{name} — click or drag onto the canvas | {name} — क्लिक करें या कैनवस पर ड्रैग करें | {name} — क्लिक करा किंवा कॅनव्हासवर ड्रॅग करा
+— click or drag onto the canvas | — क्लिक करें या कैनवस पर ड्रैग करें | — क्लिक करा किंवा कॅनव्हासवर ड्रॅग करा
+Document symbols | दस्तावेज़ प्रतीक | दस्तऐवज चिन्हे
+None yet — select artwork and press F8. | अभी कोई नहीं — कलाकृति चुनें और F8 दबाएँ। | अद्याप काही नाही — कलाकृती निवडा आणि F8 दाबा.
+Redefine | फिर से परिभाषित करें | पुन्हा परिभाषित करा
+Sprayer tool | स्प्रेयर टूल | स्प्रेअर साधन
+Rounded rect | गोल आयत | गोलाकार आयत
+Shapes library | आकृति लाइब्रेरी | आकार संग्रह
+Icon & symbol library | आइकन और प्रतीक लाइब्रेरी | आयकॉन आणि चिन्ह संग्रह
+Pen pressure | पेन दबाव | पेन दाब
+Pinch | पिंच | चिमटा
+Taper both ends | दोनों छोर पतले करें | दोन्ही टोके निमुळती करा
+Taper end | अंत पतला करें | शेवट निमुळता करा
+Taper start | शुरुआत पतली करें | सुरुवात निमुळती करा
+Merge with same-colour shapes | समान रंग की आकृतियों के साथ मर्ज करें | समान रंगाच्या आकारांमध्ये विलीन करा
+Paints filled shapes; overlapping strokes of the same colour merge | भरी हुई आकृतियाँ पेंट करता है; समान रंग के ओवरलैप होने वाले स्ट्रोक मर्ज हो जाते हैं | भरलेले आकार रंगवतो; एकमेकांवर येणारे समान रंगाचे स्ट्रोक विलीन होतात
+Erasing from every unlocked shape | हर अनलॉक आकृति से मिटाया जा रहा है | प्रत्येक अनलॉक आकारातून खोडत आहे

@@ -1,0 +1,283 @@
+# Photo (tools options, dialogs)
+Mode | मोड | मोड
+Replaces the color under the brush center with the foreground color | ब्रश के केंद्र के नीचे के रंग को अग्रभूमि रंग से बदलता है | ब्रशच्या मध्याखालील रंग अग्रभूमी रंगाने बदलतो
+Tolerance | सहनशीलता | सहनशीलता
+Paint over blemishes — content-aware healing on release | दाग-धब्बों पर पेंट करें — छोड़ने पर कंटेंट-अवेयर हीलिंग | डागांवर रंगवा — सोडल्यावर कंटेंट-अवेअर हीलिंग
+Brush along the wires — thin lines under the brush are detected and removed | तारों के साथ ब्रश करें — ब्रश के नीचे की पतली रेखाएँ पहचान कर हटाई जाती हैं | तारांवरून ब्रश फिरवा — ब्रशखालील पातळ रेषा ओळखून काढल्या जातात
+Brush over an object to remove it | किसी वस्तु को हटाने के लिए उस पर ब्रश करें | वस्तू काढण्यासाठी तिच्यावर ब्रश फिरवा
+Brush over the area — small spots under the brush are detected and removed | क्षेत्र पर ब्रश करें — ब्रश के नीचे के छोटे धब्बे पहचान कर हटाए जाते हैं | भागावर ब्रश फिरवा — ब्रशखालील लहान डाग ओळखून काढले जातात
+Dust & spots | धूल और धब्बे | धूळ आणि डाग
+Objects (content-aware) | वस्तुएँ (कंटेंट-अवेयर) | वस्तू (कंटेंट-अवेअर)
+Whole image / selection | पूरी छवि / चयन | संपूर्ण प्रतिमा / निवड
+Wires & cables | तार और केबल | तारा आणि केबल
+Eye brighten | आँखें चमकाएँ | डोळे उजळा
+Paint over teeth or the irises | दाँतों या आँखों की पुतलियों पर पेंट करें | दातांवर किंवा बुबुळांवर रंगवा
+Strength | शक्ति | तीव्रता
+Teeth whitening | दाँत सफ़ेद करें | दात पांढरे करा
+Corner radius | कोने की त्रिज्या | कोपऱ्याची त्रिज्या
+Frame corners | फ़्रेम के कोने | फ्रेमचे कोपरे
+Frame shape | फ़्रेम आकृति | फ्रेम आकार
+Frame stroke | फ़्रेम स्ट्रोक | फ्रेम स्ट्रोक
+Frame content | फ़्रेम सामग्री | फ्रेम मजकूर
+Content % | सामग्री % | मजकूर %
+Replace image | छवि बदलें | प्रतिमा बदला
+Drag to draw a frame · click a frame to fill it with an image | फ़्रेम बनाने के लिए ड्रैग करें · छवि से भरने के लिए फ़्रेम पर क्लिक करें | फ्रेम काढण्यासाठी ड्रॅग करा · प्रतिमेने भरण्यासाठी फ्रेमवर क्लिक करा
+Drag inside the selection to the area you want to copy from | चयन के अंदर से उस क्षेत्र तक ड्रैग करें जहाँ से कॉपी करना है | ज्या भागातून कॉपी करायचे तिथे निवडीच्या आतून ड्रॅग करा
+Draw around the area to repair, then drag it to a clean area | सुधारने वाले क्षेत्र के चारों ओर बनाएँ, फिर उसे साफ़ क्षेत्र तक ड्रैग करें | दुरुस्त करायच्या भागाभोवती रेखाटा, मग तो स्वच्छ भागाकडे ड्रॅग करा
+Click on a red eye | लाल आँख पर क्लिक करें | लाल डोळ्यावर क्लिक करा
+Pupil size | पुतली का आकार | बाहुलीचा आकार
+Blur | धुंधला करें | धूसर करा
+Sharpen | तीक्ष्ण करें | तीक्ष्ण करा
+Smudge | स्मज | स्मज
+Burn | बर्न | बर्न
+Dodge | डॉज | डॉज
+Exposure | एक्सपोज़र | एक्सपोजर
+Midtones | मिडटोन | मिडटोन
+Range | सीमा | श्रेणी
+Shadows | छाया | सावल्या
+Sponge (desaturate) | स्पंज (रंग कम करें) | स्पंज (रंग कमी करा)
+Sponge (saturate) | स्पंज (रंग बढ़ाएँ) | स्पंज (रंग वाढवा)
+Feather | फ़ेदर | फेदर
+Contiguous | सटे हुए | लागून असलेले
+Click to edit the gradient | ग्रेडिएंट संपादित करने के लिए क्लिक करें | ग्रेडियंट संपादित करण्यासाठी क्लिक करा
+Angle | कोण | कोन
+Diamond | हीरा | हिरा
+Linear | रैखिक | रेषीय
+Radial | त्रिज्य | त्रिज्य
+Reflected | परावर्तित | परावर्तित
+FG → transparent | अग्रभूमि → पारदर्शी | अग्रभूमी → पारदर्शक
+Reverse | उलटें | उलटा करा
+Arial Black | = | =
+Calibri | = | =
+Cambria | = | =
+Comic Sans MS | = | =
+Consolas | = | =
+Courier New | = | =
+Georgia | = | =
+Impact | = | =
+Mangal | = | =
+Nirmala UI | = | =
+Segoe UI | = | =
+Tahoma | = | =
+Times New Roman | = | =
+Trebuchet MS | = | =
+Verdana | = | =
+Align | संरेखित करें | संरेखित करा
+Center | केंद्र | मध्य
+Click to add text · color = foreground | टेक्स्ट जोड़ने के लिए क्लिक करें · रंग = अग्रभूमि | मजकूर जोडण्यासाठी क्लिक करा · रंग = अग्रभूमी
+Left | बाएँ | डावीकडे
+Right | दाएँ | उजवीकडे
+Rounded rectangle | गोल कोनों वाला आयत | गोलाकार कोपऱ्यांचा आयत
+Star | तारा | तारा
+Triangle | त्रिभुज | त्रिकोण
+Sides | भुजाएँ | बाजू
+Ratio | अनुपात | गुणोत्तर
+Reset | रीसेट करें | रीसेट करा
+Swap orientation | अभिविन्यास बदलें | दिशा बदला
+Content-aware fill outside | बाहर कंटेंट-अवेयर फ़िल | बाहेर कंटेंट-अवेअर फिल
+Drag to set the crop, Enter to apply | क्रॉप सेट करने के लिए ड्रैग करें, लागू करने के लिए Enter | क्रॉप सेट करण्यासाठी ड्रॅग करा, लागू करण्यासाठी Enter
+Drag the four corners onto the edges of the slanted object, then Enter | चारों कोनों को तिरछी वस्तु के किनारों पर ड्रैग करें, फिर Enter | चारही कोपरे तिरक्या वस्तूच्या कडांवर ड्रॅग करा, मग Enter
+Drag to measure distance and angle | दूरी और कोण मापने के लिए ड्रैग करें | अंतर आणि कोन मोजण्यासाठी ड्रॅग करा
+X {p0} Y {p1} W {p2} H {p3} A {p4}° L {p5} px | = | =
+Straighten layer | लेयर सीधी करें | लेयर सरळ करा
+Click to add a note · click a note to edit it | नोट जोड़ने के लिए क्लिक करें · संपादित करने के लिए नोट पर क्लिक करें | टीप जोडण्यासाठी क्लिक करा · संपादित करण्यासाठी टिपेवर क्लिक करा
+Delete all notes | सभी नोट हटाएँ | सर्व टिपा हटवा
+Show / hide notes | नोट दिखाएँ / छिपाएँ | टिपा दाखवा / लपवा
+Align layer to canvas | लेयर को कैनवस से संरेखित करें | लेयर कॅनव्हासशी संरेखित करा
+Auto-select layer | लेयर अपने-आप चुनें | लेयर आपोआप निवडा
+Shift = keep proportions · drag outside to rotate | Shift = अनुपात बनाए रखें · घुमाने के लिए बाहर ड्रैग करें | Shift = प्रमाण कायम ठेवा · फिरवण्यासाठी बाहेर ड्रॅग करा
+Click to set foreground · Alt+click for background | अग्रभूमि सेट करने के लिए क्लिक करें · पृष्ठभूमि के लिए Alt+क्लिक | अग्रभूमी सेट करण्यासाठी क्लिक करा · पार्श्वभूमीसाठी Alt+क्लिक
+Hex | = | =
+OK | ठीक है | ठीक आहे
+Rulers — drag from a ruler to create a guide | रूलर — गाइड बनाने के लिए रूलर से ड्रैग करें | रूलर — मार्गदर्शक रेषा तयार करण्यासाठी रूलरवरून ड्रॅग करा
+Snap {p0} | स्नैप {p0} | स्नॅप {p0}
+on | चालू | चालू
+off | बंद | बंद
+Horizontal | क्षैतिज | आडवी
+New guide | नया गाइड | नवीन मार्गदर्शक
+Position (px) | स्थिति (px) | स्थान (px)
+Position is a percentage | स्थिति प्रतिशत में है | स्थान टक्केवारीत आहे
+Vertical | लंबवत | उभी
+Gridline every (px, 0 = automatic) | हर इतने पर ग्रिड रेखा (px, 0 = स्वचालित) | दर इतक्या अंतरावर ग्रिड रेषा (px, 0 = स्वयंचलित)
+Show grid | ग्रिड दिखाएँ | ग्रिड दाखवा
+{w} × {h} px | = | =
+Bevel & emboss | बेवल और एम्बॉस | बेव्हल आणि एम्बॉस
+Color overlay | रंग ओवरले | रंग ओव्हरले
+Drop shadow | ड्रॉप शैडो | ड्रॉप शॅडो
+Gradient overlay | ग्रेडिएंट ओवरले | ग्रेडियंट ओव्हरले
+Inner glow | भीतरी चमक | आतील चमक
+Inner shadow | भीतरी छाया | आतील सावली
+Outer glow | बाहरी चमक | बाहेरील चमक
+Pattern overlay | पैटर्न ओवरले | पॅटर्न ओव्हरले
+Checker | चेकर | चौकटी
+Polka dots | पोल्का डॉट | पोल्का डॉट
+Stripes | धारियाँ | पट्टे
+Bricks | ईंटें | विटा
+Noise | नॉइज़ | नॉइज
+Hexagons | षट्भुज | षटकोन
+Paper | काग़ज़ | कागद
+Nothing to define | परिभाषित करने के लिए कुछ नहीं | परिभाषित करण्यासारखे काही नाही
+Define pattern | पैटर्न परिभाषित करें | पॅटर्न परिभाषित करा
+Pattern name | पैटर्न का नाम | पॅटर्नचे नाव
+Pattern {p0} | पैटर्न {p0} | पॅटर्न {p0}
+Pattern defined — use it with the Pattern stamp or Pattern overlay | पैटर्न परिभाषित हुआ — इसे पैटर्न स्टैम्प या पैटर्न ओवरले के साथ उपयोग करें | पॅटर्न परिभाषित झाला — तो पॅटर्न स्टॅम्प किंवा पॅटर्न ओव्हरलेसह वापरा
+Selection | चयन | निवड
+Select all | सभी चुनें | सर्व निवडा
+Load transparency | पारदर्शिता लोड करें | पारदर्शकता लोड करा
+Make a selection first | पहले चयन करें | आधी निवड करा
+Border selection | बॉर्डर चयन | किनार निवड
+Contract selection | चयन सिकोड़ें | निवड आकुंचित करा
+Expand selection | चयन फैलाएँ | निवड विस्तारित करा
+Feather selection | चयन फ़ेदर करें | निवड फेदर करा
+Radius (px) | त्रिज्या (px) | त्रिज्या (px)
+Smooth selection | चयन चिकना करें | निवड गुळगुळीत करा
+Width (px) | चौड़ाई (px) | रुंदी (px)
+New snapshot | नया स्नैपशॉट | नवीन स्नॅपशॉट
+Snapshot | स्नैपशॉट | स्नॅपशॉट
+Snapshot name | स्नैपशॉट का नाम | स्नॅपशॉटचे नाव
+Snapshot saved | स्नैपशॉट सहेजा गया | स्नॅपशॉट जतन केला
+Snapshot {p0} | स्नैपशॉट {p0} | स्नॅपशॉट {p0}
+Snapshot: {name} | स्नैपशॉट: {name} | स्नॅपशॉट: {name}
+Select inverse | उलटा चुनें | उलट निवडा
+Layer is locked | लेयर लॉक है | लेयर लॉक आहे
+This is an adjustment layer — select a pixel layer, or paint on its mask with the brush | यह एडजस्टमेंट लेयर है — कोई पिक्सेल लेयर चुनें, या ब्रश से इसके मास्क पर पेंट करें | हा ॲडजस्टमेंट लेयर आहे — पिक्सेल लेयर निवडा, किंवा ब्रशने त्याच्या मास्कवर रंगवा
+Rasterize the text layer first (Layer › Rasterize) | पहले टेक्स्ट लेयर रास्टराइज़ करें (लेयर › रास्टराइज़) | आधी मजकूर लेयर रास्टराइझ करा (लेयर › रास्टराइझ)
+Frames hold an image — use Layer › Frame › Place image, or Layer › Rasterize layer to paint on it | फ़्रेम में छवि रहती है — लेयर › फ़्रेम › छवि रखें का उपयोग करें, या उस पर पेंट करने के लिए लेयर › लेयर रास्टराइज़ करें | फ्रेममध्ये प्रतिमा असते — लेयर › फ्रेम › प्रतिमा ठेवा वापरा, किंवा त्यावर रंगवण्यासाठी लेयर › लेयर रास्टराइझ करा
+Layer is hidden | लेयर छिपी है | लेयर लपलेला आहे
+Clone source set | क्लोन स्रोत सेट हुआ | क्लोन स्रोत सेट झाला
+Elliptical marquee | दीर्घवृत्ताकार मार्की | लंबवर्तुळाकार मार्की
+Rectangular marquee | आयताकार मार्की | आयताकार मार्की
+Patch selection | पैच चयन | पॅच निवड
+Blur tool | ब्लर टूल | ब्लर साधन
+Dodge tool | डॉज टूल | डॉज साधन
+Paint | पेंट | रंगवा
+failed | विफल | अयशस्वी
+{label} failed: {message} | {label} विफल: {message} | {label} अयशस्वी: {message}
+Healing | हीलिंग | हीलिंग
+Removing | हटाया जा रहा है | काढत आहे
+Content-aware fill | कंटेंट-अवेयर फ़िल | कंटेंट-अवेअर फिल
+Spot healing | स्पॉट हीलिंग | स्पॉट हीलिंग
+Select the area to fill first (lasso around the object) | पहले भरने वाला क्षेत्र चुनें (वस्तु के चारों ओर लैसो) | आधी भरायचा भाग निवडा (वस्तूभोवती लॅसो)
+Select a pixel layer | कोई पिक्सेल लेयर चुनें | पिक्सेल लेयर निवडा
+All layers | सभी लेयर | सर्व लेयर
+Content-Aware Fill | कंटेंट-अवेयर फ़िल | कंटेंट-अवेअर फिल
+Current layer | वर्तमान लेयर | सध्याचा लेयर
+Expand selection by (px) | चयन इतना फैलाएँ (px) | निवड इतकी विस्तारित करा (px)
+Output to | आउटपुट यहाँ | आउटपुट येथे
+Sample from | नमूना यहाँ से | नमुना येथून
+Patching | पैच हो रहा है | पॅच होत आहे
+No red pixels found there — try a larger pupil size | वहाँ कोई लाल पिक्सेल नहीं मिला — बड़ा पुतली आकार आज़माएँ | तिथे लाल पिक्सेल सापडले नाहीत — मोठा बाहुली आकार वापरून पाहा
+New note | नया नोट | नवीन टीप
+Note {p0} | नोट {p0} | टीप {p0}
+Notes are saved in .btsp projects and never appear in exported images. | नोट .btsp प्रोजेक्ट में सहेजे जाते हैं और एक्सपोर्ट की गई छवियों में कभी नहीं दिखते। | टिपा .btsp प्रकल्पांमध्ये जतन होतात आणि एक्सपोर्ट केलेल्या प्रतिमांमध्ये कधीच दिसत नाहीत.
+Delete stop | स्टॉप हटाएँ | स्टॉप हटवा
+Click the bar to add a stop · drag stops to move · drag down to remove | स्टॉप जोड़ने के लिए बार पर क्लिक करें · खिसकाने के लिए स्टॉप ड्रैग करें · हटाने के लिए नीचे ड्रैग करें | स्टॉप जोडण्यासाठी पट्टीवर क्लिक करा · हलवण्यासाठी स्टॉप ड्रॅग करा · काढण्यासाठी खाली ड्रॅग करा
+Location % | स्थान % | स्थान %
+Presets | प्रीसेट | प्रीसेट
+Gradient editor | ग्रेडिएंट संपादक | ग्रेडियंट संपादक
+Rounded Rectangle | गोल कोनों वाला आयत | गोलाकार कोपऱ्यांचा आयत
+New shape | नई आकृति | नवीन आकार
+{p0}{p1}{size}px "{font}" | - |
+Edit type | टेक्स्ट संपादित करें | मजकूर संपादित करा
+Type layer | टेक्स्ट लेयर | मजकूर लेयर
+Text style | टेक्स्ट शैली | मजकूर शैली
+Rasterize | रास्टराइज़ करें | रास्टराइझ करा
+Rasterize {what} | {what} रास्टराइज़ करें | {what} रास्टराइझ करा
+Adjustment layers cannot be transformed | एडजस्टमेंट लेयर ट्रांसफ़ॉर्म नहीं की जा सकतीं | ॲडजस्टमेंट लेयरचे रूपांतर करता येत नाही
+Layer is empty | लेयर खाली है | लेयर रिकामा आहे
+Content-aware crop fill | कंटेंट-अवेयर क्रॉप फ़िल | कंटेंट-अवेअर क्रॉप फिल
+Merged image copied | मर्ज की गई छवि कॉपी हुई | विलीन प्रतिमा कॉपी झाली
+Merged image copied to the clipboard | मर्ज की गई छवि क्लिपबोर्ड पर कॉपी हुई | विलीन प्रतिमा क्लिपबोर्डवर कॉपी झाली
+Clipboard has no image | क्लिपबोर्ड में कोई छवि नहीं है | क्लिपबोर्डमध्ये प्रतिमा नाही
+Pasted layer | चिपकाई गई लेयर | पेस्ट केलेला लेयर
+Rasterize the layer first | पहले लेयर रास्टराइज़ करें | आधी लेयर रास्टराइझ करा
+50% gray | 50% ग्रे | 50% राखाडी
+Custom color | कस्टम रंग | सानुकूल रंग
+White | सफ़ेद | पांढरा
+Content-aware fill needs a selection | कंटेंट-अवेयर फ़िल के लिए चयन आवश्यक है | कंटेंट-अवेअर फिलसाठी निवड आवश्यक आहे
+Fill pattern | पैटर्न भरें | पॅटर्न भरा
+Stroke selection | चयन पर स्ट्रोक | निवडीवर स्ट्रोक
+Automatic (bicubic, stepped) | स्वचालित (बाइक्यूबिक, चरणबद्ध) | स्वयंचलित (बायक्युबिक, टप्प्याटप्प्याने)
+Bicubic sharper (best for reduction) | बाइक्यूबिक तीक्ष्ण (छोटा करने के लिए सर्वोत्तम) | बायक्युबिक तीक्ष्ण (लहान करण्यासाठी सर्वोत्तम)
+Bilinear | बाइलीनियर | बायलिनियर
+Constrain proportions | अनुपात बनाए रखें | प्रमाण कायम ठेवा
+Height (px) | ऊँचाई (px) | उंची (px)
+Image size | छवि आकार | प्रतिमा आकार
+Nearest neighbor (hard edges) | निकटतम पड़ोसी (तीखे किनारे) | जवळचा शेजारी (तीक्ष्ण कडा)
+Preserve details (enlargement) | विवरण बनाए रखें (बड़ा करना) | तपशील जपा (मोठे करणे)
+Resample | पुनः नमूना लें | पुन्हा नमुना घ्या
+Content-aware (generative) | कंटेंट-अवेयर (जनरेटिव) | कंटेंट-अवेअर (जनरेटिव्ह)
+Transparent | पारदर्शी | पारदर्शक
+Anchor | एंकर | अँकर
+Extension color | विस्तार रंग | विस्तार रंग
+Extension fill | विस्तार भरण | विस्तार भरण
+Relative | सापेक्ष | सापेक्ष
+Canvas size | कैनवस आकार | कॅनव्हास आकार
+Generative expand | जनरेटिव विस्तार | जनरेटिव्ह विस्तार
+Nothing to fill | भरने के लिए कुछ नहीं | भरण्यासारखे काही नाही
+The image is empty | छवि खाली है | प्रतिमा रिकामी आहे
+Generating expanded content | विस्तारित सामग्री बन रही है | विस्तारित मजकूर तयार होत आहे
+Generative expand canvas | कैनवस का जनरेटिव विस्तार | कॅनव्हासचा जनरेटिव्ह विस्तार
+By a percentage | प्रतिशत के अनुसार | टक्केवारीनुसार
+By pixels on each side | हर ओर पिक्सेल के अनुसार | प्रत्येक बाजूला पिक्सेलनुसार
+Expand | फैलाएँ | विस्तारित करा
+To an aspect ratio | किसी आस्पेक्ट रेशियो तक | आस्पेक्ट रेशोपर्यंत
+21:9 (cinema) | 21:9 (सिनेमा) | 21:9 (सिनेमा)
+Aspect ratio | आस्पेक्ट रेशियो | आस्पेक्ट रेशो
+Bottom (px) | नीचे (px) | तळ (px)
+Left (px) | बाएँ (px) | डावीकडे (px)
+Right (px) | दाएँ (px) | उजवीकडे (px)
+Top (px) | ऊपर (px) | वर (px)
+Generate | बनाएँ | तयार करा
+Percentage (all sides) | प्रतिशत (सभी ओर) | टक्केवारी (सर्व बाजू)
+The image already has that shape | छवि का आकार पहले से वैसा ही है | प्रतिमेचा आकार आधीच तसा आहे
+Expand canvas | कैनवस फैलाएँ | कॅनव्हास विस्तारित करा
+Rotate canvas | कैनवस घुमाएँ | कॅनव्हास फिरवा
+Rotate {p0}° | {p0}° घुमाएँ | {p0}° फिरवा
+Content-aware edges | कंटेंट-अवेयर किनारे | कंटेंट-अवेअर कडा
+Angle (°) | कोण (°) | कोन (°)
+Content-aware fill corners | कोनों में कंटेंट-अवेयर फ़िल | कोपऱ्यांत कंटेंट-अवेअर फिल
+Crop to fit (no empty corners) | फ़िट होने तक क्रॉप करें (कोई खाली कोना नहीं) | बसेल असे क्रॉप करा (रिकामे कोपरे नाहीत)
+Edges | किनारे | कडा
+Expand canvas (keep everything) | कैनवस फैलाएँ (सब कुछ रखें) | कॅनव्हास विस्तारित करा (सर्व काही ठेवा)
+Auto | स्वतः | स्वयं
+Straighten / rotate | सीधा करें / घुमाएँ | सरळ करा / फिरवा
+The image already looks straight | छवि पहले से सीधी दिखती है | प्रतिमा आधीच सरळ दिसते
+Straightened by {p0}° | {p0}° सीधा किया गया | {p0}° ने सरळ केले
+Flip canvas | कैनवस पलटें | कॅनव्हास उलटा
+Nothing to trim | ट्रिम करने के लिए कुछ नहीं | ट्रिम करण्यासारखे काही नाही
+Based on | इसके आधार पर | याच्या आधारे
+Bottom-right pixel color | नीचे-दाएँ पिक्सेल का रंग | तळ-उजव्या पिक्सेलचा रंग
+Top-left pixel color | ऊपर-बाएँ पिक्सेल का रंग | वर-डाव्या पिक्सेलचा रंग
+Transparent pixels | पारदर्शी पिक्सेल | पारदर्शक पिक्सेल
+Trim | ट्रिम करें | ट्रिम करा
+All layer content is already visible | सारी लेयर सामग्री पहले से दिख रही है | लेयरचा सर्व मजकूर आधीच दिसत आहे
+Layer {length} | लेयर {length} | लेयर {length}
+An image needs at least one layer | छवि में कम से कम एक लेयर होनी चाहिए | प्रतिमेत किमान एक लेयर असणे आवश्यक आहे
+Rename layer | लेयर का नाम बदलें | लेयरचे नाव बदला
+Arrange | व्यवस्थित करें | मांडणी
+Cannot merge onto an adjustment layer | एडजस्टमेंट लेयर पर मर्ज नहीं किया जा सकता | ॲडजस्टमेंट लेयरवर विलीन करता येत नाही
+Merged | मर्ज हुआ | विलीन झाले
+Add layer mask | लेयर मास्क जोड़ें | लेयर मास्क जोडा
+Mask added — paint black to hide, white to reveal | मास्क जोड़ा गया — छिपाने के लिए काला, दिखाने के लिए सफ़ेद पेंट करें | मास्क जोडला — लपवण्यासाठी काळा, दाखवण्यासाठी पांढरा रंगवा
+Layer style copied | लेयर शैली कॉपी हुई | लेयर शैली कॉपी झाली
+This layer has no style — copied an empty style | इस लेयर की कोई शैली नहीं है — खाली शैली कॉपी हुई | या लेयरला शैली नाही — रिकामी शैली कॉपी झाली
+Adjustment layers cannot have styles | एडजस्टमेंट लेयर की शैलियाँ नहीं हो सकतीं | ॲडजस्टमेंट लेयरला शैली असू शकत नाही
+Angle ° | कोण ° | कोन °
+Blend mode | ब्लेंड मोड | ब्लेंड मोड
+Spread % | फैलाव % | पसरण %
+Choke % | चोक % | चोक %
+Edge | किनारा | कडा
+Source | स्रोत | स्रोत
+Inside | अंदर | आत
+Outside | बाहर | बाहेर
+Scale % | स्केल % | प्रमाण %
+Altitude ° | ऊँचाई ° | उंची °
+Depth % | गहराई % | खोली %
+Direction | दिशा | दिशा
+Down | नीचे | खाली
+Highlight opacity % | हाइलाइट अपारदर्शिता % | हायलाइट अपारदर्शकता %
+Shadow | छाया | सावली
+Shadow opacity % | छाया अपारदर्शिता % | सावली अपारदर्शकता %
+Soften | नरम करें | मऊ करा
+Up | ऊपर | वर

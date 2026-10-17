@@ -1,0 +1,189 @@
+# Photo (actions, batch, Camera Raw, looks) + runtime-only strings
+Delete the action “ | एक्शन हटाएँ “ | ॲक्शन हटवा “
+Delete the action “{name}”? | एक्शन “{name}” हटाएँ? | ॲक्शन “{name}” हटवायची?
+Delete set | सेट हटाएँ | संच हटवा
+Delete the set “ | सेट हटाएँ “ | संच हटवा “
+Delete the set “{name}” and all its actions? | सेट “{name}” और उसके सभी एक्शन हटाएँ? | संच “{name}” आणि त्यातील सर्व ॲक्शन हटवायच्या?
+” and all its actions? | ” और उसके सभी एक्शन? | ” आणि त्यातील सर्व ॲक्शन?
+Reset default actions | डिफ़ॉल्ट एक्शन रीसेट करें | डीफॉल्ट ॲक्शन रीसेट करा
+Restore the built-in “Default actions” set? Your own sets are kept. | अंतर्निर्मित “डिफ़ॉल्ट एक्शन” सेट पुनर्स्थापित करें? आपके अपने सेट बने रहेंगे। | अंगभूत “डीफॉल्ट ॲक्शन” संच पुनर्संचयित करायचा? तुमचे स्वतःचे संच कायम राहतील.
+Default actions restored | डिफ़ॉल्ट एक्शन पुनर्स्थापित हुए | डीफॉल्ट ॲक्शन पुनर्संचयित झाल्या
+BTS Photo actions | BTS Photo एक्शन | BTS Photo ॲक्शन
+Actions exported | एक्शन एक्सपोर्ट हुए | ॲक्शन एक्सपोर्ट झाल्या
+This is not a BTS Photo actions file | यह BTS Photo एक्शन फ़ाइल नहीं है | ही BTS Photo ॲक्शन फाइल नाही
+Imported | इम्पोर्ट हुआ | इम्पोर्ट झाले
+Could not import | इम्पोर्ट नहीं हो सका | इम्पोर्ट करता आले नाही
+Could not import: {message} | इम्पोर्ट नहीं हो सका: {message} | इम्पोर्ट करता आले नाही: {message}
+Imported {n} actions | {n} एक्शन इम्पोर्ट हुए | {n} ॲक्शन इम्पोर्ट झाल्या
+Recording | रिकॉर्डिंग | रेकॉर्डिंग
+No steps yet | अभी तक कोई चरण नहीं | अद्याप टप्पे नाहीत
+Recording — use the app as usual | रिकॉर्डिंग — ऐप को सामान्य रूप से उपयोग करें | रेकॉर्डिंग — ॲप नेहमीप्रमाणे वापरा
+Include this step | यह चरण शामिल करें | हा टप्पा समाविष्ट करा
+Show the dialog when this step plays | यह चरण चलने पर डायलॉग दिखाएँ | हा टप्पा चालताना संवाद दाखवा
+This step has no dialog | इस चरण का कोई डायलॉग नहीं है | या टप्प्याला संवाद नाही
+Start recording | रिकॉर्डिंग शुरू करें | रेकॉर्डिंग सुरू करा
+Stop recording | रिकॉर्डिंग रोकें | रेकॉर्डिंग थांबवा
+Play the selected action (from the selected step) | चुना गया एक्शन चलाएँ (चुने गए चरण से) | निवडलेली ॲक्शन चालवा (निवडलेल्या टप्प्यापासून)
+Duplicate action | एक्शन की प्रतिलिपि बनाएँ | ॲक्शनची प्रत बनवा
+More | अधिक | अधिक
+Recording “{p0}” | “{p0}” रिकॉर्ड हो रहा है | “{p0}” रेकॉर्ड होत आहे
+Edit step settings | चरण सेटिंग्ज़ संपादित करें | टप्प्याच्या सेटिंग्ज संपादित करा
+Export all sets | सभी सेट एक्सपोर्ट करें | सर्व संच एक्सपोर्ट करा
+Export selected set | चुना गया सेट एक्सपोर्ट करें | निवडलेला संच एक्सपोर्ट करा
+Import actions | एक्शन इम्पोर्ट करें | ॲक्शन इम्पोर्ट करा
+Play from selected step | चुने गए चरण से चलाएँ | निवडलेल्या टप्प्यापासून चालवा
+This step has no editable settings — toggle “show dialog” to adjust it while playing | इस चरण में संपादन योग्य सेटिंग नहीं है — चलते समय इसे बदलने के लिए “डायलॉग दिखाएँ” चालू करें | या टप्प्याला संपादित करता येणाऱ्या सेटिंग्ज नाहीत — चालताना बदलण्यासाठी “संवाद दाखवा” चालू करा
+Actions panel | एक्शन पैनल | ॲक्शन पॅनेल
+Play selected action | चुना गया एक्शन चलाएँ | निवडलेली ॲक्शन चालवा
+Export actions | एक्शन एक्सपोर्ट करें | ॲक्शन एक्सपोर्ट करा
+Choose this folder.txt | - |
+Folder | फ़ोल्डर | फोल्डर
+Batch | बैच | बॅच
+Cancelled by the user before {name} | {name} से पहले उपयोगकर्ता ने रद्द किया | {name} पूर्वी वापरकर्त्याने रद्द केले
+No destination folder | कोई गंतव्य फ़ोल्डर नहीं | गंतव्य फोल्डर नाही
+Cancelled | रद्द किया गया | रद्द केले
+BTS Photo — {title} {p1} Processed: {done} of {total} Output files: {length} | BTS Photo — {title} {p1} संसाधित: {total} में से {done} आउटपुट फ़ाइलें: {length} | BTS Photo — {title} {p1} प्रक्रिया केलेल्या: {total} पैकी {done} आउटपुट फाइल्स: {length}
+BTS Photo — {title} {p1} Processed: {done} of {total} Output files: {length} {log} | BTS Photo — {title} {p1} संसाधित: {total} में से {done} आउटपुट फ़ाइलें: {length} {log} | BTS Photo — {title} {p1} प्रक्रिया केलेल्या: {total} पैकी {done} आउटपुट फाइल्स: {length} {log}
+Error log saved to | त्रुटि लॉग यहाँ सहेजा गया | त्रुटी लॉग येथे जतन केला
+Error log saved to {logPath} | त्रुटि लॉग {logPath} में सहेजा गया | त्रुटी लॉग {logPath} मध्ये जतन केला
+Errors | त्रुटियाँ | त्रुटी
+{done} of {total} files processed · {length} files written · {secs} s | {total} में से {done} फ़ाइलें संसाधित · {length} फ़ाइलें लिखी गईं · {secs} s | {total} पैकी {done} फाइल्सवर प्रक्रिया · {length} फाइल्स लिहिल्या · {secs} s
+As in the action’s Export step | जैसा एक्शन के एक्सपोर्ट चरण में | ॲक्शनच्या एक्सपोर्ट टप्प्याप्रमाणे
+Create an action first | पहले कोई एक्शन बनाएँ | आधी ॲक्शन तयार करा
+No files chosen | कोई फ़ाइल नहीं चुनी गई | फाइल्स निवडल्या नाहीत
+No folder chosen | कोई फ़ोल्डर नहीं चुना गया | फोल्डर निवडले नाही
+{length} files · {p1}{p2} | {length} फ़ाइलें · {p1}{p2} | {length} फाइल्स · {p1}{p2}
+Choose files | फ़ाइलें चुनें | फाइल्स निवडा
+Choose folder | फ़ोल्डर चुनें | फोल्डर निवडा
+Same folder as each source file | हर स्रोत फ़ाइल वाला फ़ोल्डर | प्रत्येक स्रोत फाइलचेच फोल्डर
+Example | उदाहरण | उदाहरण
+Example: {p0}.{p1} | उदाहरण: {p0}.{p1} | उदाहरण: {p0}.{p1}
+File name ({name}, {n}, {nnn}, {date}) | = | =
+Quality % (JPEG, WebP, AVIF) | गुणवत्ता % (JPEG, WebP, AVIF) | गुणवत्ता % (JPEG, WebP, AVIF)
+Example: {p0}.jpg | उदाहरण: {p0}.jpg | उदाहरण: {p0}.jpg
+Each file is opened in a hidden document, the action is played (its Export steps are replaced by these output settings) and the result is saved. Errors are written to a log file in the destination folder. | हर फ़ाइल एक छिपे दस्तावेज़ में खोली जाती है, एक्शन चलाया जाता है (इसके एक्सपोर्ट चरण इन आउटपुट सेटिंग्ज़ से बदल जाते हैं) और परिणाम सहेजा जाता है। त्रुटियाँ गंतव्य फ़ोल्डर की लॉग फ़ाइल में लिखी जाती हैं। | प्रत्येक फाइल लपलेल्या दस्तऐवजात उघडली जाते, ॲक्शन चालवली जाते (तिचे एक्सपोर्ट टप्पे या आउटपुट सेटिंग्जने बदलले जातात) आणि परिणाम जतन केला जातो. त्रुटी गंतव्य फोल्डरमधील लॉग फाइलमध्ये लिहिल्या जातात.
+Destination | गंतव्य | गंतव्य
+Run | चलाएँ | चालवा
+File types | फ़ाइल प्रकार | फाइल प्रकार
+JPEG quality % | JPEG गुणवत्ता % | JPEG गुणवत्ता %
+Save as JPEG | JPEG के रूप में सहेजें | JPEG म्हणून जतन करा
+Save as PNG | PNG के रूप में सहेजें | PNG म्हणून जतन करा
+Save as WebP | WebP के रूप में सहेजें | WebP म्हणून जतन करा
+WebP quality % | WebP गुणवत्ता % | WebP गुणवत्ता %
+Resize to fit (never enlarges) | फ़िट करने के लिए आकार बदलें (कभी बड़ा नहीं करता) | बसेल असा आकार बदला (कधीही मोठे करत नाही)
+Run an action first | पहले कोई एक्शन चलाएँ | आधी ॲक्शन चालवा
+When more than one file type is chosen, each output name starts with the format (for example jpeg-photo.jpg). | एक से अधिक फ़ाइल प्रकार चुनने पर हर आउटपुट नाम फ़ॉर्मेट से शुरू होता है (जैसे jpeg-photo.jpg)। | एकापेक्षा जास्त फाइल प्रकार निवडल्यास प्रत्येक आउटपुट नाव फॉरमॅटने सुरू होते (उदा. jpeg-photo.jpg).
+Image Processor | इमेज प्रोसेसर | इमेज प्रोसेसर
+Choose at least one file type | कम से कम एक फ़ाइल प्रकार चुनें | किमान एक फाइल प्रकार निवडा
+Missing | अनुपलब्ध | गहाळ
+Missing {src} | {src} अनुपलब्ध | {src} गहाळ
+Could not load {url} | {url} लोड नहीं हो सका | {url} लोड करता आले नाही
+The raw data could not be decoded | raw डेटा डिकोड नहीं हो सका | raw डेटा डिकोड करता आला नाही
+White balance | व्हाइट बैलेंस | व्हाइट बॅलन्स
+As shot | जैसा खींचा गया | काढल्याप्रमाणे
+Custom (picker) | कस्टम (पिकर) | सानुकूल (पिकर)
+Tone | टोन | टोन
+Blacks | काले | काळे
+Whites | सफ़ेद | पांढरे
+Presence | उपस्थिति | प्रभाव
+Color noise reduction | रंग नॉइज़ कमी करना | रंग नॉइज कमी करणे
+Noise reduction | नॉइज़ कमी करना | नॉइज कमी करणे
+Camera Raw | = | =
+Click a neutral grey or white area in the preview to set the white balance | व्हाइट बैलेंस सेट करने के लिए पूर्वावलोकन में किसी तटस्थ ग्रे या सफ़ेद क्षेत्र पर क्लिक करें | व्हाइट बॅलन्स सेट करण्यासाठी पूर्वावलोकनातील तटस्थ राखाडी किंवा पांढऱ्या भागावर क्लिक करा
+White balance picker | व्हाइट बैलेंस पिकर | व्हाइट बॅलन्स पिकर
+White balance picker — click something that should be neutral grey | व्हाइट बैलेंस पिकर — किसी ऐसी चीज़ पर क्लिक करें जो तटस्थ ग्रे होनी चाहिए | व्हाइट बॅलन्स पिकर — तटस्थ राखाडी असायला हवे अशा गोष्टीवर क्लिक करा
+Show original | मूल दिखाएँ | मूळ दाखवा
+Detail at 100% — click the preview to move | 100% पर विवरण — खिसकाने के लिए पूर्वावलोकन पर क्लिक करें | 100% वर तपशील — हलवण्यासाठी पूर्वावलोकनावर क्लिक करा
+LibRaw could not decode | LibRaw डिकोड नहीं कर सका | LibRaw डिकोड करू शकले नाही
+This camera raw file could not be decoded and has no embedded preview | यह कैमरा raw फ़ाइल डिकोड नहीं हो सकी और इसमें एम्बेडेड पूर्वावलोकन नहीं है | ही कॅमेरा raw फाइल डिकोड करता आली नाही आणि तिच्यात एम्बेड केलेले पूर्वावलोकन नाही
+Decoding camera raw | कैमरा raw डिकोड हो रहा है | कॅमेरा raw डिकोड होत आहे
+Camera Raw — | Camera Raw — | Camera Raw —
+Camera Raw — {name} | Camera Raw — {name} | Camera Raw — {name}
+The raw sensor data in this file could not be decoded, so the full-size JPEG preview embedded in it is being edited instead. | इस फ़ाइल का raw सेंसर डेटा डिकोड नहीं हो सका, इसलिए इसके बजाय इसमें एम्बेडेड पूर्ण आकार का JPEG पूर्वावलोकन संपादित हो रहा है। | या फाइलमधील raw सेन्सर डेटा डिकोड करता आला नाही, म्हणून त्याऐवजी तिच्यात एम्बेड केलेले पूर्ण आकाराचे JPEG पूर्वावलोकन संपादित होत आहे.
+Developing | डेवलप हो रहा है | डेव्हलप होत आहे
+Opened the embedded JPEG preview of this raw file (the raw data could not be decoded) | इस raw फ़ाइल का एम्बेडेड JPEG पूर्वावलोकन खोला गया (raw डेटा डिकोड नहीं हो सका) | या raw फाइलचे एम्बेड केलेले JPEG पूर्वावलोकन उघडले (raw डेटा डिकोड करता आला नाही)
+This layer has smart filters — use Layer › Smart filters › Rasterize first | इस लेयर पर स्मार्ट फ़िल्टर हैं — पहले लेयर › स्मार्ट फ़िल्टर › रास्टराइज़ करें का उपयोग करें | या लेयरवर स्मार्ट फिल्टर आहेत — आधी लेयर › स्मार्ट फिल्टर › रास्टराइझ करा वापरा
+No image found in this HEIF file | इस HEIF फ़ाइल में कोई छवि नहीं मिली | या HEIF फाइलमध्ये प्रतिमा सापडली नाही
+HEIF decoding failed | HEIF डिकोडिंग विफल रही | HEIF डिकोडिंग अयशस्वी
+Blue day | नीला दिन | निळा दिवस
+Golden hour | सुनहरा समय | सोनेरी वेळ
+Dusk | संध्या | संधिप्रकाश
+Overcast | बादल छाए | ढगाळ
+Night stars | रात के तारे | रात्रीचे तारे
+Dramatic | नाटकीय | नाट्यमय
+Cotton candy | कॉटन कैंडी | कॉटन कँडी
+Cinematic | सिनेमाई | सिनेमॅटिक
+B&W Noir | श्वेत-श्याम नुआर | कृष्णधवल नुआर
+Fade | फ़ेड | फिका
+Warm | गर्म | उबदार
+Cool | ठंडा | थंड
+Lomo | लोमो | लोमो
+Polaroid | पोलरॉइड | पोलरॉइड
+HDR | = | =
+Vivid | चटकीला | भडक
+Moody | मूडी | मूडी
+Pastel | पेस्टल | पेस्टल
+Bleach bypass | ब्लीच बायपास | ब्लीच बायपास
+Chrome | क्रोम | क्रोम
+(no markers) | (कोई मार्कर नहीं) | (मार्कर नाहीत)
+(no other sequences) | (कोई अन्य सीक्वेंस नहीं) | (इतर सीक्वेन्स नाहीत)
++ Add effect | + इफ़ेक्ट जोड़ें | + इफेक्ट जोडा
++ Artboard | + आर्टबोर्ड | + आर्टबोर्ड
++ Ellipse | + दीर्घवृत्त | + लंबवर्तुळ
++ Global | + ग्लोबल | + ग्लोबल
++ Layer | + लेयर | + लेयर
++ New | + नया | + नवीन
++ Pen | + पेन | + पेन
++ Rectangle | + आयत | + आयत
++ Sublayer | + उप-लेयर | + उप-लेयर
++ Swatch | + स्वैच | + स्वॅच
+. Updates are delivered automatically. | । अपडेट अपने-आप मिलते हैं। | . अपडेट आपोआप मिळतात.
+0 of 1 ticked for “selected” export | “चयनित” एक्सपोर्ट के लिए 1 में से 0 चिह्नित | “निवडलेल्या” एक्सपोर्टसाठी 1 पैकी 0 खूण केलेले
+{n} of {m} ticked for “selected” export | “चयनित” एक्सपोर्ट के लिए {m} में से {n} चिह्नित | “निवडलेल्या” एक्सपोर्टसाठी {m} पैकी {n} खूण केलेले
+1 clip selected | 1 क्लिप चयनित | 1 क्लिप निवडली
+{n} clips selected | {n} क्लिप चयनित | {n} क्लिप निवडल्या
+1 item | 1 आइटम | 1 घटक
+{n} items | {n} आइटम | {n} घटक
+{n} steps | {n} चरण | {n} टप्पे
+2 steps | 2 चरण | 2 टप्पे
+{n} fonts | {n} फ़ॉन्ट | {n} फॉन्ट
+{n} fps | = | =
+1920×1080 · 30 fps | = | =
+24 fps | = | =
+25 fps | = | =
+30 fps | = | =
+50 fps | = | =
+60 fps | = | =
+264 fonts | 264 फ़ॉन्ट | 264 फॉन्ट
+512 × 512 px | = | =
+Add ellipse mask | दीर्घवृत्त मास्क जोड़ें | लंबवर्तुळ मास्क जोडा
+Add pen (bezier) mask | पेन (बेज़ियर) मास्क जोड़ें | पेन (बेझियर) मास्क जोडा
+Add rectangle mask | आयत मास्क जोड़ें | आयत मास्क जोडा
+Align Bottom | नीचे संरेखित करें | तळाशी संरेखित करा
+Align Horizontal centre | क्षैतिज केंद्र में संरेखित करें | आडव्या मध्यात संरेखित करा
+Align Left | बाएँ संरेखित करें | डावीकडे संरेखित करा
+Align Right | दाएँ संरेखित करें | उजवीकडे संरेखित करा
+Align Top | ऊपर संरेखित करें | वर संरेखित करा
+Align Vertical centre | लंबवत केंद्र में संरेखित करें | उभ्या मध्यात संरेखित करा
+Alt+click to set source | स्रोत सेट करने के लिए Alt+क्लिक करें | स्रोत सेट करण्यासाठी Alt+क्लिक करा
+Apply to fill | भरण पर लागू करें | भरणवर लागू करा
+click or drag onto the canvas | क्लिक करें या कैनवस पर ड्रैग करें | क्लिक करा किंवा कॅनव्हासवर ड्रॅग करा
+Auto-straighten | अपने-आप सीधा करें | आपोआप सरळ करा
+{p0} tool | {p0} टूल | {p0} साधन
+{p0} (right-click for more) | {p0} (अधिक के लिए राइट-क्लिक करें) | {p0} (अधिकसाठी राइट-क्लिक करा)
+right-click for more | अधिक के लिए राइट-क्लिक करें | अधिकसाठी राइट-क्लिक करा
+Brightness/Contrast | चमक/कंट्रास्ट | उजळपणा/कॉन्ट्रास्ट
+Hue/Saturation | ह्यू/संतृप्ति | ह्यू/संपृक्तता
+Shadows/Highlights | छाया/हाइलाइट | सावल्या/हायलाइट
+Temperature/Tint | तापमान/टिंट | तापमान/छटा
+Tilt-Shift | टिल्ट-शिफ़्ट | टिल्ट-शिफ्ट
+Character — new type | कैरेक्टर — नया टेक्स्ट | कॅरेक्टर — नवीन मजकूर
+Cross-process | क्रॉस-प्रोसेस | क्रॉस-प्रोसेस
+Earth | धरती | पृथ्वी
+Forest | वन | वन
+Every 2 minutes | हर 2 मिनट | दर 2 मिनिटांनी
+Every 5 minutes | हर 5 मिनट | दर 5 मिनिटांनी
+Every minute | हर मिनट | दर मिनिटाला
+Every {n} minutes | हर {n} मिनट | दर {n} मिनिटांनी
+FG → BG | अग्रभूमि → पृष्ठभूमि | अग्रभूमी → पार्श्वभूमी
+Interpolation at playhead: {l} | प्लेहेड पर इंटरपोलेशन: {l} | प्लेहेडवर इंटरपोलेशन: {l}

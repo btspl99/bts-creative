@@ -1,0 +1,281 @@
+# PDF Pro (part 4): bookmarks, crop, optimize, a11y, extract, OCR, reading, compare, review
+Move down | नीचे ले जाएँ | खाली हलवा
+Move out one level | एक स्तर बाहर ले जाएँ | एक स्तर बाहेर हलवा
+Move up | ऊपर ले जाएँ | वर हलवा
+Open a PDF to see bookmarks. | बुकमार्क देखने के लिए कोई PDF खोलें। | बुकमार्क पाहण्यासाठी PDF उघडा.
+No bookmarks yet. Go to a page and press + (or Ctrl+B) to add one. Bookmarks are saved into the PDF outline. | अभी तक कोई बुकमार्क नहीं। किसी पृष्ठ पर जाएँ और जोड़ने के लिए + (या Ctrl+B) दबाएँ। बुकमार्क PDF की रूपरेखा में सहेजे जाते हैं। | अद्याप बुकमार्क नाहीत. एखाद्या पृष्ठावर जा आणि जोडण्यासाठी + (किंवा Ctrl+B) दाबा. बुकमार्क PDF च्या रूपरेषेत जतन केले जातात.
+Add child bookmark | उप-बुकमार्क जोड़ें | उप-बुकमार्क जोडा
+Bookmark | बुकमार्क | बुकमार्क
+Set to current page | वर्तमान पृष्ठ पर सेट करें | सध्याच्या पृष्ठावर सेट करा
+Move bookmark | बुकमार्क ले जाएँ | बुकमार्क हलवा
+Page {p0} | पृष्ठ {p0} | पृष्ठ {p0}
+Bookmark title (goes to page {p0}) | बुकमार्क शीर्षक (पृष्ठ {p0} पर जाता है) | बुकमार्क शीर्षक (पृष्ठ {p0} वर जाते)
+Rename bookmark | बुकमार्क का नाम बदलें | बुकमार्कचे नाव बदला
+Delete bookmark | बुकमार्क हटाएँ | बुकमार्क हटवा
+Bookmark level | बुकमार्क स्तर | बुकमार्क स्तर
+Replace page | पृष्ठ बदलें | पृष्ठ बदला
+Which page of "{name}" should replace page {p1}? (1–{n}) | "{name}" का कौन-सा पृष्ठ पृष्ठ {p1} की जगह ले? (1–{n}) | "{name}" मधील कोणते पृष्ठ पृष्ठ {p1} ची जागा घ्यावे? (1–{n})
+Page {p0} replaced | पृष्ठ {p0} बदला गया | पृष्ठ {p0} बदलले
+Page order reversed | पृष्ठ क्रम उलटा गया | पृष्ठ क्रम उलटा केला
+Reverse pages | पृष्ठ उलटें | पृष्ठे उलटी करा
+Reversed {length} selected pages | {length} चुने गए पृष्ठ उलटे गए | {length} निवडलेली पृष्ठे उलटी केली
+Bottom (mm) | नीचे (mm) | तळ (mm)
+Top (mm) | ऊपर (mm) | वर (mm)
+Left (mm) | बाएँ (mm) | डावीकडे (mm)
+Right (mm) | दाएँ (mm) | उजवीकडे (mm)
+Remove crop instead (restore full page) | इसके बजाय क्रॉप हटाएँ (पूरा पृष्ठ वापस लाएँ) | त्याऐवजी क्रॉप काढा (पूर्ण पृष्ठ परत आणा)
+Crop removed | क्रॉप हटाया गया | क्रॉप काढले
+Cropped {length} page(s) — the hidden area is kept and can be restored | {length} पृष्ठ क्रॉप किए गए — छिपा क्षेत्र रखा गया है और वापस लाया जा सकता है | {length} पृष्ठे क्रॉप केली — लपलेला भाग ठेवला आहे आणि परत आणता येतो
+Keep the selected {p0} × {p1} mm area on | चुना गया {p0} × {p1} mm क्षेत्र इन पर रखें | निवडलेला {p0} × {p1} mm भाग यांवर ठेवा
+This page | यह पृष्ठ | हे पृष्ठ
+New page size | नया पृष्ठ आकार | नवीन पृष्ठ आकार
+Keep each page's orientation | हर पृष्ठ का अभिविन्यास रखें | प्रत्येक पृष्ठाची दिशा ठेवा
+Comments and other additions on the page are merged into the page content before resizing. Continue? | आकार बदलने से पहले पृष्ठ की टिप्पणियाँ और अन्य जोड़ पृष्ठ सामग्री में मिला दिए जाते हैं। जारी रखें? | आकार बदलण्यापूर्वी पृष्ठावरील टिप्पण्या आणि इतर भर पृष्ठ मजकुरात विलीन केल्या जातात. पुढे जायचे?
+ArtBox | = | =
+BleedBox | = | =
+CropBox | = | =
+TrimBox | = | =
+Resized {n} page(s) to {size} | {n} पृष्ठों का आकार {size} किया गया | {n} पृष्ठांचा आकार {size} केला
+Page labels | पृष्ठ लेबल | पृष्ठ लेबल
+Apply to pages starting at page | इस पृष्ठ से शुरू होने वाले पृष्ठों पर लागू करें | या पृष्ठापासून सुरू होणाऱ्या पृष्ठांवर लागू करा
+I, II, III | = | =
+None (prefix only) | कोई नहीं (केवल उपसर्ग) | काहीही नाही (फक्त उपसर्ग)
+i, ii, iii | = | =
+Prefix (e.g. "A-") | उपसर्ग (जैसे "A-") | उपसर्ग (उदा. "A-")
+Start at number | इस संख्या से शुरू करें | या क्रमांकापासून सुरू करा
+Remove all page labels instead | इसके बजाय सभी पृष्ठ लेबल हटाएँ | त्याऐवजी सर्व पृष्ठ लेबल काढा
+Page labels will be written when you save | सहेजते समय पृष्ठ लेबल लिखे जाएँगे | जतन करताना पृष्ठ लेबल लिहिली जातील
+Decode | - |
+ImageMask | - |
+DecodeParms | - |
+DCTDecode | - |
+DeviceRGB | - |
+SMask | - |
+Intent | - |
+Optimize | अनुकूलित करें | ऑप्टिमाइझ करा
+Optimize / compress PDF | PDF अनुकूलित / संपीड़ित करें | PDF ऑप्टिमाइझ / कॉम्प्रेस करा
+Quality preset | गुणवत्ता प्रीसेट | गुणवत्ता प्रीसेट
+High quality — images up to 2400 px, JPEG 85% (keeps text) | उच्च गुणवत्ता — 2400 px तक की छवियाँ, JPEG 85% (टेक्स्ट बना रहता है) | उच्च गुणवत्ता — 2400 px पर्यंत प्रतिमा, JPEG 85% (मजकूर कायम राहतो)
+Medium — images up to 1600 px, JPEG 70% (keeps text) | मध्यम — 1600 px तक की छवियाँ, JPEG 70% (टेक्स्ट बना रहता है) | मध्यम — 1600 px पर्यंत प्रतिमा, JPEG 70% (मजकूर कायम राहतो)
+Low / smallest — images up to 1000 px, JPEG 50% (keeps text) | निम्न / सबसे छोटा — 1000 px तक की छवियाँ, JPEG 50% (टेक्स्ट बना रहता है) | कमी / सर्वात लहान — 1000 px पर्यंत प्रतिमा, JPEG 50% (मजकूर कायम राहतो)
+Maximum — rasterize pages at 100 dpi (scans only; text becomes image) | अधिकतम — पृष्ठों को 100 dpi पर रास्टराइज़ करें (केवल स्कैन; टेक्स्ट छवि बन जाता है) | कमाल — पृष्ठे 100 dpi वर रास्टराइझ करा (फक्त स्कॅनसाठी; मजकूर प्रतिमा बनतो)
+Also remove hidden metadata | छिपा मेटाडेटा भी हटाएँ | लपलेला मेटाडेटाही काढा
+Building document | दस्तावेज़ बन रहा है | दस्तऐवज तयार होत आहे
+Optimizing | अनुकूलित हो रहा है | ऑप्टिमाइझ होत आहे
+Rasterizing pages | पृष्ठ रास्टराइज़ हो रहे हैं | पृष्ठे रास्टराइझ होत आहेत
+Recompressing images | छवियाँ फिर से संपीड़ित हो रही हैं | प्रतिमा पुन्हा कॉम्प्रेस होत आहेत
+Original file | मूल फ़ाइल | मूळ फाइल
+Optimized | अनुकूलित | ऑप्टिमाइझ केलेले
+No reduction (already optimized) | कोई कमी नहीं (पहले से अनुकूलित) | घट नाही (आधीच ऑप्टिमाइझ केलेले)
+Saving | सहेजा जा रहा है | जतन होत आहे
+{pct}% smaller | {pct}% छोटा | {pct}% लहान
+{images} found · {shrunk} recompressed | {images} मिले · {shrunk} फिर से संपीड़ित | {images} सापडल्या · {shrunk} पुन्हा कॉम्प्रेस केल्या
+After | बाद में | नंतर
+Before | पहले | आधी
+Optimization report | अनुकूलन रिपोर्ट | ऑप्टिमायझेशन अहवाल
+Use in this document | इस दस्तावेज़ में उपयोग करें | या दस्तऐवजात वापरा
+Saved {X} | {X} सहेजा गया | {X} जतन केले
+Optimized document loaded — save to keep it | अनुकूलित दस्तावेज़ लोड हुआ — रखने के लिए सहेजें | ऑप्टिमाइझ केलेला दस्तऐवज लोड झाला — ठेवण्यासाठी जतन करा
+Flatten | फ़्लैटन करें | सपाट करा
+Merge all form fields, comments, drawings and stamps into the page content? They can no longer be edited after this. | सभी फ़ॉर्म फ़ील्ड, टिप्पणियाँ, ड्रॉइंग और स्टैम्प पृष्ठ सामग्री में मिला दें? इसके बाद इन्हें संपादित नहीं किया जा सकेगा। | सर्व फॉर्म फील्ड, टिप्पण्या, रेखाचित्रे आणि शिक्के पृष्ठ मजकुरात विलीन करायचे? यानंतर ते संपादित करता येणार नाहीत.
+Flattened — save to keep the result | फ़्लैटन हो गया — परिणाम रखने के लिए सहेजें | सपाट केले — परिणाम ठेवण्यासाठी जतन करा
+Title, author, keywords, creator, producer and XMP metadata will be removed when you save | सहेजते समय शीर्षक, लेखक, कीवर्ड, निर्माता, प्रोड्यूसर और XMP मेटाडेटा हटा दिए जाएँगे | जतन करताना शीर्षक, लेखक, कीवर्ड, निर्माता, प्रोड्यूसर आणि XMP मेटाडेटा काढला जाईल
+All pages contain text | सभी पृष्ठों में टेक्स्ट है | सर्व पृष्ठांवर मजकूर आहे
+Document has real text (not just scanned images) | दस्तावेज़ में वास्तविक टेक्स्ट है (केवल स्कैन की गई छवियाँ नहीं) | दस्तऐवजात खरा मजकूर आहे (फक्त स्कॅन केलेल्या प्रतिमा नाहीत)
+Run OCR | OCR चलाएँ | OCR चालवा
+{length} of {p1} page(s) have no text: {p2}{p3} | {p1} में से {length} पृष्ठों में टेक्स्ट नहीं है: {p2}{p3} | {p1} पैकी {length} पृष्ठांवर मजकूर नाही: {p2}{p3}
+Document title is set | दस्तावेज़ का शीर्षक सेट है | दस्तऐवजाचे शीर्षक सेट आहे
+No title in document properties | दस्तावेज़ गुणों में कोई शीर्षक नहीं | दस्तऐवज गुणधर्मांमध्ये शीर्षक नाही
+Set title | शीर्षक सेट करें | शीर्षक सेट करा
+Document language is set | दस्तावेज़ की भाषा सेट है | दस्तऐवजाची भाषा सेट आहे
+No language — screen readers may mispronounce text | कोई भाषा नहीं — स्क्रीन रीडर टेक्स्ट का गलत उच्चारण कर सकते हैं | भाषा नाही — स्क्रीन रीडर मजकुराचा चुकीचा उच्चार करू शकतात
+Set language | भाषा सेट करें | भाषा सेट करा
+Document is tagged | दस्तावेज़ टैग किया हुआ है | दस्तऐवज टॅग केलेला आहे
+Not tagged. Re-export from the original Word/Docs file with "tagged PDF" turned on for best accessibility. | टैग नहीं है। सर्वोत्तम सुलभता के लिए मूल Word/Docs फ़ाइल से "tagged PDF" चालू करके फिर से एक्सपोर्ट करें। | टॅग केलेला नाही. सर्वोत्तम सुलभतेसाठी मूळ Word/Docs फाइलमधून "tagged PDF" चालू करून पुन्हा एक्सपोर्ट करा.
+Only images are tagged (alt text added with Make accessible). For full tagging, export a tagged PDF from the original Word/Docs file. | केवल छवियाँ टैग हैं (सुलभ बनाएँ से जोड़ा गया alt टेक्स्ट)। पूर्ण टैगिंग के लिए मूल Word/Docs फ़ाइल से टैग किया गया PDF एक्सपोर्ट करें। | फक्त प्रतिमा टॅग केल्या आहेत (सुलभ करा ने जोडलेला alt मजकूर). पूर्ण टॅगिंगसाठी मूळ Word/Docs फाइलमधून टॅग केलेला PDF एक्सपोर्ट करा.
+Tagged PDF (structure for screen readers) | टैग किया गया PDF (स्क्रीन रीडर के लिए संरचना) | टॅग केलेला PDF (स्क्रीन रीडरसाठी रचना)
+Images have alternative text | छवियों में वैकल्पिक टेक्स्ट है | प्रतिमांना पर्यायी मजकूर आहे
+No images found | कोई छवि नहीं मिली | प्रतिमा सापडल्या नाहीत
+{p0} of {nImg} image(s) described{p2} | {nImg} में से {p0} छवियों का वर्णन किया गया{p2} | {nImg} पैकी {p0} प्रतिमांचे वर्णन केले{p2}
+Add bookmarks | बुकमार्क जोड़ें | बुकमार्क जोडा
+Bookmarks for navigation (documents over 20 pages) | नेविगेशन के लिए बुकमार्क (20 से अधिक पृष्ठों वाले दस्तावेज़) | नेव्हिगेशनसाठी बुकमार्क (20 पेक्षा जास्त पृष्ठांचे दस्तऐवज)
+No bookmarks | कोई बुकमार्क नहीं | बुकमार्क नाहीत
+Short document — not required | छोटा दस्तावेज़ — आवश्यक नहीं | लहान दस्तऐवज — आवश्यक नाही
+{nOl} top-level bookmark(s) | {nOl} शीर्ष-स्तर बुकमार्क | {nOl} वरच्या स्तराचे बुकमार्क
+Form fields have descriptions (tooltips) | फ़ॉर्म फ़ील्ड में विवरण (टूलटिप) हैं | फॉर्म फील्डना वर्णन (टूलटिप) आहे
+No form fields | कोई फ़ॉर्म फ़ील्ड नहीं | फॉर्म फील्ड नाहीत
+{tips} of {nf} field(s) have a tooltip | {nf} में से {tips} फ़ील्ड में टूलटिप है | {nf} पैकी {tips} फील्डना टूलटिप आहे
+Allowed | अनुमति है | परवानगी आहे
+Not protected | सुरक्षित नहीं | संरक्षित नाही
+Protection blocks assistive technology | सुरक्षा सहायक तकनीक को रोकती है | संरक्षण सहाय्यक तंत्रज्ञानाला अडवते
+Security allows screen readers | सुरक्षा स्क्रीन रीडर की अनुमति देती है | सुरक्षा स्क्रीन रीडरना परवानगी देते
+Accessibility check — {passed} of {length} passed | सुलभता जाँच — {length} में से {passed} सफल | सुलभता तपासणी — {length} पैकी {passed} उत्तीर्ण
+This is a quick check, not a full PDF/UA audit. | यह एक त्वरित जाँच है, पूर्ण PDF/UA ऑडिट नहीं। | ही एक जलद तपासणी आहे, पूर्ण PDF/UA ऑडिट नाही.
+_rels/.rels | - |
+{p0} tables | {p0} तालिकाएँ | {p0} सारण्या
+xl/_rels/workbook.xml.rels | - |
+Table {p0} — page {p1} | तालिका {p0} — पृष्ठ {p1} | सारणी {p0} — पृष्ठ {p1}
+Table {n} | तालिका {n} | सारणी {n}
+Find tables | तालिकाएँ ढूँढें | सारण्या शोधा
+Look on | यहाँ देखें | येथे पाहा
+Range (e.g. 2-4) | श्रेणी (जैसे 2-4) | श्रेणी (उदा. 2-4)
+No tables found. Tables need text in aligned columns (scans need OCR first). | कोई तालिका नहीं मिली। तालिकाओं के लिए संरेखित कॉलम में टेक्स्ट चाहिए (स्कैन के लिए पहले OCR ज़रूरी है)। | सारण्या सापडल्या नाहीत. सारण्यांसाठी संरेखित स्तंभांमध्ये मजकूर हवा (स्कॅनसाठी आधी OCR आवश्यक).
+Page {p0} · table {n} | पृष्ठ {p0} · तालिका {n} | पृष्ठ {p0} · सारणी {n}
+{length} rows × {cols} columns | {length} पंक्तियाँ × {cols} कॉलम | {length} ओळी × {cols} स्तंभ
+Extract tables — {length} found | तालिकाएँ निकालें — {length} मिलीं | सारण्या काढा — {length} सापडल्या
+Save CSV | CSV सहेजें | CSV जतन करा
+Save Excel (.xlsx) | Excel सहेजें (.xlsx) | Excel जतन करा (.xlsx)
+Table copied — paste into Sheets or Excel | तालिका कॉपी हुई — Sheets या Excel में चिपकाएँ | सारणी कॉपी झाली — Sheets किंवा Excel मध्ये पेस्ट करा
+Excel workbook | Excel वर्कबुक | Excel वर्कबुक
+{length} table(s) saved | {length} तालिकाएँ सहेजी गईं | {length} सारण्या जतन केल्या
+Slide {p0} of {length} | स्लाइड {p0} / {length} | स्लाइड {p0} / {length}
+Export to PowerPoint (.pptx) | PowerPoint में एक्सपोर्ट करें (.pptx) | PowerPoint मध्ये एक्सपोर्ट करा (.pptx)
+Picture quality | चित्र गुणवत्ता | चित्र गुणवत्ता
+Sharp (220 dpi) | स्पष्ट (220 dpi) | स्पष्ट (220 dpi)
+Smaller file (110 dpi) | छोटी फ़ाइल (110 dpi) | लहान फाइल (110 dpi)
+Standard (150 dpi) | मानक (150 dpi) | मानक (150 dpi)
+Put each page's text into the speaker notes | हर पृष्ठ का टेक्स्ट स्पीकर नोट्स में डालें | प्रत्येक पृष्ठाचा मजकूर स्पीकर नोट्समध्ये घाला
+Creating PowerPoint | PowerPoint बन रहा है | PowerPoint तयार होत आहे
+Export failed | एक्सपोर्ट विफल रहा | एक्सपोर्ट अयशस्वी
+Export failed: {message} | एक्सपोर्ट विफल रहा: {message} | एक्सपोर्ट अयशस्वी: {message}
+PowerPoint | = | =
+Saved {length} slide(s) | {length} स्लाइड सहेजी गईं | {length} स्लाइड जतन केल्या
+Export to HTML | HTML में एक्सपोर्ट करें | HTML मध्ये एक्सपोर्ट करा
+Include page pictures (exact look) | पृष्ठ चित्र शामिल करें (हूबहू रूप) | पृष्ठ चित्रे समाविष्ट करा (हुबेहूब स्वरूप)
+Include reflowable text (headings & paragraphs) | रीफ़्लो योग्य टेक्स्ट शामिल करें (शीर्षक और अनुच्छेद) | रीफ्लो होणारा मजकूर समाविष्ट करा (शीर्षके आणि परिच्छेद)
+Sharp | स्पष्ट | स्पष्ट
+Small | छोटा | लहान
+Standard | मानक | मानक
+Choose pictures, text or both | चित्र, टेक्स्ट या दोनों चुनें | चित्रे, मजकूर किंवा दोन्ही निवडा
+Creating HTML | HTML बन रहा है | HTML तयार होत आहे
+Web page | वेब पेज | वेब पेज
+Sending the page to Photo | पृष्ठ Photo में भेजा जा रहा है | पृष्ठ Photo मध्ये पाठवत आहे
+Sending the page to Vector | पृष्ठ Vector में भेजा जा रहा है | पृष्ठ Vector मध्ये पाठवत आहे
+Received | प्राप्त हुआ | मिळाले
+Unsupported item received | असमर्थित आइटम प्राप्त हुआ | असमर्थित घटक मिळाला
+Received {p0} | {p0} प्राप्त हुआ | {p0} मिळाले
+Could not open the received item | प्राप्त आइटम नहीं खुल सका | मिळालेला घटक उघडता आला नाही
+Could not open the received item: {message} | प्राप्त आइटम नहीं खुल सका: {message} | मिळालेला घटक उघडता आला नाही: {message}
+Comments | टिप्पणियाँ | टिप्पण्या
+Signatures | हस्ताक्षर | स्वाक्षऱ्या
+English | अंग्रेज़ी | इंग्रजी
+Hindi (हिन्दी) | हिन्दी | हिंदी
+Marathi (मराठी) | मराठी | मराठी
+Scanned PDF or images | स्कैन किया गया PDF या छवियाँ | स्कॅन केलेला PDF किंवा प्रतिमा
+Recognize | पहचानें | ओळखा
+Current page ({cur}) | वर्तमान पृष्ठ ({cur}) | सध्याचे पृष्ठ ({cur})
+Range (e.g. 1-3, 6) | श्रेणी (जैसे 1-3, 6) | श्रेणी (उदा. 1-3, 6)
+High (300 dpi, more accurate) | उच्च (300 dpi, अधिक सटीक) | उच्च (300 dpi, अधिक अचूक)
+Quality | गुणवत्ता | गुणवत्ता
+Standard (200 dpi, faster) | मानक (200 dpi, तेज़) | मानक (200 dpi, जलद)
+Skip pages that already contain text | जिन पृष्ठों में पहले से टेक्स्ट है, उन्हें छोड़ें | ज्या पृष्ठांवर आधीच मजकूर आहे ती वगळा
+Choose at least one language | कम से कम एक भाषा चुनें | किमान एक भाषा निवडा
+Recognizing text (OCR) | टेक्स्ट पहचाना जा रहा है (OCR) | मजकूर ओळखत आहे (OCR)
+Loading OCR engine ( | OCR इंजन लोड हो रहा है ( | OCR इंजिन लोड होत आहे (
+Loading OCR engine ({langs}) | OCR इंजन लोड हो रहा है ({langs}) | OCR इंजिन लोड होत आहे ({langs})
+Page {p0} — rendering | पृष्ठ {p0} — रेंडर हो रहा है | पृष्ठ {p0} — रेंडर होत आहे
+Page {p0} — recognizing text | पृष्ठ {p0} — टेक्स्ट पहचाना जा रहा है | पृष्ठ {p0} — मजकूर ओळखत आहे
+Page {p0} — {length} words | पृष्ठ {p0} — {length} शब्द | पृष्ठ {p0} — {length} शब्द
+OCR failed | OCR विफल रहा | OCR अयशस्वी
+OCR failed: {p0} | OCR विफल रहा: {p0} | OCR अयशस्वी: {p0}
+All selected pages already contain text — nothing to recognise. | सभी चुने गए पृष्ठों में पहले से टेक्स्ट है — पहचानने के लिए कुछ नहीं। | सर्व निवडलेल्या पृष्ठांवर आधीच मजकूर आहे — ओळखण्यासारखे काही नाही.
+No text was recognised. | कोई टेक्स्ट नहीं पहचाना गया। | कोणताही मजकूर ओळखला गेला नाही.
+OCR | = | =
+Recognised {nWords} words on {length} page(s){p2}. Text is now searchable and selectable — save to keep it. | {length} पृष्ठों पर {nWords} शब्द पहचाने गए{p2}। अब टेक्स्ट खोजा और चुना जा सकता है — रखने के लिए सहेजें। | {length} पृष्ठांवर {nWords} शब्द ओळखले{p2}. आता मजकूर शोधता आणि निवडता येतो — ठेवण्यासाठी जतन करा.
+{length} beginbfchar {p1} endbfchar | - |
+GlyphLessFont | - |
+Adobe | = | =
+CIDFontType2 | - |
+Identity | - |
+Run OCR first (Tools › Recognize text) | पहले OCR चलाएँ (टूल › टेक्स्ट पहचानें) | आधी OCR चालवा (साधने › मजकूर ओळखा)
+Recognised text copied to the clipboard | पहचाना गया टेक्स्ट क्लिपबोर्ड पर कॉपी हुआ | ओळखलेला मजकूर क्लिपबोर्डवर कॉपी झाला
+Recognised text saved | पहचाना गया टेक्स्ट सहेजा गया | ओळखलेला मजकूर जतन केला
+Quick action bar off | त्वरित क्रिया बार बंद | जलद क्रिया पट्टी बंद
+Quick action bar on — select text to see it | त्वरित क्रिया बार चालू — इसे देखने के लिए टेक्स्ट चुनें | जलद क्रिया पट्टी चालू — ती पाहण्यासाठी मजकूर निवडा
+Add note | नोट जोड़ें | टीप जोडा
+Marked for redaction — the text is removed permanently when you save | रिडैक्शन के लिए चिह्नित — सहेजते समय टेक्स्ट स्थायी रूप से हट जाता है | रिडॅक्शनसाठी खूण केली — जतन करताना मजकूर कायमचा काढला जातो
+Redact selection | चयन रिडैक्ट करें | निवड रिडॅक्ट करा
+Dark | गहरा | गडद
+Night | रात | रात्र
+Reading mode: {p0} | पठन मोड: {p0} | वाचन मोड: {p0}
+Dark (inverted) | गहरा (उलटे रंग) | गडद (उलट रंग)
+Night (low blue) | रात (कम नीला) | रात्र (कमी निळा)
+Page {p0} of {n} | पृष्ठ {p0} / {n} | पृष्ठ {p0} / {n}
+ArrowDown | - |
+ArrowRight | - |
+PageDown | - |
+ArrowLeft | - |
+ArrowUp | - |
+Backspace | = | =
+PageUp | - |
+End | = | =
+Full screen is not available here | पूर्ण स्क्रीन यहाँ उपलब्ध नहीं है | पूर्ण स्क्रीन येथे उपलब्ध नाही
+Presentation: → / Space next, ← previous, Esc to exit | प्रस्तुति: → / Space अगला, ← पिछला, बाहर निकलने के लिए Esc | सादरीकरण: → / Space पुढील, ← मागील, बाहेर पडण्यासाठी Esc
+Reading ruler on — move the mouse over the page. Ctrl+Shift+L to turn off. | पठन रूलर चालू — माउस को पृष्ठ पर ले जाएँ। बंद करने के लिए Ctrl+Shift+L। | वाचन पट्टी चालू — माउस पृष्ठावर फिरवा. बंद करण्यासाठी Ctrl+Shift+L.
+Speech is not available on this system | इस सिस्टम पर वाचन उपलब्ध नहीं है | या प्रणालीवर वाचन उपलब्ध नाही
+Select some text on the page first | पहले पृष्ठ पर कुछ टेक्स्ट चुनें | आधी पृष्ठावरील काही मजकूर निवडा
+). Install a text-to-speech voice in your system settings. | )। अपनी सिस्टम सेटिंग्ज़ में टेक्स्ट-टू-स्पीच आवाज़ इंस्टॉल करें। | ). तुमच्या प्रणाली सेटिंग्जमध्ये टेक्स्ट-टू-स्पीच आवाज इन्स्टॉल करा.
+Speech failed ( | वाचन विफल रहा ( | वाचन अयशस्वी (
+Speech failed ({p0}). Install a text-to-speech voice in your system settings. | वाचन विफल रहा ({p0})। अपनी सिस्टम सेटिंग्ज़ में टेक्स्ट-टू-स्पीच आवाज़ इंस्टॉल करें। | वाचन अयशस्वी ({p0}). तुमच्या प्रणाली सेटिंग्जमध्ये टेक्स्ट-टू-स्पीच आवाज इन्स्टॉल करा.
+Speech failed | वाचन विफल रहा | वाचन अयशस्वी
+Speech failed: {message} | वाचन विफल रहा: {message} | वाचन अयशस्वी: {message}
+Default voice | डिफ़ॉल्ट आवाज़ | डीफॉल्ट आवाज
+Previous sentence | पिछला वाक्य | मागील वाक्य
+Next sentence | अगला वाक्य | पुढील वाक्य
+Stop | रोकें | थांबवा
+Reading page {p0} · sentence {p1} of {length} | पृष्ठ {p0} पढ़ा जा रहा है · वाक्य {p1} / {length} | पृष्ठ {p0} वाचत आहे · वाक्य {p1} / {length}
+Read aloud — voice & speed | ज़ोर से पढ़ें — आवाज़ और गति | मोठ्याने वाचा — आवाज आणि वेग
+Voice | आवाज़ | आवाज
+Speed | गति | वेग
+No speech voices are installed on this computer — the system default will be used. | इस कंप्यूटर पर कोई वाचन आवाज़ इंस्टॉल नहीं है — सिस्टम डिफ़ॉल्ट का उपयोग होगा। | या संगणकावर वाचन आवाज इन्स्टॉल नाहीत — प्रणालीचा डीफॉल्ट वापरला जाईल.
+Open the first PDF, then compare | पहला PDF खोलें, फिर तुलना करें | पहिला PDF उघडा, मग तुलना करा
+Comparing | तुलना हो रही है | तुलना करत आहे
+{changed} of {length} page(s) differ · {removed} word(s) removed · {added} word(s) added | {length} में से {changed} पृष्ठ अलग हैं · {removed} शब्द हटाए गए · {added} शब्द जोड़े गए | {length} पैकी {changed} पृष्ठे वेगळी आहेत · {removed} शब्द काढले · {added} शब्द जोडले
+Overlay | ओवरले | ओव्हरले
+Pixel diff | पिक्सेल अंतर | पिक्सेल फरक
+Text changes | टेक्स्ट बदलाव | मजकूर बदल
+Original | मूल | मूळ
+Revised | संशोधित | सुधारित
+Added | जोड़ा गया | जोडले
+Removed | हटाया गया | काढले
+Compare | तुलना करें | तुलना करा
+Current | वर्तमान | सध्याचे
+Only changed pages | केवल बदले गए पृष्ठ | फक्त बदललेली पृष्ठे
+Export report | रिपोर्ट एक्सपोर्ट करें | अहवाल एक्सपोर्ट करा
+— no text changes | — कोई टेक्स्ट बदलाव नहीं | — मजकुरात बदल नाहीत
+— {length} removed, {p1} added | — {length} हटाए, {p1} जोड़े | — {length} काढले, {p1} जोडले
+Page {p0} — | पृष्ठ {p0} — | पृष्ठ {p0} —
+{p0}% of the page looks different | पृष्ठ का {p0}% अलग दिखता है | पृष्ठाचा {p0}% भाग वेगळा दिसतो
+{length} of {p1} page(s) look different (pixel comparison — red: only in {p2}, green: only in {name}) | {p1} में से {length} पृष्ठ अलग दिखते हैं (पिक्सेल तुलना — लाल: केवल {p2} में, हरा: केवल {name} में) | {p1} पैकी {length} पृष्ठे वेगळी दिसतात (पिक्सेल तुलना — लाल: फक्त {p2} मध्ये, हिरवा: फक्त {name} मध्ये)
+Overlay: the revised page is drawn over the original — move the slider to fade between them. | ओवरले: संशोधित पृष्ठ मूल के ऊपर बनाया जाता है — दोनों के बीच बदलने के लिए स्लाइडर खिसकाएँ। | ओव्हरले: सुधारित पृष्ठ मूळ पृष्ठावर काढले जाते — दोघांमध्ये बदलण्यासाठी स्लायडर सरकवा.
+No page | कोई पृष्ठ नहीं | पृष्ठ नाही
+Comparison report Original: {p0} Revised: {name} Date: {p2} | तुलना रिपोर्ट मूल: {p0} संशोधित: {name} दिनांक: {p2} | तुलना अहवाल मूळ: {p0} सुधारित: {name} दिनांक: {p2}
+Current document | वर्तमान दस्तावेज़ | सध्याचा दस्तऐवज
+{changed} of {length} page(s) differ; {removed} word(s) removed; {added} word(s) added. | {length} में से {changed} पृष्ठ अलग हैं; {removed} शब्द हटाए गए; {added} शब्द जोड़े गए। | {length} पैकी {changed} पृष्ठे वेगळी आहेत; {removed} शब्द काढले; {added} शब्द जोडले.
+Removed: {p0} | हटाया गया: {p0} | काढले: {p0}
+Added: {p0} | जोड़ा गया: {p0} | जोडले: {p0}
+DOMContentLoaded | - |
+Drawing | ड्रॉइंग | रेखाचित्र
+Image watermark | छवि वॉटरमार्क | प्रतिमा वॉटरमार्क
+Measurement | माप | मापन
+Redaction | रिडैक्शन | रिडॅक्शन
+Signature stamp | हस्ताक्षर स्टैम्प | स्वाक्षरी शिक्का
+Signature | हस्ताक्षर | स्वाक्षरी
+Header / footer | हेडर / फ़ुटर | शीर्षलेख / तळटीप
+Attachment | अनुलग्नक | संलग्नक
+Caret | कैरेट | कॅरेट
+Note | नोट | टीप
+Polygon | बहुभुज | बहुभुज
+Polyline | पॉलीलाइन | पॉलिलाइन
+Squiggly | लहरदार रेखा | नागमोडी रेषा
+Text box | टेक्स्ट बॉक्स | मजकूर बॉक्स
+Filter comments | टिप्पणियाँ फ़िल्टर करें | टिप्पण्या फिल्टर करा
+All types | सभी प्रकार | सर्व प्रकार
+Comments & text | टिप्पणियाँ और टेक्स्ट | टिप्पण्या आणि मजकूर
+Drawings & shapes | ड्रॉइंग और आकृतियाँ | रेखाचित्रे आणि आकार
+Highlights | हाइलाइट | हायलाइट
+Other | अन्य | इतर
+Stamps & signatures | स्टैम्प और हस्ताक्षर | शिक्के आणि स्वाक्षऱ्या
+Any status | कोई भी स्थिति | कोणतीही स्थिती
+Resolved | हल किया गया | निकाली काढले
+All authors | सभी लेखक | सर्व लेखक

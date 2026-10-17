@@ -41,7 +41,7 @@ function drawMaskOverlay(x, c, M) {
       bezierCurveTo: (a, b, c2, d, e, f) => pr.bezierCurveTo(...M.toS(a, b), ...M.toS(c2, d), ...M.toS(e, f)),
       ellipse: (cx, cy, rx, ry, rot) => { for (let i = 0; i <= 48; i++) { const t = i / 48 * Math.PI * 2; const px = cx + Math.cos(t) * rx * Math.cos(rot) - Math.sin(t) * ry * Math.sin(rot), py = cy + Math.cos(t) * rx * Math.sin(rot) + Math.sin(t) * ry * Math.cos(rot); i ? pr.lineTo(...M.toS(px, py)) : pr.moveTo(...M.toS(px, py)); } pr.closePath(); } };
     maskPath(tmp, m, true); sx.stroke(pr);
-    if (foc) { sx.fillStyle = '#ffd400'; maskHandles(m).forEach(hd => { const [px, py] = M.toS(...hd.p); sx.fillRect(px - 4.5, py - 4.5, 9, 9); }); const [cx, cy] = M.toS(m.x, m.y); sx.beginPath(); sx.arc(cx, cy, 4, 0, Math.PI * 2); sx.fill(); sx.font = '11px sans-serif'; sx.fillText(m.name + (m.invert ? ' (inverted)' : ''), cx + 8, cy - 8); }
+    if (foc) { sx.fillStyle = '#ffd400'; maskHandles(m).forEach(hd => { const [px, py] = M.toS(...hd.p); sx.fillRect(px - 4.5, py - 4.5, 9, 9); }); const [cx, cy] = M.toS(m.x, m.y); sx.beginPath(); sx.arc(cx, cy, 4, 0, Math.PI * 2); sx.fill(); sx.font = '11px sans-serif'; sx.fillText(m.name + (m.invert ? ' (' + I18N.T('inverted') + ')' : ''), cx + 8, cy - 8); }
     sx.restore();
   });
 }

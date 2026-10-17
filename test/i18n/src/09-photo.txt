@@ -1,0 +1,281 @@
+# Photo (selection, export, harmonize, upscale, sky, presets, autosave, actions)
+No person found — used background-colour detection instead | कोई व्यक्ति नहीं मिला — इसके बजाय पृष्ठभूमि-रंग पहचान का उपयोग किया गया | व्यक्ती सापडली नाही — त्याऐवजी पार्श्वभूमी-रंग ओळख वापरली
+Person model unavailable — used background-colour detection | व्यक्ति मॉडल उपलब्ध नहीं — पृष्ठभूमि-रंग पहचान का उपयोग किया गया | व्यक्ती मॉडेल उपलब्ध नाही — पार्श्वभूमी-रंग ओळख वापरली
+Selecting subject | विषय चुना जा रहा है | विषय निवडत आहे
+Also remove enclosed background areas | घिरे हुए पृष्ठभूमि क्षेत्र भी हटाएँ | बंदिस्त पार्श्वभूमी भागही काढा
+Feather (px) | फ़ेदर (px) | फेदर (px)
+Shift edge inward (px) | किनारा अंदर खिसकाएँ (px) | कडा आत सरकवा (px)
+Works best for products and portraits on a plain, evenly coloured background. The result is a layer mask, so you can paint it to fix details. | सादी, एकसमान रंग वाली पृष्ठभूमि पर उत्पादों और पोर्ट्रेट के लिए सबसे अच्छा काम करता है। परिणाम एक लेयर मास्क है, इसलिए विवरण ठीक करने के लिए आप उस पर पेंट कर सकते हैं। | साध्या, एकसमान रंगाच्या पार्श्वभूमीवरील उत्पादने आणि पोर्ट्रेटसाठी सर्वोत्तम काम करते. परिणाम लेयर मास्क असतो, त्यामुळे तपशील दुरुस्त करण्यासाठी तुम्ही त्यावर रंगवू शकता.
+Background hidden with a layer mask — paint the mask to refine | लेयर मास्क से पृष्ठभूमि छिपाई गई — परिष्कृत करने के लिए मास्क पर पेंट करें | लेयर मास्कने पार्श्वभूमी लपवली — सुधारण्यासाठी मास्कवर रंगवा
+Removing background | पृष्ठभूमि हटाई जा रही है | पार्श्वभूमी काढत आहे
+Selecting sky | आसमान चुना जा रहा है | आकाश निवडत आहे
+No sky found in this image | इस छवि में आसमान नहीं मिला | या प्रतिमेत आकाश सापडले नाही
+In-focus range | फ़ोकस वाली सीमा | फोकसमधील श्रेणी
+Selects the sharp, in-focus parts of the photo. | फ़ोटो के स्पष्ट, फ़ोकस वाले भाग चुनता है। | फोटोमधील स्पष्ट, फोकसमधील भाग निवडतो.
+Softness | कोमलता | मऊपणा
+Focus area | फ़ोकस क्षेत्र | फोकस क्षेत्र
+Blues | नीले | निळे
+Cyans | सियान | सायन
+Fuzziness | धुंधलापन | अस्पष्टता
+Greens | हरे | हिरवे
+Magentas | मैजेंटा | मॅजेंटा
+Reds | लाल | लाल
+Sampled color | नमूना रंग | नमुना रंग
+Sampled color (or click the preview) | नमूना रंग (या पूर्वावलोकन पर क्लिक करें) | नमुना रंग (किंवा पूर्वावलोकनावर क्लिक करा)
+Skin tones | त्वचा के रंग | त्वचेचे रंग
+Yellows | पीले | पिवळे
+Color range | रंग सीमा | रंग श्रेणी
+White = selected | सफ़ेद = चयनित | पांढरा = निवडलेले
+Black & white mask | श्वेत-श्याम मास्क | कृष्णधवल मास्क
+Contrast % | कंट्रास्ट % | कॉन्ट्रास्ट %
+New layer with layer mask | लेयर मास्क के साथ नई लेयर | लेयर मास्कसह नवीन लेयर
+On black | काले पर | काळ्यावर
+On layers (transparent) | लेयर पर (पारदर्शी) | लेयरवर (पारदर्शक)
+On white | सफ़ेद पर | पांढऱ्यावर
+Overlay (red) | ओवरले (लाल) | ओव्हरले (लाल)
+Shift edge (px, − contract, + expand) | किनारा खिसकाएँ (px, − सिकोड़ें, + फैलाएँ) | कडा सरकवा (px, − आकुंचित, + विस्तार)
+Smart radius (edge-aware, for hair & fur) | स्मार्ट त्रिज्या (किनारा-सजग, बालों और फ़र के लिए) | स्मार्ट त्रिज्या (कडा-जाणीव, केस आणि फरसाठी)
+Refine edge | किनारा परिष्कृत करें | कडा सुधारा
+Refining edge | किनारा परिष्कृत हो रहा है | कडा सुधारत आहे
+Instagram portrait | Instagram पोर्ट्रेट | Instagram पोर्ट्रेट
+Instagram post | Instagram पोस्ट | Instagram पोस्ट
+Instagram story / Reel | Instagram स्टोरी / Reel | Instagram स्टोरी / Reel
+Social | सोशल | सोशल
+Facebook cover | Facebook कवर | Facebook कव्हर
+LinkedIn banner | LinkedIn बैनर | LinkedIn बॅनर
+X / Twitter header | X / Twitter हेडर | X / Twitter हेडर
+YouTube thumbnail | YouTube थंबनेल | YouTube थंबनेल
+A4 @300 dpi | = | =
+A4 landscape @300 dpi | A4 लैंडस्केप @300 dpi | A4 आडवे @300 dpi
+Passport photo 35×45 mm @300 dpi | पासपोर्ट फ़ोटो 35×45 mm @300 dpi | पासपोर्ट फोटो 35×45 mm @300 dpi
+Postcard 6×4 in @300 dpi | पोस्टकार्ड 6×4 in @300 dpi | पोस्टकार्ड 6×4 in @300 dpi
+US Letter @300 dpi | = | =
+4K UHD | = | =
+App icon | ऐप आइकन | ॲप आयकॉन
+Full HD | फ़ुल HD | फुल HD
+Phone wallpaper | फ़ोन वॉलपेपर | फोन वॉलपेपर
+Web 1366×768 | वेब 1366×768 | वेब 1366×768
+⇄ Swap orientation | ⇄ अभिविन्यास बदलें | ⇄ दिशा बदला
+3fr | - |
+All files | सभी फ़ाइलें | सर्व फाइल्स
+Camera raw | कैमरा raw | कॅमेरा raw
+HEIC / HEIF (iPhone) | = | =
+Images, camera raw & projects | छवियाँ, कैमरा raw और प्रोजेक्ट | प्रतिमा, कॅमेरा raw आणि प्रकल्प
+Camera raw support is not loaded | कैमरा raw समर्थन लोड नहीं है | कॅमेरा raw समर्थन लोड झालेले नाही
+HEIF support is not loaded | HEIF समर्थन लोड नहीं है | HEIF समर्थन लोड झालेले नाही
+Decoding HEIF image | HEIF छवि डिकोड हो रही है | HEIF प्रतिमा डिकोड होत आहे
+Could not open {name}: {message} | {name} नहीं खुल सका: {message} | {name} उघडता आले नाही: {message}
+Decoding image | छवि डिकोड हो रही है | प्रतिमा डिकोड होत आहे
+Press Enter to commit the placed image | रखी गई छवि पक्की करने के लिए Enter दबाएँ | ठेवलेली प्रतिमा निश्चित करण्यासाठी Enter दाबा
+BTS Photo project | BTS Photo प्रोजेक्ट | BTS Photo प्रकल्प
+Saved {name} | {name} सहेजा गया | {name} जतन केले
+Photoshop | = | =
+Saved PSD | PSD सहेजा गया | PSD जतन केले
+WebP | = | =
+Estimating | अनुमान लगाया जा रहा है | अंदाज घेत आहे
+{W} × {H} px · {p2}{p3} | = | =
+Background (JPEG has no transparency) | पृष्ठभूमि (JPEG में पारदर्शिता नहीं होती) | पार्श्वभूमी (JPEG मध्ये पारदर्शकता नसते)
+Matte | मैट | मॅट
+None (keep transparency) | कोई नहीं (पारदर्शिता रखें) | काहीही नाही (पारदर्शकता ठेवा)
+Quality % | गुणवत्ता % | गुणवत्ता %
+Estimated file size | अनुमानित फ़ाइल आकार | अंदाजित फाइल आकार
+Export As | इस रूप में एक्सपोर्ट करें | म्हणून एक्सपोर्ट करा
+Exported {p0} KB | {p0} KB एक्सपोर्ट हुआ | {p0} KB एक्सपोर्ट झाले
+Choose folder & name | फ़ोल्डर और नाम चुनें | फोल्डर आणि नाव निवडा
+Export layers to files | लेयर को फ़ाइलों में एक्सपोर्ट करें | लेयर फाइल्समध्ये एक्सपोर्ट करा
+Include hidden layers | छिपी लेयर शामिल करें | लपलेले लेयर समाविष्ट करा
+Include layer styles and masks | लेयर शैलियाँ और मास्क शामिल करें | लेयर शैली आणि मास्क समाविष्ट करा
+Quality % (JPEG/WebP) | गुणवत्ता % (JPEG/WebP) | गुणवत्ता % (JPEG/WebP)
+Trim each layer to its content | हर लेयर को उसकी सामग्री तक ट्रिम करें | प्रत्येक लेयर त्याच्या मजकुरापर्यंत ट्रिम करा
+Exporting layers | लेयर एक्सपोर्ट हो रही हैं | लेयर एक्सपोर्ट होत आहेत
+Exported {n} layer file{p1} | {n} लेयर फ़ाइलें एक्सपोर्ट हुईं | {n} लेयर फाइल्स एक्सपोर्ट झाल्या
+Save changes to “{name}” before closing? | बंद करने से पहले “{name}” के बदलाव सहेजें? | बंद करण्यापूर्वी “{name}” मधील बदल जतन करायचे?
+This layer has smart filters — use Layer › Smart filters › Rasterize before editing its pixels | इस लेयर पर स्मार्ट फ़िल्टर हैं — पिक्सेल संपादित करने से पहले लेयर › स्मार्ट फ़िल्टर › रास्टराइज़ करें का उपयोग करें | या लेयरवर स्मार्ट फिल्टर आहेत — पिक्सेल संपादित करण्यापूर्वी लेयर › स्मार्ट फिल्टर › रास्टराइझ करा वापरा
+Select a pixel layer to harmonize | सामंजस्य के लिए कोई पिक्सेल लेयर चुनें | सुसंगत करण्यासाठी पिक्सेल लेयर निवडा
+Harmonize matches a layer to the layers below it — select an upper layer (for example a placed or pasted object) | सामंजस्य किसी लेयर को उसके नीचे की लेयर से मिलाता है — ऊपर की कोई लेयर चुनें (जैसे रखी या चिपकाई गई वस्तु) | सुसंगत करा एखाद्या लेयरला त्याखालील लेयरशी जुळवते — वरचा लेयर निवडा (उदा. ठेवलेली किंवा पेस्ट केलेली वस्तू)
+The layer is empty | लेयर खाली है | लेयर रिकामा आहे
+The layer is outside the canvas | लेयर कैनवस के बाहर है | लेयर कॅनव्हासच्या बाहेर आहे
+There is nothing below this layer to match | इस लेयर के नीचे मिलाने के लिए कुछ नहीं है | या लेयरखाली जुळवण्यासारखे काही नाही
+Contact shadow | संपर्क छाया | संपर्क सावली
+Brightness match % | चमक मिलान % | उजळपणा जुळणी %
+Colour match % | रंग मिलान % | रंग जुळणी %
+Directional lighting % | दिशात्मक प्रकाश % | दिशात्मक प्रकाश %
+Match contrast and saturation range | कंट्रास्ट और संतृप्ति सीमा मिलाएँ | कॉन्ट्रास्ट आणि संपृक्तता श्रेणी जुळवा
+Strength % | शक्ति % | तीव्रता %
+Add contact shadow under the layer | लेयर के नीचे संपर्क छाया जोड़ें | लेयरखाली संपर्क सावली जोडा
+Shadow angle ° | छाया कोण ° | सावली कोन °
+Shadow length % | छाया लंबाई % | सावली लांबी %
+Softness (px) | कोमलता (px) | मऊपणा (px)
+Statistics transfer in Lab colour space from the area around the layer. The lighting term follows the brightness gradient of the background. | लेयर के आसपास के क्षेत्र से Lab रंग स्पेस में सांख्यिकी स्थानांतरण। प्रकाश घटक पृष्ठभूमि की चमक के ग्रेडिएंट का अनुसरण करता है। | लेयरभोवतीच्या भागातून Lab रंग स्पेसमध्ये सांख्यिकी हस्तांतरण. प्रकाश घटक पार्श्वभूमीच्या उजळपणाच्या ग्रेडियंटनुसार चालतो.
+Harmonize — | सामंजस्य — | सुसंगत करा —
+Harmonize — {name} | सामंजस्य — {name} | सुसंगत करा — {name}
+Harmonize | सामंजस्य करें | सुसंगत करा
+The image is too large to upscale (limit {UPSCALE_MAX_SIDE}px per side) | छवि अपस्केल के लिए बहुत बड़ी है (सीमा हर ओर {UPSCALE_MAX_SIDE}px) | अपस्केल करण्यासाठी प्रतिमा खूप मोठी आहे (मर्यादा प्रत्येक बाजूला {UPSCALE_MAX_SIDE}px)
+{w} × {h} → {p2} × {p3} px · preview at 100% · {p4} ms | {w} × {h} → {p2} × {p3} px · 100% पर पूर्वावलोकन · {p4} ms | {w} × {h} → {p2} × {p3} px · 100% वर पूर्वावलोकन · {p4} ms
+Result would be too large | परिणाम बहुत बड़ा होगा | परिणाम खूप मोठा होईल
+Detail / sharpening % | विवरण / तीक्ष्णता % | तपशील / तीक्ष्णता %
+Edge smoothing (anti-jaggies) % | किनारा चिकना करना (एंटी-जैगीज़) % | कडा गुळगुळीत करणे (अँटी-जॅगीज) %
+Noise reduction % | नॉइज़ कमी करना % | नॉइज कमी करणे %
+Lanczos3 resampling, edge-directed smoothing along contours and halo-free detail sharpening. Click the overview to choose the preview area. | Lanczos3 रीसैंपलिंग, आकृति-रेखाओं के साथ किनारा-निर्देशित चिकनाई और बिना हेलो के विवरण तीक्ष्णता। पूर्वावलोकन क्षेत्र चुनने के लिए अवलोकन पर क्लिक करें। | Lanczos3 रीसॅम्पलिंग, रेषांलगत कडा-निर्देशित गुळगुळीतपणा आणि हेलोशिवाय तपशील तीक्ष्णता. पूर्वावलोकन भाग निवडण्यासाठी आढाव्यावर क्लिक करा.
+Standard resize | मानक आकार परिवर्तन | मानक आकार बदल
+Super resolution | सुपर रिज़ॉल्यूशन | सुपर रिझोल्यूशन
+Upscale | अपस्केल करें | अपस्केल करा
+Upscale (super resolution) | अपस्केल (सुपर रिज़ॉल्यूशन) | अपस्केल (सुपर रिझोल्यूशन)
+The result would be too large | परिणाम बहुत बड़ा होगा | परिणाम खूप मोठा होईल
+Upscaling | अपस्केल हो रहा है | अपस्केल होत आहे
+Upscaling {name} — {p1}% | {name} अपस्केल हो रहा है — {p1}% | {name} अपस्केल होत आहे — {p1}%
+Upscale {f}× | {f}× अपस्केल | {f}× अपस्केल
+Also detect light lines | हल्की रेखाएँ भी पहचानें | फिकट रेषाही ओळखा
+Maximum wire width (px) | अधिकतम तार चौड़ाई (px) | कमाल तार रुंदी (px)
+Only over smooth backgrounds (sky, walls) | केवल चिकनी पृष्ठभूमि पर (आसमान, दीवारें) | फक्त गुळगुळीत पार्श्वभूमीवर (आकाश, भिंती)
+Remove wires & cables | तार और केबल हटाएँ | तारा आणि केबल काढा
+Sensitivity | संवेदनशीलता | संवेदनशीलता
+Also detect light spots | हल्के धब्बे भी पहचानें | फिकट डागही ओळखा
+Maximum spot size (px) | अधिकतम धब्बा आकार (px) | कमाल डाग आकार (px)
+Remove dust & spots | धूल और धब्बे हटाएँ | धूळ आणि डाग काढा
+Detected {p0} px (red) — they will be removed with content-aware fill | {p0} px पहचाने गए (लाल) — इन्हें कंटेंट-अवेयर फ़िल से हटाया जाएगा | {p0} px ओळखले (लाल) — ते कंटेंट-अवेअर फिलने काढले जातील
+Nothing detected — raise the sensitivity | कुछ नहीं पहचाना गया — संवेदनशीलता बढ़ाएँ | काहीही ओळखले नाही — संवेदनशीलता वाढवा
+Working inside the selected / brushed area. | चयनित / ब्रश किए गए क्षेत्र के अंदर काम हो रहा है। | निवडलेल्या / ब्रश फिरवलेल्या भागात काम होत आहे.
+Working on the whole layer. Select or brush an area first to limit the search. | पूरी लेयर पर काम हो रहा है। खोज सीमित करने के लिए पहले कोई क्षेत्र चुनें या ब्रश करें। | संपूर्ण लेयरवर काम होत आहे. शोध मर्यादित करण्यासाठी आधी भाग निवडा किंवा ब्रश फिरवा.
+Detecting | पहचान हो रही है | ओळखत आहे
+Nothing was detected | कुछ नहीं पहचाना गया | काहीही ओळखले नाही
+Nothing was detected{p0} | कुछ नहीं पहचाना गया{p0} | काहीही ओळखले नाही{p0}
+under the brush | ब्रश के नीचे | ब्रशखाली
+Finding the sky | आसमान खोजा जा रहा है | आकाश शोधत आहे
+No sky found — select the sky first (Select › Sky, Color range or the lasso) | आसमान नहीं मिला — पहले आसमान चुनें (चुनें › आसमान, रंग सीमा या लैसो) | आकाश सापडले नाही — आधी आकाश निवडा (निवडा › आकाश, रंग श्रेणी किंवा लॅसो)
+Image file | छवि फ़ाइल | प्रतिमा फाइल
+Fade edge (px) | किनारा फ़ेड (px) | कडा फिकी करा (px)
+Flip sky horizontally | आसमान क्षैतिज पलटें | आकाश आडवे उलटा
+Foreground colour & light match % | अग्रभूमि रंग और प्रकाश मिलान % | अग्रभूमी रंग आणि प्रकाश जुळणी %
+Shift edge (px) | किनारा खिसकाएँ (px) | कडा सरकवा (px)
+Sky brightness | आसमान की चमक | आकाशाचा उजळपणा
+Sky position % | आसमान की स्थिति % | आकाशाचे स्थान %
+Sky scale % | आसमान का स्केल % | आकाशाचे प्रमाण %
+Sky temperature | आसमान का तापमान | आकाशाचे तापमान
+Sky replacement | आसमान बदलें | आकाश बदला
+Finding the subject | विषय खोजा जा रहा है | विषय शोधत आहे
+Blur amount (px) | ब्लर मात्रा (px) | ब्लर प्रमाण (px)
+Bokeh brightness | बोकेह चमक | बोकेह उजळपणा
+Edge feather (px) | किनारा फ़ेदर (px) | कडा फेदर (px)
+Keeps the subject (Select subject) sharp and applies a lens blur to everything else. The background behind the subject is reconstructed first so the subject does not bleed into the blur. | विषय (विषय चुनें) को स्पष्ट रखता है और बाकी सब पर लेंस ब्लर लगाता है। विषय के पीछे की पृष्ठभूमि पहले पुनर्निर्मित की जाती है ताकि विषय ब्लर में न फैले। | विषय (विषय निवडा) स्पष्ट ठेवतो आणि बाकी सर्वांवर लेन्स ब्लर लावतो. विषयामागील पार्श्वभूमी आधी पुनर्रचित केली जाते, त्यामुळे विषय ब्लरमध्ये पसरत नाही.
+Protect subject edge (px) | विषय का किनारा सुरक्षित रखें (px) | विषयाची कडा जपा (px)
+Background blur | पृष्ठभूमि ब्लर | पार्श्वभूमी ब्लर
+Blurring the background | पृष्ठभूमि ब्लर हो रही है | पार्श्वभूमी ब्लर होत आहे
+Frame {p0} | फ़्रेम {p0} | फ्रेम {p0}
+New frame | नया फ़्रेम | नवीन फ्रेम
+Select a frame layer first (draw one with the Frame tool, K) | पहले कोई फ़्रेम लेयर चुनें (फ़्रेम टूल, K से बनाएँ) | आधी फ्रेम लेयर निवडा (फ्रेम साधन, K ने काढा)
+Place into frame | फ़्रेम में रखें | फ्रेममध्ये ठेवा
+No saved presets | कोई सहेजा गया प्रीसेट नहीं | जतन केलेले प्रीसेट नाहीत
+Preset name | प्रीसेट का नाम | प्रीसेटचे नाव
+Preset saved | प्रीसेट सहेजा गया | प्रीसेट जतन केला
+Save these settings as a preset | इन सेटिंग्ज़ को प्रीसेट के रूप में सहेजें | या सेटिंग्ज प्रीसेट म्हणून जतन करा
+Save {name} preset | {name} प्रीसेट सहेजें | {name} प्रीसेट जतन करा
+Choose a preset to delete | हटाने के लिए प्रीसेट चुनें | हटवण्यासाठी प्रीसेट निवडा
+Delete the selected preset | चुना गया प्रीसेट हटाएँ | निवडलेला प्रीसेट हटवा
+Preset deleted | प्रीसेट हटाया गया | प्रीसेट हटवला
+Select an adjustment layer with settings | सेटिंग्ज़ वाली एडजस्टमेंट लेयर चुनें | सेटिंग्ज असलेला ॲडजस्टमेंट लेयर निवडा
+No presets yet — save one from an adjustment panel (Save…) | अभी तक कोई प्रीसेट नहीं — किसी एडजस्टमेंट पैनल से सहेजें (सहेजें…) | अद्याप प्रीसेट नाहीत — ॲडजस्टमेंट पॅनेलमधून एक जतन करा (जतन करा…)
+Add adjustment layer | एडजस्टमेंट लेयर जोड़ें | ॲडजस्टमेंट लेयर जोडा
+Apply adjustment preset | एडजस्टमेंट प्रीसेट लागू करें | ॲडजस्टमेंट प्रीसेट लागू करा
+Preset: {name} | प्रीसेट: {name} | प्रीसेट: {name}
+No saved presets. | कोई सहेजा गया प्रीसेट नहीं। | जतन केलेले प्रीसेट नाहीत.
+Adjustment layers cannot hold filters | एडजस्टमेंट लेयर में फ़िल्टर नहीं रह सकते | ॲडजस्टमेंट लेयरमध्ये फिल्टर राहू शकत नाहीत
+Filters on this layer are now editable — see the Layers panel | इस लेयर के फ़िल्टर अब संपादन योग्य हैं — लेयर पैनल देखें | या लेयरवरील फिल्टर आता संपादित करता येतात — लेयर पॅनेल पाहा
+This layer already uses smart filters | यह लेयर पहले से स्मार्ट फ़िल्टर उपयोग करती है | हा लेयर आधीच स्मार्ट फिल्टर वापरतो
+Hide | छिपाएँ | लपवा
+{p0}smart filter | - |
+Delete smart filter | स्मार्ट फ़िल्टर हटाएँ | स्मार्ट फिल्टर हटवा
+This filter has no settings | इस फ़िल्टर की कोई सेटिंग नहीं है | या फिल्टरला सेटिंग्ज नाहीत
+Rasterize smart filters | स्मार्ट फ़िल्टर रास्टराइज़ करें | स्मार्ट फिल्टर रास्टराइझ करा
+The active layer has no smart filters | सक्रिय लेयर पर कोई स्मार्ट फ़िल्टर नहीं है | सक्रिय लेयरवर स्मार्ट फिल्टर नाहीत
+Autosave failed | ऑटोसेव विफल रहा | ऑटोसेव्ह अयशस्वी
+Recovery storage is unavailable | पुनर्प्राप्ति स्टोरेज उपलब्ध नहीं है | पुनर्प्राप्ती साठवण उपलब्ध नाही
+No autosaved documents to recover | पुनर्प्राप्त करने के लिए कोई ऑटोसेव दस्तावेज़ नहीं | पुनर्प्राप्त करण्यासाठी ऑटोसेव्ह दस्तऐवज नाहीत
+{w} × {h} px · autosaved {p2} | {w} × {h} px · ऑटोसेव {p2} | {w} × {h} px · ऑटोसेव्ह {p2}
+BTS Photo closed unexpectedly. These documents were autosaved and can be restored. | BTS Photo अचानक बंद हो गया। ये दस्तावेज़ ऑटोसेव हुए थे और पुनर्स्थापित किए जा सकते हैं। | BTS Photo अनपेक्षितपणे बंद झाले. हे दस्तऐवज ऑटोसेव्ह झाले होते आणि पुनर्संचयित करता येतात.
+Later | बाद में | नंतर
+Autosaved documents discarded | ऑटोसेव दस्तावेज़ हटाए गए | ऑटोसेव्ह दस्तऐवज टाकून दिले
+Could not recover {name} | {name} पुनर्प्राप्त नहीं हो सका | {name} पुनर्प्राप्त करता आले नाही
+Recovered {n} document{p1} — save them to keep the changes | {n} दस्तावेज़ पुनर्प्राप्त हुए — बदलाव रखने के लिए इन्हें सहेजें | {n} दस्तऐवज पुनर्प्राप्त झाले — बदल ठेवण्यासाठी ते जतन करा
+Autosave & recovery | ऑटोसेव और पुनर्प्राप्ति | ऑटोसेव्ह आणि पुनर्प्राप्ती
+Autosave unsaved documents for crash recovery | क्रैश से पुनर्प्राप्ति के लिए बिना सहेजे दस्तावेज़ ऑटोसेव करें | क्रॅशनंतर पुनर्प्राप्तीसाठी जतन न केलेले दस्तऐवज ऑटोसेव्ह करा
+Every (seconds) | हर (सेकंड) | दर (सेकंद)
+Autosave every {sec} s | हर {sec} s पर ऑटोसेव | दर {sec} s ला ऑटोसेव्ह
+Autosave is off | ऑटोसेव बंद है | ऑटोसेव्ह बंद आहे
+Commit | पक्का करें | निश्चित करा
+Apply crop | क्रॉप लागू करें | क्रॉप लागू करा
+Mask | मास्क | मास्क
+Replace sky | आसमान बदलें | आकाश बदला
+Hide the contextual task bar (View menu to show it again) | प्रासंगिक कार्य बार छिपाएँ (फिर दिखाने के लिए देखें मेनू) | संदर्भानुसार कार्य पट्टी लपवा (पुन्हा दाखवण्यासाठी दृश्य मेनू)
+Show / hide this filter | यह फ़िल्टर दिखाएँ / छिपाएँ | हा फिल्टर दाखवा / लपवा
+Edit filter settings | फ़िल्टर सेटिंग्ज़ संपादित करें | फिल्टर सेटिंग्ज संपादित करा
+Apply a filter to add it here | इसे यहाँ जोड़ने के लिए कोई फ़िल्टर लागू करें | येथे जोडण्यासाठी फिल्टर लागू करा
+Apply new filters as smart filters | नए फ़िल्टर स्मार्ट फ़िल्टर के रूप में लागू करें | नवीन फिल्टर स्मार्ट फिल्टर म्हणून लागू करा
+Filters are applied directly to pixels | फ़िल्टर सीधे पिक्सेल पर लागू होते हैं | फिल्टर थेट पिक्सेलवर लागू होतात
+New filters are added as editable smart filters | नए फ़िल्टर संपादन योग्य स्मार्ट फ़िल्टर के रूप में जुड़ते हैं | नवीन फिल्टर संपादित करता येणारे स्मार्ट फिल्टर म्हणून जोडले जातात
+This layer has smart filters — rasterize it first | इस लेयर पर स्मार्ट फ़िल्टर हैं — पहले इसे रास्टराइज़ करें | या लेयरवर स्मार्ट फिल्टर आहेत — आधी तो रास्टराइझ करा
+Inverse selection | उलटा चयन | उलट निवड
+This export format is not supported | यह एक्सपोर्ट फ़ॉर्मेट समर्थित नहीं है | हा एक्सपोर्ट फॉरमॅट समर्थित नाही
+Adjustment | एडजस्टमेंट | ॲडजस्टमेंट
+This adjustment cannot be replayed | यह एडजस्टमेंट दोबारा नहीं चलाया जा सकता | हे ॲडजस्टमेंट पुन्हा चालवता येत नाही
+Adjustment layer | एडजस्टमेंट लेयर | ॲडजस्टमेंट लेयर
+Auto adjustment | ऑटो एडजस्टमेंट | स्वयं ॲडजस्टमेंट
+Unknown filter | अज्ञात फ़िल्टर | अज्ञात फिल्टर
+Camera Raw filter | Camera Raw फ़िल्टर | Camera Raw फिल्टर
+{w} px ↔ | = | =
+Constrain proportions (height follows the width) | अनुपात बनाए रखें (ऊँचाई चौड़ाई के अनुसार) | प्रमाण कायम ठेवा (उंची रुंदीनुसार)
+Fit image | छवि फ़िट करें | प्रतिमा बसवा
+Enlarge smaller images | छोटी छवियों को बड़ा करें | लहान प्रतिमा मोठ्या करा
+Max height (px) | अधिकतम ऊँचाई (px) | कमाल उंची (px)
+Max width (px) | अधिकतम चौड़ाई (px) | कमाल रुंदी (px)
+Size (% of the largest crop) | आकार (सबसे बड़े क्रॉप का %) | आकार (सर्वात मोठ्या क्रॉपच्या %)
+Intensity % | तीव्रता % | तीव्रता %
+Unknown look | अज्ञात लुक | अज्ञात लुक
+Plain background | सादी पृष्ठभूमि | साधी पार्श्वभूमी
+Text layer | टेक्स्ट लेयर | मजकूर लेयर
+Size (% of image height) | आकार (छवि ऊँचाई का %) | आकार (प्रतिमेच्या उंचीच्या %)
+As recorded | जैसा रिकॉर्ड हुआ | रेकॉर्ड केल्याप्रमाणे
+Bottom center | नीचे बीच में | तळाशी मध्यभागी
+Unknown selection | अज्ञात चयन | अज्ञात निवड
+AVIF | = | =
+Unknown step | अज्ञात चरण | अज्ञात टप्पा
+Unknown step: {op} | अज्ञात चरण: {op} | अज्ञात टप्पा: {op}
+Sent to BTS PDF Pro | BTS PDF Pro में भेजा गया | BTS PDF Pro मध्ये पाठवले
+Sent to BTS Vector | BTS Vector में भेजा गया | BTS Vector मध्ये पाठवले
+Sent to BTS Video | BTS Video में भेजा गया | BTS Video मध्ये पाठवले
+Could not send the image | छवि नहीं भेजी जा सकी | प्रतिमा पाठवता आली नाही
+Could not send the image: {message} | छवि नहीं भेजी जा सकी: {message} | प्रतिमा पाठवता आली नाही: {message}
+BTS Photo does not open PDF documents — use BTS PDF Pro for PDFs | BTS Photo PDF दस्तावेज़ नहीं खोलता — PDF के लिए BTS PDF Pro का उपयोग करें | BTS Photo PDF दस्तऐवज उघडत नाही — PDF साठी BTS PDF Pro वापरा
+Received an item BTS Photo cannot open | ऐसा आइटम मिला जिसे BTS Photo नहीं खोल सकता | BTS Photo उघडू शकत नाही असा घटक मिळाला
+Create a new image or open a photo, PSD or project. You can also drop files here or paste an image. | नई छवि बनाएँ या कोई फ़ोटो, PSD या प्रोजेक्ट खोलें। आप फ़ाइलें यहाँ छोड़ भी सकते हैं या कोई छवि चिपका सकते हैं। | नवीन प्रतिमा तयार करा किंवा फोटो, PSD किंवा प्रकल्प उघडा. तुम्ही फाइल्स येथे टाकू शकता किंवा प्रतिमा पेस्ट करू शकता.
+{p0}Open | - |
+Drop images to open | खोलने के लिए छवियाँ छोड़ें | उघडण्यासाठी प्रतिमा टाका
+Recovery check failed | पुनर्प्राप्ति जाँच विफल रही | पुनर्प्राप्ती तपासणी अयशस्वी
+Handoff failed | हस्तांतरण विफल रहा | हस्तांतरण अयशस्वी
+Default actions | डिफ़ॉल्ट एक्शन | डीफॉल्ट ॲक्शन
+Instagram 1080×1350 crop | Instagram 1080×1350 क्रॉप | Instagram 1080×1350 क्रॉप
+Vintage | विंटेज | व्हिंटेज
+Auto enhance | ऑटो सुधार | स्वयं सुधारणा
+Remove background PNG | पृष्ठभूमि हटाकर PNG | पार्श्वभूमी काढून PNG
+Passport photo 35×45 mm @300dpi | पासपोर्ट फ़ोटो 35×45 mm @300dpi | पासपोर्ट फोटो 35×45 mm @300dpi
+Watermark (text bottom-right) | वॉटरमार्क (नीचे-दाएँ टेक्स्ट) | वॉटरमार्क (तळ-उजवीकडे मजकूर)
+Could not save the actions | एक्शन सहेजे नहीं जा सके | ॲक्शन जतन करता आल्या नाहीत
+Could not save the actions: {message} | एक्शन सहेजे नहीं जा सके: {message} | ॲक्शन जतन करता आल्या नाहीत: {message}
+Recording “ | रिकॉर्डिंग: “ | रेकॉर्डिंग: “
+Recording “{name}” — use the app as usual, then press Stop | “{name}” रिकॉर्ड हो रहा है — ऐप को सामान्य रूप से उपयोग करें, फिर रोकें दबाएँ | “{name}” रेकॉर्ड होत आहे — ॲप नेहमीप्रमाणे वापरा, मग थांबवा दाबा
+” — use the app as usual, then press Stop | ” — ऐप को सामान्य रूप से उपयोग करें, फिर रोकें दबाएँ | ” — ॲप नेहमीप्रमाणे वापरा, मग थांबवा दाबा
+Stopped recording — | रिकॉर्डिंग रुकी — | रेकॉर्डिंग थांबले —
+Stopped recording — {length} steps | रिकॉर्डिंग रुकी — {length} चरण | रेकॉर्डिंग थांबले — {length} टप्पे
+Select an action first | पहले कोई एक्शन चुनें | आधी ॲक्शन निवडा
+Played “ | चलाया गया “ | चालवले “
+Played “{name}” | “{name}” चलाया गया | “{name}” चालवले
+Set 1 | सेट 1 | संच 1
+Action {p0} | एक्शन {p0} | ॲक्शन {p0}
+New action | नया एक्शन | नवीन ॲक्शन
+New set | नया सेट | नवीन संच
+Set | सेट | संच
+Set {length} | सेट {length} | संच {length}
+Rename step | चरण का नाम बदलें | टप्प्याचे नाव बदला
+Rename action | एक्शन का नाम बदलें | ॲक्शनचे नाव बदला
+Rename set | सेट का नाम बदलें | संचाचे नाव बदला
+Delete action | एक्शन हटाएँ | ॲक्शन हटवा

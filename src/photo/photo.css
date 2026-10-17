@@ -251,7 +251,7 @@
 .cr-notice { background: color-mix(in srgb, var(--accent) 14%, var(--bg-2)); border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--line)); color: var(--tx-0); border-radius: 6px; padding: 7px 10px; font-size: 12px; }
 .cr-side { display: flex; flex-direction: column; gap: 8px; max-height: 70vh; overflow: auto; padding-right: 4px; }
 .cr-hist { width: 100%; height: 80px; background: var(--bg-0); border: 1px solid var(--line); border-radius: 6px; }
-.cr-clip { font-size: 11px; min-height: 14px; }
+.cr-clip { font-size: 11px; min-height: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .cr-btns { gap: 6px; flex-wrap: wrap; }
 .cr-fields > .muted { font-weight: 600; text-transform: uppercase; letter-spacing: .04em; font-size: 10.5px !important; color: var(--tx-2); margin-top: 6px; border-top: 1px solid var(--line); padding-top: 8px; }
 .cr-l { font-size: 11px; }

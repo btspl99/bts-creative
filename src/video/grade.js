@@ -311,7 +311,7 @@ function drawScopes(force) {
   else if (scopeMode === 'wave') drawWave(x, px, sw, sh, 0, 0, W, H, false); else if (scopeMode === 'parade') drawWave(x, px, sw, sh, 0, 0, W, H, true); else if (scopeMode === 'vector') drawVector(x, px, 0, 0, W, H); else drawHist(x, px, 0, 0, W, H);
   return { mode: scopeMode, w: sw, h: sh };
 }
-function scopeLabel(x, txt, X, Y) { x.font = `${10 * (devicePixelRatio || 1)}px sans-serif`; x.fillStyle = 'rgba(220,220,220,.75)'; x.fillText(txt, X + 4, Y + 12 * (devicePixelRatio || 1)); }
+function scopeLabel(x, txt, X, Y) { x.font = `${10 * (devicePixelRatio || 1)}px sans-serif`; x.fillStyle = 'rgba(220,220,220,.75)'; x.fillText(I18N.T(txt), X + 4, Y + 12 * (devicePixelRatio || 1)); }
 function drawWave(x, px, sw, sh, X, Y, W, H, parade) {
   const cols = parade ? 3 : 1; const bw = Math.floor(W / cols); const bins = 128; const im = x.createImageData(Math.max(1, bw * cols), H); const acc = new Uint32Array(sw * bins * cols);
   for (let j = 0; j < sh; j++) for (let i = 0; i < sw; i++) { const o = (j * sw + i) * 4; const r = px[o], g = px[o + 1], b = px[o + 2];

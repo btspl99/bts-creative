@@ -1,0 +1,281 @@
+# PDF Pro (part 3): assistant, protect, page decorations
+True | सही | खरे
+Answer | उत्तर | उत्तर
+Fill in the blank | रिक्त स्थान भरें | रिकामी जागा भरा
+Option A | विकल्प A | पर्याय A
+Option B | विकल्प B | पर्याय B
+Option C | विकल्प C | पर्याय C
+Option D | विकल्प D | पर्याय D
+Question | प्रश्न | प्रश्न
+Back | पीछे | मागे
+Front | सामने | पुढे
+Study material | अध्ययन सामग्री | अभ्यास साहित्य
+{p0} · {length} flashcards · {p2} quiz questions · made offline by BTS PDF Pro | {p0} · {length} फ़्लैशकार्ड · {p2} क्विज़ प्रश्न · BTS PDF Pro द्वारा ऑफ़लाइन बनाया गया | {p0} · {length} फ्लॅशकार्ड · {p2} प्रश्नमंजूषा प्रश्न · BTS PDF Pro ने ऑफलाइन तयार केले
+Flashcards | फ़्लैशकार्ड | फ्लॅशकार्ड
+Quiz | क्विज़ | प्रश्नमंजूषा
+True or false | सही या गलत | खरे की खोटे
+Answer key | उत्तर कुंजी | उत्तरसूची
+Summary of {p0} ({length}, extractive — sentences selected from the document) | {p0} का सारांश ({length}, निष्कर्षात्मक — दस्तावेज़ से चुने गए वाक्य) | {p0} चा सारांश ({length}, निवडक — दस्तऐवजातून निवडलेली वाक्ये)
+Key points | मुख्य बिंदु | मुख्य मुद्दे
+Key points {p0} | मुख्य बिंदु {p0} | मुख्य मुद्दे {p0}
+Keywords: {p0} | कीवर्ड: {p0} | कीवर्ड: {p0}
+Summary | सारांश | सारांश
+{p0} · extractive summary ({length}) · made offline by BTS PDF Pro | {p0} · निष्कर्षात्मक सारांश ({length}) · BTS PDF Pro द्वारा ऑफ़लाइन बनाया गया | {p0} · निवडक सारांश ({length}) · BTS PDF Pro ने ऑफलाइन तयार केले
+Keywords | कीवर्ड | कीवर्ड
+Insert summary page | सारांश पृष्ठ डालें | सारांश पृष्ठ घाला
+Summary inserted as {length} new page(s) — save to keep it | सारांश {length} नए पृष्ठ के रूप में डाला गया — रखने के लिए सहेजें | सारांश {length} नवीन पृष्ठ म्हणून घातला — ठेवण्यासाठी जतन करा
+Ask | पूछें | विचारा
+Study | अध्ययन | अभ्यास
+Current page | वर्तमान पृष्ठ | सध्याचे पृष्ठ
+Whole document | पूरा दस्तावेज़ | संपूर्ण दस्तऐवज
+Long | लंबा | लांब
+Medium | मध्यम | मध्यम
+Short | छोटा | लहान
+Length | लंबाई | लांबी
+Ranking sentences | वाक्यों की रैंकिंग हो रही है | वाक्यांची क्रमवारी लावत आहे
+No readable text found. If this is a scan, run Tools › Recognize text (OCR) first. | कोई पढ़ने योग्य टेक्स्ट नहीं मिला। अगर यह स्कैन है, तो पहले टूल › टेक्स्ट पहचानें (OCR) चलाएँ। | वाचता येण्याजोगा मजकूर सापडला नाही. हे स्कॅन असल्यास आधी साधने › मजकूर ओळखा (OCR) चालवा.
+Copy | कॉपी करें | कॉपी करा
+Summary copied | सारांश कॉपी किया गया | सारांश कॉपी केला
+Insert as PDF page | PDF पृष्ठ के रूप में डालें | PDF पृष्ठ म्हणून घाला
+Save .txt | .txt सहेजें | .txt जतन करा
+Extractive summary: {p0} picked from the document by an offline ranking method (TextRank). Nothing is generated or sent online. | निष्कर्षात्मक सारांश: ऑफ़लाइन रैंकिंग विधि (TextRank) से दस्तावेज़ में से चुने गए {p0}। कुछ भी नया नहीं बनाया जाता और न ही ऑनलाइन भेजा जाता है। | निवडक सारांश: ऑफलाइन क्रमवारी पद्धतीने (TextRank) दस्तऐवजातून निवडलेली {p0}. काहीही नवीन तयार केले जात नाही किंवा ऑनलाइन पाठवले जात नाही.
+{length} of {total} sentences | {total} में से {length} वाक्य | {total} पैकी {length} वाक्ये
+Finding key points | मुख्य बिंदु खोजे जा रहे हैं | मुख्य मुद्दे शोधत आहे
+Keywords & topics | कीवर्ड और विषय | कीवर्ड आणि विषय
+{count}× · pages {p1} | {count}× · पृष्ठ {p1} | {count}× · पृष्ठे {p1}
+Copied | कॉपी किया गया | कॉपी केले
+{p0} Keywords: {p1} | {p0} कीवर्ड: {p1} | {p0} कीवर्ड: {p1}
+Click a keyword to find where it is discussed. | यह जानने के लिए कि उसकी चर्चा कहाँ है, किसी कीवर्ड पर क्लिक करें। | त्याची चर्चा कुठे आहे ते शोधण्यासाठी कीवर्डवर क्लिक करा.
+Ask about the document… e.g. what is evaporation | दस्तावेज़ के बारे में पूछें… जैसे वाष्पीकरण क्या है | दस्तऐवजाबद्दल विचारा… उदा. बाष्पीभवन म्हणजे काय
+Enter | = | =
+Search | खोजें | शोधा
+No passage matches those words. Try other keywords. | कोई अंश इन शब्दों से मेल नहीं खाता। दूसरे कीवर्ड आज़माएँ। | कोणताही उतारा या शब्दांशी जुळत नाही. इतर कीवर्ड वापरून पाहा.
+"Ask" finds the best-matching passages with a local keyword search (BM25). It shows text from your PDF — it does not write answers and works without internet. | "पूछें" स्थानीय कीवर्ड खोज (BM25) से सबसे मिलते-जुलते अंश ढूँढता है। यह आपके PDF का टेक्स्ट दिखाता है — यह उत्तर नहीं लिखता और बिना इंटरनेट के काम करता है। | "विचारा" स्थानिक कीवर्ड शोधाने (BM25) सर्वात जुळणारे उतारे शोधते. ते तुमच्या PDF मधील मजकूर दाखवते — ते उत्तरे लिहित नाही आणि इंटरनेटशिवाय काम करते.
+Building flashcards and quiz | फ़्लैशकार्ड और क्विज़ बन रहे हैं | फ्लॅशकार्ड आणि प्रश्नमंजूषा तयार होत आहे
+Flashcards CSV | फ़्लैशकार्ड CSV | फ्लॅशकार्ड CSV
+Quiz CSV | क्विज़ CSV | प्रश्नमंजूषा CSV
+Study sheet PDF | अध्ययन शीट PDF | अभ्यास पत्रक PDF
+Flashcards ({length}) | फ़्लैशकार्ड ({length}) | फ्लॅशकार्ड ({length})
+Quiz ({length}) | क्विज़ ({length}) | प्रश्नमंजूषा ({length})
+Flashcards ({length}) — click to flip | फ़्लैशकार्ड ({length}) — पलटने के लिए क्लिक करें | फ्लॅशकार्ड ({length}) — उलटण्यासाठी क्लिक करा
+No definitions ("… is / are / means / refers to …") or headings were found. | कोई परिभाषा ("… है / हैं / का अर्थ है / को कहते हैं …") या शीर्षक नहीं मिले। | कोणत्याही व्याख्या ("… आहे / आहेत / म्हणजे / याला म्हणतात …") किंवा शीर्षके सापडली नाहीत.
+Term | पद | संज्ञा
+Topic | विषय | विषय
+— score {right} / {length} | — स्कोर {right} / {length} | — गुण {right} / {length}
+Not enough definitions to build quiz questions. | क्विज़ प्रश्न बनाने के लिए पर्याप्त परिभाषाएँ नहीं हैं। | प्रश्नमंजूषेचे प्रश्न तयार करण्यासाठी पुरेशा व्याख्या नाहीत.
+✓ Correct | ✓ सही | ✓ बरोबर
+✗ Answer: {p0} | ✗ उत्तर: {p0} | ✗ उत्तर: {p0}
+Reset quiz | क्विज़ रीसेट करें | प्रश्नमंजूषा रीसेट करा
+Made from headings and definition sentences in your PDF. Check answers against the page — they are copied, not generated. | आपके PDF के शीर्षकों और परिभाषा वाले वाक्यों से बनाया गया। उत्तरों को पृष्ठ से मिलाकर जाँचें — वे कॉपी किए गए हैं, बनाए नहीं गए। | तुमच्या PDF मधील शीर्षके आणि व्याख्या असलेल्या वाक्यांपासून तयार केले. उत्तरे पृष्ठाशी पडताळून पाहा — ती कॉपी केलेली आहेत, तयार केलेली नाहीत.
+After the last page | अंतिम पृष्ठ के बाद | शेवटच्या पृष्ठानंतर
+Before the first page | पहले पृष्ठ से पहले | पहिल्या पृष्ठापूर्वी
+Insert | डालें | घाला
+Insert summary as a new page | सारांश को नए पृष्ठ के रूप में डालें | सारांश नवीन पृष्ठ म्हणून घाला
+Position | स्थिति | स्थान
+Summary saved | सारांश सहेजा गया | सारांश जतन केला
+Study sheet saved | अध्ययन शीट सहेजी गई | अभ्यास पत्रक जतन केले
+CSV | = | =
+Symbol | प्रतीक | चिन्ह
+ZapfDingbats | - |
+Arial | = | =
+Arial,Bold | - |
+Arial,BoldItalic | - |
+Arial,Italic | - |
+ArialMT | - |
+CourierNew | - |
+CourierNewPSMT | - |
+TimesNewRoman | - |
+TimesNewRoman,Bold | - |
+TimesNewRoman,Italic | - |
+TimesNewRomanPSMT | - |
+Type1 | - |
+BaseFont | - |
+Name | नाम | नाव
+Type3 | - |
+Type0 | - |
+DescendantFonts | - |
+Encoding | - |
+FirstChar | - |
+Widths | - |
+FontMatrix | - |
+FontDescriptor | - |
+Flags | - |
+FontWeight | - |
+ItalicAngle | - |
+FontFamily | - |
+Ascent | - |
+Descent | - |
+MissingWidth | - |
+FontFile | - |
+FontFile2 | - |
+FontFile3 | - |
+FontBBox | - |
+BaseEncoding | - |
+Differences | - |
+TrueType | = | =
+ToUnicode | - |
+Tc | - |
+Tz | - |
+Ts | - |
+Tr | - |
+Tm | - |
+Do | - |
+Form | फ़ॉर्म | फॉर्म
+Matrix | - |
+Resources | - |
+{p0} Tm | - |
+{p0} Tz | - |
+Mon | सोम | सोम
+Could not load | लोड नहीं हो सका | लोड करता आले नाही
+Could not load {src} | {src} लोड नहीं हो सका | {src} लोड करता आले नाही
+Starting | शुरू हो रहा है | सुरू होत आहे
+Cancelling | रद्द हो रहा है | रद्द होत आहे
+All pages | सभी पृष्ठ | सर्व पृष्ठे
+Even pages | सम पृष्ठ | सम पृष्ठे
+Odd pages | विषम पृष्ठ | विषम पृष्ठे
+Range (e.g. 1-3, 5) — used when "Page range" is chosen | श्रेणी (जैसे 1-3, 5) — "पृष्ठ श्रेणी" चुनने पर उपयोग होती है | श्रेणी (उदा. 1-3, 5) — "पृष्ठ श्रेणी" निवडल्यावर वापरली जाते
+Lang | - |
+Metadata | मेटाडेटा | मेटाडेटा
+PieceInfo | - |
+Annots | - |
+AcroForm | - |
+Kids | - |
+Rect | - |
+Fields | फ़ील्ड | फील्ड
+BtsBgGS | - |
+ExtGState | - |
+BtsBgImg | - |
+Fit | फ़िट | बसवा
+Action | क्रिया | क्रिया
+Completed | पूर्ण | पूर्ण
+Review | समीक्षा | पुनरावलोकन
+Parent | - |
+Tabs | टैब | टॅब
+Outlines | - |
+Untitled | बिना शीर्षक | शीर्षकरहित
+Next | अगला | पुढील
+Prev | पिछला | मागील
+Dest | - |
+Count | गिनती | संख्या
+First | पहला | पहिले
+Last | अंतिम | शेवटचे
+PageLabels | - |
+Protect & save as | सुरक्षित करें और इस रूप में सहेजें | संरक्षित करा आणि म्हणून जतन करा
+Protect with password | पासवर्ड से सुरक्षित करें | पासवर्डने संरक्षित करा
+Password to open the document (leave empty for permissions only) | दस्तावेज़ खोलने का पासवर्ड (केवल अनुमतियों के लिए खाली छोड़ें) | दस्तऐवज उघडण्याचा पासवर्ड (फक्त परवानग्यांसाठी रिकामा ठेवा)
+Confirm open password | खोलने वाले पासवर्ड की पुष्टि करें | उघडण्याच्या पासवर्डची पुष्टी करा
+Permissions (owner) password — needed to change restrictions | अनुमति (स्वामी) पासवर्ड — प्रतिबंध बदलने के लिए आवश्यक | परवानगी (मालक) पासवर्ड — निर्बंध बदलण्यासाठी आवश्यक
+High resolution | उच्च रिज़ॉल्यूशन | उच्च रिझोल्यूशन
+Low resolution only | केवल निम्न रिज़ॉल्यूशन | फक्त कमी रिझोल्यूशन
+Not allowed | अनुमति नहीं | परवानगी नाही
+Printing allowed | प्रिंट करने की अनुमति | प्रिंट करण्याची परवानगी
+Allow copying text and images | टेक्स्ट और छवियाँ कॉपी करने दें | मजकूर आणि प्रतिमा कॉपी करू द्या
+Allow screen readers (accessibility) | स्क्रीन रीडर को अनुमति दें (सुलभता) | स्क्रीन रीडरना परवानगी द्या (सुलभता)
+Allow comments | टिप्पणियों की अनुमति दें | टिप्पण्यांना परवानगी द्या
+Allow filling in forms and signing | फ़ॉर्म भरने और हस्ताक्षर करने दें | फॉर्म भरू द्या आणि स्वाक्षरी करू द्या
+Allow editing content | सामग्री संपादित करने दें | मजकूर संपादित करू द्या
+Allow inserting, deleting and rotating pages | पृष्ठ डालने, हटाने और घुमाने दें | पृष्ठे घालू, हटवू आणि फिरवू द्या
+AES-128 (older readers) | AES-128 (पुराने रीडर) | AES-128 (जुने रीडर)
+AES-256 (recommended, Acrobat X and later) | AES-256 (अनुशंसित, Acrobat X और बाद के) | AES-256 (शिफारस केलेले, Acrobat X आणि नंतरचे)
+Encryption | एन्क्रिप्शन | एन्क्रिप्शन
+The open passwords do not match | खोलने वाले पासवर्ड मेल नहीं खाते | उघडण्याचे पासवर्ड जुळत नाहीत
+Enter an open password or a permissions password | खोलने का पासवर्ड या अनुमति पासवर्ड दर्ज करें | उघडण्याचा पासवर्ड किंवा परवानगी पासवर्ड प्रविष्ट करा
+Password protection will be removed when you save | सहेजते समय पासवर्ड सुरक्षा हटा दी जाएगी | जतन करताना पासवर्ड संरक्षण काढले जाईल
+This document was opened with its password. Save to write a copy without a password. | यह दस्तावेज़ उसके पासवर्ड से खोला गया था। बिना पासवर्ड की प्रति लिखने के लिए सहेजें। | हा दस्तऐवज त्याच्या पासवर्डने उघडला होता. पासवर्डशिवाय प्रत लिहिण्यासाठी जतन करा.
+Remove password | पासवर्ड हटाएँ | पासवर्ड काढा
+The current document is not password protected. Open a protected PDF to remove its password? | वर्तमान दस्तावेज़ पासवर्ड से सुरक्षित नहीं है। पासवर्ड हटाने के लिए कोई सुरक्षित PDF खोलें? | सध्याचा दस्तऐवज पासवर्डने संरक्षित नाही. पासवर्ड काढण्यासाठी संरक्षित PDF उघडायचा?
+"{name}" is protected. Enter the password to open it. | "{name}" सुरक्षित है। इसे खोलने के लिए पासवर्ड दर्ज करें। | "{name}" संरक्षित आहे. तो उघडण्यासाठी पासवर्ड प्रविष्ट करा.
+Password required | पासवर्ड आवश्यक | पासवर्ड आवश्यक
+Incorrect password — try again | गलत पासवर्ड — फिर से प्रयास करें | चुकीचा पासवर्ड — पुन्हा प्रयत्न करा
+cantoo decrypt failed, rasterising | - |
+Opened. The password is removed when you save — use Tools › Protect to add one again. | खुल गया। सहेजते समय पासवर्ड हटा दिया जाता है — फिर से जोड़ने के लिए टूल › सुरक्षित करें का उपयोग करें। | उघडला. जतन करताना पासवर्ड काढला जातो — पुन्हा जोडण्यासाठी साधने › संरक्षित करा वापरा.
+Create PDF | PDF बनाएँ | PDF तयार करा
+Images to PDF — {length} image(s) | छवियों से PDF — {length} छवियाँ | प्रतिमांपासून PDF — {length} प्रतिमा
+Page size | पृष्ठ आकार | पृष्ठ आकार
+Same as image | छवि के समान | प्रतिमेइतकाच
+Automatic (match each image) | स्वचालित (हर छवि से मिलाएँ) | स्वयंचलित (प्रत्येक प्रतिमेशी जुळवा)
+Landscape | लैंडस्केप | आडवे (लँडस्केप)
+Orientation | अभिविन्यास | दिशा
+Portrait | पोर्ट्रेट | उभे (पोर्ट्रेट)
+Margin (mm) | हाशिया (mm) | समास (mm)
+Actual size (96 dpi) | वास्तविक आकार (96 dpi) | वास्तविक आकार (96 dpi)
+Fill page (crop edges) | पृष्ठ भरें (किनारे क्रॉप करें) | पृष्ठ भरा (कडा क्रॉप करा)
+Fit inside margins | हाशिये के अंदर फ़िट करें | समासाच्या आत बसवा
+Image placement | छवि का स्थान | प्रतिमेचे स्थान
+Convert PNG/other images to JPEG (smaller file) | PNG/अन्य छवियों को JPEG में बदलें (छोटी फ़ाइल) | PNG/इतर प्रतिमा JPEG मध्ये बदला (लहान फाइल)
+Add to the end of the current document | वर्तमान दस्तावेज़ के अंत में जोड़ें | सध्याच्या दस्तऐवजाच्या शेवटी जोडा
+Add images | छवियाँ जोड़ें | प्रतिमा जोडा
+Added {length} page(s) | {length} पृष्ठ जोड़े गए | {length} पृष्ठे जोडली
+Export anyway | फिर भी एक्सपोर्ट करें | तरीही एक्सपोर्ट करा
+No text found | कोई टेक्स्ट नहीं मिला | मजकूर सापडला नाही
+This PDF has no text layer (it may be a scan). Run OCR first (Tools › Recognize text) for a useful Word file. Export anyway? | इस PDF में टेक्स्ट लेयर नहीं है (यह स्कैन हो सकता है)। उपयोगी Word फ़ाइल के लिए पहले OCR चलाएँ (टूल › टेक्स्ट पहचानें)। फिर भी एक्सपोर्ट करें? | या PDF मध्ये मजकूर लेयर नाही (हे स्कॅन असू शकते). उपयुक्त Word फाइलसाठी आधी OCR चालवा (साधने › मजकूर ओळखा). तरीही एक्सपोर्ट करायचे?
+Converting to Word | Word में रूपांतरित हो रहा है | Word मध्ये रूपांतरित होत आहे
+Word document | Word दस्तावेज़ | Word दस्तऐवज
+Saved {p0} | {p0} सहेजा गया | {p0} जतन केले
+Enhance | सुधारें | सुधारा
+Convert to grayscale | ग्रेस्केल में बदलें | ग्रेस्केलमध्ये बदला
+Auto contrast (clean white background) | स्वतः कंट्रास्ट (साफ़ सफ़ेद पृष्ठभूमि) | स्वयं कॉन्ट्रास्ट (स्वच्छ पांढरी पार्श्वभूमी)
+Straighten tilted pages (deskew) | झुके पृष्ठ सीधे करें (डीस्क्यू) | तिरकी पृष्ठे सरळ करा (डीस्क्यू)
+Black & white (sharpest text, smallest file) | श्वेत-श्याम (सबसे स्पष्ट टेक्स्ट, सबसे छोटी फ़ाइल) | कृष्णधवल (सर्वात स्पष्ट मजकूर, सर्वात लहान फाइल)
+Resolution | रिज़ॉल्यूशन | रिझोल्यूशन
+The selected {length} page(s) will be replaced by cleaned-up images. Existing text on these pages is replaced too — run OCR afterwards to make them searchable. Continue? | चुने गए {length} पृष्ठ साफ़ की गई छवियों से बदल दिए जाएँगे। इन पृष्ठों का मौजूदा टेक्स्ट भी बदल जाएगा — इन्हें खोजने योग्य बनाने के लिए बाद में OCR चलाएँ। जारी रखें? | निवडलेली {length} पृष्ठे स्वच्छ केलेल्या प्रतिमांनी बदलली जातील. या पृष्ठांवरील विद्यमान मजकूरही बदलला जाईल — ती शोधण्यायोग्य करण्यासाठी नंतर OCR चालवा. पुढे जायचे?
+Enhancing scan | स्कैन सुधारा जा रहा है | स्कॅन सुधारत आहे
+Enhanced {length} page(s) | {length} पृष्ठ सुधारे गए | {length} पृष्ठे सुधारली
+· straightened by {p0} | · {p0} सीधा किया गया | · {p0} ने सरळ केले
+Bottom centre | नीचे बीच में | तळाशी मध्यभागी
+Bottom left | नीचे बाएँ | तळाशी डावीकडे
+Bottom right | नीचे दाएँ | तळाशी उजवीकडे
+Centre | केंद्र | मध्यभागी
+Middle left | बीच में बाएँ | मध्यभागी डावीकडे
+Middle right | बीच में दाएँ | मध्यभागी उजवीकडे
+Tiled (repeat) | टाइल (दोहराएँ) | टाइल (पुनरावृत्ती)
+Top centre | ऊपर बीच में | वर मध्यभागी
+Top left | ऊपर बाएँ | वर डावीकडे
+Top right | ऊपर दाएँ | वर उजवीकडे
+{p0} {size}px Helvetica, Arial | - |
+Image (choose after Apply, or press Choose image…) | छवि (लागू करें के बाद चुनें, या छवि चुनें… दबाएँ) | प्रतिमा (लागू करा नंतर निवडा, किंवा प्रतिमा निवडा… दाबा)
+Font size | फ़ॉन्ट आकार | फॉन्ट आकार
+Colour | रंग | रंग
+Image width (% of page) | छवि की चौड़ाई (पृष्ठ का %) | प्रतिमेची रुंदी (पृष्ठाच्या %)
+Opacity % | अपारदर्शिता % | अपारदर्शकता %
+Rotation° | घुमाव° | फिरवणे°
+Behind other annotations | अन्य एनोटेशन के पीछे | इतर भाष्यांच्या मागे
+In front | सामने | पुढे
+Layer | लेयर | लेयर
+Watermark added to {length} page(s). Pages › Remove watermark… removes it. | {length} पृष्ठों में वॉटरमार्क जोड़ा गया। पृष्ठ › वॉटरमार्क हटाएँ… से इसे हटाया जा सकता है। | {length} पृष्ठांवर वॉटरमार्क जोडला. पृष्ठे › वॉटरमार्क काढा… ने तो काढता येतो.
+Header & footer · page numbers · Bates | हेडर और फ़ुटर · पृष्ठ संख्या · Bates | शीर्षलेख आणि तळटीप · पृष्ठ क्रमांक · Bates
+Header centre | हेडर बीच में | शीर्षलेख मध्यभागी
+Header left | हेडर बाएँ | शीर्षलेख डावीकडे
+Header right | हेडर दाएँ | शीर्षलेख उजवीकडे
+Footer centre | फ़ुटर बीच में | तळटीप मध्यभागी
+Footer left | फ़ुटर बाएँ | तळटीप डावीकडे
+Footer right | फ़ुटर दाएँ | तळटीप उजवीकडे
+Distance from edge (mm) | किनारे से दूरी (mm) | कडेपासून अंतर (mm)
+Start page numbering at | पृष्ठ संख्या यहाँ से शुरू करें | पृष्ठ क्रमांक येथून सुरू करा
+Date format | दिनांक प्रारूप | दिनांक स्वरूप
+BTS | = | =
+Bates digits | Bates अंक | Bates अंक
+Bates prefix ({bates}) | Bates उपसर्ग ({bates}) | Bates उपसर्ग ({bates})
+Bates start number | Bates प्रारंभ संख्या | Bates प्रारंभ क्रमांक
+Bates suffix | Bates प्रत्यय | Bates प्रत्यय
+Replace existing header & footer added here | यहाँ जोड़े गए मौजूदा हेडर और फ़ुटर बदलें | येथे जोडलेले विद्यमान शीर्षलेख आणि तळटीप बदला
+Header & footer | हेडर और फ़ुटर | शीर्षलेख आणि तळटीप
+Header & footer added to {length} page(s) | {length} पृष्ठों में हेडर और फ़ुटर जोड़े गए | {length} पृष्ठांवर शीर्षलेख आणि तळटीप जोडली
+Fill with | इससे भरें | याने भरा
+Image (you will choose it next) | छवि (इसे आप अगले चरण में चुनेंगे) | प्रतिमा (ती पुढील टप्प्यात निवडाल)
+Fill page | पृष्ठ भरें | पृष्ठ भरा
+Fit inside page | पृष्ठ के अंदर फ़िट करें | पृष्ठाच्या आत बसवा
+Image fit | छवि फ़िट | प्रतिमा बसवणे
+Stretch | खींचें | ताणा
+Background applied to {length} page(s) | {length} पृष्ठों पर पृष्ठभूमि लागू की गई | {length} पृष्ठांवर पार्श्वभूमी लागू केली
+Remove page decorations | पृष्ठ सजावट हटाएँ | पृष्ठ सजावट काढा
+Backgrounds | पृष्ठभूमियाँ | पार्श्वभूमी
+Headers & footers / page numbers / Bates | हेडर और फ़ुटर / पृष्ठ संख्या / Bates | शीर्षलेख आणि तळटीपा / पृष्ठ क्रमांक / Bates
+Watermarks | वॉटरमार्क | वॉटरमार्क
+Nothing to remove (only items added in BTS PDF Pro before saving can be removed) | हटाने के लिए कुछ नहीं (केवल सहेजने से पहले BTS PDF Pro में जोड़े गए आइटम हटाए जा सकते हैं) | काढण्यासारखे काही नाही (फक्त जतन करण्यापूर्वी BTS PDF Pro मध्ये जोडलेले घटक काढता येतात)
+Remove decorations | सजावट हटाएँ | सजावट काढा
+Removed {n} item(s) | {n} आइटम हटाए गए | {n} घटक काढले
+Loading | लोड हो रहा है | लोड होत आहे
+Add bookmark for current page | वर्तमान पृष्ठ के लिए बुकमार्क जोड़ें | सध्याच्या पृष्ठासाठी बुकमार्क जोडा
+Rename | नाम बदलें | नाव बदला
+Make child of previous | पिछले का उप-आइटम बनाएँ | मागीलचा उप-घटक बनवा

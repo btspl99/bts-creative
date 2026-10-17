@@ -1,0 +1,211 @@
+# Video (timeline, markers, layouts, nests, masks, tracking, transcript)
+Unlink | अनलिंक करें | अनलिंक करा
+Unlink audio to A track | ऑडियो को A ट्रैक पर अनलिंक करें | ऑडिओ A ट्रॅकवर अनलिंक करा
+· handles: A {p0} after Out, B {p1} before In (needs {p2}s each){p3} | · हैंडल: Out के बाद A {p0}, In से पहले B {p1} (हर एक को {p2}s चाहिए){p3} | · हँडल: Out नंतर A {p0}, In पूर्वी B {p1} (प्रत्येकी {p2}s लागतात){p3}
+Change to | इसमें बदलें | यात बदला
+Delete transition | ट्रांज़िशन हटाएँ | ट्रान्झिशन हटवा
+Duration | अवधि | कालावधी
+Edit caption timing | कैप्शन समय संपादित करें | कॅप्शन वेळ संपादित करा
+Edit caption | कैप्शन संपादित करें | कॅप्शन संपादित करा
+Split caption at playhead | प्लेहेड पर कैप्शन विभाजित करें | प्लेहेडवर कॅप्शन विभाजित करा
+Razor | रेज़र | रेझर
+Slip: in {p0} · out {p1} | स्लिप: in {p0} · out {p1} | स्लिप: in {p0} · out {p1}
+Rolling edit needs an adjacent clip on this side | रोलिंग एडिट के लिए इस ओर पास की क्लिप चाहिए | रोलिंग एडिटसाठी या बाजूला शेजारची क्लिप हवी
+Speed {p0}% | गति {p0}% | वेग {p0}%
+Rate stretch | रेट स्ट्रेच | रेट स्ट्रेच
+Ripple edit | रिपल एडिट | रिपल एडिट
+Rolling edit | रोलिंग एडिट | रोलिंग एडिट
+Slip | स्लिप | स्लिप
+Move keyframe | कीफ़्रेम खिसकाएँ | कीफ्रेम हलवा
+Interpolation | इंटरपोलेशन | इंटरपोलेशन
+Interpolation: {l} | इंटरपोलेशन: {l} | इंटरपोलेशन: {l}
+Delete keyframe | कीफ़्रेम हटाएँ | कीफ्रेम हटवा
+Go to keyframe | कीफ़्रेम पर जाएँ | कीफ्रेमवर जा
+Media is offline — relink it first | मीडिया ऑफ़लाइन है — पहले इसे फिर से लिंक करें | मीडिया ऑफलाइन आहे — आधी तो पुन्हा लिंक करा
+Add clip | क्लिप जोड़ें | क्लिप जोडा
+THE TITLE A short subtitle | - |
+Name Surname Role · Organisation | - |
+Education is the most powerful weapon to change the world. — Nelson Mandela | - |
+Directed by Your Name Edited by Your Name Music Artist Name Made with BTS Video | - |
+Subtitle text goes here | - |
+Once upon a time | - |
+BOLD STATEMENT | - |
+Neon outline | नियॉन आउटलाइन | निऑन आउटलाइन
+Add shape | आकृति जोड़ें | आकार जोडा
+Color matte | कलर मैट | कलर मॅट
+Add {name} | {name} जोड़ें | {name} जोडा
+Add track | ट्रैक जोड़ें | ट्रॅक जोडा
+Delete {id} and its clips? | {id} और इसकी क्लिप हटाएँ? | {id} आणि त्याच्या क्लिप हटवायच्या?
+Nothing under the playhead to split | प्लेहेड के नीचे विभाजित करने के लिए कुछ नहीं | प्लेहेडखाली विभाजित करण्यासारखे काही नाही
+Copied {length} clip(s) | {length} क्लिप कॉपी हुईं | {length} क्लिप कॉपी झाल्या
+Duration (seconds) | अवधि (सेकंड) | कालावधी (सेकंद)
+Transitions go on video, image, title or shape clips | ट्रांज़िशन वीडियो, छवि, टाइटल या आकृति क्लिप पर लगते हैं | ट्रान्झिशन व्हिडिओ, प्रतिमा, टायटल किंवा आकार क्लिपवर लागतात
+Transition: {kind} | ट्रांज़िशन: {kind} | ट्रान्झिशन: {kind}
+Add a clip first | पहले कोई क्लिप जोड़ें | आधी क्लिप जोडा
+Fades | फ़ेड | फेड
+Select a clip first | पहले कोई क्लिप चुनें | आधी क्लिप निवडा
+Change | बदलें | बदला
+Change {k} | {k} बदलें | {k} बदला
+Duration (seconds){p0} | अवधि (सेकंड){p0} | कालावधी (सेकंद){p0}
+Speed % | गति % | वेग %
+— changes the speed | — गति बदलता है | — वेग बदलते
+Reverse speed (renders a reversed copy) | उलटी गति (उलटी प्रति रेंडर करता है) | उलट वेग (उलट प्रत रेंडर करते)
+Ripple edit, shifting trailing clips | रिपल एडिट, पीछे की क्लिप खिसकाते हुए | रिपल एडिट, मागील क्लिप सरकवत
+Clip speed / duration | क्लिप गति / अवधि | क्लिप वेग / कालावधी
+Speed / duration | गति / अवधि | वेग / कालावधी
+Select a video or audio clip | कोई वीडियो या ऑडियो क्लिप चुनें | व्हिडिओ किंवा ऑडिओ क्लिप निवडा
+Curve | कर्व | कर्व्ह
+End speed % | अंतिम गति % | शेवटचा वेग %
+Speed ramp | स्पीड रैंप | स्पीड रॅम्प
+Start speed % | प्रारंभिक गति % | सुरुवातीचा वेग %
+Steps (smoothness) | चरण (चिकनाई) | टप्पे (गुळगुळीतपणा)
+Speed ramp: {n} segments from {p1}% to {p2}% | स्पीड रैंप: {p1}% से {p2}% तक {n} खंड | स्पीड रॅम्प: {p1}% ते {p2}% पर्यंत {n} खंड
+Reversing needs FFmpeg | उलटने के लिए FFmpeg चाहिए | उलट करण्यासाठी FFmpeg आवश्यक
+Reverse a long clip? | लंबी क्लिप उलटें? | लांब क्लिप उलट करायची?
+Reversing loads the whole clip into memory. It may take a while. | उलटने पर पूरी क्लिप मेमोरी में लोड होती है। इसमें कुछ समय लग सकता है। | उलट करताना संपूर्ण क्लिप मेमरीत लोड होते. याला थोडा वेळ लागू शकतो.
+Rendering a reversed copy with FFmpeg | FFmpeg से उलटी प्रति रेंडर हो रही है | FFmpeg ने उलट प्रत रेंडर होत आहे
+Reversing clip | क्लिप उलटी हो रही है | क्लिप उलट होत आहे
+Could not reverse | उलटा नहीं जा सका | उलट करता आले नाही
+Could not reverse: {p0} | उलटा नहीं जा सका: {p0} | उलट करता आले नाही: {p0}
+Clip reversed | क्लिप उलटी हुई | क्लिप उलट झाली
+Put the playhead over a video clip | प्लेहेड को किसी वीडियो क्लिप पर रखें | प्लेहेड व्हिडिओ क्लिपवर ठेवा
+Hold duration (seconds) | होल्ड अवधि (सेकंड) | होल्ड कालावधी (सेकंद)
+Insert frame hold segment | फ़्रेम होल्ड खंड डालें | फ्रेम होल्ड खंड घाला
+Frame hold segment | फ़्रेम होल्ड खंड | फ्रेम होल्ड खंड
+No clip under the playhead | प्लेहेड के नीचे कोई क्लिप नहीं | प्लेहेडखाली क्लिप नाही
+Ripple trim next edit | अगला एडिट रिपल ट्रिम करें | पुढील एडिट रिपल ट्रिम करा
+Ripple trim previous edit | पिछला एडिट रिपल ट्रिम करें | मागील एडिट रिपल ट्रिम करा
+Set an In point (I) and an Out point (O) first | पहले In बिंदु (I) और Out बिंदु (O) सेट करें | आधी In बिंदू (I) आणि Out बिंदू (O) सेट करा
+Select a clip in the Project panel first | पहले प्रोजेक्ट पैनल में कोई क्लिप चुनें | आधी प्रकल्प पॅनेलमधील क्लिप निवडा
+Insert edit | इन्सर्ट एडिट | इन्सर्ट एडिट
+Overwrite edit | ओवरराइट एडिट | ओव्हरराइट एडिट
+Cyan | सियान | सायन
+Orange | नारंगी | नारिंगी
+Purple | बैंगनी | जांभळा
+Delete this marker | यह मार्कर हटाएँ | हा मार्कर हटवा
+Time (seconds) | समय (सेकंड) | वेळ (सेकंद)
+Edit marker | मार्कर संपादित करें | मार्कर संपादित करा
+No more markers | और मार्कर नहीं | आणखी मार्कर नाहीत
+Linked {length} clips | {length} क्लिप लिंक हुईं | {length} क्लिप लिंक झाल्या
+Select clips first | पहले क्लिप चुनें | आधी क्लिप निवडा
+Select two or more clips to link | लिंक करने के लिए दो या अधिक क्लिप चुनें | लिंक करण्यासाठी दोन किंवा अधिक क्लिप निवडा
+Unlinked | अनलिंक हुआ | अनलिंक झाले
+Grouped {length} clips | {length} क्लिप समूहित हुईं | {length} क्लिपचा गट केला
+Select two or more clips to group | समूह बनाने के लिए दो या अधिक क्लिप चुनें | गट करण्यासाठी दोन किंवा अधिक क्लिप निवडा
+Select a video clip that has audio | ऑडियो वाली कोई वीडियो क्लिप चुनें | ऑडिओ असलेली व्हिडिओ क्लिप निवडा
+Audio moved to its own track — the clips stay linked (Ctrl+L to unlink). | ऑडियो अपने ट्रैक पर ले जाया गया — क्लिप लिंक रहती हैं (अनलिंक के लिए Ctrl+L)। | ऑडिओ स्वतःच्या ट्रॅकवर हलवला — क्लिप लिंक राहतात (अनलिंकसाठी Ctrl+L).
+Add caption | कैप्शन जोड़ें | कॅप्शन जोडा
+New caption | नया कैप्शन | नवीन कॅप्शन
+Put the playhead inside the caption | प्लेहेड को कैप्शन के अंदर रखें | प्लेहेड कॅप्शनच्या आत ठेवा
+Split caption | कैप्शन विभाजित करें | कॅप्शन विभाजित करा
+Pop in | पॉप इन | पॉप इन
+Fade in | फ़ेड इन | फेड इन
+Fade out | फ़ेड आउट | फेड आउट
+Slide in from left | बाएँ से स्लाइड इन | डावीकडून स्लाइड इन
+Spin in | घूमकर आएँ | फिरत या
+Select a video, image, title or shape clip | कोई वीडियो, छवि, टाइटल या आकृति क्लिप चुनें | व्हिडिओ, प्रतिमा, टायटल किंवा आकार क्लिप निवडा
+Keyframe preset: {name} | कीफ़्रेम प्रीसेट: {name} | कीफ्रेम प्रीसेट: {name}
+4-up grid | 4-अप ग्रिड | 4-अप ग्रिड
+Full frame (reset layout) | पूरा फ़्रेम (लेआउट रीसेट) | संपूर्ण फ्रेम (मांडणी रीसेट)
+PiP bottom-left | PiP नीचे-बाएँ | PiP तळ-डावीकडे
+PiP bottom-right | PiP नीचे-दाएँ | PiP तळ-उजवीकडे
+PiP top-left | PiP ऊपर-बाएँ | PiP वर-डावीकडे
+PiP top-right | PiP ऊपर-दाएँ | PiP वर-उजवीकडे
+Split screen 2-up (side by side) | स्प्लिट स्क्रीन 2-अप (अगल-बगल) | स्प्लिट स्क्रीन 2-अप (शेजारी शेजारी)
+Split screen 2-up (stacked) | स्प्लिट स्क्रीन 2-अप (ऊपर-नीचे) | स्प्लिट स्क्रीन 2-अप (वर-खाली)
+Split screen 3-up | स्प्लिट स्क्रीन 3-अप | स्प्लिट स्क्रीन 3-अप
+Select one or more video/image clips (stacked on different tracks for split screens) | एक या अधिक वीडियो/छवि क्लिप चुनें (स्प्लिट स्क्रीन के लिए अलग-अलग ट्रैक पर) | एक किंवा अधिक व्हिडिओ/प्रतिमा क्लिप निवडा (स्प्लिट स्क्रीनसाठी वेगवेगळ्या ट्रॅकवर)
+This layout has {length} cells — select {p1} clips stacked on different video tracks. | इस लेआउट में {length} सेल हैं — अलग-अलग वीडियो ट्रैक पर रखी {p1} क्लिप चुनें। | या मांडणीत {length} सेल आहेत — वेगवेगळ्या व्हिडिओ ट्रॅकवरील {p1} क्लिप निवडा.
+Layout: {kind} | लेआउट: {kind} | मांडणी: {kind}
+Add keyframes | कीफ़्रेम जोड़ें | कीफ्रेम जोडा
+Added {n} keyframe(s) at {p1} | {p1} पर {n} कीफ़्रेम जोड़े गए | {p1} वर {n} कीफ्रेम जोडले
+Put the playhead on a keyframe (use Next / Previous keyframe) | प्लेहेड को किसी कीफ़्रेम पर रखें (अगला / पिछला कीफ़्रेम उपयोग करें) | प्लेहेड कीफ्रेमवर ठेवा (पुढील / मागील कीफ्रेम वापरा)
+No more keyframes | और कीफ़्रेम नहीं | आणखी कीफ्रेम नाहीत
+Bypass effects | इफ़ेक्ट बायपास करें | इफेक्ट बायपास करा
+Enable effects | इफ़ेक्ट चालू करें | इफेक्ट चालू करा
+The selected clip has no effects | चुनी गई क्लिप में कोई इफ़ेक्ट नहीं है | निवडलेल्या क्लिपवर इफेक्ट नाहीत
+Select a title clip | कोई टाइटल क्लिप चुनें | टायटल क्लिप निवडा
+Clip volume & pan | क्लिप वॉल्यूम और पैन | क्लिप व्हॉल्यूम आणि पॅन
+Pan (−100 left … 100 right) | पैन (−100 बाएँ … 100 दाएँ) | पॅन (−100 डावे … 100 उजवे)
+Clip volume | क्लिप वॉल्यूम | क्लिप व्हॉल्यूम
+Editing | संपादन | संपादन
+Editing {name} | {name} संपादित हो रहा है | {name} संपादित होत आहे
+New sequence | नया सीक्वेंस | नवीन सीक्वेन्स
+Rename sequence | सीक्वेंस का नाम बदलें | सीक्वेन्सचे नाव बदला
+A project needs at least one sequence | प्रोजेक्ट में कम से कम एक सीक्वेंस होना चाहिए | प्रकल्पात किमान एक सीक्वेन्स असणे आवश्यक आहे
+This sequence is nested in {p0} — delete those nest clips first | यह सीक्वेंस {p0} में नेस्टेड है — पहले वे नेस्ट क्लिप हटाएँ | हा सीक्वेन्स {p0} मध्ये नेस्टेड आहे — आधी त्या नेस्ट क्लिप हटवा
+Select the clips to nest | नेस्ट करने के लिए क्लिप चुनें | नेस्ट करण्यासाठी क्लिप निवडा
+Nested sequence {p0} | नेस्टेड सीक्वेंस {p0} | नेस्टेड सीक्वेन्स {p0}
+Nest | नेस्ट | नेस्ट
+Nested {length} clip(s) into “{name}” — double-click it to edit its contents | {length} क्लिप “{name}” में नेस्ट की गईं — सामग्री संपादित करने के लिए उस पर डबल-क्लिक करें | {length} क्लिप “{name}” मध्ये नेस्ट केल्या — मजकूर संपादित करण्यासाठी त्यावर डबल-क्लिक करा
+Select a nested sequence clip | कोई नेस्टेड सीक्वेंस क्लिप चुनें | नेस्टेड सीक्वेन्स क्लिप निवडा
+The nested sequence is missing | नेस्टेड सीक्वेंस अनुपलब्ध है | नेस्टेड सीक्वेन्स गहाळ आहे
+Match nest length | नेस्ट की लंबाई मिलाएँ | नेस्टची लांबी जुळवा
+Nested sequence (used inside another sequence) | नेस्टेड सीक्वेंस (दूसरे सीक्वेंस के अंदर उपयोग) | नेस्टेड सीक्वेन्स (दुसऱ्या सीक्वेन्समध्ये वापरलेला)
+Insert into active sequence as nest | सक्रिय सीक्वेंस में नेस्ट के रूप में डालें | सक्रिय सीक्वेन्समध्ये नेस्ट म्हणून घाला
+That would nest a sequence inside itself | इससे सीक्वेंस अपने ही अंदर नेस्ट हो जाएगा | यामुळे सीक्वेन्स स्वतःमध्येच नेस्ट होईल
+Insert nested sequence | नेस्टेड सीक्वेंस डालें | नेस्टेड सीक्वेन्स घाला
+Mask {n} | मास्क {n} | मास्क {n}
+Select a video, image, title, shape or nested clip first | पहले कोई वीडियो, छवि, टाइटल, आकृति या नेस्टेड क्लिप चुनें | आधी व्हिडिओ, प्रतिमा, टायटल, आकार किंवा नेस्टेड क्लिप निवडा
+Add {type} mask | {type} मास्क जोड़ें | {type} मास्क जोडा
+Remove mask | मास्क हटाएँ | मास्क काढा
+Mask path keyframes | मास्क पाथ कीफ़्रेम | मास्क पाथ कीफ्रेम
+Edit mask | मास्क संपादित करें | मास्क संपादित करा
+Click to add points on the monitor — click the first point, double-click or press Enter to close the mask. Esc cancels. | मॉनिटर पर बिंदु जोड़ने के लिए क्लिक करें — मास्क बंद करने के लिए पहले बिंदु पर क्लिक करें, डबल-क्लिक करें या Enter दबाएँ। Esc रद्द करता है। | मॉनिटरवर बिंदू जोडण्यासाठी क्लिक करा — मास्क बंद करण्यासाठी पहिल्या बिंदूवर क्लिक करा, डबल-क्लिक करा किंवा Enter दाबा. Esc रद्द करते.
+Select a visual clip, then click points on the program monitor | कोई दृश्य क्लिप चुनें, फिर प्रोग्राम मॉनिटर पर बिंदुओं पर क्लिक करें | दृश्य क्लिप निवडा, मग प्रोग्राम मॉनिटरवर बिंदूंवर क्लिक करा
+A pen mask needs at least 3 points | पेन मास्क में कम से कम 3 बिंदु होने चाहिए | पेन मास्कला किमान 3 बिंदू हवेत
+Tracking works on video clips | ट्रैकिंग वीडियो क्लिप पर काम करती है | ट्रॅकिंग व्हिडिओ क्लिपवर चालते
+Nothing to track in that direction | उस दिशा में ट्रैक करने के लिए कुछ नहीं | त्या दिशेने ट्रॅक करण्यासारखे काही नाही
+Tracking needs FFmpeg | ट्रैकिंग के लिए FFmpeg चाहिए | ट्रॅकिंगसाठी FFmpeg आवश्यक
+Select a video clip that has a mask or a face-blur (mosaic) effect | मास्क या चेहरा-ब्लर (मोज़ेक) इफ़ेक्ट वाली कोई वीडियो क्लिप चुनें | मास्क किंवा चेहरा-ब्लर (मोझॅक) इफेक्ट असलेली व्हिडिओ क्लिप निवडा
+Add a mask or a Mosaic / face blur effect to track | ट्रैक करने के लिए मास्क या मोज़ेक / चेहरा ब्लर इफ़ेक्ट जोड़ें | ट्रॅक करण्यासाठी मास्क किंवा मोझॅक / चेहरा ब्लर इफेक्ट जोडा
+Tracking {p0} {p1} | {p0} {p1} ट्रैक हो रहा है | {p0} {p1} ट्रॅक होत आहे
+Tracking… {p0}% | ट्रैक हो रहा है… {p0}% | ट्रॅक होत आहे… {p0}%
+Could not track — try a larger or more detailed region | ट्रैक नहीं हो सका — बड़ा या अधिक विवरण वाला क्षेत्र आज़माएँ | ट्रॅक करता आले नाही — मोठा किंवा अधिक तपशीलवार भाग वापरून पाहा
+Track {p0} {p1} | {p0} {p1} ट्रैक करें | {p0} {p1} ट्रॅक करा
+Tracked {frames} frames{p1} | {frames} फ़्रेम ट्रैक हुए{p1} | {frames} फ्रेम ट्रॅक झाल्या{p1}
+Smart reframe — following the subject | स्मार्ट रीफ़्रेम — विषय का अनुसरण | स्मार्ट रीफ्रेम — विषयाचा पाठलाग
+Analysing {name} ({p1}/{length}) | {name} का विश्लेषण हो रहा है ({p1}/{length}) | {name} चे विश्लेषण होत आहे ({p1}/{length})
+Tracking the subject in {name}… {p1}% | {name} में विषय ट्रैक हो रहा है… {p1}% | {name} मधील विषय ट्रॅक होत आहे… {p1}%
+Smart reframe | स्मार्ट रीफ़्रेम | स्मार्ट रीफ्रेम
+Smart reframe: {done} clip(s) now follow their subject in {aspect} | स्मार्ट रीफ़्रेम: {done} क्लिप अब {aspect} में अपने विषय का अनुसरण करती हैं | स्मार्ट रीफ्रेम: {done} क्लिप आता {aspect} मध्ये त्यांच्या विषयाचा पाठलाग करतात
+Smart reframe (follow the subject) | स्मार्ट रीफ़्रेम (विषय का अनुसरण करें) | स्मार्ट रीफ्रेम (विषयाचा पाठलाग करा)
+Camera smoothness | कैमरा चिकनाई | कॅमेरा गुळगुळीतपणा
+Track the subject and keyframe the framing (uses the clip’s mask or face-blur region if it has one) | विषय ट्रैक करें और फ़्रेमिंग का कीफ़्रेम बनाएँ (क्लिप का मास्क या चेहरा-ब्लर क्षेत्र हो तो उसका उपयोग करता है) | विषय ट्रॅक करा आणि फ्रेमिंगचे कीफ्रेम करा (क्लिपचा मास्क किंवा चेहरा-ब्लर भाग असल्यास तो वापरते)
+Cut selection | चयन काटें | निवड कापा
+Ripple-delete the selected words from the timeline (Delete) | चुने गए शब्दों को टाइमलाइन से रिपल-डिलीट करें (Delete) | निवडलेले शब्द टाइमलाइनमधून रिपल-डिलीट करा (Delete)
+Transcript settings | ट्रांसक्रिप्ट सेटिंग्ज़ | ट्रान्सक्रिप्ट सेटिंग्ज
+No transcript yet. Run Auto-transcribe to recognise the speech — the words appear here with their timings, ready for editing. | अभी तक कोई ट्रांसक्रिप्ट नहीं। आवाज़ पहचानने के लिए अपने-आप ट्रांसक्राइब चलाएँ — शब्द अपने समय के साथ यहाँ दिखेंगे, संपादन के लिए तैयार। | अद्याप ट्रान्सक्रिप्ट नाही. आवाज ओळखण्यासाठी आपोआप ट्रान्सक्राइब चालवा — शब्द त्यांच्या वेळेसह येथे दिसतील, संपादनासाठी तयार.
+{length} words · {p1} | {length} शब्द · {p1} | {length} शब्द · {p1}
+· {est} words have estimated timings | · {est} शब्दों का समय अनुमानित है | · {est} शब्दांची वेळ अंदाजित आहे
+Go to this paragraph | इस अनुच्छेद पर जाएँ | या परिच्छेदावर जा
+{p0} word(s) selected · {p1} s | {p0} शब्द चयनित · {p1} s | {p0} शब्द निवडले · {p1} s
+Select words in the transcript first (click, drag or Shift+click) | पहले ट्रांसक्रिप्ट में शब्द चुनें (क्लिक, ड्रैग या Shift+क्लिक) | आधी ट्रान्सक्रिप्टमधील शब्द निवडा (क्लिक, ड्रॅग किंवा Shift+क्लिक)
+Cut words (transcript) | शब्द काटें (ट्रांसक्रिप्ट) | शब्द कापा (ट्रान्सक्रिप्ट)
+Transcript edit | ट्रांसक्रिप्ट संपादन | ट्रान्सक्रिप्ट संपादन
+Removed {length} range(s) · {p1} s | {length} श्रेणियाँ हटाई गईं · {p1} s | {length} श्रेणी काढल्या · {p1} s
+Run Auto-transcribe first — the transcript comes from its captions | पहले अपने-आप ट्रांसक्राइब चलाएँ — ट्रांसक्रिप्ट उसके कैप्शन से आती है | आधी आपोआप ट्रान्सक्राइब चालवा — ट्रान्सक्रिप्ट त्याच्या कॅप्शनमधून येते
+Filler words and phrases (comma separated) | भराव शब्द और वाक्यांश (अल्पविराम से अलग) | भरावाचे शब्द आणि वाक्प्रचार (स्वल्पविरामाने वेगळे)
+Remove filler words | भराव शब्द हटाएँ | भरावाचे शब्द काढा
+No filler words found | कोई भराव शब्द नहीं मिला | भरावाचे शब्द सापडले नाहीत
+Remove selected | चयनित हटाएँ | निवडलेले काढा
+{length} filler word(s) found. Untick any you want to keep, then remove the rest from the timeline. | {length} भराव शब्द मिले। जिन्हें रखना है उनका चिह्न हटाएँ, फिर बाकी को टाइमलाइन से हटाएँ। | {length} भरावाचे शब्द सापडले. जे ठेवायचे त्यांची खूण काढा, मग बाकीचे टाइमलाइनमधून काढा.
+Removed {length} filler word(s) · {p1} s | {length} भराव शब्द हटाए गए · {p1} s | {length} भरावाचे शब्द काढले · {p1} s
+Find pauses | विराम खोजें | विराम शोधा
+Keep this much silence on each side (seconds) | हर ओर इतनी चुप्पी रखें (सेकंड) | प्रत्येक बाजूला इतकी शांतता ठेवा (सेकंद)
+Remove pauses | विराम हटाएँ | विराम काढा
+Remove pauses longer than (seconds) | इससे लंबे विराम हटाएँ (सेकंड) | यापेक्षा लांब विराम काढा (सेकंद)
+No pauses that long | इतने लंबे विराम नहीं | इतके लांब विराम नाहीत
+{length} pause(s) found. Removing them shortens the sequence by {p1} s ({p2} → {p3}). | {length} विराम मिले। इन्हें हटाने से सीक्वेंस {p1} s छोटा होगा ({p2} → {p3})। | {length} विराम सापडले. ते काढल्याने सीक्वेन्स {p1} s ने लहान होईल ({p2} → {p3}).
+Removed {length} pause(s) · {p1} s | {length} विराम हटाए गए · {p1} s | {length} विराम काढले · {p1} s
+There is no transcript yet | अभी तक कोई ट्रांसक्रिप्ट नहीं है | अद्याप ट्रान्सक्रिप्ट नाही
+Export transcript | ट्रांसक्रिप्ट एक्सपोर्ट करें | ट्रान्सक्रिप्ट एक्सपोर्ट करा
+Start each paragraph with its timestamp | हर अनुच्छेद उसके टाइमस्टैम्प से शुरू करें | प्रत्येक परिच्छेद त्याच्या टाइमस्टॅम्पने सुरू करा
+Word / DOCX friendly (UTF-8 with byte-order mark) | Word / DOCX के अनुकूल (बाइट-ऑर्डर मार्क के साथ UTF-8) | Word / DOCX साठी योग्य (बाइट-ऑर्डर मार्कसह UTF-8)
+Could not copy | कॉपी नहीं हो सका | कॉपी करता आले नाही
+Could not copy: {message} | कॉपी नहीं हो सका: {message} | कॉपी करता आले नाही: {message}
+Transcript copied | ट्रांसक्रिप्ट कॉपी हुई | ट्रान्सक्रिप्ट कॉपी झाली
+All unlocked tracks (everything stays in sync) | सभी अनलॉक ट्रैक (सब कुछ तालमेल में रहता है) | सर्व अनलॉक ट्रॅक (सर्व काही समक्रमित राहते)
+Cutting words removes time from | शब्द काटने से यहाँ से समय हटता है | शब्द कापल्याने येथून वेळ कमी होतो
+Only the speaker’s clips and their linked audio (music keeps playing) | केवल वक्ता की क्लिप और उनका लिंक ऑडियो (संगीत चलता रहता है) | फक्त वक्त्याच्या क्लिप आणि त्यांचा लिंक ऑडिओ (संगीत चालू राहते)
+Start a new paragraph after a pause of (seconds) | इतने विराम के बाद नया अनुच्छेद शुरू करें (सेकंड) | इतक्या विरामानंतर नवीन परिच्छेद सुरू करा (सेकंद)

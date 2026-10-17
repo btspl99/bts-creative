@@ -132,7 +132,7 @@ export async function checkRecovery({ includeLive = false, auto } = {}) {
   if (!auto) {
     const sel = list.map(() => true);
     const body = h('div', { class: 'rec-list' }, h('div', { class: 'muted', style: { marginBottom: '8px' } }, 'BTS PDF Pro closed before these documents were saved. Recover the unsaved changes?'),
-      ...list.map((r, i) => { const cb = h('input', { type: 'checkbox', checked: true }); cb.onchange = () => sel[i] = cb.checked; return h('label', { class: 'row rec-row' }, cb, h('b', {}, r.fileName), h('span', { class: 'muted' }, `${r.pages} page(s) · ${new Date(r.at).toLocaleString()}`)); }));
+      ...list.map((r, i) => { const cb = h('input', { type: 'checkbox', checked: true }); cb.onchange = () => sel[i] = cb.checked; return h('label', { class: 'row rec-row' }, cb, h('b', {}, r.fileName), h('span', { class: 'muted' }, `${r.pages} page(s) · ${I18N.date(r.at)}`)); }));
     const res = await UI.modal({ title: 'Recover unsaved work', width: 520, body, buttons: [{ label: 'Not now', value: null }, { label: 'Discard', value: 'discard' }, { label: 'Recover', primary: true, value: 'ok' }] });
     if (!res) return [];
     if (res === 'discard') { for (const r of list) await dropRecord(r.id); UI.toast('Recovery data discarded'); return []; }

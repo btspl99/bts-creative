@@ -1,0 +1,281 @@
+# PDF Pro (signatures, text editing) and Photo (menus, tools)
+This signature could not be checked: {error} | यह हस्ताक्षर जाँचा नहीं जा सका: {error} | ही स्वाक्षरी तपासता आली नाही: {error}
+The document has been altered or corrupted since it was signed. | हस्ताक्षर के बाद से दस्तावेज़ बदला गया है या क्षतिग्रस्त है। | स्वाक्षरीनंतर दस्तऐवज बदलला आहे किंवा खराब झाला आहे.
+The signature does not match the signer's certificate. | हस्ताक्षर हस्ताक्षरकर्ता के प्रमाणपत्र से मेल नहीं खाता। | स्वाक्षरी स्वाक्षरीकर्त्याच्या प्रमाणपत्राशी जुळत नाही.
+The document has not been modified since this signature was applied. | यह हस्ताक्षर लगाए जाने के बाद से दस्तावेज़ में कोई बदलाव नहीं हुआ है। | ही स्वाक्षरी केल्यापासून दस्तऐवजात बदल झालेला नाही.
+Valid | मान्य | वैध
+The signed version is intact. The document was changed after this signature was applied. | हस्ताक्षरित संस्करण सुरक्षित है। यह हस्ताक्षर लगाने के बाद दस्तावेज़ बदला गया। | स्वाक्षरी केलेली आवृत्ती अबाधित आहे. ही स्वाक्षरी केल्यानंतर दस्तऐवज बदलला गेला.
+Certificate | प्रमाणपत्र | प्रमाणपत्र
+Certificate: {name} | प्रमाणपत्र: {name} | प्रमाणपत्र: {name}
+No certificate chosen yet | अभी तक कोई प्रमाणपत्र नहीं चुना गया | अद्याप प्रमाणपत्र निवडलेले नाही
+Signing as {name} | {name} के रूप में हस्ताक्षर | {name} म्हणून स्वाक्षरी
+Open a PDF to see its signatures | हस्ताक्षर देखने के लिए कोई PDF खोलें | स्वाक्षऱ्या पाहण्यासाठी PDF उघडा
+This document has no digital signatures. | इस दस्तावेज़ में कोई डिजिटल हस्ताक्षर नहीं है। | या दस्तऐवजात डिजिटल स्वाक्षऱ्या नाहीत.
+Checking signatures | हस्ताक्षर जाँचे जा रहे हैं | स्वाक्षऱ्या तपासत आहे
+All {length} signature(s) are valid. | सभी {length} हस्ताक्षर मान्य हैं। | सर्व {length} स्वाक्षऱ्या वैध आहेत.
+Signer identities are not verified: BTS PDF Pro has no list of trusted certificate authorities. | हस्ताक्षरकर्ताओं की पहचान सत्यापित नहीं है: BTS PDF Pro के पास विश्वसनीय प्रमाणपत्र प्राधिकरणों की सूची नहीं है। | स्वाक्षरीकर्त्यांची ओळख पडताळलेली नाही: BTS PDF Pro कडे विश्वसनीय प्रमाणपत्र प्राधिकरणांची यादी नाही.
+{bad} of {length} signature(s) are NOT valid. | {length} में से {bad} हस्ताक्षर मान्य नहीं हैं। | {length} पैकी {bad} स्वाक्षऱ्या वैध नाहीत.
+You have unsaved changes. Saving them rewrites the file and the signatures will become invalid. | आपके बदलाव सहेजे नहीं गए हैं। इन्हें सहेजने से फ़ाइल फिर से लिखी जाती है और हस्ताक्षर अमान्य हो जाएँगे। | तुमचे बदल जतन केलेले नाहीत. ते जतन केल्याने फाइल पुन्हा लिहिली जाते आणि स्वाक्षऱ्या अवैध होतील.
+Later changes: {laterRevisions} revision(s) added after signing, including {laterSignatures} later signature(s). | बाद के बदलाव: हस्ताक्षर के बाद {laterRevisions} संशोधन जोड़े गए, जिनमें {laterSignatures} बाद के हस्ताक्षर शामिल हैं। | नंतरचे बदल: स्वाक्षरीनंतर {laterRevisions} सुधारणा जोडल्या, त्यात {laterSignatures} नंतरच्या स्वाक्षऱ्या समाविष्ट.
+Identity not verified: the certificate is self-signed, so anyone could create one with this name. Confirm the fingerprint with the signer. | पहचान सत्यापित नहीं: प्रमाणपत्र स्व-हस्ताक्षरित है, इसलिए कोई भी इस नाम से इसे बना सकता है। हस्ताक्षरकर्ता से फ़िंगरप्रिंट की पुष्टि करें। | ओळख पडताळलेली नाही: प्रमाणपत्र स्व-स्वाक्षरित आहे, त्यामुळे कोणीही या नावाने ते तयार करू शकतो. स्वाक्षरीकर्त्याकडून फिंगरप्रिंटची पुष्टी करा.
+Identity not verified: the certificate was issued by {p0}, which is not in a trusted list. | पहचान सत्यापित नहीं: प्रमाणपत्र {p0} द्वारा जारी किया गया है, जो विश्वसनीय सूची में नहीं है। | ओळख पडताळलेली नाही: प्रमाणपत्र {p0} यांनी जारी केले आहे, जे विश्वसनीय यादीत नाही.
+Signed by {signer} | {signer} द्वारा हस्ताक्षरित | {signer} यांनी स्वाक्षरी केलेले
+Signing time: {p0} | हस्ताक्षर का समय: {p0} | स्वाक्षरीची वेळ: {p0}
+Certified: form filling and signing allowed | प्रमाणित: फ़ॉर्म भरने और हस्ताक्षर की अनुमति | प्रमाणित: फॉर्म भरणे आणि स्वाक्षरीला परवानगी
+Certified: form filling, signing and comments allowed | प्रमाणित: फ़ॉर्म भरने, हस्ताक्षर और टिप्पणियों की अनुमति | प्रमाणित: फॉर्म भरणे, स्वाक्षरी आणि टिप्पण्यांना परवानगी
+Certified: no changes allowed | प्रमाणित: किसी बदलाव की अनुमति नहीं | प्रमाणित: कोणत्याही बदलांना परवानगी नाही
+Certificate details | प्रमाणपत्र विवरण | प्रमाणपत्र तपशील
+Signature details | हस्ताक्षर विवरण | स्वाक्षरी तपशील
+Issued by | जारीकर्ता | जारीकर्ता
+Organisation | संगठन | संस्था
+Signer | हस्ताक्षरकर्ता | स्वाक्षरीकर्ता
+Certificate valid from | प्रमाणपत्र इस तिथि से मान्य | प्रमाणपत्र या दिनांकापासून वैध
+Certificate valid until | प्रमाणपत्र इस तिथि तक मान्य | प्रमाणपत्र या दिनांकापर्यंत वैध
+No | नहीं | नाही
+Valid at signing time | हस्ताक्षर के समय मान्य | स्वाक्षरीच्या वेळी वैध
+Yes | हाँ | होय
+Digest algorithm | डाइजेस्ट एल्गोरिदम | डायजेस्ट अल्गोरिदम
+SHA-256 fingerprint | SHA-256 फ़िंगरप्रिंट | SHA-256 फिंगरप्रिंट
+Serial number | क्रम संख्या | अनुक्रमांक
+Signature format | हस्ताक्षर प्रारूप | स्वाक्षरी स्वरूप
+Byte range | बाइट रेंज | बाइट रेंज
+Covers the whole file | पूरी फ़ाइल को कवर करता है | संपूर्ण फाइल व्यापते
+Document digest matches | दस्तावेज़ डाइजेस्ट मेल खाता है | दस्तऐवज डायजेस्ट जुळतो
+Signature matches certificate | हस्ताक्षर प्रमाणपत्र से मेल खाता है | स्वाक्षरी प्रमाणपत्राशी जुळते
+Current certificate: {name}{p1} | वर्तमान प्रमाणपत्र: {name}{p1} | सध्याचे प्रमाणपत्र: {name}{p1}
+Forget | भूल जाएँ | विसरा
+No certificate is in use. | किसी प्रमाणपत्र का उपयोग नहीं हो रहा। | कोणतेही प्रमाणपत्र वापरात नाही.
+Signing certificate | हस्ताक्षर प्रमाणपत्र | स्वाक्षरी प्रमाणपत्र
+The standard fonts cannot write these characters: {chars}. Choose a system font or a font file in the options bar, then try again. | मानक फ़ॉन्ट ये अक्षर नहीं लिख सकते: {chars}। विकल्प बार में कोई सिस्टम फ़ॉन्ट या फ़ॉन्ट फ़ाइल चुनें, फिर से प्रयास करें। | मानक फॉन्ट ही अक्षरे लिहू शकत नाहीत: {chars}. पर्याय पट्टीत प्रणाली फॉन्ट किंवा फॉन्ट फाइल निवडा आणि पुन्हा प्रयत्न करा.
+The original font does not contain all the letters you typed, so a similar standard font ({p0}) was used for them. | मूल फ़ॉन्ट में आपके टाइप किए सभी अक्षर नहीं हैं, इसलिए उनके लिए मिलता-जुलता मानक फ़ॉन्ट ({p0}) उपयोग किया गया। | मूळ फॉन्टमध्ये तुम्ही टाइप केलेली सर्व अक्षरे नाहीत, म्हणून त्यांच्यासाठी समान मानक फॉन्ट ({p0}) वापरला.
+Letters missing from the embedded font were written with {p0}. | एम्बेडेड फ़ॉन्ट में न मिलने वाले अक्षर {p0} से लिखे गए। | एम्बेड केलेल्या फॉन्टमध्ये नसलेली अक्षरे {p0} ने लिहिली.
+content parse failed | - |
+Edit paragraph | अनुच्छेद संपादित करें | परिच्छेद संपादित करा
+Edit this line only | केवल यह पंक्ति संपादित करें | फक्त ही ओळ संपादित करा
+Delete paragraph | अनुच्छेद हटाएँ | परिच्छेद हटवा
+Delete this line | यह पंक्ति हटाएँ | ही ओळ हटवा
+Enter = new paragraph · Ctrl+Enter = done · Esc = cancel · empty = delete | Enter = नया अनुच्छेद · Ctrl+Enter = हो गया · Esc = रद्द · खाली = हटाएँ | Enter = नवीन परिच्छेद · Ctrl+Enter = झाले · Esc = रद्द · रिकामे = हटवा
+Delete text | टेक्स्ट हटाएँ | मजकूर हटवा
+The text changed; click it again. | टेक्स्ट बदल गया; उस पर फिर से क्लिक करें। | मजकूर बदलला; त्यावर पुन्हा क्लिक करा.
+Text deleted from the page content | पृष्ठ सामग्री से टेक्स्ट हटाया गया | पृष्ठ मजकुरातून मजकूर हटवला
+The text now needs more lines and overlaps the text below it. Shorten it, or undo with Ctrl+Z. | टेक्स्ट को अब अधिक पंक्तियाँ चाहिए और यह नीचे के टेक्स्ट पर चढ़ रहा है। इसे छोटा करें, या Ctrl+Z से पूर्ववत करें। | मजकुराला आता जास्त ओळी लागतात आणि तो खालच्या मजकुरावर येतो. तो लहान करा किंवा Ctrl+Z ने पूर्ववत करा.
+Could not edit this text | यह टेक्स्ट संपादित नहीं हो सका | हा मजकूर संपादित करता आला नाही
+Could not edit this text: {message} | यह टेक्स्ट संपादित नहीं हो सका: {message} | हा मजकूर संपादित करता आला नाही: {message}
+Add paragraph | अनुच्छेद जोड़ें | परिच्छेद जोडा
+Could not add the paragraph | अनुच्छेद नहीं जोड़ा जा सका | परिच्छेद जोडता आला नाही
+Could not add the paragraph: {message} | अनुच्छेद नहीं जोड़ा जा सका: {message} | परिच्छेद जोडता आला नाही: {message}
+This is recognised (OCR) text over a scanned image. It will be covered with a white box and new text instead. | यह स्कैन की गई छवि पर पहचाना गया (OCR) टेक्स्ट है। इसके बजाय इसे सफ़ेद बॉक्स और नए टेक्स्ट से ढक दिया जाएगा। | हा स्कॅन केलेल्या प्रतिमेवरील ओळखलेला (OCR) मजकूर आहे. त्याऐवजी तो पांढऱ्या बॉक्सने आणि नवीन मजकुराने झाकला जाईल.
+This text uses a Type 3 (drawn) font that cannot be edited directly. It will be covered with a white box and new text instead; the old text stays in the file underneath. | यह टेक्स्ट Type 3 (चित्रित) फ़ॉन्ट का उपयोग करता है जिसे सीधे संपादित नहीं किया जा सकता। इसके बजाय इसे सफ़ेद बॉक्स और नए टेक्स्ट से ढका जाएगा; पुराना टेक्स्ट फ़ाइल में नीचे बना रहेगा। | हा मजकूर Type 3 (रेखाटलेला) फॉन्ट वापरतो जो थेट संपादित करता येत नाही. त्याऐवजी तो पांढऱ्या बॉक्सने आणि नवीन मजकुराने झाकला जाईल; जुना मजकूर फाइलमध्ये खाली राहील.
+This text could not be matched in the page content, so it will be covered with a white box and new text instead. The old text stays in the file underneath. | यह टेक्स्ट पृष्ठ सामग्री में नहीं मिल सका, इसलिए इसके बजाय इसे सफ़ेद बॉक्स और नए टेक्स्ट से ढका जाएगा। पुराना टेक्स्ट फ़ाइल में नीचे बना रहेगा। | हा मजकूर पृष्ठ मजकुरात जुळला नाही, म्हणून त्याऐवजी तो पांढऱ्या बॉक्सने आणि नवीन मजकुराने झाकला जाईल. जुना मजकूर फाइलमध्ये खाली राहील.
+Replace with | इससे बदलें | याने बदला
+Replace all | सभी बदलें | सर्व बदला
+Whole words only | केवल पूरे शब्द | फक्त संपूर्ण शब्द
+Replace failed | बदलना विफल रहा | बदलणे अयशस्वी
+Replace failed: {message} | बदलना विफल रहा: {message} | बदलणे अयशस्वी: {message}
+Replace text | टेक्स्ट बदलें | मजकूर बदला
+No matches found | कोई मिलान नहीं मिला | जुळण्या सापडल्या नाहीत
+No text was replaced. {skipped} match(es) use fonts that cannot be edited. | कोई टेक्स्ट नहीं बदला गया। {skipped} मिलान ऐसे फ़ॉन्ट उपयोग करते हैं जिन्हें संपादित नहीं किया जा सकता। | कोणताही मजकूर बदलला नाही. {skipped} जुळण्या संपादित न करता येणारे फॉन्ट वापरतात.
+Replaced {count} occurrence(s) in the page content. | पृष्ठ सामग्री में {count} जगह बदला गया। | पृष्ठ मजकुरात {count} ठिकाणी बदलले.
+{fallback} needed a similar standard font. | {fallback} के लिए मिलते-जुलते मानक फ़ॉन्ट की ज़रूरत पड़ी। | {fallback} साठी समान मानक फॉन्ट लागला.
+{skipped} could not be changed (unsupported font). | {skipped} नहीं बदले जा सके (असमर्थित फ़ॉन्ट)। | {skipped} बदलता आले नाहीत (असमर्थित फॉन्ट).
+Installed fonts are not available here. Choose a font file instead. | इंस्टॉल फ़ॉन्ट यहाँ उपलब्ध नहीं हैं। इसके बजाय फ़ॉन्ट फ़ाइल चुनें। | इन्स्टॉल केलेले फॉन्ट येथे उपलब्ध नाहीत. त्याऐवजी फॉन्ट फाइल निवडा.
+Search fonts | फ़ॉन्ट खोजें | फॉन्ट शोधा
+Choose an installed font | इंस्टॉल फ़ॉन्ट चुनें | इन्स्टॉल केलेला फॉन्ट निवडा
+The font is embedded (only the letters used) into the PDF for edited text. | संपादित टेक्स्ट के लिए फ़ॉन्ट PDF में एम्बेड किया जाता है (केवल प्रयुक्त अक्षर)। | संपादित मजकुरासाठी फॉन्ट PDF मध्ये एम्बेड केला जातो (फक्त वापरलेली अक्षरे).
+Use font | फ़ॉन्ट उपयोग करें | फॉन्ट वापरा
+Fonts | फ़ॉन्ट | फॉन्ट
+This font file cannot be used | यह फ़ॉन्ट फ़ाइल उपयोग नहीं की जा सकती | ही फॉन्ट फाइल वापरता येत नाही
+This font file cannot be used: {message} | यह फ़ॉन्ट फ़ाइल उपयोग नहीं की जा सकती: {message} | ही फॉन्ट फाइल वापरता येत नाही: {message}
+{name} will be used for edited text | संपादित टेक्स्ट के लिए {name} का उपयोग होगा | संपादित मजकुरासाठी {name} वापरला जाईल
+Paragraph | अनुच्छेद | परिच्छेद
+Original font (auto) | मूल फ़ॉन्ट (स्वतः) | मूळ फॉन्ट (स्वयं)
+std | - |
+Colour for edited text | संपादित टेक्स्ट का रंग | संपादित मजकुराचा रंग
+Font file | फ़ॉन्ट फ़ाइल | फॉन्ट फाइल
+System font | सिस्टम फ़ॉन्ट | प्रणाली फॉन्ट
+Match installed fonts | इंस्टॉल फ़ॉन्ट से मिलाएँ | इन्स्टॉल केलेल्या फॉन्टशी जुळवा
+When the original font lacks a letter, use the same font installed on this computer | जब मूल फ़ॉन्ट में कोई अक्षर न हो, तो इस कंप्यूटर पर इंस्टॉल वही फ़ॉन्ट उपयोग करें | मूळ फॉन्टमध्ये एखादे अक्षर नसल्यास या संगणकावर इन्स्टॉल केलेला तोच फॉन्ट वापरा
+Click text to edit it, or click empty space to add a paragraph | संपादित करने के लिए टेक्स्ट पर क्लिक करें, या अनुच्छेद जोड़ने के लिए खाली जगह पर क्लिक करें | संपादित करण्यासाठी मजकुरावर क्लिक करा, किंवा परिच्छेद जोडण्यासाठी रिकाम्या जागेवर क्लिक करा
+Replace everywhere | हर जगह बदलें | सर्वत्र बदला
+record failed | - |
+Color Burn | कलर बर्न | कलर बर्न
+Color Dodge | कलर डॉज | कलर डॉज
+Darken | गहरा करें | गडद करा
+Difference | अंतर | फरक
+Exclusion | अपवर्जन | वगळणूक
+Hard Light | हार्ड लाइट | हार्ड लाइट
+Hue | ह्यू (वर्ण) | ह्यू (छटा)
+Lighten | हल्का करें | फिकट करा
+Luminosity | ल्यूमिनोसिटी | ल्युमिनोसिटी
+Saturation | संतृप्ति | संपृक्तता
+Screen | स्क्रीन | स्क्रीन
+Soft Light | सॉफ़्ट लाइट | सॉफ्ट लाइट
+Untitled- | बिना शीर्षक- | शीर्षकरहित-
+Layer 1 | लेयर 1 | लेयर 1
+New document | नया दस्तावेज़ | नवीन दस्तऐवज
+Lasso | लैसो | लॅसो
+Magic wand | मैजिक वैंड | मॅजिक वँड
+Marquee | मार्की | मार्की
+Perspective crop | पर्सपेक्टिव क्रॉप | पर्स्पेक्टिव्ह क्रॉप
+Eyedropper | आईड्रॉपर | आयड्रॉपर
+Ruler / measure | रूलर / माप | रूलर / मोजमाप
+Patch tool | पैच टूल | पॅच साधन
+Red-eye tool | रेड-आई टूल | रेड-आय साधन
+Remove tool | रिमूव टूल | काढण्याचे साधन
+Spot healing brush | स्पॉट हीलिंग ब्रश | स्पॉट हीलिंग ब्रश
+Brush | ब्रश | ब्रश
+Color replacement | रंग प्रतिस्थापन | रंग बदल
+Mixer brush | मिक्सर ब्रश | मिक्सर ब्रश
+Pencil | पेंसिल | पेन्सिल
+Clone stamp | क्लोन स्टैम्प | क्लोन स्टॅम्प
+Pattern stamp | पैटर्न स्टैम्प | पॅटर्न स्टॅम्प
+Eraser | इरेज़र | खोडरबर
+Gradient | ग्रेडिएंट | ग्रेडियंट
+Paint bucket | पेंट बकेट | पेंट बकेट
+Blur / Sharpen / Smudge | धुंधला / तीक्ष्ण / स्मज | धूसर / तीक्ष्ण / स्मज
+Dodge / Burn / Sponge | डॉज / बर्न / स्पंज | डॉज / बर्न / स्पंज
+Frame | फ़्रेम | फ्रेम
+Teeth & eye brighten | दाँत और आँखें चमकाएँ | दात आणि डोळे उजळा
+Shape | आकृति | आकार
+Place image as layer | छवि को लेयर के रूप में रखें | प्रतिमा लेयर म्हणून ठेवा
+Save project (.btsp) | प्रोजेक्ट सहेजें (.btsp) | प्रकल्प जतन करा (.btsp)
+Save project as | प्रोजेक्ट इस रूप में सहेजें | प्रकल्प म्हणून जतन करा
+Save as Photoshop (.psd) | Photoshop (.psd) के रूप में सहेजें | Photoshop (.psd) म्हणून जतन करा
+Quick export PNG | त्वरित PNG एक्सपोर्ट | जलद PNG एक्सपोर्ट
+Copy merged to clipboard | मर्ज की गई कॉपी क्लिपबोर्ड पर | विलीन प्रत क्लिपबोर्डवर कॉपी करा
+Automate | स्वचालित करें | स्वयंचलित करा
+Send to PDF Pro | PDF Pro में भेजें | PDF Pro मध्ये पाठवा
+Send to Video | Video में भेजें | Video मध्ये पाठवा
+Recover autosaved documents | ऑटोसेव किए गए दस्तावेज़ पुनर्प्राप्त करें | ऑटोसेव्ह केलेले दस्तऐवज पुनर्प्राप्त करा
+Close document | दस्तावेज़ बंद करें | दस्तऐवज बंद करा
+Undo {p0} | पूर्ववत करें: {p0} | पूर्ववत करा: {p0}
+Copy merged | मर्ज की गई कॉपी | विलीन प्रत कॉपी करा
+Cut | काटें | कापा
+Paste | चिपकाएँ | पेस्ट करा
+Paste as new layer (from clipboard) | नई लेयर के रूप में चिपकाएँ (क्लिपबोर्ड से) | नवीन लेयर म्हणून पेस्ट करा (क्लिपबोर्डवरून)
+Remove tool (brush over distractions) | रिमूव टूल (अनचाही चीज़ों पर ब्रश करें) | काढण्याचे साधन (नको असलेल्या गोष्टींवर ब्रश फिरवा)
+Free transform | फ़्री ट्रांसफ़ॉर्म | मुक्त रूपांतर
+Flip horizontal | क्षैतिज पलटें | आडवे उलटा
+Flip vertical | लंबवत पलटें | उभे उलटा
+Rotate 180° | 180° घुमाएँ | 180° फिरवा
+Rotate 90° CCW | 90° वामावर्त घुमाएँ | 90° घड्याळाच्या उलट फिरवा
+Rotate 90° CW | 90° दक्षिणावर्त घुमाएँ | 90° घड्याळाच्या दिशेने फिरवा
+Transform | ट्रांसफ़ॉर्म | रूपांतर
+Take history snapshot | इतिहास स्नैपशॉट लें | इतिहास स्नॅपशॉट घ्या
+Adjustments | एडजस्टमेंट | ॲडजस्टमेंट
+Auto tone | ऑटो टोन | स्वयं टोन
+Auto contrast | ऑटो कंट्रास्ट | स्वयं कॉन्ट्रास्ट
+Auto color | ऑटो रंग | स्वयं रंग
+90° clockwise | 90° दक्षिणावर्त | 90° घड्याळाच्या दिशेने
+90° counter-clockwise | 90° वामावर्त | 90° घड्याळाच्या उलट दिशेने
+Arbitrary | मनचाहा कोण | हवा तो कोन
+Flip canvas horizontal | कैनवस क्षैतिज पलटें | कॅनव्हास आडवा उलटा
+Flip canvas vertical | कैनवस लंबवत पलटें | कॅनव्हास उभा उलटा
+Image rotation | छवि घुमाव | प्रतिमा फिरवणे
+Straighten | सीधा करें | सरळ करा
+Crop to selection | चयन तक क्रॉप करें | निवडीपर्यंत क्रॉप करा
+Reveal all | सब दिखाएँ | सर्व दाखवा
+New layer | नई लेयर | नवीन लेयर
+New adjustment layer | नई एडजस्टमेंट लेयर | नवीन ॲडजस्टमेंट लेयर
+Layer via copy | कॉपी से लेयर | कॉपीद्वारे लेयर
+Layer via cut | कट से लेयर | कटद्वारे लेयर
+Delete layer | लेयर हटाएँ | लेयर हटवा
+Duplicate layer | लेयर की प्रतिलिपि बनाएँ | लेयरची प्रत बनवा
+Layer properties / edit adjustment | लेयर गुण / एडजस्टमेंट संपादित करें | लेयर गुणधर्म / ॲडजस्टमेंट संपादित करा
+Apply mask | मास्क लागू करें | मास्क लागू करा
+Delete mask | मास्क हटाएँ | मास्क हटवा
+Hide all | सब छिपाएँ | सर्व लपवा
+Invert mask | मास्क उलटें | मास्क उलटा करा
+Layer mask | लेयर मास्क | लेयर मास्क
+Reveal selection | चयन दिखाएँ | निवड दाखवा
+Blending options / all styles | ब्लेंडिंग विकल्प / सभी शैलियाँ | ब्लेंडिंग पर्याय / सर्व शैली
+Clear layer style | लेयर शैली साफ़ करें | लेयर शैली साफ करा
+Copy layer style | लेयर शैली कॉपी करें | लेयर शैली कॉपी करा
+Layer style | लेयर शैली | लेयर शैली
+Paste layer style | लेयर शैली चिपकाएँ | लेयर शैली पेस्ट करा
+Person / portrait (AI) | व्यक्ति / पोर्ट्रेट (AI) | व्यक्ती / पोर्ट्रेट (AI)
+Plain or product background | सादी या उत्पाद पृष्ठभूमि | साधी किंवा उत्पादन पार्श्वभूमी
+Remove background | पृष्ठभूमि हटाएँ | पार्श्वभूमी काढा
+Fill frame | फ़्रेम भरें | फ्रेम भरा
+Fit content to frame | सामग्री को फ़्रेम में फ़िट करें | मजकूर फ्रेममध्ये बसवा
+Frame from selection / layer | चयन / लेयर से फ़्रेम | निवड / लेयरपासून फ्रेम
+New ellipse frame | नया दीर्घवृत्त फ़्रेम | नवीन लंबवर्तुळ फ्रेम
+New rectangle frame | नया आयत फ़्रेम | नवीन आयत फ्रेम
+Place image into frame | छवि को फ़्रेम में रखें | प्रतिमा फ्रेममध्ये ठेवा
+Remove image from frame | फ़्रेम से छवि हटाएँ | फ्रेममधून प्रतिमा काढा
+Smart filters | स्मार्ट फ़िल्टर | स्मार्ट फिल्टर
+Adjustment presets | एडजस्टमेंट प्रीसेट | ॲडजस्टमेंट प्रीसेट
+Apply preset | प्रीसेट लागू करें | प्रीसेट लागू करा
+Manage presets | प्रीसेट प्रबंधित करें | प्रीसेट व्यवस्थापित करा
+Save preset from active adjustment layer | सक्रिय एडजस्टमेंट लेयर से प्रीसेट सहेजें | सक्रिय ॲडजस्टमेंट लेयरमधून प्रीसेट जतन करा
+Rasterize layer | लेयर रास्टराइज़ करें | लेयर रास्टराइझ करा
+Bring forward | आगे लाएँ | पुढे आणा
+Send backward | पीछे भेजें | मागे पाठवा
+Flatten image | छवि फ़्लैटन करें | प्रतिमा सपाट करा
+Merge down | नीचे मर्ज करें | खाली विलीन करा
+Merge visible | दिखने वाली मर्ज करें | दृश्य लेयर विलीन करा
+All | सभी | सर्व
+Deselect | चयन हटाएँ | निवड रद्द करा
+Reselect | फिर से चुनें | पुन्हा निवडा
+Inverse | उलटा चयन | उलट निवड
+Subject (people, AI) | विषय (लोग, AI) | विषय (लोक, AI)
+Subject (plain background) | विषय (सादी पृष्ठभूमि) | विषय (साधी पार्श्वभूमी)
+Load layer transparency | लेयर पारदर्शिता लोड करें | लेयर पारदर्शकता लोड करा
+Sky | आसमान | आकाश
+Grow | बढ़ाएँ | वाढवा
+Similar | समान | समान
+Contract | सिकोड़ें | आकुंचित करा
+Modify | संशोधित करें | सुधारा
+Repeat last filter | अंतिम फ़िल्टर दोहराएँ | शेवटचा फिल्टर पुन्हा लावा
+Repeat last filter{p0} | अंतिम फ़िल्टर दोहराएँ{p0} | शेवटचा फिल्टर पुन्हा लावा{p0}
+Skin smoothing | त्वचा चिकनी करें | त्वचा गुळगुळीत करा
+Teeth & eye brighten tool | दाँत और आँखें चमकाने का टूल | दात आणि डोळे उजळण्याचे साधन
+Fit on screen | स्क्रीन पर फ़िट करें | स्क्रीनवर बसवा
+Rulers | रूलर | रूलर
+Guides | गाइड | मार्गदर्शक रेषा
+Grid | ग्रिड | ग्रिड
+Snap | स्नैप | स्नॅप
+Smart guides | स्मार्ट गाइड | स्मार्ट मार्गदर्शक
+Contextual task bar | प्रासंगिक कार्य बार | संदर्भानुसार कार्य पट्टी
+Lock guides | गाइड लॉक करें | मार्गदर्शक लॉक करा
+Clear guides | गाइड साफ़ करें | मार्गदर्शक साफ करा
+Grid settings | ग्रिड सेटिंग्ज़ | ग्रिड सेटिंग्ज
+Pixel preview at high zoom | अधिक ज़ूम पर पिक्सेल पूर्वावलोकन | जास्त झूमवर पिक्सेल पूर्वावलोकन
+Actions | एक्शन | ॲक्शन
+Adjustments & filters | एडजस्टमेंट और फ़िल्टर | ॲडजस्टमेंट आणि फिल्टर
+History & snapshots | इतिहास और स्नैपशॉट | इतिहास आणि स्नॅपशॉट
+Layers | लेयर | लेयर
+Looks | लुक | लुक
+Panels | पैनल | पॅनेल
+About BTS Photo | BTS Photo के बारे में | BTS Photo बद्दल
+Person segmentation by MediaPipe (Apache-2.0). | व्यक्ति विभाजन: MediaPipe (Apache-2.0)। | व्यक्ती विभाजन: MediaPipe (Apache-2.0).
+Background color | पृष्ठभूमि रंग | पार्श्वभूमी रंग
+Foreground color | अग्रभूमि रंग | अग्रभूमी रंग
+Default colors (D) | डिफ़ॉल्ट रंग (D) | डीफॉल्ट रंग (D)
+Swap (X) | अदला-बदली (X) | अदलाबदल (X)
+shift+b | - |
+shift+g | - |
+shift+i | - |
+shift+j | - |
+shift+o | - |
+shift+s | - |
+1:1 (square) | 1:1 (वर्ग) | 1:1 (चौरस)
+4:5 (portrait) | 4:5 (पोर्ट्रेट) | 4:5 (पोर्ट्रेट)
+9:16 (story) | 9:16 (स्टोरी) | 9:16 (स्टोरी)
+A4 landscape | A4 लैंडस्केप | A4 आडवे
+A4 portrait | A4 पोर्ट्रेट | A4 उभे
+Custom W:H | कस्टम W:H | सानुकूल W:H
+Free | मुक्त | मुक्त
+Flow | प्रवाह | प्रवाह
+Hardness | कठोरता | कडकपणा
+Intersect | प्रतिच्छेद | छेद
+New | नया | नवीन
+Subtract | घटाएँ | वजा करा
+Select sky | आसमान चुनें | आकाश निवडा
+Select subject | विषय चुनें | विषय निवडा
+Aligned | संरेखित | संरेखित
+Sample all layers | सभी लेयर से नमूना लें | सर्व लेयरमधून नमुना घ्या
+Pattern | पैटर्न | पॅटर्न
+Load | लोड करें | लोड करा
+Mixes the foreground color with the paint already on the canvas | अग्रभूमि रंग को कैनवस पर पहले से लगे रंग के साथ मिलाता है | अग्रभूमी रंग कॅनव्हासवरील आधीच्या रंगात मिसळतो
+Wet | गीला | ओला

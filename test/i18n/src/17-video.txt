@@ -1,0 +1,281 @@
+# Video (effects, transitions, grading, panels, captions, inspector)
+Width px | चौड़ाई px | रुंदी px
+CRT scanlines | CRT स्कैनलाइन | CRT स्कॅनलाइन
+Curvature | वक्रता | वक्रता
+Retro | रेट्रो | रेट्रो
+Old film | पुरानी फ़िल्म | जुनी फिल्म
+Kaleidoscope | बहुरूपदर्शक | कॅलिडोस्कोप
+Zoom % | ज़ूम % | झूम %
+Lens distortion | लेंस विकृति | लेन्स विकृती
+Amplitude px | आयाम px | आयाम px
+Frequency | आवृत्ति | वारंवारता
+Wave warp | लहर वार्प | लाट वार्प
+Amount px | मात्रा px | प्रमाण px
+Camera shake | कैमरा कंपन | कॅमेरा हादरा
+Zoom (hide edges) % | ज़ूम (किनारे छिपाएँ) % | झूम (कडा लपवा) %
+Pixel sort | पिक्सेल सॉर्ट | पिक्सेल सॉर्ट
+Darken image | छवि गहरी करें | प्रतिमा गडद करा
+Edge glow | किनारा चमक | कडा चमक
+Dot size | बिंदु आकार | ठिपका आकार
+Halftone | हाफ़टोन | हाफटोन
+Mix | मिश्रण | मिश्रण
+Level | स्तर | पातळी
+Colorize / tint | रंग भरें / टिंट | रंग द्या / छटा
+Directional blur | दिशात्मक ब्लर | दिशात्मक ब्लर
+Length px | लंबाई px | लांबी px
+Centre X % | केंद्र X % | मध्य X %
+Centre Y % | केंद्र Y % | मध्य Y %
+Zoom blur | ज़ूम ब्लर | झूम ब्लर
+1:1 square | 1:1 वर्ग | 1:1 चौरस
+2.39:1 Scope | = | =
+4:3 pillarbox | 4:3 पिलरबॉक्स | 4:3 पिलरबॉक्स
+Letterbox bars | लेटरबॉक्स पट्टियाँ | लेटरबॉक्स पट्ट्या
+Blue screen key | ब्लू स्क्रीन की | ब्लू स्क्रीन की
+Green screen key | ग्रीन स्क्रीन की | ग्रीन स्क्रीन की
+Cinematic bars 2.39:1 | सिनेमाई पट्टियाँ 2.39:1 | सिनेमॅटिक पट्ट्या 2.39:1
+Comic halftone | कॉमिक हाफ़टोन | कॉमिक हाफटोन
+Earthquake | भूकंप | भूकंप
+Handheld shake | हाथ में पकड़ा कंपन | हातातील हादरा
+Neon edges | नियॉन किनारे | निऑन कडा
+Retro TV | रेट्रो TV | रेट्रो TV
+VHS tape | VHS टेप | VHS टेप
+Face blur (pixelate) | चेहरा ब्लर (पिक्सेलेट) | चेहरा ब्लर (पिक्सेलेट)
+Face blur (soft) | चेहरा ब्लर (नरम) | चेहरा ब्लर (मऊ)
+Pixelate whole frame | पूरा फ़्रेम पिक्सेलेट करें | संपूर्ण फ्रेम पिक्सेलेट करा
+Cross dissolve | क्रॉस डिज़ॉल्व | क्रॉस डिझॉल्व्ह
+Dip to black | काले में डुबकी | काळ्यात बुडी
+Dip to white | सफ़ेद में डुबकी | पांढऱ्यात बुडी
+Wipe down | नीचे वाइप | खाली वाइप
+Wipe left → right | वाइप बाएँ → दाएँ | वाइप डावीकडून → उजवीकडे
+Wipe right → left | वाइप दाएँ → बाएँ | वाइप उजवीकडून → डावीकडे
+Wipe up | ऊपर वाइप | वर वाइप
+Blur dissolve | ब्लर डिज़ॉल्व | ब्लर डिझॉल्व्ह
+Push | धकेलें | ढकला
+Slide | स्लाइड | स्लाइड
+Circle iris | वृत्त आइरिस | वर्तुळ आयरिस
+Clock wipe | घड़ी वाइप | घड्याळ वाइप
+Cube spin (2D) | क्यूब घुमाव (2D) | क्यूब फिरकी (2D)
+Film burn | फ़िल्म बर्न | फिल्म बर्न
+Light leak | लाइट लीक | लाइट लीक
+Whip pan left | व्हिप पैन बाएँ | व्हिप पॅन डावीकडे
+Whip pan right | व्हिप पैन दाएँ | व्हिप पॅन उजवीकडे
+Barn door | बार्न डोर | बार्न डोअर
+Diamond iris | हीरा आइरिस | हिरा आयरिस
+Heart wipe | दिल वाइप | हृदय वाइप
+Luma fade | ल्यूमा फ़ेड | ल्युमा फेड
+Star wipe | तारा वाइप | तारा वाइप
+Swipe (diagonal) | स्वाइप (तिरछा) | स्वाइप (तिरपा)
+Checkerboard | चेकरबोर्ड | चौकटी पट
+Flash (white) | फ़्लैश (सफ़ेद) | फ्लॅश (पांढरा)
+Push up | ऊपर धकेलें | वर ढकला
+Slide up | ऊपर स्लाइड | वर स्लाइड
+Venetian blinds | वेनिशियन ब्लाइंड्स | व्हेनेशियन ब्लाइंड्स
+Bleach Bypass | ब्लीच बायपास | ब्लीच बायपास
+Cold Blue | ठंडा नीला | थंड निळा
+Day for Night | दिन से रात | दिवसाची रात्र
+Film Warm | फ़िल्म गर्म | फिल्म उबदार
+Kodak-ish Warm | Kodak जैसा गर्म | Kodak सारखा उबदार
+Mono Contrast | मोनो कंट्रास्ट | मोनो कॉन्ट्रास्ट
+Vintage Fade | विंटेज फ़ेड | व्हिंटेज फिका
+LUTs that combine a 1D shaper and a 3D table are not supported | 1D शेपर और 3D तालिका को मिलाने वाले LUT समर्थित नहीं हैं | 1D शेपर आणि 3D सारणी एकत्र करणारे LUT समर्थित नाहीत
+This is not a valid .cube LUT (missing LUT_3D_SIZE or LUT_1D_SIZE) | यह मान्य .cube LUT नहीं है (LUT_3D_SIZE या LUT_1D_SIZE नहीं है) | हा वैध .cube LUT नाही (LUT_3D_SIZE किंवा LUT_1D_SIZE नाही)
+The LUT data is incomplete ({p0} of {p1} entries) | LUT डेटा अधूरा है ({p1} में से {p0} प्रविष्टियाँ) | LUT डेटा अपूर्ण आहे ({p1} पैकी {p0} नोंदी)
+Could not load the LUT “{p0}”: {message} | LUT “{p0}” लोड नहीं हो सका: {message} | LUT “{p0}” लोड करता आला नाही: {message}
+LUT | = | =
+Gain | गेन | गेन
+Lift | लिफ़्ट | लिफ्ट
+LUT (.cube) | = | =
+Gamma blue | गामा नीला | गॅमा निळा
+Gamma green | गामा हरा | गॅमा हिरवा
+Gamma luma | गामा ल्यूमा | गॅमा ल्युमा
+Gamma red | गामा लाल | गॅमा लाल
+Lift blue | लिफ़्ट नीला | लिफ्ट निळा
+Lift green | लिफ़्ट हरा | लिफ्ट हिरवा
+Lift luma | लिफ़्ट ल्यूमा | लिफ्ट ल्युमा
+Lift red | लिफ़्ट लाल | लिफ्ट लाल
+Gain blue | गेन नीला | गेन निळा
+Gain green | गेन हरा | गेन हिरवा
+Gain luma | गेन ल्यूमा | गेन ल्युमा
+Gain red | गेन लाल | गेन लाल
+Offset blue | ऑफ़सेट नीला | ऑफसेट निळा
+Offset green | ऑफ़सेट हरा | ऑफसेट हिरवा
+Offset luma | ऑफ़सेट ल्यूमा | ऑफसेट ल्युमा
+Offset red | ऑफ़सेट लाल | ऑफसेट लाल
+Hue vs Hue | ह्यू बनाम ह्यू | ह्यू विरुद्ध ह्यू
+Hue vs Sat | ह्यू बनाम संतृप्ति | ह्यू विरुद्ध संपृक्तता
+Master | मास्टर | मास्टर
+Mix % | मिश्रण % | मिश्रण %
+Bundled LUTs | शामिल LUT | समाविष्ट LUT
+Import .cube file | .cube फ़ाइल इम्पोर्ट करें | .cube फाइल इम्पोर्ट करा
+__import | - |
+{p0} LUT · {N}{p2} points{p3} | {p0} LUT · {N}{p2} बिंदु{p3} | {p0} LUT · {N}{p2} बिंदू{p3}
+Cube LUT | = | =
+Imported {p0} LUT “{p1}” | {p0} LUT “{p1}” इम्पोर्ट हुआ | {p0} LUT “{p1}” इम्पोर्ट झाला
+Could not import the LUT | LUT इम्पोर्ट नहीं हो सका | LUT इम्पोर्ट करता आला नाही
+Could not import the LUT: {message} | LUT इम्पोर्ट नहीं हो सका: {message} | LUT इम्पोर्ट करता आला नाही: {message}
+Select a clip or an adjustment layer first | पहले कोई क्लिप या एडजस्टमेंट लेयर चुनें | आधी क्लिप किंवा ॲडजस्टमेंट लेयर निवडा
+Drag to tint · double-click to reset | टिंट के लिए ड्रैग करें · रीसेट के लिए डबल-क्लिक करें | छटेसाठी ड्रॅग करा · रीसेटसाठी डबल-क्लिक करा
+Colour wheel | कलर व्हील | कलर व्हील
+Reset colour wheel | कलर व्हील रीसेट करें | कलर व्हील रीसेट करा
+Luma | ल्यूमा | ल्युमा
+Wheel colour values (keyframeable) | व्हील रंग मान (कीफ़्रेम योग्य) | व्हील रंग मूल्ये (कीफ्रेम करता येणारी)
+Reset colour wheels | कलर व्हील रीसेट करें | कलर व्हील रीसेट करा
+Reset wheels | व्हील रीसेट करें | व्हील रीसेट करा
+Click to add a point, drag to move, double-click a point to remove it | बिंदु जोड़ने के लिए क्लिक करें, खिसकाने के लिए ड्रैग करें, हटाने के लिए बिंदु पर डबल-क्लिक करें | बिंदू जोडण्यासाठी क्लिक करा, हलवण्यासाठी ड्रॅग करा, काढण्यासाठी बिंदूवर डबल-क्लिक करा
+A curve needs at least two points | कर्व में कम से कम दो बिंदु होने चाहिए | कर्व्हला किमान दोन बिंदू हवेत
+Remove curve point | कर्व बिंदु हटाएँ | कर्व्ह बिंदू काढा
+Reset all | सब रीसेट करें | सर्व रीसेट करा
+Reset curve | कर्व रीसेट करें | कर्व्ह रीसेट करा
+Reset curves | कर्व रीसेट करें | कर्व्ह रीसेट करा
+Reset this curve | यह कर्व रीसेट करें | हा कर्व्ह रीसेट करा
+Hue curves: the middle line means “no change”. Add three points and drag the middle one to change one colour range. | ह्यू कर्व: बीच की रेखा का अर्थ है “कोई बदलाव नहीं”। एक रंग सीमा बदलने के लिए तीन बिंदु जोड़ें और बीच वाले को ड्रैग करें। | ह्यू कर्व्ह: मधली रेषा म्हणजे “बदल नाही”. एक रंग श्रेणी बदलण्यासाठी तीन बिंदू जोडा आणि मधला ड्रॅग करा.
+All four | चारों | चारही
+Histogram | हिस्टोग्राम | हिस्टोग्राम
+RGB parade | RGB परेड | RGB परेड
+Vectorscope | वेक्टरस्कोप | वेक्टरस्कोप
+Waveform (luma) | वेवफ़ॉर्म (ल्यूमा) | वेव्हफॉर्म (ल्युमा)
+Program · live | प्रोग्राम · लाइव | प्रोग्राम · लाइव्ह
+Scope | स्कोप | स्कोप
+Cy | = | =
+Mg | = | =
+Yl | = | =
+Add marker (M) | मार्कर जोड़ें (M) | मार्कर जोडा (M)
+Audio meters (L / R) | ऑडियो मीटर (L / R) | ऑडिओ मीटर (L / R)
+Effect controls | इफ़ेक्ट नियंत्रण | इफेक्ट नियंत्रणे
+Go to end (End) | अंत पर जाएँ (End) | शेवटी जा (End)
+Go to start (Home) | शुरुआत पर जाएँ (Home) | सुरुवातीला जा (Home)
+Mark In (I) | In चिह्नित करें (I) | In चिन्हांकित करा (I)
+Mark Out (O) | Out चिह्नित करें (O) | Out चिन्हांकित करा (O)
+Play / pause (Space) · J K L shuttle | चलाएँ / रोकें (Space) · J K L शटल | चालवा / थांबवा (Space) · J K L शटल
+Program | प्रोग्राम | प्रोग्राम
+Step back (←) | पीछे (←) | मागे (←)
+Step forward (→) | आगे (→) | पुढे (→)
+Project | प्रोजेक्ट | प्रकल्प
+Transcript | ट्रांसक्रिप्ट | ट्रान्सक्रिप्ट
+Transitions | ट्रांज़िशन | ट्रान्झिशन
+New item | नया आइटम | नवीन घटक
+{p0}New item | - |
+Search media | मीडिया खोजें | मीडिया शोधा
+{p0}Import | - |
+Import videos, music and images, then drag them onto the timeline. | वीडियो, संगीत और छवियाँ इम्पोर्ट करें, फिर उन्हें टाइमलाइन पर ड्रैग करें। | व्हिडिओ, संगीत आणि प्रतिमा इम्पोर्ट करा, मग त्या टाइमलाइनवर ड्रॅग करा.
+Supported: MP4, WebM, MOV, MP3, WAV, PNG, JPG | समर्थित: MP4, WebM, MOV, MP3, WAV, PNG, JPG | समर्थित: MP4, WebM, MOV, MP3, WAV, PNG, JPG
+· proxy | · प्रॉक्सी | · प्रॉक्सी
+Append to end | अंत में जोड़ें | शेवटी जोडा
+Create proxy (low-res preview) | प्रॉक्सी बनाएँ (कम रिज़ॉल्यूशन पूर्वावलोकन) | प्रॉक्सी तयार करा (कमी रिझोल्यूशन पूर्वावलोकन)
+Insert at playhead | प्लेहेड पर डालें | प्लेहेडवर घाला
+Overwrite at playhead | प्लेहेड पर ओवरराइट करें | प्लेहेडवर ओव्हरराइट करा
+Relink | फिर से लिंक करें | पुन्हा लिंक करा
+Remove from project | प्रोजेक्ट से हटाएँ | प्रकल्पातून काढा
+Image sequence | इमेज सीक्वेंस | इमेज सीक्वेन्स
+Search effects, looks, presets | इफ़ेक्ट, लुक, प्रीसेट खोजें | इफेक्ट, लुक, प्रीसेट शोधा
+Click to add to the selected clip, or drag onto a clip | चुनी गई क्लिप में जोड़ने के लिए क्लिक करें, या किसी क्लिप पर ड्रैग करें | निवडलेल्या क्लिपमध्ये जोडण्यासाठी क्लिक करा, किंवा क्लिपवर ड्रॅग करा
+Video effects · | वीडियो इफ़ेक्ट · | व्हिडिओ इफेक्ट ·
+Lumetri looks | Lumetri लुक | Lumetri लुक
+Picture-in-picture & layouts | पिक्चर-इन-पिक्चर और लेआउट | पिक्चर-इन-पिक्चर आणि मांडणी
+Audio effects | ऑडियो इफ़ेक्ट | ऑडिओ इफेक्ट
+Select a video, image, title, shape or adjustment clip first | पहले कोई वीडियो, छवि, टाइटल, आकृति या एडजस्टमेंट क्लिप चुनें | आधी व्हिडिओ, प्रतिमा, टायटल, आकार किंवा ॲडजस्टमेंट क्लिप निवडा
+Add effect | इफ़ेक्ट जोड़ें | इफेक्ट जोडा
+Add effect: {name} | इफ़ेक्ट जोड़ें: {name} | इफेक्ट जोडा: {name}
+Select a clip (or an adjustment layer) first | पहले कोई क्लिप (या एडजस्टमेंट लेयर) चुनें | आधी क्लिप (किंवा ॲडजस्टमेंट लेयर) निवडा
+Disable | बंद करें | बंद करा
+Enable | चालू करें | चालू करा
+Select an audio clip or a video clip with audio | कोई ऑडियो क्लिप या ऑडियो वाली वीडियो क्लिप चुनें | ऑडिओ क्लिप किंवा ऑडिओ असलेली व्हिडिओ क्लिप निवडा
+Default duration (s) | डिफ़ॉल्ट अवधि (s) | डीफॉल्ट कालावधी (s)
+Drag a transition onto a cut (left half of a clip = its start, right half = its end). Click to apply at the cut nearest the playhead. Double-click a transition on the timeline to change its duration. | किसी कट पर ट्रांज़िशन ड्रैग करें (क्लिप का बायाँ आधा = उसकी शुरुआत, दायाँ आधा = उसका अंत)। प्लेहेड के निकटतम कट पर लगाने के लिए क्लिक करें। अवधि बदलने के लिए टाइमलाइन पर ट्रांज़िशन पर डबल-क्लिक करें। | कटवर ट्रान्झिशन ड्रॅग करा (क्लिपचा डावा अर्धा भाग = सुरुवात, उजवा अर्धा = शेवट). प्लेहेडजवळच्या कटवर लावण्यासाठी क्लिक करा. कालावधी बदलण्यासाठी टाइमलाइनवरील ट्रान्झिशनवर डबल-क्लिक करा.
+Video transitions | वीडियो ट्रांज़िशन | व्हिडिओ ट्रान्झिशन
+Text templates — click to add at playhead | टेक्स्ट टेम्पलेट — प्लेहेड पर जोड़ने के लिए क्लिक करें | मजकूर टेम्पलेट — प्लेहेडवर जोडण्यासाठी क्लिक करा
+Backgrounds & generators | पृष्ठभूमि और जनरेटर | पार्श्वभूमी आणि जनरेटर
+Import SRT/VTT | SRT/VTT इम्पोर्ट करें | SRT/VTT इम्पोर्ट करा
+SRT | = | =
+VTT | = | =
+{p0}Add | - |
+Burn into export | एक्सपोर्ट में बर्न करें | एक्सपोर्टमध्ये बर्न करा
+Customize | अनुकूलित करें | सानुकूलित करा
+Bleep | बीप | बीप
+Censor words{p0} | शब्द सेंसर करें{p0} | शब्द सेन्सॉर करा{p0}
+Censor words | शब्द सेंसर करें | शब्द सेन्सॉर करा
+Mute + 1 kHz tone over censored words | सेंसर किए गए शब्दों पर म्यूट + 1 kHz टोन | सेन्सॉर केलेल्या शब्दांवर म्यूट + 1 kHz टोन
+Paste what is said — BTS Video times it to the speech (offline) | जो बोला गया है वह चिपकाएँ — BTS Video उसे आवाज़ के साथ समय-बद्ध करता है (ऑफ़लाइन) | जे बोलले आहे ते पेस्ट करा — BTS Video ते आवाजाशी वेळ जुळवते (ऑफलाइन)
+Recognise the speech and create timed captions (offline) | आवाज़ पहचानें और समय-बद्ध कैप्शन बनाएँ (ऑफ़लाइन) | आवाज ओळखा आणि वेळ जुळवलेले कॅप्शन तयार करा (ऑफलाइन)
+No captions yet. Use “Auto-transcribe…” to recognise the speech, import an SRT or WebVTT file, paste a transcript with “Auto-time transcript…”, click Add, or double-click the CC track on the timeline. | अभी तक कोई कैप्शन नहीं। आवाज़ पहचानने के लिए “अपने-आप ट्रांसक्राइब करें…” उपयोग करें, SRT या WebVTT फ़ाइल इम्पोर्ट करें, “ट्रांसक्रिप्ट का अपने-आप समय-निर्धारण…” से ट्रांसक्रिप्ट चिपकाएँ, जोड़ें पर क्लिक करें, या टाइमलाइन पर CC ट्रैक पर डबल-क्लिक करें। | अद्याप कॅप्शन नाहीत. आवाज ओळखण्यासाठी “आपोआप ट्रान्सक्राइब करा…” वापरा, SRT किंवा WebVTT फाइल इम्पोर्ट करा, “ट्रान्सक्रिप्टची आपोआप वेळ जुळवणी…” ने ट्रान्सक्रिप्ट पेस्ट करा, जोडा वर क्लिक करा, किंवा टाइमलाइनवरील CC ट्रॅकवर डबल-क्लिक करा.
+Caption timing | कैप्शन समय | कॅप्शन वेळ
+Caption text | कैप्शन टेक्स्ट | कॅप्शन मजकूर
+{length} timed words | {length} समय-बद्ध शब्द | {length} वेळ जुळवलेले शब्द
+Delete caption | कैप्शन हटाएँ | कॅप्शन हटवा
+Go to caption | कैप्शन पर जाएँ | कॅप्शनवर जा
+Size (at 1080p) | आकार (1080p पर) | आकार (1080p वर)
+Outline colour | आउटलाइन रंग | आउटलाइन रंग
+Outline width | आउटलाइन चौड़ाई | आउटलाइन रुंदी
+Text colour | टेक्स्ट रंग | मजकूर रंग
+Background opacity % | पृष्ठभूमि अपारदर्शिता % | पार्श्वभूमी अपारदर्शकता %
+Margin % | हाशिया % | समास %
+Middle | मध्य | मध्य
+No captions found in that file | उस फ़ाइल में कोई कैप्शन नहीं मिला | त्या फाइलमध्ये कॅप्शन सापडले नाहीत
+Import captions | कैप्शन इम्पोर्ट करें | कॅप्शन इम्पोर्ट करा
+Replace | बदलें | बदला
+Replace the {length} existing captions or add to them? | {length} मौजूदा कैप्शन बदलें या उनमें जोड़ें? | {length} विद्यमान कॅप्शन बदलायचे की त्यांत जोडायचे?
+Imported {length} captions | {length} कैप्शन इम्पोर्ट हुए | {length} कॅप्शन इम्पोर्ट झाले
+There are no captions | कोई कैप्शन नहीं है | कॅप्शन नाहीत
+{p0}Redo | - |
+{p0}Undo | - |
+Credits roll | क्रेडिट रोल | क्रेडिट रोल
+Fade up | फ़ेड अप | फेड अप
+Letter by letter | अक्षर दर अक्षर | अक्षरानुसार
+Pop | पॉप | पॉप
+Slide in | स्लाइड इन | स्लाइड इन
+Typewriter | टाइपराइटर | टाइपरायटर
+Wipe reveal | वाइप से प्रकट | वाइपने उघड
+Blur in | ब्लर इन | ब्लर इन
+Bounce | उछाल | उसळी
+Drop in | ड्रॉप इन | ड्रॉप इन
+Flip in | फ़्लिप इन | फ्लिप इन
+Glitch text | ग्लिच टेक्स्ट | ग्लिच मजकूर
+Karaoke highlight | कराओके हाइलाइट | कराओके हायलाइट
+Neon flicker | नियॉन झिलमिल | निऑन लुकलुक
+Scramble / decode | गड्डमड्ड / डिकोड | गोंधळ / डिकोड
+Track in (letter spacing) | ट्रैक इन (अक्षर दूरी) | ट्रॅक इन (अक्षर अंतर)
+Word by word | शब्द दर शब्द | शब्दानुसार
+Caption | कैप्शन | कॅप्शन
+Split at playhead | प्लेहेड पर विभाजित करें | प्लेहेडवर विभाजित करा
+Select a clip in the timeline to edit its motion, keyframes, effects, colour, audio and transitions. | मोशन, कीफ़्रेम, इफ़ेक्ट, रंग, ऑडियो और ट्रांज़िशन संपादित करने के लिए टाइमलाइन में कोई क्लिप चुनें। | मोशन, कीफ्रेम, इफेक्ट, रंग, ऑडिओ आणि ट्रान्झिशन संपादित करण्यासाठी टाइमलाइनमधील क्लिप निवडा.
+{length} clips selected — effects, looks and presets you click apply to all of them. | {length} क्लिप चयनित — आप जिन इफ़ेक्ट, लुक और प्रीसेट पर क्लिक करेंगे वे सभी पर लागू होंगे। | {length} क्लिप निवडल्या — तुम्ही क्लिक कराल ते इफेक्ट, लुक आणि प्रीसेट सर्वांना लागू होतील.
+Add keyframe | कीफ़्रेम जोड़ें | कीफ्रेम जोडा
+Remove keyframes | कीफ़्रेम हटाएँ | कीफ्रेम काढा
+Stop animating (removes keyframes) | एनिमेशन रोकें (कीफ़्रेम हटाता है) | ॲनिमेशन थांबवा (कीफ्रेम काढते)
+Toggle animation — adds a keyframe at the playhead | एनिमेशन चालू/बंद — प्लेहेड पर कीफ़्रेम जोड़ता है | ॲनिमेशन चालू/बंद — प्लेहेडवर कीफ्रेम जोडते
+Keyframe | कीफ़्रेम | कीफ्रेम
+Remove keyframe (right-click: easing) | कीफ़्रेम हटाएँ (राइट-क्लिक: ईज़िंग) | कीफ्रेम काढा (राइट-क्लिक: ईझिंग)
+Keyframe easing | कीफ़्रेम ईज़िंग | कीफ्रेम ईझिंग
+Title text | टाइटल टेक्स्ट | टायटल मजकूर
+Extra bold | अति मोटा | अति ठळक
+Regular | सामान्य | सामान्य
+Semibold | अर्ध मोटा | अर्ध ठळक
+Letter spacing | अक्षर दूरी | अक्षर अंतर
+Line height | पंक्ति ऊँचाई | ओळ उंची
+Shadow colour | छाया रंग | सावली रंग
+Stroke colour | स्ट्रोक रंग | स्ट्रोक रंग
+Background box | पृष्ठभूमि बॉक्स | पार्श्वभूमी बॉक्स
+Box colour | बॉक्स रंग | बॉक्स रंग
+Box opacity | बॉक्स अपारदर्शिता | बॉक्स अपारदर्शकता
+Animation | एनिमेशन | ॲनिमेशन
+Call to action | कॉल टू एक्शन | कॉल टू ॲक्शन
+Countdown | उलटी गिनती | उलटी गणती
+Lower third | लोअर थर्ड | लोअर थर्ड
+Plain | सादा | साधा
+Quote | उद्धरण | अवतरण
+Template style | टेम्पलेट शैली | टेम्पलेट शैली
+Title card | टाइटल कार्ड | टायटल कार्ड
+Count from | यहाँ से गिनें | येथून मोजा
+Sticker | स्टिकर | स्टिकर
+Sticker / emoji | स्टिकर / इमोजी | स्टिकर / इमोजी
+Stroke width | स्ट्रोक चौड़ाई | स्ट्रोक रुंदी
+Nested sequence | नेस्टेड सीक्वेंस | नेस्टेड सीक्वेन्स
+The nested sequence is missing. | नेस्टेड सीक्वेंस अनुपलब्ध है। | नेस्टेड सीक्वेन्स गहाळ आहे.
+The nested sequence is {p0} s long; this clip shows {p1}–{p2} s of it. | नेस्टेड सीक्वेंस {p0} s लंबा है; यह क्लिप उसका {p1}–{p2} s दिखाती है। | नेस्टेड सीक्वेन्स {p0} s लांब आहे; ही क्लिप त्याचा {p1}–{p2} s भाग दाखवते.
+“{name}” · {w}×{h} · {p3} s · {length} clip(s) | “{name}” · {w}×{h} · {p3} s · {length} क्लिप | “{name}” · {w}×{h} · {p3} s · {length} क्लिप
+Match sequence length | सीक्वेंस की लंबाई से मिलाएँ | सीक्वेन्सच्या लांबीशी जुळवा
+Open (edit contents) | खोलें (सामग्री संपादित करें) | उघडा (मजकूर संपादित करा)
+Colour 2 | रंग 2 | रंग 2
+Colour matte | कलर मैट | कलर मॅट
+Motion | मोशन | मोशन
+Position X | स्थिति X | स्थान X

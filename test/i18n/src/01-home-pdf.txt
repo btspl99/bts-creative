@@ -1,0 +1,288 @@
+# Home launcher, shared, PDF Pro (part 1).   English | हिन्दी | मराठी
+About & updates | परिचय और अपडेट | माहिती आणि अपडेट
+Appearance | रूप-रंग | स्वरूप
+BTS Creative | = | =
+Free & open source for students | छात्रों के लिए मुफ़्त और ओपन सोर्स | विद्यार्थ्यांसाठी मोफत आणि ओपन सोर्स
+Home | होम | मुख्यपृष्ठ
+Recent files | हाल की फ़ाइलें | अलीकडील फाइल्स
+© Bhoomiputra Tech Solutions | = | =
+File | फ़ाइल | फाइल
+New PDF Pro window | नई PDF Pro विंडो | नवीन PDF Pro विंडो
+New Photo window | नई Photo विंडो | नवीन Photo विंडो
+New Vector window | नई Vector विंडो | नवीन Vector विंडो
+New Video window | नई Video विंडो | नवीन Video विंडो
+Exit | बाहर निकलें | बाहेर पडा
+View | देखें | दृश्य
+Skin | स्किन | स्किन
+Help | सहायता | मदत
+Check for updates | अपडेट की जाँच करें | अपडेट तपासा
+Keyboard shortcuts | कीबोर्ड शॉर्टकट | कीबोर्ड शॉर्टकट
+Website | वेबसाइट | वेबसाइट
+About BTS Creative | BTS Creative के बारे में | BTS Creative बद्दल
+BTS PDF Pro | = | =
+Documents · forms · signatures | दस्तावेज़ · फ़ॉर्म · हस्ताक्षर | दस्तऐवज · फॉर्म · स्वाक्षऱ्या
+Pdf | = | =
+View, annotate, sign, fill forms, edit and organize PDF pages. | PDF देखें, उस पर टिप्पणी करें, हस्ताक्षर करें, फ़ॉर्म भरें, संपादित करें और पृष्ठ व्यवस्थित करें। | PDF पाहा, त्यावर टिप्पणी करा, स्वाक्षरी करा, फॉर्म भरा, संपादित करा आणि पृष्ठे व्यवस्थित करा.
+BTS Photo | = | =
+Layer-based photo editing with brushes, selections, adjustments and filters. | ब्रश, चयन, एडजस्टमेंट और फ़िल्टर के साथ लेयर-आधारित फ़ोटो संपादन। | ब्रश, निवड, ॲडजस्टमेंट आणि फिल्टरसह लेयर-आधारित फोटो संपादन.
+Layers · masks · filters · PSD | लेयर · मास्क · फ़िल्टर · PSD | लेयर · मास्क · फिल्टर · PSD
+Ph | = | =
+BTS Vector | = | =
+Pen · pathfinder · SVG & PDF | पेन · पाथफ़ाइंडर · SVG और PDF | पेन · पाथफाइंडर · SVG आणि PDF
+Vc | = | =
+Vector illustration with pen, shapes, gradients, type and artboards. | पेन, आकृतियों, ग्रेडिएंट, टेक्स्ट और आर्टबोर्ड के साथ वेक्टर चित्रण। | पेन, आकार, ग्रेडियंट, मजकूर आणि आर्टबोर्डसह वेक्टर चित्रण.
+BTS Video | = | =
+Multi-track timeline editing with titles, transitions and MP4 export. | टाइटल, ट्रांज़िशन और MP4 एक्सपोर्ट के साथ मल्टी-ट्रैक टाइमलाइन संपादन। | टायटल, ट्रान्झिशन आणि MP4 एक्सपोर्टसह मल्टी-ट्रॅक टाइमलाइन संपादन.
+Timeline · titles · MP4 export | टाइमलाइन · टाइटल · MP4 एक्सपोर्ट | टाइमलाइन · टायटल · MP4 एक्सपोर्ट
+Vd | = | =
+No recent files yet. Files you save will appear here. | अभी तक कोई हाल की फ़ाइल नहीं। आप जो फ़ाइलें सहेजेंगे, वे यहाँ दिखेंगी। | अद्याप अलीकडील फाइल नाही. तुम्ही जतन केलेल्या फाइल्स येथे दिसतील.
+Good afternoon | नमस्कार | शुभ दुपार
+Good evening | शुभ संध्या | शुभ संध्याकाळ
+Good morning | सुप्रभात | सुप्रभात
+Pick an app to start creating, or open a file. | रचना शुरू करने के लिए कोई ऐप चुनें, या कोई फ़ाइल खोलें। | निर्मिती सुरू करण्यासाठी एखादे ॲप निवडा किंवा फाइल उघडा.
+Open file | फ़ाइल खोलें | फाइल उघडा
+{p0}Open file | - |
+Recent | हाल के | अलीकडील
+Skins, accent colour and interface size apply to every BTS Creative app. | स्किन, एक्सेंट रंग और इंटरफ़ेस आकार हर BTS Creative ऐप पर लागू होते हैं। | स्किन, ॲक्सेंट रंग आणि इंटरफेस आकार प्रत्येक BTS Creative ॲपला लागू होतात.
+is a free, open-source creative suite built for students by Bhoomiputra Tech Solutions Pvt Ltd. | एक मुफ़्त, ओपन-सोर्स क्रिएटिव सुइट है, जिसे Bhoomiputra Tech Solutions Pvt Ltd ने छात्रों के लिए बनाया है। | हा Bhoomiputra Tech Solutions Pvt Ltd ने विद्यार्थ्यांसाठी तयार केलेला मोफत, ओपन-सोर्स क्रिएटिव्ह संच आहे.
+<b>BTS Creative</b> is a free, open-source creative suite built for students by Bhoomiputra Tech Solutions Pvt Ltd. | <b>BTS Creative</b> एक मुफ़्त, ओपन-सोर्स क्रिएटिव सुइट है, जिसे Bhoomiputra Tech Solutions Pvt Ltd ने छात्रों के लिए बनाया है। | <b>BTS Creative</b> हा Bhoomiputra Tech Solutions Pvt Ltd ने विद्यार्थ्यांसाठी तयार केलेला मोफत, ओपन-सोर्स क्रिएटिव्ह संच आहे.
+Includes <b>PDF Pro</b>, <b>Photo</b>, <b>Vector</b> and <b>Video</b>. Updates are delivered automatically. | इसमें <b>PDF Pro</b>, <b>Photo</b>, <b>Vector</b> और <b>Video</b> शामिल हैं। अपडेट अपने-आप मिलते हैं। | यात <b>PDF Pro</b>, <b>Photo</b>, <b>Vector</b> आणि <b>Video</b> समाविष्ट आहेत. अपडेट आपोआप मिळतात.
+Includes | शामिल हैं | समाविष्ट
+PDF Pro | = | =
+Photo | फ़ोटो | फोटो
+Vector | वेक्टर | वेक्टर
+Video | वीडियो | व्हिडिओ
+Licensed under the MIT License. BTS Creative is an independent project and is not affiliated with or endorsed by Adobe Inc. | MIT लाइसेंस के अंतर्गत लाइसेंसीकृत। BTS Creative एक स्वतंत्र परियोजना है और Adobe Inc. से संबद्ध या उसके द्वारा समर्थित नहीं है। | MIT परवान्याअंतर्गत परवानाकृत. BTS Creative हा एक स्वतंत्र प्रकल्प आहे आणि Adobe Inc. शी संलग्न नाही किंवा त्यांच्याकडून समर्थित नाही.
+{p0}Check for updates | - |
+Updates are checked automatically in the installed version. | इंस्टॉल किए गए संस्करण में अपडेट की जाँच अपने-आप होती है। | इन्स्टॉल केलेल्या आवृत्तीत अपडेट आपोआप तपासले जातात.
+Updates are delivered by the Microsoft Store. | अपडेट Microsoft Store द्वारा दिए जाते हैं। | अपडेट Microsoft Store द्वारे दिले जातात.
+Checking for updates | अपडेट की जाँच हो रही है | अपडेट तपासत आहे
+Checking | जाँच हो रही है | तपासत आहे
+Downloading v{version} | v{version} डाउनलोड हो रहा है | v{version} डाउनलोड होत आहे
+Downloading {percent}% | डाउनलोड हो रहा है {percent}% | डाउनलोड होत आहे {percent}%
+You have the latest version. | आपके पास नवीनतम संस्करण है। | तुमच्याकडे नवीनतम आवृत्ती आहे.
+v{version} ready — restart to install | v{version} तैयार — इंस्टॉल करने के लिए पुनः आरंभ करें | v{version} तयार — इन्स्टॉल करण्यासाठी पुन्हा सुरू करा
+Version {version} | संस्करण {version} | आवृत्ती {version}
+Could not check for updates: {message} | अपडेट की जाँच नहीं हो सकी: {message} | अपडेट तपासता आले नाहीत: {message}
+Update error: {message} | अपडेट त्रुटि: {message} | अपडेट त्रुटी: {message}
+Language | भाषा | भाषा
+Language: {name} | भाषा: {name} | भाषा: {name}
+XObject | - |
+Subtype | - |
+Height | ऊँचाई | उंची
+Width | चौड़ाई | रुंदी
+Filter | फ़िल्टर | फिल्टर
+ColorSpace | - |
+BitsPerComponent | - |
+Contents | सामग्री | मजकूर
+Figure | चित्र | आकृती
+DisplayDocTitle | - |
+ViewerPreferences | - |
+StructTreeRoot | - |
+BTSMinimal | - |
+Pg | - |
+Alt | = | =
+StructElem | - |
+StructParents | - |
+MarkInfo | - |
+Document | दस्तावेज़ | दस्तऐवज
+Bengali | बांग्ला | बंगाली
+English (India) | अंग्रेज़ी (भारत) | इंग्रजी (भारत)
+English (UK) | अंग्रेज़ी (यूके) | इंग्रजी (यूके)
+English (US) | अंग्रेज़ी (यूएस) | इंग्रजी (यूएस)
+Gujarati | गुजराती | गुजराती
+Hindi | हिन्दी | हिंदी
+Kannada | कन्नड़ | कन्नड
+Marathi | मराठी | मराठी
+Tamil | तमिल | तमिळ
+Telugu | तेलुगु | तेलुगू
+Urdu | उर्दू | उर्दू
+Looking for images | छवियाँ खोजी जा रही हैं | प्रतिमा शोधत आहे
+No images found on the pages. (Images you added in this session are listed after you save.) | पृष्ठों पर कोई छवि नहीं मिली। (इस सत्र में जोड़ी गई छवियाँ सहेजने के बाद दिखेंगी।) | पृष्ठांवर कोणतीही प्रतिमा सापडली नाही. (या सत्रात जोडलेल्या प्रतिमा जतन केल्यानंतर दिसतील.)
+Describe the image for people who cannot see it | जो लोग छवि नहीं देख सकते, उनके लिए इसका वर्णन करें | ज्यांना प्रतिमा दिसत नाही त्यांच्यासाठी तिचे वर्णन करा
+Decorative (no description needed) | सजावटी (वर्णन की ज़रूरत नहीं) | सजावटी (वर्णनाची गरज नाही)
+Page {p0} · {name} · {w}×{h}px | पृष्ठ {p0} · {name} · {w}×{h}px | पृष्ठ {p0} · {name} · {w}×{h}px
+Document language | दस्तावेज़ की भाषा | दस्तऐवजाची भाषा
+Document title | दस्तावेज़ का शीर्षक | दस्तऐवजाचे शीर्षक
+Show the title (not the file name) in the window title bar | विंडो के टाइटल बार में शीर्षक दिखाएँ (फ़ाइल का नाम नहीं) | विंडोच्या शीर्षक पट्टीत शीर्षक दाखवा (फाइलचे नाव नाही)
+Alternative text for images ({length}) | छवियों के लिए वैकल्पिक टेक्स्ट ({length}) | प्रतिमांसाठी पर्यायी मजकूर ({length})
+Alt text is written as tagged Figure elements in the saved PDF. This does not make a full PDF/UA document. | Alt टेक्स्ट सहेजे गए PDF में टैग किए गए Figure तत्वों के रूप में लिखा जाता है। इससे पूर्ण PDF/UA दस्तावेज़ नहीं बनता। | Alt मजकूर जतन केलेल्या PDF मध्ये टॅग केलेल्या Figure घटकांच्या रूपात लिहिला जातो. यामुळे पूर्ण PDF/UA दस्तऐवज तयार होत नाही.
+Apply | लागू करें | लागू करा
+Cancel | रद्द करें | रद्द करा
+Make accessible | सुलभ बनाएँ | सुलभ करा
+Title, language{p0} will be written when you save | शीर्षक, भाषा{p0} सहेजते समय लिखे जाएँगे | शीर्षक, भाषा{p0} जतन करताना लिहिली जाईल
+Reading order report — {p0} {p1} | पढ़ने के क्रम की रिपोर्ट — {p0} {p1} | वाचन क्रम अहवाल — {p0} {p1}
+The document is not tagged: screen readers read text in the order it is stored in the file. | दस्तावेज़ टैग नहीं है: स्क्रीन रीडर टेक्स्ट को उसी क्रम में पढ़ते हैं जिसमें वह फ़ाइल में संग्रहीत है। | दस्तऐवज टॅग केलेला नाही: स्क्रीन रीडर मजकूर फाइलमध्ये साठवलेल्या क्रमानेच वाचतात.
+The document is tagged: screen readers follow the tag tree. | दस्तावेज़ टैग किया हुआ है: स्क्रीन रीडर टैग ट्री का पालन करते हैं। | दस्तऐवज टॅग केलेला आहे: स्क्रीन रीडर टॅग ट्रीनुसार वाचतात.
+Page {p0}: {n} text block(s), {columns} column(s), {p3}{p4}{p5} | पृष्ठ {p0}: {n} टेक्स्ट ब्लॉक, {columns} कॉलम, {p3}{p4}{p5} | पृष्ठ {p0}: {n} मजकूर ब्लॉक, {columns} स्तंभ, {p3}{p4}{p5}
+{pct}% in natural order | {pct}% स्वाभाविक क्रम में | {pct}% नैसर्गिक क्रमात
+Summary: {p0} | सारांश: {p0} | सारांश: {p0}
+{length} page(s) may be read in a confusing order: {p1} | {length} पृष्ठ भ्रमित करने वाले क्रम में पढ़े जा सकते हैं: {p1} | {length} पृष्ठे गोंधळात टाकणाऱ्या क्रमाने वाचली जाऊ शकतात: {p1}
+Blocks | ब्लॉक | ब्लॉक
+Columns | कॉलम | स्तंभ
+In order | क्रम में | क्रमाने
+Page | पृष्ठ | पृष्ठ
+Show | दिखाएँ | दाखवा
+Reading order — {p0} | पढ़ने का क्रम — {p0} | वाचन क्रम — {p0}
+{length} page(s) to check | जाँचने के लिए {length} पृष्ठ | तपासण्यासाठी {length} पृष्ठे
+This PDF is not tagged, so screen readers read text in the stored order shown below. | यह PDF टैग नहीं है, इसलिए स्क्रीन रीडर टेक्स्ट को नीचे दिखाए गए संग्रहीत क्रम में पढ़ते हैं। | हा PDF टॅग केलेला नाही, त्यामुळे स्क्रीन रीडर मजकूर खाली दाखवलेल्या साठवलेल्या क्रमाने वाचतात.
+This PDF is tagged, so screen readers use its tag order. The table shows the stored text order. | यह PDF टैग किया हुआ है, इसलिए स्क्रीन रीडर इसके टैग क्रम का उपयोग करते हैं। तालिका संग्रहीत टेक्स्ट क्रम दिखाती है। | हा PDF टॅग केलेला आहे, त्यामुळे स्क्रीन रीडर त्याचा टॅग क्रम वापरतात. सारणी साठवलेला मजकूर क्रम दाखवते.
+Close | बंद करें | बंद करा
+Save report | रिपोर्ट सहेजें | अहवाल जतन करा
+Show order on this page | इस पृष्ठ पर क्रम दिखाएँ | या पृष्ठावर क्रम दाखवा
+Report saved | रिपोर्ट सहेजी गई | अहवाल जतन केला
+Text | टेक्स्ट | मजकूर
+Numbers show the stored reading order ({pct}% natural). Click any number to hide them. | संख्याएँ संग्रहीत पढ़ने का क्रम दिखाती हैं ({pct}% स्वाभाविक)। इन्हें छिपाने के लिए किसी भी संख्या पर क्लिक करें। | क्रमांक साठवलेला वाचन क्रम दाखवतात ({pct}% नैसर्गिक). ते लपवण्यासाठी कोणत्याही क्रमांकावर क्लिक करा.
+Date: {p0} | दिनांक: {p0} | दिनांक: {p0}
+Digitally signed by {p0} | {p0} द्वारा डिजिटल रूप से हस्ताक्षरित | {p0} यांनी डिजिटल स्वाक्षरी केलेले
+Location: {location} | स्थान: {location} | स्थान: {location}
+Reason: {reason} | कारण: {reason} | कारण: {reason}
+Helvetica, Arial | - |
+Sign here | यहाँ हस्ताक्षर करें | येथे स्वाक्षरी करा
+Helvetica | = | =
+PDFCheckBox | - |
+PDFDropdown | - |
+PDFRadioGroup | - |
+PDFTextField | - |
+Student | - |
+Open in new window | नई विंडो में खोलें | नवीन विंडोमध्ये उघडा
+Recent documents | हाल के दस्तावेज़ | अलीकडील दस्तऐवज
+New blank PDF | नया खाली PDF | नवीन रिक्त PDF
+Create PDF from images | छवियों से PDF बनाएँ | प्रतिमांपासून PDF तयार करा
+Save | सहेजें | जतन करा
+Save as | इस रूप में सहेजें | म्हणून जतन करा
+Export | एक्सपोर्ट | एक्सपोर्ट
+Pages as PNG images | पृष्ठ PNG छवियों के रूप में | पृष्ठे PNG प्रतिमा म्हणून
+Pages as JPEG images | पृष्ठ JPEG छवियों के रूप में | पृष्ठे JPEG प्रतिमा म्हणून
+Plain text (.txt) | सादा टेक्स्ट (.txt) | साधा मजकूर (.txt)
+Word document (.docx) | Word दस्तावेज़ (.docx) | Word दस्तऐवज (.docx)
+PowerPoint (.pptx) | = | =
+Web page (.html) | वेब पेज (.html) | वेब पेज (.html)
+Tables to Excel / CSV | तालिकाएँ Excel / CSV में | सारण्या Excel / CSV मध्ये
+Summary (.txt) | सारांश (.txt) | सारांश (.txt)
+Study sheet (flashcards & quiz PDF) | अध्ययन शीट (फ़्लैशकार्ड और क्विज़ PDF) | अभ्यास पत्रक (फ्लॅशकार्ड आणि प्रश्नमंजूषा PDF)
+Comments summary | टिप्पणियों का सारांश | टिप्पण्यांचा सारांश
+Form data (JSON) | फ़ॉर्म डेटा (JSON) | फॉर्म डेटा (JSON)
+Send to | इसमें भेजें | येथे पाठवा
+Send to Photo | Photo में भेजें | Photo मध्ये पाठवा
+Send to Vector | Vector में भेजें | Vector मध्ये पाठवा
+Autosave unsaved work | बिना सहेजे काम को अपने-आप सहेजें | जतन न केलेले काम आपोआप जतन करा
+Every {p0} | हर {p0} | दर {p0}
+Off | बंद | बंद
+Close tab | टैब बंद करें | टॅब बंद करा
+Move tab to new window | टैब को नई विंडो में ले जाएँ | टॅब नवीन विंडोमध्ये हलवा
+BTS Creative home | BTS Creative होम | BTS Creative मुख्यपृष्ठ
+Close window | विंडो बंद करें | विंडो बंद करा
+Edit | संपादन | संपादन
+Undo | पूर्ववत करें | पूर्ववत करा
+Redo | फिर से करें | पुन्हा करा
+Copy selected text | चयनित टेक्स्ट कॉपी करें | निवडलेला मजकूर कॉपी करा
+Del | = | =
+Delete annotation | एनोटेशन हटाएँ | भाष्य हटवा
+Duplicate annotation | एनोटेशन की प्रतिलिपि बनाएँ | भाष्याची प्रत बनवा
+Edit existing text | मौजूदा टेक्स्ट संपादित करें | विद्यमान मजकूर संपादित करा
+Text editing | टेक्स्ट संपादन | मजकूर संपादन
+Edit whole paragraphs | पूरे अनुच्छेद संपादित करें | संपूर्ण परिच्छेद संपादित करा
+Edit single lines | एकल पंक्तियाँ संपादित करें | एकेरी ओळी संपादित करा
+Keep the original font | मूल फ़ॉन्ट रखें | मूळ फॉन्ट ठेवा
+Match fonts installed on this computer | इस कंप्यूटर पर इंस्टॉल फ़ॉन्ट से मिलाएँ | या संगणकावर इन्स्टॉल केलेल्या फॉन्टशी जुळवा
+Use an installed font for edited text | संपादित टेक्स्ट के लिए इंस्टॉल फ़ॉन्ट का उपयोग करें | संपादित मजकुरासाठी इन्स्टॉल केलेला फॉन्ट वापरा
+Use a font file for edited text | संपादित टेक्स्ट के लिए फ़ॉन्ट फ़ाइल का उपयोग करें | संपादित मजकुरासाठी फॉन्ट फाइल वापरा
+Add a paragraph (click empty space) | अनुच्छेद जोड़ें (खाली जगह पर क्लिक करें) | परिच्छेद जोडा (रिकाम्या जागेवर क्लिक करा)
+Click an empty place on the page to add a paragraph | अनुच्छेद जोड़ने के लिए पृष्ठ पर किसी खाली जगह पर क्लिक करें | परिच्छेद जोडण्यासाठी पृष्ठावरील रिकाम्या जागेवर क्लिक करा
+Add text box | टेक्स्ट बॉक्स जोड़ें | मजकूर बॉक्स जोडा
+Add link | लिंक जोड़ें | लिंक जोडा
+Bookmarks | बुकमार्क | बुकमार्क
+Show bookmarks panel | बुकमार्क पैनल दिखाएँ | बुकमार्क पॅनेल दाखवा
+Find & redact | ढूँढें और रिडैक्ट करें | शोधा आणि रिडॅक्ट करा
+Redact patterns (email, phone, Aadhaar, PAN) | पैटर्न रिडैक्ट करें (ईमेल, फ़ोन, आधार, PAN) | पॅटर्न रिडॅक्ट करा (ईमेल, फोन, आधार, PAN)
+Author name | लेखक का नाम | लेखकाचे नाव
+Name used on comments | टिप्पणियों पर प्रयुक्त नाम | टिप्पण्यांवर वापरले जाणारे नाव
+Set author name | लेखक का नाम सेट करें | लेखकाचे नाव सेट करा
+Zoom in | ज़ूम इन करें | झूम इन करा
+Zoom out | ज़ूम आउट करें | झूम आउट करा
+Zoom | ज़ूम | झूम
+Actual size (100%) | वास्तविक आकार (100%) | वास्तविक आकार (100%)
+Fit width | चौड़ाई में फ़िट करें | रुंदीत बसवा
+Fit page | पृष्ठ में फ़िट करें | पृष्ठात बसवा
+Page display | पृष्ठ प्रदर्शन | पृष्ठ प्रदर्शन
+Continuous scrolling | लगातार स्क्रॉलिंग | सलग स्क्रोलिंग
+Single page | एकल पृष्ठ | एकच पृष्ठ
+Two-page spread | दो-पृष्ठ स्प्रेड | दोन-पृष्ठी स्प्रेड
+Show cover page in spread | स्प्रेड में कवर पृष्ठ दिखाएँ | स्प्रेडमध्ये मुखपृष्ठ दाखवा
+Reading mode | पठन मोड | वाचन मोड
+Normal | सामान्य | सामान्य
+Dark (inverted pages) | गहरा (उलटे रंग वाले पृष्ठ) | गडद (उलट रंगांची पृष्ठे)
+Sepia | सीपिया | सेपिया
+Night (low blue light) | रात (कम नीली रोशनी) | रात्र (कमी निळा प्रकाश)
+Reading ruler / line focus | पठन रूलर / पंक्ति फ़ोकस | वाचन पट्टी / ओळ फोकस
+Quick action bar on text selection | टेक्स्ट चयन पर त्वरित क्रिया बार | मजकूर निवडल्यावर जलद क्रिया पट्टी
+Full screen | पूर्ण स्क्रीन | पूर्ण स्क्रीन
+Presentation mode | प्रस्तुति मोड | सादरीकरण मोड
+Read aloud | ज़ोर से पढ़ें | मोठ्याने वाचा
+Read this page | यह पृष्ठ पढ़ें | हे पृष्ठ वाचा
+Read from selection | चयन से पढ़ें | निवडीपासून वाचा
+Read to end of document | दस्तावेज़ के अंत तक पढ़ें | दस्तऐवजाच्या शेवटपर्यंत वाचा
+Pause / resume | रोकें / फिर शुरू करें | थांबवा / पुन्हा सुरू करा
+Stop reading | पढ़ना बंद करें | वाचन थांबवा
+Voice & speed | आवाज़ और गति | आवाज आणि वेग
+Rotate view clockwise | दृश्य दक्षिणावर्त घुमाएँ | दृश्य घड्याळाच्या दिशेने फिरवा
+Show side panel | साइड पैनल दिखाएँ | बाजूचे पॅनेल दाखवा
+Organize pages | पृष्ठ व्यवस्थित करें | पृष्ठे व्यवस्थित करा
+Next document tab | अगला दस्तावेज़ टैब | पुढील दस्तऐवज टॅब
+Previous document tab | पिछला दस्तावेज़ टैब | मागील दस्तऐवज टॅब
+Comment | टिप्पणी | टिप्पणी
+Sticky note | चिपकने वाला नोट | चिकट टीप
+Highlight text | टेक्स्ट हाइलाइट करें | मजकूर हायलाइट करा
+Underline text | टेक्स्ट को रेखांकित करें | मजकूर अधोरेखित करा
+Strikethrough text | टेक्स्ट को काटें (स्ट्राइकथ्रू) | मजकूर खोडा (स्ट्राइकथ्रू)
+Text comment (text box) | टेक्स्ट टिप्पणी (टेक्स्ट बॉक्स) | मजकूर टिप्पणी (मजकूर बॉक्स)
+Callout | कॉलआउट | कॉलआउट
+Draw (pen, smoothed) | ड्रॉ करें (पेन, सहज) | रेखाटा (पेन, गुळगुळीत)
+Rectangle | आयत | आयत
+Ellipse | दीर्घवृत्त | लंबवर्तुळ
+Line | रेखा | रेषा
+Arrow | तीर | बाण
+Stamp | स्टैम्प | शिक्का
+Custom image stamp | कस्टम छवि स्टैम्प | सानुकूल प्रतिमा शिक्का
+Stamps library | स्टैम्प लाइब्रेरी | शिक्का संग्रह
+Measure | मापें | मोजा
+Distance | दूरी | अंतर
+Perimeter | परिमाप | परिमिती
+Area | क्षेत्रफल | क्षेत्रफळ
+Comments list | टिप्पणियों की सूची | टिप्पण्यांची यादी
+Remove all annotations | सभी एनोटेशन हटाएँ | सर्व भाष्ये काढा
+Fill & Sign | भरें और हस्ताक्षर करें | भरा आणि स्वाक्षरी करा
+Add signature | हस्ताक्षर जोड़ें | स्वाक्षरी जोडा
+Add initials | आद्याक्षर जोड़ें | आद्याक्षरे जोडा
+Add date | दिनांक जोड़ें | दिनांक जोडा
+Add text | टेक्स्ट जोड़ें | मजकूर जोडा
+Tick mark ✓ | सही का निशान ✓ | बरोबरची खूण ✓
+Cross mark ✗ | क्रॉस का निशान ✗ | फुलीची खूण ✗
+Dot ● | बिंदु ● | ठिपका ●
+Request signature: "Sign here" tag | हस्ताक्षर का अनुरोध: "यहाँ हस्ताक्षर करें" टैग | स्वाक्षरीची विनंती: "येथे स्वाक्षरी करा" टॅग
+Digital-signature-look stamp (visual only) | डिजिटल-हस्ताक्षर जैसा स्टैम्प (केवल दिखावटी) | डिजिटल स्वाक्षरीसारखा शिक्का (फक्त दृश्य)
+Manage saved signatures | सहेजे गए हस्ताक्षर प्रबंधित करें | जतन केलेल्या स्वाक्षऱ्या व्यवस्थापित करा
+Sign with certificate (digital signature) | प्रमाणपत्र से हस्ताक्षर करें (डिजिटल हस्ताक्षर) | प्रमाणपत्राने स्वाक्षरी करा (डिजिटल स्वाक्षरी)
+Certify document (digital signature) | दस्तावेज़ प्रमाणित करें (डिजिटल हस्ताक्षर) | दस्तऐवज प्रमाणित करा (डिजिटल स्वाक्षरी)
+Validate signatures | हस्ताक्षर सत्यापित करें | स्वाक्षऱ्या प्रमाणित करा
+Import certificate (.p12 / .pfx) | प्रमाणपत्र इम्पोर्ट करें (.p12 / .pfx) | प्रमाणपत्र इम्पोर्ट करा (.p12 / .pfx)
+Forget saved certificate | सहेजा गया प्रमाणपत्र भूल जाएँ | जतन केलेले प्रमाणपत्र विसरा
+Forms | फ़ॉर्म | फॉर्म
+Add form field | फ़ॉर्म फ़ील्ड जोड़ें | फॉर्म फील्ड जोडा
+Clear form | फ़ॉर्म साफ़ करें | फॉर्म साफ करा
+Import form data (JSON) | फ़ॉर्म डेटा इम्पोर्ट करें (JSON) | फॉर्म डेटा इम्पोर्ट करा (JSON)
+Export form data (JSON) | फ़ॉर्म डेटा एक्सपोर्ट करें (JSON) | फॉर्म डेटा एक्सपोर्ट करा (JSON)
+Flatten form fields & annotations | फ़ॉर्म फ़ील्ड और एनोटेशन फ़्लैटन करें | फॉर्म फील्ड आणि भाष्ये सपाट करा
+Pages | पृष्ठ | पृष्ठे
+Insert blank page | खाली पृष्ठ डालें | रिक्त पृष्ठ घाला
+Insert pages from file | फ़ाइल से पृष्ठ डालें | फाइलमधून पृष्ठे घाला
+Replace current page | वर्तमान पृष्ठ बदलें | सध्याचे पृष्ठ बदला
+Rotate current page right | वर्तमान पृष्ठ दाएँ घुमाएँ | सध्याचे पृष्ठ उजवीकडे फिरवा
+Rotate current page left | वर्तमान पृष्ठ बाएँ घुमाएँ | सध्याचे पृष्ठ डावीकडे फिरवा
+Duplicate current page | वर्तमान पृष्ठ की प्रतिलिपि बनाएँ | सध्याच्या पृष्ठाची प्रत बनवा
+Delete current page | वर्तमान पृष्ठ हटाएँ | सध्याचे पृष्ठ हटवा
+Reverse page order | पृष्ठ क्रम उलटें | पृष्ठ क्रम उलटा करा
+Crop pages (draw box) | पृष्ठ क्रॉप करें (बॉक्स बनाएँ) | पृष्ठे क्रॉप करा (बॉक्स काढा)
+Crop margins | हाशिये क्रॉप करें | समास क्रॉप करा
+Resize pages (A4 / Letter…) | पृष्ठों का आकार बदलें (A4 / Letter…) | पृष्ठांचा आकार बदला (A4 / Letter…)
